@@ -3,8 +3,6 @@ layout: default
 title: "神马"都是"浮云"
 ---
 
-# FuYun 知识建模系统
-
 ![FuYun](./images/FuYun.png)
 
 
