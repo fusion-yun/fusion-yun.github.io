@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: "神马"都是"浮云"
 ---
 
