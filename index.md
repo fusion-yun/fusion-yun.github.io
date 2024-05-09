@@ -5,7 +5,7 @@ title: "神马"都是"浮云"
 
 # FuYun 知识建模系统
 
-![Image](images/FuYun.png "FuYun")
+![FuYun](./images/FuYun.png)
 
 
 ## 目标
