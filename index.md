@@ -14,10 +14,10 @@ title: "神马"都是"浮云"
 - 构建科学装置的数字孪生
 
 
-## Projects:
+## 子系统:
 
-- SpDM:  a data integration tool designed to organize scientific data. [http://fusion-yun.github.io/spdm/]
-    Install: `pip install spdm`
+- **SpDM**:  a data integration tool designed to organize scientific data. [ http://fusion-yun.github.io/spdm/ ]
+   - Install: `pip install spdm`
 
-- FyTok: Tokamak integrated modeling and analysis toolkit. [http://fusion-yun.github.io/fytok/]
-    Install: `pip install fytok`
+- **FyTok**: Tokamak integrated modeling and analysis toolkit. [ http://fusion-yun.github.io/fytok/ ]
+   - Install: `pip install fytok`
