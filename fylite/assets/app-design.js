@@ -61,13 +61,24 @@
       tb.appendChild(tr);
     });
   }
-  function showCurrents(chan) {
+  //: the authoritative coil set.  The table shows it rounded to 0.1 kA, so
+  //: reading the set back from the inputs would quantize it by up to 50 A on
+  //: every run — enough to make a converged design drift for no reason.
+  var currentChan = null;
+  function setCurrents(chan) {
+    currentChan = Float64Array.from(chan);
     coilInputs.forEach(function (inp, i) {
-      inp.value = (chan[i] / 1e3).toFixed(1);
+      inp.value = (currentChan[i] / 1e3).toFixed(1);
     });
   }
+  /** Edits in the table override the stored set for that channel only. */
   function readCurrents() {
-    return Float64Array.from(coilInputs, function (i) { return +i.value * 1e3; });
+    var out = Float64Array.from(currentChan || coilInputs.map(function () { return 0; }));
+    coilInputs.forEach(function (inp, i) {
+      var typed = +inp.value * 1e3;
+      if (Math.abs(typed - out[i]) > 50) out[i] = typed;
+    });
+    return out;
   }
 
   // --- drawing --------------------------------------------------------------
@@ -347,7 +358,7 @@
     if (m.type === 'solve') {
       state = m.result;
       if (!referenceLcfs) referenceLcfs = m.result.lcfs;
-      showCurrents(m.chan);
+      setCurrents(m.chan);
       draw();
       setBusy(false, '自由边界求解完成：' + m.result.iterations + ' 次迭代，残差 ' +
               m.result.residual.toExponential(2));
@@ -356,15 +367,27 @@
     }
     if (m.type === 'design') {
       state = m.result;
-      showCurrents(m.chan);
+      setCurrents(m.chan);
       draw();
       drawHistory(m.history);
       drawCurrents(beforeCurrents, m.chan);
       var failed = m.history.filter(function (h) { return h.error; });
-      setBusy(false, '设计完成：取第 ' + m.pass + ' 趟结果（位形误差 ' +
-              m.history.filter(function (h) { return h.pass === m.pass; })[0].err.toFixed(4) +
-              '）' + (failed.length ? '；第 ' + failed[0].pass + ' 趟求解发散，已停止退火' : ''));
+      var err = m.history.filter(function (h) { return h.pass === m.pass; })[0].err;
+      var tail = failed.length
+        ? '；第 ' + failed[0].pass + ' 趟求解发散，已停止退火' : '';
       $('progress').style.width = '100%';
+      if (m.pass === 0) {
+        // saying only "取第 0 趟" reads like success; the figure is then
+        // the STARTING configuration and looks like it never redrew
+        setBusy(false, '');
+        $('status').innerHTML = '设计结束：' + (m.history.length - 1) +
+          ' 趟退火都不优于起点，图示与线圈电流仍是<strong>起点位形</strong>' +
+          '（位形误差 ' + err.toFixed(4) + '）。可放宽目标，或调大迭代步长 γ。' + tail;
+        $('status').className = 'status warn';
+      } else {
+        setBusy(false, '设计完成：取第 ' + m.pass + ' 趟结果（位形误差 ' +
+                err.toFixed(4) + '）' + tail);
+      }
       return;
     }
   };
@@ -372,7 +395,7 @@
   function resetToReference() {
     setBusy(true, '正在求解参考放电 EAST #' + M.reference.shot + ' …');
     referenceLcfs = null;
-    showCurrents(M.reference.aturns);
+    setCurrents(M.reference.aturns);
     worker.postMessage({ cmd: 'solve', chan: Array.from(M.reference.aturns),
                          prof: readProf(), ip: readIp() });
   }
@@ -425,7 +448,7 @@
 
   buildCoilTable();
   syncLabels();
-  showCurrents(M.reference.aturns);
+  setCurrents(M.reference.aturns);
   draw();
   worker.postMessage({ cmd: 'init' });
 })();

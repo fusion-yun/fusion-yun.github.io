@@ -230,3 +230,5 @@ header.top nav { align-items: center; }
 .panel.toolbar .status { flex: 1 1 240px; margin: 0; align-self: center; }
 .panel.toolbar .bar { flex: 1 1 100%; order: 99; margin-top: 0; }
 @media (max-width: 700px) { .panel.toolbar .ctl { flex-basis: 100%; } }
+
+.status.warn { color: var(--warn); }

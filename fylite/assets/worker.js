@@ -180,7 +180,7 @@ function designRun(msg) {
   var res;
   try { res = freeSolve(chan, prof, ip, msg.solve); }
   catch (e) { post({ type: 'error', where: 'design', message: e.message }); return; }
-  var best = { chan: chan, sum: summarize(res, prof), pass: 0 };
+  var best = { chan: chan, sum: summarize(res, prof), pass: 0, res: res };
   var history = [{ pass: 0, alpha: null, err: shapeError(best.sum.shape),
                    shape: best.sum.shape }];
   best.err = history[0].err;
@@ -201,7 +201,15 @@ function designRun(msg) {
     var sum = summarize(res, prof), err = shapeError(sum.shape);
     history.push({ pass: p + 1, alpha: msg.schedule[p], err: err,
                    shape: sum.shape, residual: res.residual });
-    if (err < best.err) best = { chan: chan, sum: sum, err: err, pass: p + 1 };
+    // The anneal keeps travelling from the LAST pass, not from the best
+    // one.  Rolling back a regression was tried and measurably hurts: the
+    // good basin usually lies past a worse intermediate state, and
+    // reverting cuts the run short (a 0.45 -> 0.50: 0.048 at pass 7 while
+    // travelling, 0.162 at pass 1 when reverting; same for du 0.65 and
+    // dl 0.00).  A run that cannot improve at all ends at pass 0 and says
+    // so — that is a reporting matter, not a reason to hobble the search.
+    if (err < best.err)
+      best = { chan: chan, sum: sum, err: err, pass: p + 1, res: res };
     post({ type: 'progress', phase: 'design', pass: p + 1,
            total: msg.schedule.length, err: err });
   }
