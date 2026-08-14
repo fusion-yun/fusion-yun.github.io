@@ -102,7 +102,7 @@
       psiBnd: state && state.psiBnd, nLevels: 12,
       lcfs: state && state.lcfs,
       target: flat,
-      reference: referenceLcfs,
+      reference: $('showref').checked ? referenceLcfs : null,
       axis: state && [state.axisR, state.axisZ],
       xpoint: state && state.bndKind === 1 ? [state.xptR, state.xptZ] : null,
     });
@@ -193,10 +193,14 @@
     var items = [
       { label: '等离子体边界', color: col.lcfs, kind: 'line', width: 2 },
       { label: '目标边界', color: col.accent, kind: 'line', dash: [4, 4] },
-      { label: '参考放电', color: col.alt, kind: 'line', dash: [5, 3] },
-      { label: '磁轴（实际）', color: col.fg, kind: 'plus' },
-      { label: 'O 点（拖动改 R₀/Z₀）', color: col.accent, kind: 'plus' },
     ];
+    if ($('showref').checked && referenceLcfs)
+      items.push({ label: '参考放电', color: col.alt, kind: 'line',
+                   dash: [5, 3] });
+    items.push(
+
+      { label: '磁轴（实际）', color: col.fg, kind: 'plus' },
+      { label: 'O 点（拖动改 R₀/Z₀）', color: col.accent, kind: 'plus' });
     if ($('usex').checked)
       items.push({ label: 'X 点（可拖动）', color: col.accent, kind: 'x' });
     return items;
@@ -435,7 +439,9 @@
                          prof: readProf(), ip: readIp() });
   });
   $('reset').addEventListener('click', function () { if (!busy) resetToReference(); });
-  $('wide').addEventListener('change', draw);
+  ['wide', 'showref'].forEach(function (id) {
+    $(id).addEventListener('change', draw);
+  });
   OPOINT.concat(['usex', 'xr', 'xz']).forEach(function (id) {
     $(id).addEventListener('input', draw);
     $(id).addEventListener('change', draw);

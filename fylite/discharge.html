@@ -7,6 +7,9 @@
 <meta name="description" content="托卡马克放电位形设计：给定目标截面形状，反解极向场线圈电流，再正算平衡校验实际得到的位形。">
 <link rel="stylesheet" href="assets/style.css">
 <style>canvas.drag { touch-action: none; }
+  .fig-opts { display: flex; flex-wrap: wrap; gap: 6px 20px;
+              justify-content: flex-end; }
+  .fig-opts .check { margin: 0; }
   /* cross-section and the coil-current table read together: the figure
      encodes the currents as colour, the table carries the numbers */
   .cross-row { display: grid; grid-template-columns: minmax(0, 1fr) 236px;
@@ -97,9 +100,15 @@
   <!-- ------------------------------------------------ figures -->
   <div>
     <div class="panel">
-      <div class="check" style="justify-content:flex-end">
-        <input type="checkbox" id="wide" checked>
-        <label for="wide">视野含全部 PF 线圈（点线框为 65×65 计算网格盒）</label>
+      <div class="fig-opts">
+        <div class="check">
+          <input type="checkbox" id="showref" checked>
+          <label for="showref">显示参考放电边界</label>
+        </div>
+        <div class="check">
+          <input type="checkbox" id="wide" checked>
+          <label for="wide">视野含全部 PF 线圈（点线框为 65×65 计算网格盒）</label>
+        </div>
       </div>
       <div class="cross-row">
         <figure>
