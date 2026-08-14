@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>动理学平衡重构 · fylite</title>
-<meta name="description" content="在浏览器中用 fylite 的 WebAssembly 内核做托卡马克平衡重构：磁通环测量加动理学压强约束，拟合 p′/FF′ 多项式剖面。">
+<meta name="description" content="托卡马克动理学平衡重构：由极向磁通环测量加压强约束反推平衡状态，可跑真实放电数据或真值已知的合成算例。">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -78,7 +78,7 @@
         <button id="run">运行重构</button>
       </div>
       <div class="bar"><div id="progress"></div></div>
-      <div class="status" id="status">正在加载 WebAssembly 内核…</div>
+      <div class="status" id="status">正在加载计算内核…</div>
     </div>
   </div>
 
@@ -128,9 +128,8 @@
 </main>
 
 <footer>
-  全部计算在您的浏览器内完成，由 <code>fylite_rs.wasm</code>（fylite Rust 内核的
-  WebAssembly 构建，仅二进制）执行；页面本身不含求解器源码，也不上传任何数据。
-  <a href="index.html">说明与出处</a>
+  全部计算在您的浏览器内完成，不上传任何数据。
+  <a href="index.html">功能说明</a>
 </footer>
 
 <script src="assets/machine.js"></script>

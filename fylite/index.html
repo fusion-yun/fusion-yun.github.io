@@ -4,121 +4,119 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>fylite 在线演示</title>
-<meta name="description" content="fylite 的 Rust 平衡内核编译为 WebAssembly，在浏览器中直接运行托卡马克放电位形设计与动理学平衡重构。">
+<meta name="description" content="托卡马克平衡计算的两个交互演示：放电位形设计，以及由磁测量与压强约束反推平衡状态的动理学重构。打开即用，计算全部在浏览器内完成。">
 <link rel="stylesheet" href="assets/style.css">
 <style>
-  main.doc { max-width: 900px; }
-  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 22px 0; }
+  main.doc { max-width: 880px; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0 8px; }
   @media (max-width: 760px) { .cards { grid-template-columns: 1fr; } }
   .card { display: block; text-decoration: none; color: inherit; }
   .card:hover { border-color: var(--accent); }
   .card h3 { margin: 0 0 6px; font-size: 17px; color: var(--accent); }
   .card p { margin: 0; font-size: 13.5px; color: var(--muted); }
-  main.doc h2 { font-size: 16px; margin-top: 30px; }
+  main.doc h2 { font-size: 16px; margin-top: 34px; }
+  main.doc h3 { font-size: 14.5px; margin: 22px 0 6px; }
   main.doc li { margin: 5px 0; }
-  dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; font-size: 13.5px; }
-  dt { color: var(--muted); }
-  dd { margin: 0; }
+  main.doc .lead { font-size: 15.5px; }
 </style>
 </head>
 <body>
 
 <header class="top">
   <h1>fylite 在线演示</h1>
-  <span class="sub">平衡内核编译为 WebAssembly，在浏览器里直接算</span>
+  <span class="sub">托卡马克平衡计算，打开即用</span>
   <nav><a href="https://fusion-yun.github.io/">FuYun 首页</a></nav>
 </header>
 
 <main class="doc">
 
-<p>fylite 是一个自足的托卡马克平衡求解与重构包（无 sp/fy 依赖）。它的数值内核用
-Rust 写成，同一份 C ABI 既产出本地 <code>libfylite_rs.so</code>（Python 经 ctypes 调用），
-也产出 <code>fylite_rs.wasm</code>。本站装载的正是后者：183 KB 的二进制，
-<strong>不包含任何求解器源码</strong>，页面上的每一次求解都发生在您自己的浏览器里，
-没有服务端计算、也不上传任何数据。</p>
+<p class="lead">两个可交互的托卡马克平衡计算演示：一个从你想要的等离子体截面
+形状出发，反推需要怎样的线圈电流；另一个反过来，从装置外侧的磁测量反推等离子体
+内部的平衡状态。无需安装，拖动滑块即可运行；每次求解约一到两秒。</p>
 
 <div class="cards">
   <a class="card panel" href="discharge.html">
     <h3>放电设计 →</h3>
-    <p>给定目标位形（R₀、a、κ、δ）与等离子体参数，用等磁通最小二乘反解 12 路 PF
-      线圈电流，再做自由边界 Grad–Shafranov 求解校验，逐趟退火直到实现位形贴近目标。</p>
+    <p>给定目标截面形状与等离子体参数，反解需要的极向场线圈电流，
+      再正算一遍平衡校验实际得到的位形。</p>
   </a>
   <a class="card panel" href="reconstruction.html">
     <h3>动理学平衡重构 →</h3>
-    <p>由 35 道极向磁通环测量（可选叠加压强约束行）拟合 p′/FF′ 多项式剖面，
-      在 I<sub>p</sub> 等式约束下交替求解平衡。可直接跑 EAST 真实炮数据，
-      也可跑真值已知的合成孪生，量出动理学约束买到了多少精度。</p>
+    <p>由磁通环测量反推平衡状态，可叠加压强剖面作为额外约束；
+      能跑真实放电数据，也能跑真值已知的合成算例。</p>
   </a>
 </div>
 
-<h2>页面调用的内核入口</h2>
-<p>两个页面只通过 <code>c_api.rs</code> 暴露的 C ABI（v15）调用二进制，没有别的通道：</p>
-<dl>
-  <dt><code>fylite_rs_element_response</code></dt>
-    <dd>PF 线圈元件在任意点的 ψ、B<sub>r</sub>、B<sub>z</sub> 响应（组装真空场与设计方程）</dd>
-  <dt><code>fylite_rs_mutual_filaments</code></dt>
-    <dd>丝对互感（组装 35×65×65 的磁通环响应矩阵）</dd>
-  <dt><code>fylite_rs_gs_free_solve</code></dt>
-    <dd>自由边界 Grad–Shafranov 求解（满磁通 Wb 规约，轴为极大）</dd>
-  <dt><code>fylite_rs_gs_inverse_solve</code></dt>
-    <dd>平衡重构：外 Picard 迭代套内层带 I<sub>p</sub> 等式约束的线性最小二乘</dd>
-  <dt><code>fylite_rs_alloc</code> / <code>_free</code> / <code>_abi_version</code></dt>
-    <dd>线性内存与版本握手</dd>
-</dl>
+<h2>放电设计能做什么</h2>
 
-<h2>装置数据的出处</h2>
-<p>页面上的每一个装置数字都逐字取自 fylite 自带的设备描述，没有从文献重新誊抄：</p>
+<p>你指定想要的等离子体截面——大半径、小半径、拉长比、上下三角度、垂直位置——
+以及等离子体电流和电流剖面的形状。页面反解出维持这个位形所需的十二路极向场线圈
+电流，然后正算一遍平衡，把<strong>真正得到的位形</strong>算给你看。设计与校验是
+两回事，页面把两者并排放在一起。</p>
+
 <ul>
-  <li>PF 线圈（14 个元件）、真空室（40 个元件）、35 道极向磁通环几何：
-    <code>python/fylite/_data/green2018_wpf_64/dprobe.dat</code>，即生成随包 Green 表的
-    efund 输入卡。</li>
-  <li>限制器（48 点）：<code>python/fylite/_data/limiter.json</code>。</li>
-  <li>参考放电 EAST #137985 @ 4.000 s：<code>examples/scripts/{g,a}137985_loop.04000</code>
-    及随包运行摘要——PF 通道电流、35 道磁通环读数（已扣除线圈贡献）、
-    EFIT 自身给出的 p(ψ̄)/q(ψ̄)/边界，后者只作对照，不进入求解。</li>
+  <li>目标与实现逐项对照：大半径、小半径、拉长比、上下三角度各自差多少</li>
+  <li>线圈电流表可直接改数字，按任意一组电流重新正算</li>
+  <li>迭代收敛曲线，以及设计前后的线圈电流对比</li>
+  <li>可选加 X 点约束，把真空场往偏滤器位形上拉</li>
 </ul>
 
-<h2>已知边界（诚实说明）</h2>
+<p>默认从一炮真实放电的位形出发。典型的一次运行，八轮迭代把位形误差降低约一个
+数量级，各形状量都落到目标附近。</p>
+
+<h2>动理学平衡重构能做什么</h2>
+
+<p>装置外侧的磁探测只能测到边界外的磁通，等离子体内部的电流与压强分布得靠反推。
+页面用三十五道极向磁通环的读数拟合出压强与极向电流的剖面，进而给出完整的磁面
+位形。</p>
+
+<p>关键的一项开关是<strong>压强约束</strong>：只用磁测量时，内部剖面几乎不受约束，
+不同的剖面能给出几乎一样好的磁场拟合；把独立测得的压强剖面作为额外约束加进去，
+解才被真正定住。这就是「动理学」重构与纯磁重构的分别，页面让你把这个开关来回拨、
+直接看差别。</p>
+
+<h3>两种数据源</h3>
 <ul>
-  <li>计算网格固定为随包表的 65×65 盒子（R∈[1.2, 2.8] m，Z∈[±1.4] m）。</li>
-  <li>正解的剖面参数 β₀ 与 EFIT 的 <code>BETAP0</code> 不是同一个旋钮，
-    二者只在形级映射意义下对应；重构出的磁通跨度与 EFIT 的差别（真实炮约 2%）
-    主要来自这一点和真空场构造误差，不是求解器误差。</li>
-  <li>本页不含涡流演化：真实炮的磁通环读数里含真空室涡流贡献，而重构模型中没有
-    对应自由度。</li>
-  <li>自由边界解在非锚定模式下走 legacy 边界判据，位形通常判为限制器边界；
-    X 点约束改变的是真空场结构，不强制求解器改判边界类型。</li>
+  <li><strong>真实测量</strong>——一炮真实放电的实测磁通环读数，可与该炮既有的
+    重构结果逐项对照。实测下，压强约束把中心压强从明显偏高拉回到与既有结果同量级，
+    同时磁测量本身的拟合也变好。</li>
+  <li><strong>合成算例</strong>——先正算一个平衡，再采样、加噪声当作测量。因为
+    真值已知，能直接量出压强约束买到了多少精度：磁通跨度的误差从两成多收到几个
+    百分点，且随约束权重单调改善。</li>
 </ul>
 
-<h2>二进制出处</h2>
-<dl>
-  <dt>文件</dt><dd><code>assets/fylite_rs.wasm</code>（187 702 字节，ABI v15）<br>
-    <code>sha256 08238b19fd978bcadd0b2a8e0011e91b95a55392f09618c0d04d4a7b75662cab</code></dd>
-  <dt>构建</dt><dd><code>rust/build.sh --wasm-check</code>，即
-    <code>cargo build --release --target wasm32-unknown-unknown
-    --no-default-features</code>（关线程；wasm 与本地 <code>libfylite_rs.so</code>
-    共用同一导出面）</dd>
-  <dt>源</dt><dd>fylite <code>develop_rust</code> @ <code>0f8be04</code>，
-    无未提交改动——从该提交的干净工作树重建，与此处装载的二进制
-    <strong>逐字节相同</strong>（上面的 sha256 即用于核对）。该提交修正了
-    <code>inverse.rs</code> 压强约束行的符号：这条通道此前从未被调用，本页是它的
-    第一次实际使用，修正与配套的 <code>pressure_row</code> 单元闸随该提交落地。</dd>
-  <dt>自检</dt><dd>ellipke 解析锚、共轴丝互感跨架构逐位相同、33×33 固定边界
-    GS 求解，均在 <code>rust/wasm/check.mjs</code> 下通过；本页的两条通路另有
-    实测对照（真实炮磁轴 1.830 m vs EFIT 1.831 m；合成孪生真值对拍）。</dd>
-  <dt>页面副本</dt><dd>本目录是 fylite 仓的 <code>app/</code>，与
-    <a href="https://fusion-yun.github.io/fylite/">fusion-yun.github.io/fylite/</a>
-    上的一份逐字相同。</dd>
-</dl>
+<h3>可调项</h3>
+<ul>
+  <li>磁测量噪声水平与随机种子（合成算例）</li>
+  <li>压强约束的点数、权重、测量噪声</li>
+  <li>拟合剖面的阶数</li>
+</ul>
 
-<p class="note">数值免责：本站是能力演示，不是工程设计工具。请勿把这里的位形或剖面
-当作任何装置的设计依据。</p>
+<p>输出包括磁面位形与最后闭合磁面、压强与电流剖面（叠合参照曲线）、
+逐道磁通环的测量与模型对比，以及磁轴位置、磁通跨度、拟合优度等标量。</p>
+
+<h2>适用范围</h2>
+
+<ul>
+  <li>演示用的装置位形取自 EAST，计算区域是固定的一块；不能换成别的装置。</li>
+  <li>重构模型不含真空室涡流等自由度，正解的剖面参数也与既有重构代码的同名参数
+    不是同一个旋钮。与既有结果几个百分点的差别主要来自这些模型简化，而非求解精度。</li>
+  <li>自由边界解得到的位形通常判为限制器边界；X 点约束改变的是磁场结构，
+    不强制把边界改判为偏滤器位形。</li>
+  <li><strong>这是能力演示，不是工程设计工具。</strong>请勿把这里的位形或剖面
+    当作任何装置的设计依据。</li>
+</ul>
+
+<h2>关于运行方式</h2>
+
+<p>所有计算都在你自己的浏览器里完成。页面不向任何服务器发送数据，你调过的参数、
+算出的结果都不会离开本机；关掉页面即消失。因此首次打开需要下载一份计算内核，
+之后的每次求解都是本地进行的。</p>
 
 </main>
 
 <footer>
-  <a href="https://github.com/fusion-yun">fusion-yun</a> ·
-  页面在 GitHub Pages 上以静态文件方式服务，求解全部在客户端完成。
+  <a href="https://github.com/fusion-yun">fusion-yun</a>
 </footer>
 
 </body>

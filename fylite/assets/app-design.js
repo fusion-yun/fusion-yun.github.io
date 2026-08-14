@@ -167,8 +167,8 @@
     var m = ev.data;
     if (m.type === 'ready') {
       grid = m.grid;
-      setBusy(false, 'wasm ABI v' + m.abi + ' 就绪（线圈响应 ' +
-              m.timing.coils + ' ms）。正在求解参考放电…');
+      setBusy(false, '计算内核就绪（线圈响应矩阵 ' + m.timing.coils +
+              ' ms）。正在求解参考放电…');
       resetToReference();
       return;
     }

@@ -213,7 +213,7 @@
     var m = ev.data;
     if (m.type === 'ready') {
       grid = m.grid;
-      setBusy(false, 'wasm ABI v' + m.abi + ' 就绪（线圈响应 ' + m.timing.coils +
+      setBusy(false, '计算内核就绪（线圈响应矩阵 ' + m.timing.coils +
               ' ms，磁通环响应矩阵 ' + m.timing.loops + ' ms）。');
       drawAll();
       run();

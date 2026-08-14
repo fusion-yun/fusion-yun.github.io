@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>放电设计 · fylite</title>
-<meta name="description" content="在浏览器中用 fylite 的 WebAssembly 内核做托卡马克放电位形设计：给定目标边界，反解 PF 线圈电流，再自由边界求解校验。">
+<meta name="description" content="托卡马克放电位形设计：给定目标截面形状，反解极向场线圈电流，再正算平衡校验实际得到的位形。">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -72,7 +72,7 @@
         <button id="reset" class="ghost">回到参考放电</button>
       </div>
       <div class="bar"><div id="progress"></div></div>
-      <div class="status" id="status">正在加载 WebAssembly 内核…</div>
+      <div class="status" id="status">正在加载计算内核…</div>
     </div>
 
     <div class="panel">
@@ -123,10 +123,8 @@
 </main>
 
 <footer>
-  全部计算在您的浏览器内完成，由 <code>fylite_rs.wasm</code>（fylite Rust 内核的
-  WebAssembly 构建，仅二进制）执行；页面本身不含求解器源码，也不上传任何数据。
-  装置几何与参考放电取自 fylite 自带的 EAST 设备描述。
-  <a href="index.html">说明与出处</a>
+  全部计算在您的浏览器内完成，不上传任何数据。装置位形与参考放电取自 EAST。
+  <a href="index.html">功能说明</a>
 </footer>
 
 <script src="assets/machine.js"></script>
