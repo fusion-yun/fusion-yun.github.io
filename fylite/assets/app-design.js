@@ -325,7 +325,7 @@
 
   function setBusy(on, text) {
     busy = on;
-    ['run', 'solve', 'reset', 'apply'].forEach(function (id) {
+    ['run', 'solve', 'reset'].forEach(function (id) {
       $(id).disabled = on;
     });
     if (text !== undefined) $('status').textContent = text;
@@ -433,7 +433,6 @@
     worker.postMessage({ cmd: 'solve', chan: Array.from(readCurrents()),
                          prof: readProf(), ip: readIp() });
   });
-  $('apply').addEventListener('click', function () { $('solve').click(); });
   $('reset').addEventListener('click', function () { if (!busy) resetToReference(); });
   $('wide').addEventListener('change', draw);
   OPOINT.concat(['usex', 'xr', 'xz']).forEach(function (id) {

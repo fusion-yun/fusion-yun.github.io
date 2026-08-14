@@ -34,7 +34,7 @@
         <input type="range" id="passes" min="3" max="10" step="1" value="8"></div>
       <div class="buttons">
         <button id="run">运行设计</button>
-        <button id="solve" class="ghost">仅正解</button>
+        <button id="solve" class="ghost" title="按当前线圈电流正算一次平衡，不做设计迭代">仅正解</button>
         <button id="reset" class="ghost">回到参考放电</button>
       </div>
       <div class="bar"><div id="progress"></div></div>
@@ -92,7 +92,7 @@
     <div class="panel">
       <h2>PF 通道电流 [kA·匝]</h2>
       <table class="coil-table"><tbody id="coils"></tbody></table>
-      <div class="buttons"><button id="apply" class="ghost">按此电流正解</button></div>
+      <p class="note">可直接改数值；改完用顶部的「仅正解」按这组电流重算一次平衡。</p>
     </div>
   </div>
 
