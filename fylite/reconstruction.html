@@ -7,11 +7,9 @@
 <meta name="description" content="托卡马克动理学平衡重构：由极向磁通环测量加压强约束反推平衡状态，可跑真实放电数据或真值已知的合成算例。">
 <link rel="stylesheet" href="assets/style.css">
 <style>
-  .cross-row { display: grid; grid-template-columns: minmax(0,1fr) 52px minmax(280px,1fr);
-               gap: 10px; align-items: start; }
-  @media (max-width: 1100px) { .cross-row { grid-template-columns: 1fr; }
-                               canvas.cbar { display: none; } }
-  canvas.cbar { width: 52px; height: 560px; border: none; background: transparent; }
+  .cross-row { display: grid; grid-template-columns: minmax(0,1fr) minmax(280px,1fr);
+               gap: 16px; align-items: start; }
+  @media (max-width: 1100px) { .cross-row { grid-template-columns: 1fr; } }
   figcaption { margin-top: 8px; }
 </style>
 <script src="assets/theme.js"></script>
@@ -32,19 +30,12 @@
 
 <main>
 <div class="panel toolbar">
-      <h2>拟合基与求解</h2>
-      <div class="row">
-        <div class="ctl"><label>p′ 阶数 n<sub>pp</sub></label>
-          <select id="npp"><option>1</option><option selected>2</option><option>3</option></select></div>
-        <div class="ctl"><label>FF′ 阶数 n<sub>ff</sub></label>
-          <select id="nff"><option>1</option><option selected>2</option><option>3</option></select></div>
-      </div>
       <div class="ctl"><label>解析预热轮数 <span class="val" id="v-warmup"></span></label>
         <input type="range" id="warmup" min="10" max="150" step="5" value="40"></div>
       <div class="ctl"><label>最大外迭代 <span class="val" id="v-maxit"></span></label>
         <input type="range" id="maxit" min="200" max="1500" step="50" value="800"></div>
       <div class="buttons">
-        <button id="run">运行重构</button>
+        <button id="run">重构</button>
       </div>
       <div class="bar"><div id="progress"></div></div>
       <div class="status" id="status">正在加载计算内核…</div>
@@ -90,6 +81,13 @@
       <div class="ctl"><label>压强测量噪声 <span class="val" id="v-knoise"></span></label>
         <input type="range" id="knoise" min="0" max="0.2" step="0.005" value="0.03"></div>
       <p class="note" id="kin-note"></p>
+      <h3>拟合基阶数</h3>
+      <div class="row">
+        <div class="ctl"><label>p′ 阶数 n<sub>pp</sub></label>
+          <select id="npp"><option>1</option><option selected>2</option><option>3</option></select></div>
+        <div class="ctl"><label>FF′ 阶数 n<sub>ff</sub></label>
+          <select id="nff"><option>1</option><option selected>2</option><option>3</option></select></div>
+      </div>
     </div>
 
     
@@ -101,8 +99,8 @@
       <div class="cross-row">
         <figure>
           <canvas id="cross" class="tall"></canvas>
+          <div class="legend-row" id="cross-legend"></div>
         </figure>
-        <canvas id="cbar" class="cbar"></canvas>
         <div>
           <h2>重构结果</h2>
           <table><thead><tr><th>标量</th><th>重构</th><th class="ref-col">真值</th></tr></thead>
@@ -113,9 +111,9 @@
           <p class="note" id="fitnote"></p>
         </div>
       </div>
-      <figcaption>极向截面：填色为归一磁通 ψ̄（0 在磁轴、1 在边界），细线为磁面，
-        红线是等离子体边界（取 ψ̄=0.995 的磁面，以避开 X 点处的奇异）。
-        方块是 35 个极向磁通环，按拟合残差着色，空心表示权重为零、未参与拟合。</figcaption>
+      <figcaption>极向截面：细线为磁面，红线是等离子体边界（取 ψ̄=0.995 的磁面，
+        以避开 X 点处的奇异）。方块是 35 个极向磁通环，按拟合残差着色，
+        空心表示权重为零、未参与拟合。</figcaption>
     </div>
 
     <div class="panel grid3">

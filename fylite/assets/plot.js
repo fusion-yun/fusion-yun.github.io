@@ -44,7 +44,8 @@
 
   /**
    * opts: {machine, grid, psi, psiAxis, psiBnd, lcfs, target, reference,
-   *        axis, xpoint, loops, loopColor, nLevels, caption}
+   *        axis, xpoint, loops, loopColor, loopUsed, coilLabel, coilFill,
+   *        handles, legend, legendAnchor, nLevels, caption, view}
    */
   function poloidal(canvas, o) {
     var p = prepare(canvas), ctx = p.ctx, col = palette(canvas);
@@ -94,10 +95,6 @@
     }
     ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     ctx.fillText('R [m]', (X(rmin) + X(rmax)) / 2, p.h - 14);
-
-    // normalized-flux fill, painted first so everything else sits on top
-    if (o.fill)
-      fillNormalizedFlux(ctx, o, X, Y, rmin, rmax, zmin, zmax, p.dpr);
 
     // vessel elements
     if (M.vessel) {
@@ -274,88 +271,6 @@
       ctx.fillText(it.label, x + sw + 6, y);
       y += 15;
     });
-  }
-
-  /**
-   * Perceptually ordered colormap for normalized flux, sampled from the
-   * viridis control points.  t = 0 at the axis, 1 at the boundary.
-   */
-  var VIRIDIS = [
-    [68, 1, 84], [72, 40, 120], [62, 74, 137], [49, 104, 142],
-    [38, 130, 142], [31, 158, 137], [53, 183, 121], [109, 205, 89],
-    [180, 222, 44], [253, 231, 37],
-  ];
-  function colormap(t) {
-    t = t < 0 ? 0 : (t > 1 ? 1 : t);
-    var u = t * (VIRIDIS.length - 1), i = Math.min(VIRIDIS.length - 2, u | 0);
-    var f = u - i, a = VIRIDIS[i], b = VIRIDIS[i + 1];
-    return [a[0] + f * (b[0] - a[0]), a[1] + f * (b[1] - a[1]),
-            a[2] + f * (b[2] - a[2])];
-  }
-
-  /**
-   * Paint normalized flux over the vessel interior.  `o.fill` carries
-   * {psi, psiAxis, psiBnd, max} — `max` is how far past the boundary to
-   * keep painting (1 = stop at the boundary).  Rendered per screen pixel
-   * through an ImageData, which is both simpler and sharper than banding
-   * it into filled contours.
-   */
-  function fillNormalizedFlux(ctx, o, X, Y, rmin, rmax, zmin, zmax, dpr) {
-    var f = o.fill, grid = o.grid;
-    if (!f.psi || !grid) return;
-    // putImageData is the one 2-D call that IGNORES the current transform:
-    // it addresses DEVICE pixels.  X()/Y() are CSS pixels, so on any
-    // display with devicePixelRatio > 1 (or under browser zoom) a CSS-sized
-    // block lands at 1/dpr scale in the top-left corner of where it belongs.
-    // Build and place the block in device pixels instead.
-    var x0 = Math.floor(X(rmin) * dpr), x1 = Math.ceil(X(rmax) * dpr);
-    var y0 = Math.floor(Y(zmax) * dpr), y1 = Math.ceil(Y(zmin) * dpr);
-    var w = x1 - x0, h = y1 - y0;
-    if (w <= 0 || h <= 0) return;
-    var img = ctx.createImageData(w, h), d = img.data;
-    var span = f.psiBnd - f.psiAxis, top = f.max === undefined ? 1 : f.max;
-    var lr = o.machine.limiter.r, lz = o.machine.limiter.z;
-    for (var py = 0; py < h; py++) {
-      var z = zmax - (py + 0.5) * (zmax - zmin) / h;
-      for (var px = 0; px < w; px++) {
-        var r = rmin + (px + 0.5) * (rmax - rmin) / w;
-        var k = 4 * (py * w + px);
-        if (!FyPhys.insidePolygon(r, z, lr, lz)) continue;
-        var v = FyPhys.sample(grid, f.psi, r, z);
-        if (!isFinite(v)) continue;
-        var t = (v - f.psiAxis) / span;
-        if (t < 0 || t > top) continue;
-        var c = colormap(t / top);
-        d[k] = c[0]; d[k + 1] = c[1]; d[k + 2] = c[2];
-        d[k + 3] = 205;
-      }
-    }
-    ctx.putImageData(img, x0, y0);
-  }
-
-  /** Vertical colour scale for the normalized-flux fill. */
-  function colorbar(canvas, o) {
-    var p = prepare(canvas), ctx = p.ctx, col = palette(canvas);
-    ctx.fillStyle = col.bg; ctx.fillRect(0, 0, p.w, p.h);
-    var barW = 16, top = 12, bot = p.h - 18, x = 6;
-    for (var y = top; y < bot; y++) {
-      var t = 1 - (y - top) / (bot - top);      // 0 at the BOTTOM = axis
-      var c = colormap(t);
-      ctx.fillStyle = 'rgb(' + (c[0] | 0) + ',' + (c[1] | 0) + ',' + (c[2] | 0) + ')';
-      ctx.fillRect(x, y, barW, 1);
-    }
-    ctx.strokeStyle = col.grid; ctx.lineWidth = 1;
-    ctx.strokeRect(x, top, barW, bot - top);
-    ctx.fillStyle = col.muted;
-    ctx.font = '10px system-ui, sans-serif';
-    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-    for (var k = 0; k <= 5; k++) {
-      var v = k / 5, yy = bot - v * (bot - top);
-      ctx.fillText(v.toFixed(1), x + barW + 4, yy);
-    }
-    ctx.textBaseline = 'bottom'; ctx.textAlign = 'left';
-    ctx.fillText('ψ̄', x, top - 2);
-    void o;
   }
 
   function drawSegs(ctx, segs, X, Y) {
@@ -606,6 +521,5 @@
 
   root.FyPlot = { poloidal: poloidal, xy: xy, palette: palette,
                   prepare: prepare, deviceView: deviceView,
-                  colorbar: colorbar, colormap: colormap,
                   legendHTML: legendHTML, currentScale: currentScale };
 })(typeof self !== 'undefined' ? self : globalThis);

@@ -70,17 +70,13 @@
       psi: last && last.result.psi,
       psiAxis: last && last.result.psiAxis,
       psiBnd: last && last.result.psiBnd,
-      fill: last ? { psi: last.result.psi, psiAxis: last.result.psiAxis,
-                     psiBnd: last.result.psiBnd, max: 1 } : null,
       nLevels: 12,
       lcfs: last && last.result.lcfs,
       reference: last && last.truth ? last.truth.lcfs : null,
       axis: last && [last.result.axisR, last.result.axisZ],
       loops: M.loops, loopColor: residColor, loopUsed: loopUsed,
-      legend: legend,
-      caption: last ? (last.result.bndKind === 1 ? 'X 点边界' : '限制器边界') : '',
     });
-    if ($('cbar')) FyPlot.colorbar($('cbar'), {});
+    $('cross-legend').innerHTML = FyPlot.legendHTML(legend);
     drawProfiles();
     drawLoops();
     drawTables();

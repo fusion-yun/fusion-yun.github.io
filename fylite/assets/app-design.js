@@ -356,7 +356,7 @@
     }
     if (m.type === 'progress') {
       $('progress').style.width = (100 * m.pass / m.total) + '%';
-      $('status').textContent = '设计迭代 ' + m.pass + ' / ' + m.total +
+      $('status').textContent = '反解迭代 ' + m.pass + ' / ' + m.total +
         '，位形误差 ' + (isFinite(m.err) ? m.err.toFixed(4) : '—');
       return;
     }
@@ -385,12 +385,12 @@
         // saying only "取第 0 趟" reads like success; the figure is then
         // the STARTING configuration and looks like it never redrew
         setBusy(false, '');
-        $('status').innerHTML = '设计结束：' + (m.history.length - 1) +
+        $('status').innerHTML = '反解结束：' + (m.history.length - 1) +
           ' 趟退火都不优于起点，图示与线圈电流仍是<strong>起点位形</strong>' +
           '（位形误差 ' + err.toFixed(4) + '）。可放宽目标，或调大迭代步长 γ。' + tail;
         $('status').className = 'status warn';
       } else {
-        setBusy(false, '设计完成：取第 ' + m.pass + ' 趟结果（位形误差 ' +
+        setBusy(false, '反解完成：取第 ' + m.pass + ' 趟结果（位形误差 ' +
                 err.toFixed(4) + '）' + tail);
       }
       return;
@@ -420,7 +420,7 @@
     for (var i = 0; i < n; i++)
       sched.push(0.10 * Math.pow(0.005 / 0.10, i / Math.max(1, n - 1)));
     beforeCurrents = readCurrents();
-    setBusy(true, '设计迭代中…');
+    setBusy(true, '反解迭代中…');
     $('progress').style.width = '0';
     worker.postMessage({
       cmd: 'design', chan: Array.from(beforeCurrents),
