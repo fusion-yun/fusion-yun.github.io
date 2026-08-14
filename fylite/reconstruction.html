@@ -31,6 +31,25 @@
 </header>
 
 <main>
+<div class="panel toolbar">
+      <h2>拟合基与求解</h2>
+      <div class="row">
+        <div class="ctl"><label>p′ 阶数 n<sub>pp</sub></label>
+          <select id="npp"><option>1</option><option selected>2</option><option>3</option></select></div>
+        <div class="ctl"><label>FF′ 阶数 n<sub>ff</sub></label>
+          <select id="nff"><option>1</option><option selected>2</option><option>3</option></select></div>
+      </div>
+      <div class="ctl"><label>解析预热轮数 <span class="val" id="v-warmup"></span></label>
+        <input type="range" id="warmup" min="10" max="150" step="5" value="40"></div>
+      <div class="ctl"><label>最大外迭代 <span class="val" id="v-maxit"></span></label>
+        <input type="range" id="maxit" min="200" max="1500" step="50" value="800"></div>
+      <div class="buttons">
+        <button id="run">运行重构</button>
+      </div>
+      <div class="bar"><div id="progress"></div></div>
+      <div class="status" id="status">正在加载计算内核…</div>
+    </div>
+
 <div class="layout">
 
   <!-- ------------------------------------------------ controls -->
@@ -73,24 +92,7 @@
       <p class="note" id="kin-note"></p>
     </div>
 
-    <div class="panel">
-      <h2>拟合基与求解</h2>
-      <div class="row">
-        <div class="ctl"><label>p′ 阶数 n<sub>pp</sub></label>
-          <select id="npp"><option>1</option><option selected>2</option><option>3</option></select></div>
-        <div class="ctl"><label>FF′ 阶数 n<sub>ff</sub></label>
-          <select id="nff"><option>1</option><option selected>2</option><option>3</option></select></div>
-      </div>
-      <div class="ctl"><label>解析预热轮数 <span class="val" id="v-warmup"></span></label>
-        <input type="range" id="warmup" min="10" max="150" step="5" value="40"></div>
-      <div class="ctl"><label>最大外迭代 <span class="val" id="v-maxit"></span></label>
-        <input type="range" id="maxit" min="200" max="1500" step="50" value="800"></div>
-      <div class="buttons">
-        <button id="run">运行重构</button>
-      </div>
-      <div class="bar"><div id="progress"></div></div>
-      <div class="status" id="status">正在加载计算内核…</div>
-    </div>
+    
   </div>
 
   <!-- ------------------------------------------------ figures -->

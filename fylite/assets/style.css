@@ -216,3 +216,17 @@ header.top nav { align-items: center; }
   width: 12px; text-align: center; font-style: normal; font-weight: 700;
   font-size: 14px; line-height: 1;
 }
+
+/* toolbar: a control panel laid out across the top of the page ------------ */
+.panel.toolbar {
+  display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 20px;
+  margin-bottom: 14px;
+}
+.panel.toolbar h2 { margin: 0 4px 4px 0; align-self: center; white-space: nowrap; }
+.panel.toolbar .ctl { flex: 1 1 170px; min-width: 150px; margin: 0; }
+.panel.toolbar .row { flex: 0 0 auto; display: flex; gap: 10px; margin: 0; }
+.panel.toolbar .row .ctl { flex: 0 0 96px; min-width: 96px; }
+.panel.toolbar .buttons { flex: 0 0 auto; margin: 0; }
+.panel.toolbar .status { flex: 1 1 240px; margin: 0; align-self: center; }
+.panel.toolbar .bar { flex: 1 1 100%; order: 99; margin-top: 0; }
+@media (max-width: 700px) { .panel.toolbar .ctl { flex-basis: 100%; } }
