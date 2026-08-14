@@ -6,6 +6,7 @@
 <title>放电设计 · fylite</title>
 <meta name="description" content="托卡马克放电位形设计：给定目标截面形状，反解极向场线圈电流，再正算平衡校验实际得到的位形。">
 <link rel="stylesheet" href="assets/style.css">
+<style>canvas.drag { touch-action: none; }</style>
 <script src="assets/theme.js"></script>
 </head>
 <body>
@@ -40,7 +41,14 @@
       <div class="ctl"><label>下三角度 δ<sub>l</sub> <span class="val" id="v-dl"></span></label>
         <input type="range" id="dl" min="-0.2" max="0.7" step="0.01" value="0.50"></div>
       <div class="ctl"><label>垂直位置 Z<sub>0</sub> [m] <span class="val" id="v-z0"></span></label>
-        <input type="range" id="z0" min="-0.15" max="0.15" step="0.005" value="0"></div>
+        <input type="range" id="z0" min="-0.30" max="0.30" step="0.005" value="0"></div>
+      <div class="check"><input type="checkbox" id="usex"><label for="usex">加 X 点场约束 (B<sub>r</sub>=B<sub>z</sub>=0)</label></div>
+      <div class="row">
+        <div class="ctl"><label>X<sub>R</sub> [m]</label><input type="number" id="xr" value="1.62" step="0.01"></div>
+        <div class="ctl"><label>X<sub>Z</sub> [m]</label><input type="number" id="xz" value="-1.00" step="0.01"></div>
+      </div>
+      <p class="note">截面图上的 <strong>O</strong>（目标磁轴）可上下拖动改 Z<sub>0</sub>；
+        勾选 X 点约束后，<strong>×</strong> 可任意拖动改 X 点位置。</p>
     </div>
 
     <div class="panel">
@@ -60,11 +68,6 @@
 
     <div class="panel">
       <h2>设计求解</h2>
-      <div class="check"><input type="checkbox" id="usex"><label for="usex">加 X 点场约束 (B<sub>r</sub>=B<sub>z</sub>=0)</label></div>
-      <div class="row">
-        <div class="ctl"><label>X<sub>R</sub> [m]</label><input type="number" id="xr" value="1.62" step="0.01"></div>
-        <div class="ctl"><label>X<sub>Z</sub> [m]</label><input type="number" id="xz" value="-1.00" step="0.01"></div>
-      </div>
       <div class="ctl"><label>迭代步长 γ <span class="val" id="v-gamma"></span></label>
         <input type="range" id="gamma" min="0.15" max="0.7" step="0.05" value="0.4"></div>
       <div class="ctl"><label>退火趟数 <span class="val" id="v-passes"></span></label>
@@ -93,10 +96,10 @@
         <label for="wide">视野含全部 PF 线圈（点线框为 65×65 计算网格盒）</label>
       </div>
       <figure>
-        <canvas id="cross" class="tall"></canvas>
+        <canvas id="cross" class="tall drag"></canvas>
         <figcaption>极向截面：紫框为 PF 线圈、灰框为真空室元件、粗线为限制器；
           细线是磁通面，红线为等离子体边界（取 ψ̄=0.995 的磁面），蓝虚线是目标边界，
-          绿虚线是参考放电的边界。
+          绿虚线是参考放电的边界。线圈旁标注的是该路 PF 通道电流 [kA·匝]。
           EAST 的 PF 线圈都在计算网格盒之外，取消勾选可放大到网格盒。</figcaption>
       </figure>
     </div>

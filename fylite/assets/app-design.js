@@ -75,9 +75,17 @@
     var tgt = P.millerBoundary(t, 121);
     var flat = new Float64Array(tgt.length * 2);
     tgt.forEach(function (p, i) { flat[2 * i] = p[0]; flat[2 * i + 1] = p[1]; });
+    var handles = [{ r: t.r0, z: t.z0, kind: '+', key: 'o' }];
+    if ($('usex').checked)
+      handles.push({ r: +$('xr').value, z: +$('xz').value, kind: 'x', key: 'x' });
+    lastHandles = handles;
     FyPlot.poloidal($('cross'), {
       machine: M, grid: grid,
       view: $('wide').checked ? FyPlot.deviceView(M) : null,
+      coilLabel: coilLabel, handles: handles,
+      legend: legendItems(),
+      legendAnchor: $('wide').checked
+        ? { r: M.grid.rmax, z: M.grid.zmax } : null,
       psi: state && state.psi, psiAxis: state && state.psiAxis,
       psiBnd: state && state.psiBnd, nLevels: 12,
       lcfs: state && state.lcfs,
@@ -149,6 +157,104 @@
     FyPlot.xy($('curr'), { series: s, xlabel: 'PF 通道', ylabel: 'kA·匝',
                            zeroLine: true });
   }
+
+  function legendItems() {
+    var col = FyPlot.palette($('cross'));
+    var items = [
+      { label: '等离子体边界', color: col.lcfs, kind: 'line', width: 2 },
+      { label: '目标边界', color: col.accent, kind: 'line', dash: [4, 4] },
+      { label: '参考放电', color: col.alt, kind: 'line', dash: [5, 3] },
+      { label: '磁轴（实际）', color: col.fg, kind: 'plus' },
+      { label: 'O 点（拖动改 Z₀）', color: col.accent, kind: 'plus' },
+    ];
+    if ($('usex').checked)
+      items.push({ label: 'X 点（可拖动）', color: col.accent, kind: 'x' });
+    return items;
+  }
+
+  /**
+   * Per-element label: the current of the PCS channel that drives it.
+   * Elements ganged onto one channel therefore repeat its value, which is
+   * what the hardware does.
+   */
+  var elemChannel = null;
+  function coilLabel(k) {
+    if (!elemChannel) {
+      elemChannel = new Array(M.coils.length).fill(-1);
+      M.channels.forEach(function (combo, c) {
+        combo.forEach(function (pair) { elemChannel[pair[0]] = c; });
+      });
+    }
+    var c = elemChannel[k];
+    if (c < 0 || !coilInputs[c]) return null;
+    var v = +coilInputs[c].value;
+    return M.coils[k].name + ' ' + (v >= 0 ? '+' : '') + v.toFixed(0);
+  }
+
+  // --- dragging the target O point and the X point on the cross-section -----
+
+  var lastHandles = [], dragging = null;
+  var cross = $('cross');
+
+  function pointerRZ(ev) {
+    var v = cross.__fyView;
+    if (!v) return null;
+    var b = cross.getBoundingClientRect();
+    return { r: v.rOf(ev.clientX - b.left), z: v.zOf(ev.clientY - b.top),
+             view: v };
+  }
+
+  /** Which handle is under the pointer, within a ~12 px grab radius. */
+  function hitHandle(ev) {
+    var v = cross.__fyView;
+    if (!v) return null;
+    var b = cross.getBoundingClientRect();
+    var px = ev.clientX - b.left, py = ev.clientY - b.top, best = null, bd = 12;
+    lastHandles.forEach(function (h) {
+      var d = Math.hypot(v.X(h.r) - px, v.Y(h.z) - py);
+      if (d < bd) { bd = d; best = h; }
+    });
+    return best;
+  }
+
+  function clamp(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
+
+  function applyDrag(ev) {
+    var pos = pointerRZ(ev);
+    if (!pos) return;
+    if (dragging.key === 'o') {
+      // vertical only: this handle IS the Z0 control
+      var el = $('z0');
+      el.value = clamp(pos.z, +el.min, +el.max).toFixed(3);
+      syncLabels();
+    } else {
+      $('xr').value = clamp(pos.r, M.grid.rmin, M.grid.rmax).toFixed(3);
+      $('xz').value = clamp(pos.z, M.grid.zmin, M.grid.zmax).toFixed(3);
+    }
+    draw();
+  }
+
+  cross.addEventListener('pointerdown', function (ev) {
+    var h = hitHandle(ev);
+    if (!h) return;
+    dragging = h;
+    cross.setPointerCapture(ev.pointerId);
+    ev.preventDefault();
+    applyDrag(ev);
+  });
+  cross.addEventListener('pointermove', function (ev) {
+    if (dragging) { applyDrag(ev); return; }
+    cross.style.cursor = hitHandle(ev)
+      ? (lastHandles.length && hitHandle(ev).key === 'o' ? 'ns-resize' : 'move')
+      : '';
+  });
+  ['pointerup', 'pointercancel'].forEach(function (t) {
+    cross.addEventListener(t, function (ev) {
+      if (!dragging) return;
+      dragging = null;
+      try { cross.releasePointerCapture(ev.pointerId); } catch (e) { /* gone */ }
+    });
+  });
 
   // --- worker plumbing ------------------------------------------------------
 
@@ -253,6 +359,10 @@
   $('apply').addEventListener('click', function () { $('solve').click(); });
   $('reset').addEventListener('click', function () { if (!busy) resetToReference(); });
   $('wide').addEventListener('change', draw);
+  ['usex', 'xr', 'xz'].forEach(function (id) {
+    $(id).addEventListener('input', draw);
+    $(id).addEventListener('change', draw);
+  });
 
   window.addEventListener('resize', function () {
     draw();

@@ -111,13 +111,30 @@
     // PF coils (only those inside the drawn box get a label)
     ctx.strokeStyle = col.coil; ctx.lineWidth = 1.2;
     ctx.fillStyle = col.coil;
-    M.coils.forEach(function (c) {
+    M.coils.forEach(function (c, k2) {
       var x0 = X(c.r - c.w / 2), y0 = Y(c.z + c.h / 2);
       if (x0 + s * c.w < X(rmin) || x0 > X(rmax)) return;
       ctx.globalAlpha = 0.25;
       ctx.fillRect(x0, y0, s * c.w, s * c.h);
       ctx.globalAlpha = 1;
       ctx.strokeRect(x0, y0, s * c.w, s * c.h);
+      if (!o.coilLabel) return;
+      var txt = o.coilLabel(k2);
+      if (!txt) return;
+      var mid = 0.5 * (rmin + rmax), outward = c.r < mid ? -1 : 1;
+      ctx.font = '10px system-ui, sans-serif';
+      ctx.textBaseline = 'middle';
+      ctx.textAlign = outward < 0 ? 'right' : 'left';
+      var lx = outward < 0 ? x0 - 4 : x0 + s * c.w + 4;
+      var ly = Y(c.z), tw = ctx.measureText(txt).width;
+      // a chip behind the text: the inboard labels share their column with
+      // the Z tick labels, and unbacked text there is unreadable
+      ctx.globalAlpha = 0.82;
+      ctx.fillStyle = col.bg;
+      ctx.fillRect(outward < 0 ? lx - tw - 2 : lx - 2, ly - 6, tw + 4, 12);
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = col.coil;
+      ctx.fillText(txt, lx, ly);
     });
 
     // flux contours
@@ -186,7 +203,36 @@
       ctx.textAlign = 'left'; ctx.textBaseline = 'top';
       ctx.fillText(o.caption, X(rmin) + 6, Y(zmax) + 6);
     }
-    if (o.legend && o.legend.length) drawLegend(ctx, o.legend, X(rmax), Y(zmax), col);
+    // draggable handles, drawn last so they sit above everything
+    if (o.handles) o.handles.forEach(function (h) {
+      drawHandle(ctx, X(h.r), Y(h.z), h.kind, h.color || col.accent, col);
+    });
+
+    if (o.legend && o.legend.length) {
+      // anchoring to the view corner collides with the outer coils' current
+      // labels in the wide device view, so callers may anchor it elsewhere
+      var la = o.legendAnchor;
+      drawLegend(ctx, o.legend, la ? X(la.r) : X(rmax), la ? Y(la.z) : Y(zmax),
+                 col);
+    }
+
+    // the page needs to turn pointer positions back into (R, Z) — publish
+    // the transform rather than have callers re-derive the letterboxing
+    canvas.__fyView = {
+      X: X, Y: Y,
+      rOf: function (px) { return rmin + (px - ox) / s; },
+      zOf: function (py) { return zmax - (py - oy) / s; },
+      rmin: rmin, rmax: rmax, zmin: zmin, zmax: zmax, scale: s,
+    };
+  }
+
+  /** A grab handle: ring plus glyph, sized to be an obvious pointer target. */
+  function drawHandle(ctx, x, y, kind, color, col) {
+    ctx.beginPath();
+    ctx.arc(x, y, 8, 0, 2 * Math.PI);
+    ctx.fillStyle = col.bg; ctx.globalAlpha = 0.75; ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = color; ctx.lineWidth = 1.6; ctx.stroke();
+    marker(ctx, x, y, color, kind === 'x' ? 'x' : '+');
   }
 
   /** Small legend box anchored to the top-right of the plot frame. */
