@@ -13,10 +13,12 @@
   var busy = false;
 
   var $ = function (id) { return document.getElementById(id); };
-  var SLIDERS = ['r0', 'a', 'kappa', 'du', 'dl', 'z0', 'ip', 'beta0', 'emp',
+  var SLIDERS = ['a', 'kappa', 'du', 'dl', 'ip', 'beta0', 'emp',
                  'enp', 'gamma', 'passes'];
-  var DIGITS = { r0: 2, a: 3, kappa: 2, du: 2, dl: 2, z0: 3, ip: 0, beta0: 2,
+  var DIGITS = { a: 3, kappa: 2, du: 2, dl: 2, ip: 0, beta0: 2,
                  emp: 2, enp: 2, gamma: 2, passes: 0 };
+  //: the O point is two numeric fields plus a drag handle, not sliders
+  var OPOINT = ['r0', 'z0'];
 
   function readTarget() {
     return { r0: +$('r0').value, a: +$('a').value, kappa: +$('kappa').value,
@@ -82,7 +84,7 @@
     FyPlot.poloidal($('cross'), {
       machine: M, grid: grid,
       view: $('wide').checked ? FyPlot.deviceView(M) : null,
-      coilLabel: coilLabel, handles: handles,
+      coilLabel: coilLabel, coilFill: coilFill, handles: handles,
 
       psi: state && state.psi, psiAxis: state && state.psiAxis,
       psiBnd: state && state.psiBnd, nLevels: 12,
@@ -95,8 +97,24 @@
     // the key lives outside the figure: in the wide device view there is no
     // spot inside the frame that does not cover a coil-current label
     $('cross-legend').innerHTML = FyPlot.legendHTML(legendItems());
+    drawCurrentScale();
     drawShapeTable(t);
     drawScalars();
+    drawProfiles();
+  }
+
+  /** p' and FF' of the analytic profile the solve ran on. */
+  function drawProfiles() {
+    var col = FyPlot.palette($('pprime'));
+    var pr = state && state.profiles;
+    function panel(id, key, ylabel) {
+      var s = pr ? [{ x: pr.x, y: pr[key], color: col.lcfs }]
+                 : [{ x: [0, 1], y: [0, 0], color: col.grid }];
+      FyPlot.xy($(id), { series: s, xlabel: 'ψ̄', ylabel: ylabel,
+                         zeroLine: true, xmin: 0, xmax: 1 });
+    }
+    panel('pprime', 'pprime', "p′ [Pa/(Wb/rad)]");
+    panel('ffprime', 'ffprime', "FF′");
   }
 
   function drawShapeTable(t) {
@@ -165,7 +183,7 @@
       { label: '目标边界', color: col.accent, kind: 'line', dash: [4, 4] },
       { label: '参考放电', color: col.alt, kind: 'line', dash: [5, 3] },
       { label: '磁轴（实际）', color: col.fg, kind: 'plus' },
-      { label: 'O 点（拖动改 Z₀）', color: col.accent, kind: 'plus' },
+      { label: 'O 点（拖动改 R₀/Z₀）', color: col.accent, kind: 'plus' },
     ];
     if ($('usex').checked)
       items.push({ label: 'X 点（可拖动）', color: col.accent, kind: 'x' });
@@ -178,17 +196,50 @@
    * what the hardware does.
    */
   var elemChannel = null;
-  function coilLabel(k) {
+  function channelOf(k) {
     if (!elemChannel) {
       elemChannel = new Array(M.coils.length).fill(-1);
       M.channels.forEach(function (combo, c) {
         combo.forEach(function (pair) { elemChannel[pair[0]] = c; });
       });
     }
-    var c = elemChannel[k];
-    if (c < 0 || !coilInputs[c]) return null;
-    var v = +coilInputs[c].value;
-    return M.coils[k].name + ' ' + (v >= 0 ? '+' : '') + v.toFixed(0);
+    return elemChannel[k];
+  }
+
+  /** The element's name, drawn centred on it. */
+  function coilLabel(k) { return M.coils[k].name; }
+
+  /** Current of the element, i.e. of the channel that drives it [kA-turns]. */
+  function coilCurrent(k) {
+    var c = channelOf(k);
+    return c < 0 || !coilInputs[c] ? 0 : +coilInputs[c].value;
+  }
+
+  function maxAbsCurrent() {
+    var m = 0;
+    for (var k = 0; k < M.coils.length; k++)
+      m = Math.max(m, Math.abs(coilCurrent(k)));
+    return m > 0 ? m : 1;
+  }
+
+  /**
+   * Fill for an element: hue from the sign, opacity from |I| relative to
+   * the largest current in the set.  The figure carries sign and relative
+   * magnitude only — the numbers stay in the table below.
+   */
+  function coilFill(k) {
+    var col = FyPlot.palette($('cross'));
+    var v = coilCurrent(k), t = Math.abs(v) / maxAbsCurrent();
+    return { color: v < 0 ? col.accent : col.lcfs,
+             alpha: 0.12 + 0.88 * Math.min(1, t) };
+  }
+
+  function drawCurrentScale() {
+    var col = FyPlot.palette($('cross'));
+    FyPlot.currentScale($('cscale'), {
+      posColor: col.lcfs, negColor: col.accent,
+      max: maxAbsCurrent().toFixed(0), unit: 'PF 通道电流 [kA·匝]',
+    });
   }
 
   // --- dragging the target O point and the X point on the cross-section -----
@@ -219,17 +270,22 @@
 
   function clamp(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
 
+  /** Write a value into a numeric field, honouring its own min/max. */
+  function setNum(id, v) {
+    var el = $(id);
+    var lo = el.min === '' ? -Infinity : +el.min;
+    var hi = el.max === '' ? Infinity : +el.max;
+    el.value = clamp(v, lo, hi).toFixed(3);
+  }
+
   function applyDrag(ev) {
     var pos = pointerRZ(ev);
     if (!pos) return;
     if (dragging.key === 'o') {
-      // vertical only: this handle IS the Z0 control
-      var el = $('z0');
-      el.value = clamp(pos.z, +el.min, +el.max).toFixed(3);
-      syncLabels();
+      // this handle IS the O-point control: it carries both coordinates
+      setNum('r0', pos.r); setNum('z0', pos.z);
     } else {
-      $('xr').value = clamp(pos.r, M.grid.rmin, M.grid.rmax).toFixed(3);
-      $('xz').value = clamp(pos.z, M.grid.zmin, M.grid.zmax).toFixed(3);
+      setNum('xr', pos.r); setNum('xz', pos.z);
     }
     draw();
   }
@@ -244,9 +300,7 @@
   });
   cross.addEventListener('pointermove', function (ev) {
     if (dragging) { applyDrag(ev); return; }
-    cross.style.cursor = hitHandle(ev)
-      ? (lastHandles.length && hitHandle(ev).key === 'o' ? 'ns-resize' : 'move')
-      : '';
+    cross.style.cursor = hitHandle(ev) ? 'move' : '';
   });
   ['pointerup', 'pointercancel'].forEach(function (t) {
     cross.addEventListener(t, function (ev) {
@@ -359,7 +413,7 @@
   $('apply').addEventListener('click', function () { $('solve').click(); });
   $('reset').addEventListener('click', function () { if (!busy) resetToReference(); });
   $('wide').addEventListener('change', draw);
-  ['usex', 'xr', 'xz'].forEach(function (id) {
+  OPOINT.concat(['usex', 'xr', 'xz']).forEach(function (id) {
     $(id).addEventListener('input', draw);
     $(id).addEventListener('change', draw);
   });

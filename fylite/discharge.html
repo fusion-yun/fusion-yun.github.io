@@ -6,7 +6,9 @@
 <title>放电设计 · fylite</title>
 <meta name="description" content="托卡马克放电位形设计：给定目标截面形状，反解极向场线圈电流，再正算平衡校验实际得到的位形。">
 <link rel="stylesheet" href="assets/style.css">
-<style>canvas.drag { touch-action: none; }</style>
+<style>canvas.drag { touch-action: none; }
+  canvas.cscale { width: 100%; height: 34px; border: none;
+                  background: transparent; margin-top: 6px; }</style>
 <script src="assets/theme.js"></script>
 </head>
 <body>
@@ -30,8 +32,14 @@
   <div>
     <div class="panel">
       <h2>目标位形</h2>
-      <div class="ctl"><label>大半径 R<sub>0</sub> [m] <span class="val" id="v-r0"></span></label>
-        <input type="range" id="r0" min="1.6" max="2.05" step="0.01" value="1.85"></div>
+      <h3>O 点位置（磁轴）[m]</h3>
+      <div class="row">
+        <div class="ctl"><label>R<sub>0</sub></label>
+          <input type="number" id="r0" min="1.55" max="2.10" step="0.005" value="1.85"></div>
+        <div class="ctl"><label>Z<sub>0</sub></label>
+          <input type="number" id="z0" min="-0.40" max="0.40" step="0.005" value="0"></div>
+      </div>
+      <h3>形状</h3>
       <div class="ctl"><label>小半径 a [m] <span class="val" id="v-a"></span></label>
         <input type="range" id="a" min="0.30" max="0.50" step="0.005" value="0.45"></div>
       <div class="ctl"><label>拉长比 κ <span class="val" id="v-kappa"></span></label>
@@ -40,15 +48,13 @@
         <input type="range" id="du" min="-0.2" max="0.7" step="0.01" value="0.40"></div>
       <div class="ctl"><label>下三角度 δ<sub>l</sub> <span class="val" id="v-dl"></span></label>
         <input type="range" id="dl" min="-0.2" max="0.7" step="0.01" value="0.50"></div>
-      <div class="ctl"><label>垂直位置 Z<sub>0</sub> [m] <span class="val" id="v-z0"></span></label>
-        <input type="range" id="z0" min="-0.30" max="0.30" step="0.005" value="0"></div>
       <div class="check"><input type="checkbox" id="usex"><label for="usex">加 X 点场约束 (B<sub>r</sub>=B<sub>z</sub>=0)</label></div>
       <div class="row">
         <div class="ctl"><label>X<sub>R</sub> [m]</label><input type="number" id="xr" value="1.62" step="0.01"></div>
         <div class="ctl"><label>X<sub>Z</sub> [m]</label><input type="number" id="xz" value="-1.00" step="0.01"></div>
       </div>
-      <p class="note">截面图上的 <strong>O</strong>（目标磁轴）可上下拖动改 Z<sub>0</sub>；
-        勾选 X 点约束后，<strong>×</strong> 可任意拖动改 X 点位置。</p>
+      <p class="note">截面图上的 <strong>O</strong> 可拖动，同时改 R<sub>0</sub> 与
+        Z<sub>0</sub>；勾选 X 点约束后，<strong>×</strong> 也可拖动改 X 点位置。</p>
     </div>
 
     <div class="panel">
@@ -97,9 +103,11 @@
       </div>
       <figure>
         <canvas id="cross" class="tall drag"></canvas>
+        <canvas id="cscale" class="cscale"></canvas>
         <div class="legend-row" id="cross-legend"></div>
-        <figcaption>极向截面：紫框为 PF 线圈、灰框为真空室元件、粗线为限制器，细线是磁通面；
-          线圈旁标注的是该路 PF 通道电流 [kA·匝]。
+        <figcaption>极向截面：矩形为 PF 线圈，其填色表示该路通道电流——红为正、蓝为负，
+          深浅正比于电流大小（具体数值见下方电流表）；灰框为真空室元件，
+          粗线为限制器，细线是磁通面。
           EAST 的 PF 线圈都在计算网格盒之外，取消勾选可放大到网格盒。</figcaption>
       </figure>
     </div>
@@ -112,6 +120,19 @@
         <table><thead><tr><th>平衡</th><th>值</th></tr></thead>
           <tbody id="scalars"></tbody></table>
       </div>
+    </div>
+
+    <div class="panel grid2">
+      <figure>
+        <canvas id="pprime" class="short"></canvas>
+        <figcaption>p′(ψ̄)：由「剖面指数」一栏设定的解析剖面形状，
+          按 I<sub>p</sub> 归一后定出绝对幅值。</figcaption>
+      </figure>
+      <figure>
+        <canvas id="ffprime" class="short"></canvas>
+        <figcaption>FF′(ψ̄)：同一解析剖面的极向电流通道。
+          β<sub>0</sub> 决定两者的配比。</figcaption>
+      </figure>
     </div>
 
     <div class="panel grid2">

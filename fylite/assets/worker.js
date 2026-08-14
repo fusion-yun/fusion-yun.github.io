@@ -78,15 +78,27 @@ function freeSolve(chan, prof, ip, opts) {
   });
 }
 
-/** Everything the plots need from a solved field. */
-function summarize(res) {
+/**
+ * Everything the plots need from a solved field.  With `prof` given, the
+ * analytic p'/FF' the solve actually ran on are recovered too: the solver
+ * normalizes j_phi = j_c * S(R, x) to Ip, so j_c follows from the converged
+ * field, and the two terms of S separate exactly into the pressure and the
+ * poloidal-current channel.
+ */
+function summarize(res, prof) {
   var poly = P.boundarySurface(grid, res.psi, res.psiAxis, res.psiBnd,
                                res.axisR, res.axisZ, M.limiter.r,
                                M.limiter.z, 181);
   var sm = P.shapeMetrics(poly);
   var flat = new Float64Array(poly.length * 2);
   poly.forEach(function (p, i) { flat[2 * i] = p[0]; flat[2 * i + 1] = p[1]; });
+  var prof2 = null;
+  if (prof) {
+    var t = P.analyticTruth(grid, res, prof, M.limiter.r, M.limiter.z, 201);
+    prof2 = { x: t.x, pprime: t.pprime, ffprime: t.ffprime, p: t.p, jc: t.jc };
+  }
   return {
+    profiles: prof2,
     psi: res.psi, psiAxis: res.psiAxis, psiBnd: res.psiBnd,
     axisR: res.axisR, axisZ: res.axisZ, ip: res.ip, residual: res.residual,
     iterations: res.iterations, bndKind: res.bndKind,
@@ -168,7 +180,7 @@ function designRun(msg) {
   var res;
   try { res = freeSolve(chan, prof, ip, msg.solve); }
   catch (e) { post({ type: 'error', where: 'design', message: e.message }); return; }
-  var best = { chan: chan, sum: summarize(res), pass: 0 };
+  var best = { chan: chan, sum: summarize(res, prof), pass: 0 };
   var history = [{ pass: 0, alpha: null, err: shapeError(best.sum.shape),
                    shape: best.sum.shape }];
   best.err = history[0].err;
@@ -186,7 +198,7 @@ function designRun(msg) {
       break;
     }
     chan = nxt; res = r2;
-    var sum = summarize(res), err = shapeError(sum.shape);
+    var sum = summarize(res, prof), err = shapeError(sum.shape);
     history.push({ pass: p + 1, alpha: msg.schedule[p], err: err,
                    shape: sum.shape, residual: res.residual });
     if (err < best.err) best = { chan: chan, sum: sum, err: err, pass: p + 1 };
@@ -388,7 +400,7 @@ self.onmessage = function (ev) {
     if (msg.cmd === 'solve') {
       var res = freeSolve(Float64Array.from(msg.chan), msg.prof, msg.ip,
                           msg.solve);
-      return post({ type: 'solve', result: summarize(res),
+      return post({ type: 'solve', result: summarize(res, msg.prof),
                     chan: Float64Array.from(msg.chan) });
     }
     if (msg.cmd === 'design') return designRun(msg);

@@ -114,27 +114,30 @@
     ctx.fillStyle = col.coil;
     M.coils.forEach(function (c, k2) {
       var x0 = X(c.r - c.w / 2), y0 = Y(c.z + c.h / 2);
-      if (x0 + s * c.w < X(rmin) || x0 > X(rmax)) return;
-      ctx.globalAlpha = 0.25;
-      ctx.fillRect(x0, y0, s * c.w, s * c.h);
+      var cw = s * c.w, ch = s * c.h;
+      if (x0 + cw < X(rmin) || x0 > X(rmax)) return;
+      // fill carries the current: hue = sign, opacity = |I| / max|I|
+      var f = o.coilFill ? o.coilFill(k2) : null;
+      ctx.fillStyle = f ? f.color : col.coil;
+      ctx.globalAlpha = f ? f.alpha : 0.25;
+      ctx.fillRect(x0, y0, cw, ch);
       ctx.globalAlpha = 1;
-      ctx.strokeRect(x0, y0, s * c.w, s * c.h);
+      ctx.strokeStyle = col.coil; ctx.lineWidth = 1.2;
+      ctx.strokeRect(x0, y0, cw, ch);
       if (!o.coilLabel) return;
       var txt = o.coilLabel(k2);
       if (!txt) return;
-      var mid = 0.5 * (rmin + rmax), outward = c.r < mid ? -1 : 1;
-      ctx.font = '10px system-ui, sans-serif';
+      // name centred ON the element; most elements are narrower than their
+      // own name, so it gets a chip and is allowed to overhang
+      ctx.font = '9px system-ui, sans-serif';
       ctx.textBaseline = 'middle';
-      ctx.textAlign = outward < 0 ? 'right' : 'left';
-      var lx = outward < 0 ? x0 - 4 : x0 + s * c.w + 4;
-      var ly = Y(c.z), tw = ctx.measureText(txt).width;
-      // a chip behind the text: the inboard labels share their column with
-      // the Z tick labels, and unbacked text there is unreadable
-      ctx.globalAlpha = 0.82;
+      ctx.textAlign = 'center';
+      var lx = x0 + cw / 2, ly = y0 + ch / 2, tw = ctx.measureText(txt).width;
+      ctx.globalAlpha = 0.72;
       ctx.fillStyle = col.bg;
-      ctx.fillRect(outward < 0 ? lx - tw - 2 : lx - 2, ly - 6, tw + 4, 12);
+      ctx.fillRect(lx - tw / 2 - 2, ly - 6, tw + 4, 12);
       ctx.globalAlpha = 1;
-      ctx.fillStyle = col.coil;
+      ctx.fillStyle = col.fg;
       ctx.fillText(txt, lx, ly);
     });
 
@@ -411,6 +414,13 @@
     if (!(ymax > ymin)) { ymin -= 1; ymax += 1; }
     var m = 0.06 * (ymax - ymin);
     ymin -= m; ymax += m;
+    // the left margin has to clear the widest tick label AND the rotated
+    // axis title; a fixed margin puts "5.6e+5" straight through the title
+    ctx.font = '11px system-ui, sans-serif';
+    var tickW = 0;
+    for (var tk = 0; tk <= 4; tk++)
+      tickW = Math.max(tickW, ctx.measureText(fmt(ymin + (ymax - ymin) * tk / 4)).width);
+    pad.l = Math.max(pad.l, Math.ceil(tickW) + (o.ylabel ? 24 : 10));
     var X = function (v) { return pad.l + (v - xmin) / (xmax - xmin) * (p.w - pad.l - pad.r); };
     var Y = function (v) { return p.h - pad.b - (v - ymin) / (ymax - ymin) * (p.h - pad.t - pad.b); };
 
@@ -544,6 +554,41 @@
     }).join('');
   }
 
+  /**
+   * Horizontal diverging scale for the coil-current colouring, drawn into
+   * its own small canvas outside the figure: the numbers are in the table,
+   * the figure only carries sign and relative magnitude, and without a key
+   * "darker" means nothing.
+   */
+  function currentScale(canvas, o) {
+    var p = prepare(canvas), ctx = p.ctx, col = palette(canvas);
+    ctx.fillStyle = col.bg; ctx.fillRect(0, 0, p.w, p.h);
+    // the unit sits to the LEFT of the bar; measure it so the bar starts
+    // clear of it instead of underneath
+    ctx.font = '10px system-ui, sans-serif';
+    var unit = o.unit || '';
+    var padL = unit ? Math.ceil(ctx.measureText(unit).width) + 12 : 30;
+    var padR = 34, y = 6, bh = 12, w = p.w - padL - padR, pad = padL;
+    if (w <= 10) return;
+    for (var i = 0; i < w; i++) {
+      var t = i / (w - 1) * 2 - 1;             // -1 .. +1
+      ctx.fillStyle = t < 0 ? o.negColor : o.posColor;
+      ctx.globalAlpha = 0.12 + 0.88 * Math.abs(t);
+      ctx.fillRect(pad + i, y, 1, bh);
+    }
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = col.grid; ctx.lineWidth = 1;
+    ctx.strokeRect(pad, y, w, bh);
+    ctx.fillStyle = col.muted;
+    ctx.font = '10px system-ui, sans-serif';
+    ctx.textBaseline = 'top'; ctx.textAlign = 'center';
+    ctx.fillText('−' + o.max, pad, y + bh + 3);
+    ctx.fillText('0', pad + w / 2, y + bh + 3);
+    ctx.fillText('+' + o.max, pad + w, y + bh + 3);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(unit, 2, y + bh / 2);
+  }
+
   /** A view box that encloses the whole machine, not just the grid. */
   function deviceView(M, margin) {
     var m = margin === undefined ? 0.1 : margin;
@@ -562,5 +607,5 @@
   root.FyPlot = { poloidal: poloidal, xy: xy, palette: palette,
                   prepare: prepare, deviceView: deviceView,
                   colorbar: colorbar, colormap: colormap,
-                  legendHTML: legendHTML };
+                  legendHTML: legendHTML, currentScale: currentScale };
 })(typeof self !== 'undefined' ? self : globalThis);
