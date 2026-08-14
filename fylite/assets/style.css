@@ -200,3 +200,19 @@ footer {
 }
 .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
 header.top nav { align-items: center; }
+
+/* legend rendered outside the plot ---------------------------------------- */
+.legend-row {
+  display: flex; flex-wrap: wrap; gap: 6px 18px;
+  margin-top: 8px; font-size: 12.5px; color: var(--fg);
+}
+.lg-item { display: inline-flex; align-items: center; gap: 6px; }
+.lg-item .sw-line { width: 22px; border-top: 2px solid; display: inline-block; }
+.lg-item .sw-box {
+  width: 9px; height: 9px; display: inline-block;
+  border: 1.5px solid; background: transparent;
+}
+.lg-item .sw-gl {
+  width: 12px; text-align: center; font-style: normal; font-weight: 700;
+  font-size: 14px; line-height: 1;
+}

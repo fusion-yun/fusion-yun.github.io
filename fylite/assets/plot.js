@@ -22,7 +22,7 @@
     var ctx = canvas.getContext('2d');
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
-    return { ctx: ctx, w: w, h: h };
+    return { ctx: ctx, w: w, h: h, dpr: dpr };
   }
 
   function palette(el) {
@@ -96,7 +96,8 @@
     ctx.fillText('R [m]', (X(rmin) + X(rmax)) / 2, p.h - 14);
 
     // normalized-flux fill, painted first so everything else sits on top
-    if (o.fill) fillNormalizedFlux(ctx, o, X, Y, rmin, rmax, zmin, zmax, col);
+    if (o.fill)
+      fillNormalizedFlux(ctx, o, X, Y, rmin, rmax, zmin, zmax, p.dpr);
 
     // vessel elements
     if (M.vessel) {
@@ -296,11 +297,16 @@
    * through an ImageData, which is both simpler and sharper than banding
    * it into filled contours.
    */
-  function fillNormalizedFlux(ctx, o, X, Y, rmin, rmax, zmin, zmax, col) {
+  function fillNormalizedFlux(ctx, o, X, Y, rmin, rmax, zmin, zmax, dpr) {
     var f = o.fill, grid = o.grid;
     if (!f.psi || !grid) return;
-    var x0 = Math.floor(X(rmin)), x1 = Math.ceil(X(rmax));
-    var y0 = Math.floor(Y(zmax)), y1 = Math.ceil(Y(zmin));
+    // putImageData is the one 2-D call that IGNORES the current transform:
+    // it addresses DEVICE pixels.  X()/Y() are CSS pixels, so on any
+    // display with devicePixelRatio > 1 (or under browser zoom) a CSS-sized
+    // block lands at 1/dpr scale in the top-left corner of where it belongs.
+    // Build and place the block in device pixels instead.
+    var x0 = Math.floor(X(rmin) * dpr), x1 = Math.ceil(X(rmax) * dpr);
+    var y0 = Math.floor(Y(zmax) * dpr), y1 = Math.ceil(Y(zmin) * dpr);
     var w = x1 - x0, h = y1 - y0;
     if (w <= 0 || h <= 0) return;
     var img = ctx.createImageData(w, h), d = img.data;
@@ -514,6 +520,30 @@
     return v.toFixed(3);
   }
 
+  /**
+   * The same legend items as `o.legend`, rendered as HTML for callers that
+   * want the key OUTSIDE the plot.  In a crowded view an in-canvas legend
+   * has nowhere to sit that does not cover something.
+   */
+  function legendHTML(items) {
+    return items.map(function (it) {
+      var sw;
+      if (it.kind === 'square')
+        sw = '<i class="sw-box" style="' +
+             (it.hollow ? 'border-color:' + it.color
+                        : 'background:' + it.color + ';border-color:' + it.color) +
+             '"></i>';
+      else if (it.kind === 'plus' || it.kind === 'x')
+        sw = '<i class="sw-gl" style="color:' + it.color + '">' +
+             (it.kind === 'plus' ? '+' : '×') + '</i>';
+      else
+        sw = '<i class="sw-line" style="border-top-color:' + it.color +
+             ';border-top-style:' + (it.dash ? 'dashed' : 'solid') +
+             ';border-top-width:' + (it.width || 2) + 'px"></i>';
+      return '<span class="lg-item">' + sw + it.label + '</span>';
+    }).join('');
+  }
+
   /** A view box that encloses the whole machine, not just the grid. */
   function deviceView(M, margin) {
     var m = margin === undefined ? 0.1 : margin;
@@ -531,5 +561,6 @@
 
   root.FyPlot = { poloidal: poloidal, xy: xy, palette: palette,
                   prepare: prepare, deviceView: deviceView,
-                  colorbar: colorbar, colormap: colormap };
+                  colorbar: colorbar, colormap: colormap,
+                  legendHTML: legendHTML };
 })(typeof self !== 'undefined' ? self : globalThis);

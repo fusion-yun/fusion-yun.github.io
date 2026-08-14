@@ -83,9 +83,7 @@
       machine: M, grid: grid,
       view: $('wide').checked ? FyPlot.deviceView(M) : null,
       coilLabel: coilLabel, handles: handles,
-      legend: legendItems(),
-      legendAnchor: $('wide').checked
-        ? { r: M.grid.rmax, z: M.grid.zmax } : null,
+
       psi: state && state.psi, psiAxis: state && state.psiAxis,
       psiBnd: state && state.psiBnd, nLevels: 12,
       lcfs: state && state.lcfs,
@@ -93,8 +91,10 @@
       reference: referenceLcfs,
       axis: state && [state.axisR, state.axisZ],
       xpoint: state && state.bndKind === 1 ? [state.xptR, state.xptZ] : null,
-      caption: state ? (state.bndKind === 1 ? 'X 点边界' : '限制器边界') : '',
     });
+    // the key lives outside the figure: in the wide device view there is no
+    // spot inside the frame that does not cover a coil-current label
+    $('cross-legend').innerHTML = FyPlot.legendHTML(legendItems());
     drawShapeTable(t);
     drawScalars();
   }
