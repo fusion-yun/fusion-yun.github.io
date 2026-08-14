@@ -7,6 +7,12 @@
 <meta name="description" content="托卡马克放电位形设计：给定目标截面形状，反解极向场线圈电流，再正算平衡校验实际得到的位形。">
 <link rel="stylesheet" href="assets/style.css">
 <style>canvas.drag { touch-action: none; }
+  /* cross-section and the coil-current table read together: the figure
+     encodes the currents as colour, the table carries the numbers */
+  .cross-row { display: grid; grid-template-columns: minmax(0, 1fr) 236px;
+               gap: 16px; align-items: start; }
+  .cross-row > div > h2 { margin-top: 0; }
+  @media (max-width: 900px) { .cross-row { grid-template-columns: 1fr; } }
   canvas.cscale { width: 100%; height: 34px; border: none;
                   background: transparent; margin-top: 6px; }</style>
 <script src="assets/theme.js"></script>
@@ -86,14 +92,6 @@
         j<sub>φ</sub> ∝ (β<sub>0</sub>R/R<sub>0</sub> + (1−β<sub>0</sub>)R<sub>0</sub>/R)(1−ψ̄<sup>e<sub>mp</sub></sup>)<sup>e<sub>np</sub></sup>，
         并按 I<sub>p</sub> 归一。</p>
     </div>
-
-    
-
-    <div class="panel">
-      <h2>PF 通道电流 [kA·匝]</h2>
-      <table class="coil-table"><tbody id="coils"></tbody></table>
-      <p class="note">可直接改数值；改完用顶部的「仅正解」按这组电流重算一次平衡。</p>
-    </div>
   </div>
 
   <!-- ------------------------------------------------ figures -->
@@ -103,15 +101,23 @@
         <input type="checkbox" id="wide" checked>
         <label for="wide">视野含全部 PF 线圈（点线框为 65×65 计算网格盒）</label>
       </div>
-      <figure>
-        <canvas id="cross" class="tall drag"></canvas>
-        <canvas id="cscale" class="cscale"></canvas>
-        <div class="legend-row" id="cross-legend"></div>
-        <figcaption>极向截面：矩形为 PF 线圈，其填色表示该路通道电流——红为正、蓝为负，
-          深浅正比于电流大小（具体数值见下方电流表）；灰框为真空室元件，
-          粗线为限制器，细线是磁通面。
-          EAST 的 PF 线圈都在计算网格盒之外，取消勾选可放大到网格盒。</figcaption>
-      </figure>
+      <div class="cross-row">
+        <figure>
+          <canvas id="cross" class="tall drag"></canvas>
+          <canvas id="cscale" class="cscale"></canvas>
+          <div class="legend-row" id="cross-legend"></div>
+        </figure>
+        <div>
+          <h2>PF 通道电流 [kA·匝]</h2>
+          <table class="coil-table"><tbody id="coils"></tbody></table>
+          <p class="note">可直接改数值；改完用顶部的「仅正解」按这组电流重算一次平衡。
+            表中每一行对应图中同名线圈的填色。</p>
+        </div>
+      </div>
+      <figcaption>极向截面：矩形为 PF 线圈，其填色表示该路通道电流——红为正、蓝为负，
+        深浅正比于电流大小（数值见右侧电流表）；灰框为真空室元件，
+        粗线为限制器，细线是磁通面。
+        EAST 的 PF 线圈都在计算网格盒之外，取消勾选可放大到网格盒。</figcaption>
     </div>
 
     <div class="panel">
