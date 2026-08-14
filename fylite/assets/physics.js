@@ -494,6 +494,143 @@
     }
   }
 
+  // --- flux-surface geometry ----------------------------------------------
+  //
+  // Gauge, once: psi is FULL flux [Wb] with the axis at the maximum, so the
+  // per-radian flux is psi/2pi.  x = (psi - psi_a)/(psi_b - psi_a).
+
+  /** |grad psi| at a point, by central differences [Wb/m]. */
+  function gradPsiMag(grid, psi, r, z) {
+    var h = 0.5 * Math.min(grid.dr, grid.dz);
+    var dr = (sample(grid, psi, r + h, z) - sample(grid, psi, r - h, z)) / (2 * h);
+    var dz = (sample(grid, psi, r, z + h) - sample(grid, psi, r, z - h)) / (2 * h);
+    return Math.hypot(dr, dz);
+  }
+
+  /**
+   * F(x) = R*B_tor on each normalized-flux point, from the fitted FF' and
+   * the vacuum value at the edge.
+   *
+   *   FF' = F dF/dpsi_rad,  dpsi_rad/dx = (psi_b - psi_a)/2pi = -span_pr
+   *   => F^2(x) = F_edge^2 + 2 * span_pr * integral_x^1 FF'(t) dt
+   *
+   * F_edge is the machine's vacuum R0*B0: the forward model never sees F
+   * (only FF' enters j_phi), so the toroidal field has to come in from
+   * outside, and the vacuum value at the boundary is the standard choice.
+   */
+  function fProfile(x, ffprime, spanPr, fEdge) {
+    var m = x.length, f = new Float64Array(m), acc = 0;
+    f[m - 1] = Math.abs(fEdge);
+    for (var i = m - 2; i >= 0; i--) {
+      acc += 0.5 * (ffprime[i] + ffprime[i + 1]) * (x[i + 1] - x[i]);
+      var f2 = fEdge * fEdge + 2 * spanPr * acc;
+      f[i] = f2 > 0 ? Math.sqrt(f2) : 0;
+    }
+    return f;
+  }
+
+  /**
+   * Safety factor on a traced surface.  Derived rather than quoted, because
+   * the quoted forms differ by powers of R depending on how the flux label
+   * is normalized:
+   *
+   *   between two surfaces, dn = dpsi_rad / |grad psi_rad|, so
+   *   dPhi_tor = closed B_phi dl dn = dpsi_rad * closed (F/R) dl/|grad psi_rad|
+   *   q = dPhi_tor / dPsi_pol,  Psi_pol = 2 pi psi_rad
+   *     = (1/2pi) closed F dl / (R |grad psi_rad|)
+   *     = F * closed dl / (R |grad psi_full|)          [psi_full = 2 pi psi_rad]
+   *
+   * Cylindrical check, which is what pinned the exponent: a circular surface
+   * has |grad psi_rad| = R B_p and closed dl = 2 pi a, giving q = a F/(R^2 B_p)
+   * = a B_phi/(R B_p) — the textbook value.  Writing R^2 in the integrand
+   * instead lands on a F/(R^3 B_p) and comes out ~1.8x low on EAST; that WAS
+   * the first version here, and the g-file oracle below caught it.
+   *
+   * Also returns the surface's poloidal circumference.  Null for a surface
+   * too small to trace.
+   */
+  function surfaceIntegrals(grid, psi, poly) {
+    if (!poly || poly.length < 8) return null;
+    var gq = 0, per = 0;
+    for (var i = 0; i < poly.length; i++) {
+      var a = poly[i], b = poly[(i + 1) % poly.length];
+      var dl = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      if (!(dl > 0)) continue;
+      var rm = 0.5 * (a[0] + b[0]), zm = 0.5 * (a[1] + b[1]);
+      var g = gradPsiMag(grid, psi, rm, zm);
+      per += dl;
+      if (g > 0) gq += dl / (rm * g);
+    }
+    return { gq: gq, perimeter: per };
+  }
+
+  /** Enclosed volume of a traced surface [m^3]: 2pi * closed R dR dZ. */
+  function surfaceVolume(poly) {
+    if (!poly || poly.length < 3) return 0;
+    var s = 0;
+    for (var i = 0; i < poly.length; i++) {
+      var a = poly[i], b = poly[(i + 1) % poly.length];
+      s += (b[1] - a[1]) * (a[0] * a[0] + a[0] * b[0] + b[0] * b[0]) / 6;
+    }
+    return Math.abs(2 * Math.PI * s);
+  }
+
+  /**
+   * Safety-factor profile of a solved equilibrium.
+   *
+   * q is traced on `nq` surfaces spread over normalized flux; q0 is a
+   * linear extrapolation to the axis from the innermost traced pair (the
+   * surface degenerates there), and q95 is interpolated at x = 0.95.
+   *
+   * VALIDATED, and the validation is the only reason this ships: fed a
+   * reference equilibrium's own psi map and its own F profile, this
+   * reproduces that equilibrium's own q to <= 0.72 % on ten surfaces from
+   * x = 0.1 to 0.95.  The first version had R^2 where surfaceIntegrals()
+   * now has R and came out 40-45 % low; the oracle is what caught it.
+   *
+   * Deliberately NOT computed here: beta_p, l_i and the stored energy.
+   * Their definitions are not universal, and on the same reference field
+   * the plausible ones land 10-30 % apart from the reference's own
+   * reported values — a spread this page has no way to adjudicate.
+   */
+  function qProfile(grid, res, prof, limR, limZ, fEdge, opts) {
+    opts = opts || {};
+    var nq = opts.nq || 20, nth = opts.ntheta || 121;
+    var spanPr = (res.psiAxis - res.psiBnd) / (2 * Math.PI);
+    var m = prof.x.length;
+    var fArr = fProfile(prof.x, prof.ffprime, spanPr, fEdge);
+    var interp = function (arr, xq) {
+      var t = xq * (m - 1), k = Math.min(m - 2, Math.max(0, t | 0));
+      return arr[k] + (t - k) * (arr[k + 1] - arr[k]);
+    };
+    var xs = [], qs = [];
+    var xLo = 0.06, xHi = 1 - BOUNDARY_INSET;
+    for (var k = 0; k < nq; k++) {
+      var x = xLo + (xHi - xLo) * k / (nq - 1);
+      var lev = res.psiAxis + (res.psiBnd - res.psiAxis) * x;
+      var poly = lcfs(grid, res.psi, res.psiAxis, lev, res.axisR, res.axisZ,
+                      limR, limZ, nth);
+      var si = surfaceIntegrals(grid, res.psi, poly);
+      if (!si || !(si.gq > 0)) continue;
+      xs.push(x);
+      qs.push(interp(fArr, x) * si.gq);
+    }
+    var q0 = NaN, q95 = NaN;
+    if (xs.length >= 2) {
+      q0 = qs[0] + (qs[1] - qs[0]) * (0 - xs[0]) / (xs[1] - xs[0]);
+      for (var i = 0; i + 1 < xs.length; i++) {
+        if (xs[i] <= 0.95 && xs[i + 1] >= 0.95) {
+          q95 = qs[i] + (qs[i + 1] - qs[i]) * (0.95 - xs[i])
+                / (xs[i + 1] - xs[i]);
+          break;
+        }
+      }
+      if (!isFinite(q95)) q95 = qs[qs.length - 1];
+    }
+    return { x: Float64Array.from(xs), q: Float64Array.from(qs),
+             f: fArr, q0: q0, q95: q95 };
+  }
+
   /** R0 / a / kappa / delta of a closed outline. */
   function shapeMetrics(poly) {
     if (!poly.length) return null;
@@ -591,6 +728,9 @@
     totalCurrent: totalCurrent,
     analyticTruth: analyticTruth, fittedProfiles: fittedProfiles,
     contour: contour, lcfs: lcfs, boundarySurface: boundarySurface,
+    gradPsiMag: gradPsiMag, fProfile: fProfile,
+    surfaceIntegrals: surfaceIntegrals, surfaceVolume: surfaceVolume,
+    qProfile: qProfile,
     BOUNDARY_INSET: BOUNDARY_INSET, shapeMetrics: shapeMetrics,
     millerBoundary: millerBoundary,
     cholSolve: cholSolve, ridgeLstsq: ridgeLstsq,

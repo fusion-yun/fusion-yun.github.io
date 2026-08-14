@@ -6,6 +6,7 @@
 <title>fylite 在线演示</title>
 <meta name="description" content="托卡马克平衡计算的两个交互演示：放电位形设计，以及由磁测量与压强约束反推平衡状态的动理学重构。打开即用，计算全部在浏览器内完成。">
 <link rel="stylesheet" href="assets/style.css">
+<script src="assets/theme.js"></script>
 <style>
   main.doc { max-width: 880px; }
   .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0 8px; }
@@ -25,7 +26,9 @@
 <header class="top">
   <h1>fylite 在线演示</h1>
   <span class="sub">托卡马克平衡计算，打开即用</span>
-  <nav><a href="https://fusion-yun.github.io/">FuYun 首页</a></nav>
+  <nav><a href="https://fusion-yun.github.io/">FuYun 首页</a>
+    <button id="theme-toggle" class="theme-toggle" type="button"></button>
+  </nav>
 </header>
 
 <main class="doc">
@@ -77,9 +80,9 @@
 
 <h3>两种数据源</h3>
 <ul>
-  <li><strong>真实测量</strong>——一炮真实放电的实测磁通环读数，可与该炮既有的
-    重构结果逐项对照。实测下，压强约束把中心压强从明显偏高拉回到与既有结果同量级，
-    同时磁测量本身的拟合也变好。</li>
+  <li><strong>真实测量</strong>——一炮真实放电的实测磁通环读数。真值无从知晓，
+    页面给出的就是这次拟合本身的结果；打开压强约束会明显改变中心压强，同时磁测量
+    本身的拟合也变好。</li>
   <li><strong>合成算例</strong>——先正算一个平衡，再采样、加噪声当作测量。因为
     真值已知，能直接量出压强约束买到了多少精度：磁通跨度的误差从两成多收到几个
     百分点，且随约束权重单调改善。</li>
@@ -92,8 +95,10 @@
   <li>拟合剖面的阶数</li>
 </ul>
 
-<p>输出包括磁面位形与最后闭合磁面、压强与电流剖面（叠合参照曲线）、
-逐道磁通环的测量与模型对比，以及磁轴位置、磁通跨度、拟合优度等标量。</p>
+<p>输出包括：填色的归一磁通截面与等离子体边界；安全因子 q(ψ̄)、压强 p(ψ̄)、
+环向电流密度的磁面平均 ⟨j<sub>φ</sub>⟩(ψ̄)，以及拟合出的 p′ 与 FF′；逐道磁通环的
+测量与模型对比；还有磁轴位置、磁通跨度、形状量、q<sub>0</sub>/q<sub>95</sub>
+与拟合优度等标量。合成算例下每一项旁边都并排给出真值。</p>
 
 <h2>适用范围</h2>
 
@@ -105,6 +110,27 @@
     不强制把边界改判为偏滤器位形。</li>
   <li><strong>这是能力演示，不是工程设计工具。</strong>请勿把这里的位形或剖面
     当作任何装置的设计依据。</li>
+</ul>
+
+<h2>方法出处</h2>
+
+<p>页面所用的都是公开方法，不是这里发明的：</p>
+
+<ul>
+  <li>平衡本身是 Grad–Shafranov 方程（Grad 与 Rubin 1958；Shafranov 1966）。</li>
+  <li>由磁测量拟合 p′/FF′ 多项式、并在等离子体电流等式约束下与平衡交替求解，
+    是 Lao 等人给出的重构框架：<br>
+    L. L. Lao, H. St. John, R. D. Stambaugh, A. G. Kellman, W. Pfeiffer,
+    <em>Reconstruction of current profile parameters and plasma shapes in
+    tokamaks</em>, Nuclear Fusion <strong>25</strong> (1985) 1611.</li>
+  <li>自由边界求解与垂直位置的稳定处理：<br>
+    S. C. Jardin, <em>Computational Methods in Plasma Physics</em>,
+    CRC Press, 2010.</li>
+  <li>规则网格上的快速直接解法：<br>
+    R. W. Hockney, <em>A fast direct solution of Poisson's equation using
+    Fourier analysis</em>, Journal of the ACM <strong>12</strong> (1965) 95.</li>
+  <li>安全因子、形状量等平衡量的定义，以及托卡马克物理的通用背景：<br>
+    J. Wesson, <em>Tokamaks</em>, 4th ed., Oxford University Press, 2011.</li>
 </ul>
 
 <h2>关于运行方式</h2>

@@ -27,16 +27,18 @@
     $('twin-panel').hidden = s !== 'twin';
     $('src-note').innerHTML = s === 'real'
       ? 'EAST #' + R.shot + ' @ ' + R.time_s.toFixed(1) + ' s 的 35 道极向磁通环读数，' +
-        '已扣除 PF 线圈贡献（csilop − rsilfc·I），单位 Wb/rad；' +
-        'I<sub>p</sub> = ' + (R.ip / 1e3).toFixed(1) + ' kA 取自 a 文件。' +
-        '对照物是 EFIT 自己对同一时刻的重构结果。'
+        '已扣除 PF 线圈贡献，单位 Wb/rad；I<sub>p</sub> = ' +
+        (R.ip / 1e3).toFixed(1) + ' kA 随该炮给出。真值未知，所有输出都是本次拟合' +
+        '自身的结果。'
       : '先用自由边界正解生成一个"真值"平衡，再把它的等离子体电流通过与拟合完全相同的' +
         '响应行前向投影到 35 道磁通环上、加噪，作为合成测量。因为真值已知，' +
         '可以直接量出动理学约束买到了多少精度。';
     $('kin-note').innerHTML = s === 'real'
-      ? '压强点取自同一炮 g 文件的 p(ψ̄) 剖面——即把 EFIT 的压强当作独立的动理学输入，' +
-        '看它如何改变仅磁重构的解。'
+      ? '压强点取自该炮随数据给出的压强剖面，当作独立于磁测量的动理学输入。'
       : '压强点取自真值剖面并按设定加噪。';
+    document.querySelectorAll('.ref-col').forEach(function (el) {
+      el.style.display = s === 'twin' ? '' : 'none';
+    });
     drawAll();
   }
 
@@ -44,35 +46,41 @@
 
   function residColor(i) {
     var col = FyPlot.palette($('cross'));
-    if (!last || !last.wts || !last.wts[i]) return col.grid;
+    if (!last || !last.wts || !last.wts[i]) return col.muted;
     var d = Math.abs(last.model[i] - last.meas[i]);
-    var scale = last.measAmp || 1;
-    var t = Math.min(1, d / (0.02 * scale));
+    var t = Math.min(1, d / (0.02 * (last.measAmp || 1)));
     return 'rgb(' + Math.round(60 + 195 * t) + ',' +
            Math.round(150 - 100 * t) + ',' + Math.round(120 - 60 * t) + ')';
   }
+  function loopUsed(i) { return !last || !last.wts ? true : !!last.wts[i]; }
 
   function drawAll() {
-    var ref = null;
-    if (last && last.truth) ref = last.truth.lcfs;
-    else if (source === 'real') {
-      ref = new Float64Array(R.boundaryR.length * 2);
-      R.boundaryR.forEach(function (r, i) {
-        ref[2 * i] = r; ref[2 * i + 1] = R.boundaryZ[i];
-      });
-    }
+    var col = FyPlot.palette($('cross'));
+    var legend = [
+      { label: '等离子体边界', color: col.lcfs, kind: 'line', width: 2 },
+      { label: '磁轴', color: col.fg, kind: 'plus' },
+      { label: '磁通环', color: col.muted, kind: 'square' },
+      { label: '未参与拟合', color: col.muted, kind: 'square', hollow: true },
+    ];
+    if (last && last.truth)
+      legend.splice(1, 0, { label: '真值边界', color: col.alt, kind: 'line',
+                            dash: [5, 3], width: 2 });
     FyPlot.poloidal($('cross'), {
       machine: M, grid: grid,
       psi: last && last.result.psi,
       psiAxis: last && last.result.psiAxis,
       psiBnd: last && last.result.psiBnd,
+      fill: last ? { psi: last.result.psi, psiAxis: last.result.psiAxis,
+                     psiBnd: last.result.psiBnd, max: 1 } : null,
       nLevels: 12,
       lcfs: last && last.result.lcfs,
-      reference: ref,
+      reference: last && last.truth ? last.truth.lcfs : null,
       axis: last && [last.result.axisR, last.result.axisZ],
-      loops: M.loops, loopColor: residColor,
+      loops: M.loops, loopColor: residColor, loopUsed: loopUsed,
+      legend: legend,
       caption: last ? (last.result.bndKind === 1 ? 'X 点边界' : '限制器边界') : '',
     });
+    if ($('cbar')) FyPlot.colorbar($('cbar'), {});
     drawProfiles();
     drawLoops();
     drawTables();
@@ -81,42 +89,35 @@
   function drawProfiles() {
     var col = FyPlot.palette($('pres'));
     var fit = last && last.profiles, tru = last && last.truthProfiles;
-    function panel(id, key, ylabel, refSeries) {
+    function panel(id, xs, ys, txs, tys, ylabel, xmax) {
       var s = [];
-      if (fit) s.push({ x: fit.x, y: fit[key], color: col.lcfs, label: '重构' });
-      if (tru) s.push({ x: tru.x, y: tru[key], color: col.alt, dash: [5, 3],
+      if (ys) s.push({ x: xs, y: ys, color: col.lcfs, label: '重构' });
+      if (tys) s.push({ x: txs, y: tys, color: col.alt, dash: [5, 3],
                         label: '真值' });
-      if (refSeries) s.push(refSeries);
       if (!s.length) s.push({ x: [0, 1], y: [0, 0], color: col.grid });
       FyPlot.xy($(id), { series: s, xlabel: 'ψ̄', ylabel: ylabel,
-                         zeroLine: true, xmin: 0, xmax: 1 });
+                         zeroLine: true, xmin: 0, xmax: xmax || 1 });
     }
-    var efitX = [], n = R.pres.length;
-    for (var i = 0; i < n; i++) efitX.push(i / (n - 1));
-    var showEfit = source === 'real';
-    // EFIT's psi runs the other way (its axis is the minimum), so its
-    // dp/dpsi and FF' carry the opposite sign from fylite's gauge.  p
-    // itself is gauge-free.  Flip the derivatives so the curves are
-    // comparable rather than mirror images.
-    var efitPp = R.pprime.map(function (v) { return -v; });
-    var efitFf = R.ffprim.map(function (v) { return -v; });
-    panel('pres', 'p', 'p [Pa]', showEfit
-      ? { x: efitX, y: R.pres, color: col.accent, dash: [2, 3], label: 'EFIT' } : null);
-    panel('pp', 'pprime', "p′", showEfit
-      ? { x: efitX, y: efitPp, color: col.accent, dash: [2, 3], label: 'EFIT' } : null);
-    panel('ffp', 'ffprime', "FF′", showEfit
-      ? { x: efitX, y: efitFf, color: col.accent, dash: [2, 3], label: 'EFIT' } : null);
-    // kinetic constraint points, drawn on the pressure panel
-    if (last && last.kineticX && last.kineticX.length) {
-      var s = [{ x: fit.x, y: fit.p, color: col.lcfs, label: '重构' }];
-      if (tru) s.push({ x: tru.x, y: tru.p, color: col.alt, dash: [5, 3], label: '真值' });
-      if (showEfit) s.push({ x: efitX, y: R.pres, color: col.accent, dash: [2, 3],
-                            label: 'EFIT' });
-      s.push({ x: last.kineticX, y: last.kineticP, color: col.warn || '#b60',
-               kind: 'dots', radius: 3.5, label: '约束点' });
-      FyPlot.xy($('pres'), { series: s, xlabel: 'ψ̄', ylabel: 'p [Pa]',
-                             zeroLine: true, xmin: 0, xmax: 1 });
-    }
+    var q = last && last.q, tq = last && last.truthQ;
+    panel('qprof', q && q.x, q && q.q, tq && tq.x, tq && tq.q, 'q');
+    var j = last && last.jphi, tj = last && last.truthJphi;
+    panel('jphi', j && j.x, j && j.j, tj && tj.x, tj && tj.j, '⟨j_φ⟩ [A/m²]');
+    panel('pp', fit && fit.x, fit && fit.pprime, tru && tru.x,
+          tru && tru.pprime, "p′");
+    panel('ffp', fit && fit.x, fit && fit.ffprime, tru && tru.x,
+          tru && tru.ffprime, "FF′");
+
+    // pressure panel also carries the kinetic constraint points
+    var sp = [];
+    if (fit) sp.push({ x: fit.x, y: fit.p, color: col.lcfs, label: '重构' });
+    if (tru) sp.push({ x: tru.x, y: tru.p, color: col.alt, dash: [5, 3],
+                       label: '真值' });
+    if (last && last.kineticX && last.kineticX.length)
+      sp.push({ x: last.kineticX, y: last.kineticP, color: col.warn || '#b60',
+                kind: 'dots', radius: 3.5, label: '约束点' });
+    if (!sp.length) sp.push({ x: [0, 1], y: [0, 0], color: col.grid });
+    FyPlot.xy($('pres'), { series: sp, xlabel: 'ψ̄', ylabel: 'p [Pa]',
+                           zeroLine: true, xmin: 0, xmax: 1 });
   }
 
   function drawLoops() {
@@ -151,37 +152,30 @@
 
   function row(name, a, b) {
     return '<tr><td>' + name + '</td><td class="num">' + a +
-           '</td><td class="num">' + (b === undefined ? '—' : b) + '</td></tr>';
+           '</td><td class="num ref-col"' +
+           (source === 'twin' ? '' : ' style="display:none"') + '>' +
+           (b === undefined || b === null ? '—' : b) + '</td></tr>';
   }
 
   function drawTables() {
     if (!last) { $('scalars').innerHTML = ''; $('coefs').innerHTML = ''; return; }
-    var r = last.result, t = last.truth;
-    var span = (r.psiAxis - r.psiBnd) / (2 * Math.PI);
-    var refAxisR, refAxisZ, refSpan, refR0, refA, refK;
-    if (t) {
-      refAxisR = t.axisR.toFixed(3); refAxisZ = t.axisZ.toFixed(3);
-      refSpan = ((t.psiAxis - t.psiBnd) / (2 * Math.PI)).toFixed(4);
-      refR0 = t.shape.r0.toFixed(3); refA = t.shape.a.toFixed(3);
-      refK = t.shape.kappa.toFixed(3);
-    } else {
-      refAxisR = R.rmaxis.toFixed(3); refAxisZ = R.zmaxis.toFixed(3);
-      refSpan = (-(R.simag - R.sibry)).toFixed(4);
-    }
+    var r = last.result, t = last.truth, tq = last.truthQ, q = last.q;
+    var span = function (o) { return ((o.psiAxis - o.psiBnd) / (2 * Math.PI)).toFixed(4); };
+    var f2 = function (v, d) { return isFinite(v) ? v.toFixed(d) : '—'; };
     var html = '';
-    html += row('磁轴 R [m]', r.axisR.toFixed(3), refAxisR);
-    html += row('磁轴 Z [m]', r.axisZ.toFixed(3), refAxisZ);
-    html += row('磁通跨度 [Wb/rad]', span.toFixed(4), refSpan);
-    html += row('R₀ [m]', r.shape.r0.toFixed(3), refR0);
-    html += row('a [m]', r.shape.a.toFixed(3), refA);
-    html += row('κ', r.shape.kappa.toFixed(3), refK);
-    html += row('I<sub>p</sub> [kA]', (r.ip / 1e3).toFixed(1),
-                (last.ipFitted / 1e3).toFixed(1));
-    html += row('p(0) [Pa]', last.profiles.p[0].toFixed(0),
-                t && last.truthProfiles ? last.truthProfiles.p[0].toFixed(0)
-                  : (source === 'real' ? R.pres[0].toFixed(0) : undefined));
-    html += row('加权 χ² / 通道数', last.chi2.toExponential(2) + ' / ' + last.nfit,
-                source === 'real' ? R.chisq.toFixed(2) : undefined);
+    html += row('磁轴 R [m]', f2(r.axisR, 3), t && f2(t.axisR, 3));
+    html += row('磁轴 Z [m]', f2(r.axisZ, 3), t && f2(t.axisZ, 3));
+    html += row('磁通跨度 [Wb/rad]', span(r), t && span(t));
+    html += row('R₀ [m]', f2(r.shape.r0, 3), t && f2(t.shape.r0, 3));
+    html += row('a [m]', f2(r.shape.a, 3), t && f2(t.shape.a, 3));
+    html += row('κ', f2(r.shape.kappa, 3), t && f2(t.shape.kappa, 3));
+    html += row('q<sub>0</sub>', f2(q && q.q0, 3), tq && f2(tq.q0, 3));
+    html += row('q<sub>95</sub>', f2(q && q.q95, 3), tq && f2(tq.q95, 3));
+    html += row('I<sub>p</sub> [kA]', f2(r.ip / 1e3, 1),
+                t && f2(t.ip / 1e3, 1));
+    html += row('p(0) [Pa]', f2(last.profiles.p[0], 0),
+                last.truthProfiles && f2(last.truthProfiles.p[0], 0));
+    html += row('加权 χ² / 通道数', last.chi2.toExponential(2) + ' / ' + last.nfit);
     html += row('磁通环残差 RMS [Wb/rad]', rmsResidual().toExponential(2));
     html += row('外迭代 / 残差', r.iterations + ' / ' + r.residual.toExponential(2));
     html += row('边界类型', r.bndKind === 1 ? 'X 点' : '限制器');
@@ -193,11 +187,8 @@
       return '<tr><td>' + lbl + '</td><td class="num">' + c.toExponential(3) +
              '</td></tr>';
     }).join('');
-    $('fitnote').innerHTML = '第二列的 I<sub>p</sub> 是把拟合系数重新积分得到的' +
-      '等离子体总电流，用来核对 I<sub>p</sub> 等式约束确实闭合。' +
-      (source === 'real'
-        ? 'χ² 的参照值是 EFIT 对同一炮报告的值，二者权重定义不同，仅供量级参考。'
-        : '合成孪生下参照列取真值。');
+    $('fitnote').innerHTML = 'q 由拟合的 FF′ 定出 F=R·B<sub>φ</sub> 后逐面环积分得到，' +
+      '边缘取装置的真空 R₀B₀；q<sub>0</sub> 是向磁轴的线性外推（磁面本身在那里退化）。';
   }
 
   // --- worker ---------------------------------------------------------------

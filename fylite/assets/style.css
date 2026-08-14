@@ -16,8 +16,11 @@
   --warn: #b4600a;
 }
 
+/* Dark palette.  Applied both by the system preference (when the user has
+   not chosen) and by an explicit data-theme, so the toggle wins in both
+   directions: :root[data-theme="light"] must never inherit these. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #14171c;
     --panel: #1b1f26;
     --fg: #e6e9ee;
@@ -32,6 +35,22 @@
     --flux: #5d6a7d;
     --warn: #e0a458;
   }
+}
+
+:root[data-theme="dark"] {
+  --bg: #14171c;
+  --panel: #1b1f26;
+  --fg: #e6e9ee;
+  --muted: #8d97a5;
+  --grid: #2c323b;
+  --line: #262c34;
+  --accent: #58a6ff;
+  --lcfs: #ff7b6b;
+  --alt: #35c9ac;
+  --coil: #c08cf0;
+  --wall: #97a2b1;
+  --flux: #5d6a7d;
+  --warn: #e0a458;
 }
 
 * { box-sizing: border-box; }
@@ -172,3 +191,12 @@ footer {
   border-top: 1px solid var(--line); margin-top: 30px; padding: 16px 20px;
   color: var(--muted); font-size: 12.5px;
 }
+
+/* theme toggle ------------------------------------------------------------ */
+.theme-toggle {
+  border: 1px solid var(--grid); background: transparent; color: var(--muted);
+  border-radius: 6px; padding: 4px 9px; font-size: 13px; line-height: 1.3;
+  cursor: pointer; font-weight: 500;
+}
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+header.top nav { align-items: center; }

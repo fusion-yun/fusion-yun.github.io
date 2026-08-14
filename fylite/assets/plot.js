@@ -95,6 +95,9 @@
     ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     ctx.fillText('R [m]', (X(rmin) + X(rmax)) / 2, p.h - 14);
 
+    // normalized-flux fill, painted first so everything else sits on top
+    if (o.fill) fillNormalizedFlux(ctx, o, X, Y, rmin, rmax, zmin, zmax, col);
+
     // vessel elements
     if (M.vessel) {
       ctx.fillStyle = col.wall;
@@ -161,25 +164,143 @@
       ctx.strokeStyle = col.lcfs; ctx.lineWidth = 2;
       polyline(ctx, o.lcfs, X, Y, true);
     }
-    // flux loops
+    // flux loops, drawn as squares: filled = fitted, hollow = weight zero
     if (o.loops) {
+      ctx.lineWidth = 1.2;
       o.loops.forEach(function (l, i) {
-        ctx.beginPath();
-        ctx.arc(X(l[0]), Y(l[1]), 3, 0, 2 * Math.PI);
-        ctx.fillStyle = o.loopColor ? o.loopColor(i) : col.muted;
-        ctx.fill();
+        var s2 = 3, cx = X(l[0]), cy = Y(l[1]);
+        var c = o.loopColor ? o.loopColor(i) : col.muted;
+        var used = o.loopUsed ? o.loopUsed(i) : true;
+        if (used) { ctx.fillStyle = c; ctx.fillRect(cx - s2, cy - s2, 2 * s2, 2 * s2); }
+        else { ctx.strokeStyle = c; ctx.strokeRect(cx - s2, cy - s2, 2 * s2, 2 * s2); }
       });
     }
     // axis + X point
-    if (o.axis) marker(ctx, X(o.axis[0]), Y(o.axis[1]), col.lcfs, '+');
+    if (o.axis) marker(ctx, X(o.axis[0]), Y(o.axis[1]), col.fg, '+');
     if (o.xpoint && isFinite(o.xpoint[0]))
-      marker(ctx, X(o.xpoint[0]), Y(o.xpoint[1]), col.accent, 'x');
+      marker(ctx, X(o.xpoint[0]), Y(o.xpoint[1]), col.lcfs, 'x');
 
     if (o.caption) {
       ctx.fillStyle = col.muted;
+      ctx.font = '11px system-ui, sans-serif';
       ctx.textAlign = 'left'; ctx.textBaseline = 'top';
       ctx.fillText(o.caption, X(rmin) + 6, Y(zmax) + 6);
     }
+    if (o.legend && o.legend.length) drawLegend(ctx, o.legend, X(rmax), Y(zmax), col);
+  }
+
+  /** Small legend box anchored to the top-right of the plot frame. */
+  function drawLegend(ctx, items, right, top, col) {
+    ctx.font = '11px system-ui, sans-serif';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    var wLab = 0;
+    items.forEach(function (it) {
+      wLab = Math.max(wLab, ctx.measureText(it.label).width);
+    });
+    var pad = 6, sw = 20, bw = pad * 2 + sw + 6 + wLab, bh = items.length * 15 + 8;
+    var bx = right - bw - 6, by = top + 6;
+    ctx.globalAlpha = 0.88;
+    ctx.fillStyle = col.bg;
+    ctx.fillRect(bx, by, bw, bh);
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = col.grid; ctx.lineWidth = 1;
+    ctx.strokeRect(bx, by, bw, bh);
+    var y = by + 11;
+    items.forEach(function (it) {
+      var x = bx + pad;
+      ctx.strokeStyle = it.color; ctx.fillStyle = it.color;
+      ctx.lineWidth = it.width || 2;
+      if (it.kind === 'square') {
+        if (it.hollow) ctx.strokeRect(x + sw / 2 - 3, y - 3, 6, 6);
+        else ctx.fillRect(x + sw / 2 - 3, y - 3, 6, 6);
+      } else if (it.kind === 'plus' || it.kind === 'x') {
+        marker(ctx, x + sw / 2, y, it.color, it.kind === 'plus' ? '+' : 'x');
+      } else {
+        ctx.setLineDash(it.dash || []);
+        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + sw, y); ctx.stroke();
+        ctx.setLineDash([]);
+      }
+      ctx.fillStyle = col.fg;
+      ctx.fillText(it.label, x + sw + 6, y);
+      y += 15;
+    });
+  }
+
+  /**
+   * Perceptually ordered colormap for normalized flux, sampled from the
+   * viridis control points.  t = 0 at the axis, 1 at the boundary.
+   */
+  var VIRIDIS = [
+    [68, 1, 84], [72, 40, 120], [62, 74, 137], [49, 104, 142],
+    [38, 130, 142], [31, 158, 137], [53, 183, 121], [109, 205, 89],
+    [180, 222, 44], [253, 231, 37],
+  ];
+  function colormap(t) {
+    t = t < 0 ? 0 : (t > 1 ? 1 : t);
+    var u = t * (VIRIDIS.length - 1), i = Math.min(VIRIDIS.length - 2, u | 0);
+    var f = u - i, a = VIRIDIS[i], b = VIRIDIS[i + 1];
+    return [a[0] + f * (b[0] - a[0]), a[1] + f * (b[1] - a[1]),
+            a[2] + f * (b[2] - a[2])];
+  }
+
+  /**
+   * Paint normalized flux over the vessel interior.  `o.fill` carries
+   * {psi, psiAxis, psiBnd, max} — `max` is how far past the boundary to
+   * keep painting (1 = stop at the boundary).  Rendered per screen pixel
+   * through an ImageData, which is both simpler and sharper than banding
+   * it into filled contours.
+   */
+  function fillNormalizedFlux(ctx, o, X, Y, rmin, rmax, zmin, zmax, col) {
+    var f = o.fill, grid = o.grid;
+    if (!f.psi || !grid) return;
+    var x0 = Math.floor(X(rmin)), x1 = Math.ceil(X(rmax));
+    var y0 = Math.floor(Y(zmax)), y1 = Math.ceil(Y(zmin));
+    var w = x1 - x0, h = y1 - y0;
+    if (w <= 0 || h <= 0) return;
+    var img = ctx.createImageData(w, h), d = img.data;
+    var span = f.psiBnd - f.psiAxis, top = f.max === undefined ? 1 : f.max;
+    var lr = o.machine.limiter.r, lz = o.machine.limiter.z;
+    for (var py = 0; py < h; py++) {
+      var z = zmax - (py + 0.5) * (zmax - zmin) / h;
+      for (var px = 0; px < w; px++) {
+        var r = rmin + (px + 0.5) * (rmax - rmin) / w;
+        var k = 4 * (py * w + px);
+        if (!FyPhys.insidePolygon(r, z, lr, lz)) continue;
+        var v = FyPhys.sample(grid, f.psi, r, z);
+        if (!isFinite(v)) continue;
+        var t = (v - f.psiAxis) / span;
+        if (t < 0 || t > top) continue;
+        var c = colormap(t / top);
+        d[k] = c[0]; d[k + 1] = c[1]; d[k + 2] = c[2];
+        d[k + 3] = 205;
+      }
+    }
+    ctx.putImageData(img, x0, y0);
+  }
+
+  /** Vertical colour scale for the normalized-flux fill. */
+  function colorbar(canvas, o) {
+    var p = prepare(canvas), ctx = p.ctx, col = palette(canvas);
+    ctx.fillStyle = col.bg; ctx.fillRect(0, 0, p.w, p.h);
+    var barW = 16, top = 12, bot = p.h - 18, x = 6;
+    for (var y = top; y < bot; y++) {
+      var t = 1 - (y - top) / (bot - top);      // 0 at the BOTTOM = axis
+      var c = colormap(t);
+      ctx.fillStyle = 'rgb(' + (c[0] | 0) + ',' + (c[1] | 0) + ',' + (c[2] | 0) + ')';
+      ctx.fillRect(x, y, barW, 1);
+    }
+    ctx.strokeStyle = col.grid; ctx.lineWidth = 1;
+    ctx.strokeRect(x, top, barW, bot - top);
+    ctx.fillStyle = col.muted;
+    ctx.font = '10px system-ui, sans-serif';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    for (var k = 0; k <= 5; k++) {
+      var v = k / 5, yy = bot - v * (bot - top);
+      ctx.fillText(v.toFixed(1), x + barW + 4, yy);
+    }
+    ctx.textBaseline = 'bottom'; ctx.textAlign = 'left';
+    ctx.fillText('ψ̄', x, top - 2);
+    void o;
   }
 
   function drawSegs(ctx, segs, X, Y) {
@@ -363,5 +484,6 @@
   }
 
   root.FyPlot = { poloidal: poloidal, xy: xy, palette: palette,
-                  prepare: prepare, deviceView: deviceView };
+                  prepare: prepare, deviceView: deviceView,
+                  colorbar: colorbar, colormap: colormap };
 })(typeof self !== 'undefined' ? self : globalThis);

@@ -6,6 +6,15 @@
 <title>动理学平衡重构 · fylite</title>
 <meta name="description" content="托卡马克动理学平衡重构：由极向磁通环测量加压强约束反推平衡状态，可跑真实放电数据或真值已知的合成算例。">
 <link rel="stylesheet" href="assets/style.css">
+<style>
+  .cross-row { display: grid; grid-template-columns: minmax(0,1fr) 52px minmax(280px,1fr);
+               gap: 10px; align-items: start; }
+  @media (max-width: 1100px) { .cross-row { grid-template-columns: 1fr; }
+                               canvas.cbar { display: none; } }
+  canvas.cbar { width: 52px; height: 560px; border: none; background: transparent; }
+  figcaption { margin-top: 8px; }
+</style>
+<script src="assets/theme.js"></script>
 </head>
 <body>
 
@@ -16,6 +25,8 @@
     <a href="index.html">fylite 首页</a>
     <a href="discharge.html">放电设计</a>
     <a href="https://fusion-yun.github.io/">FuYun</a>
+  
+    <button id="theme-toggle" class="theme-toggle" type="button"></button>
   </nav>
 </header>
 
@@ -84,29 +95,44 @@
 
   <!-- ------------------------------------------------ figures -->
   <div>
-    <div class="panel grid2">
-      <figure>
-        <canvas id="cross" class="tall"></canvas>
-        <figcaption>重构磁面（细线）与等离子体边界（红，取 ψ̄=0.995 的磁面，
-          以避开 X 点处的奇异）。绿虚线是参照物：
-          真实测量下为 EFIT 自身给出的边界，合成孪生下为真值边界。
-          圆点是 35 个极向磁通环，按拟合残差着色（灰色＝权重为零，未参与拟合）。</figcaption>
-      </figure>
-      <div>
-        <table><thead><tr><th>标量</th><th>重构</th><th>参照</th></tr></thead>
-          <tbody id="scalars"></tbody></table>
-        <h3>拟合系数（约化基 x<sup>k</sup>−x<sup>n</sup>）</h3>
-        <table><thead><tr><th>通道</th><th>系数</th></tr></thead>
-          <tbody id="coefs"></tbody></table>
-        <p class="note" id="fitnote"></p>
+    <div class="panel">
+      <div class="cross-row">
+        <figure>
+          <canvas id="cross" class="tall"></canvas>
+        </figure>
+        <canvas id="cbar" class="cbar"></canvas>
+        <div>
+          <h2>重构结果</h2>
+          <table><thead><tr><th>标量</th><th>重构</th><th class="ref-col">真值</th></tr></thead>
+            <tbody id="scalars"></tbody></table>
+          <h3>拟合系数（约化基 x<sup>k</sup>−x<sup>n</sup>）</h3>
+          <table><thead><tr><th>通道</th><th>系数</th></tr></thead>
+            <tbody id="coefs"></tbody></table>
+          <p class="note" id="fitnote"></p>
+        </div>
       </div>
+      <figcaption>极向截面：填色为归一磁通 ψ̄（0 在磁轴、1 在边界），细线为磁面，
+        红线是等离子体边界（取 ψ̄=0.995 的磁面，以避开 X 点处的奇异）。
+        方块是 35 个极向磁通环，按拟合残差着色，空心表示权重为零、未参与拟合。</figcaption>
     </div>
 
     <div class="panel grid3">
       <figure>
-        <canvas id="pres" class="short"></canvas>
-        <figcaption>压强剖面 p(ψ̄)：重构值由拟合的 p′ 沿归一磁通积分得到。</figcaption>
+        <canvas id="qprof" class="short"></canvas>
+        <figcaption>安全因子 q(ψ̄)。由拟合的 FF′ 沿归一磁通积出 F=R·B<sub>φ</sub>，
+          再在逐个磁面上作环积分。</figcaption>
       </figure>
+      <figure>
+        <canvas id="pres" class="short"></canvas>
+        <figcaption>压强 p(ψ̄)，由拟合的 p′ 沿归一磁通积分得到。</figcaption>
+      </figure>
+      <figure>
+        <canvas id="jphi" class="short"></canvas>
+        <figcaption>环向电流密度的磁面平均 ⟨j<sub>φ</sub>⟩(ψ̄)。</figcaption>
+      </figure>
+    </div>
+
+    <div class="panel grid3">
       <figure>
         <canvas id="pp" class="short"></canvas>
         <figcaption>p′(ψ̄)，单位 Pa/(Wb/rad)。</figcaption>
@@ -115,12 +141,9 @@
         <canvas id="ffp" class="short"></canvas>
         <figcaption>FF′(ψ̄)。</figcaption>
       </figure>
-    </div>
-
-    <div class="panel">
       <figure>
         <canvas id="loops" class="short"></canvas>
-        <figcaption>35 道磁通环：测量值与前向模型值（由拟合系数重算的等离子体电流分布回算）。</figcaption>
+        <figcaption>35 道磁通环：测量值与前向模型值。</figcaption>
       </figure>
     </div>
   </div>

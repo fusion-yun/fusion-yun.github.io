@@ -56,7 +56,10 @@ function init() {
     loopsM = P.loopResponse(fy, grid, M.loops);
     post({ type: 'ready', abi: fy.abi,
            timing: { load: tG - t0, coils: tL - tG, loops: Date.now() - tL },
-           grid: { r: grid.r, z: grid.z, nr: grid.nr, nz: grid.nz } });
+           // dr/dz travel too: FyPhys.sample() divides by them, and without
+           // them every page-side field lookup silently returns NaN
+           grid: { r: grid.r, z: grid.z, nr: grid.nr, nz: grid.nz,
+                   dr: grid.dr, dz: grid.dz } });
   }).catch(function (e) {
     post({ type: 'error', where: 'init', message: String(e && e.message || e) });
   });
@@ -205,6 +208,37 @@ function flatten(poly) {
 
 var TWO_PI = 2 * Math.PI, MEAS_SCALE = 1 / (2 * Math.PI);
 
+/** Vacuum R0*B0 of the machine: q needs a toroidal field, and the forward
+ *  model never sees one (only FF' enters j_phi). */
+var F_EDGE = M.reference.bcentr * M.reference.rcentr;
+
+/**
+ * <j_phi>(x): the fitted cell currents binned onto normalized flux and
+ * divided by the bin's cross-sectional area, i.e. the flux-surface-averaged
+ * toroidal current density [A/m^2].
+ */
+function currentProfile(grid, res, cur, nbin) {
+  nbin = nbin || 24;
+  var nz = grid.nz, mi = grid.nr - 2, mj = nz - 2;
+  var da = grid.dr * grid.dz, span = res.psiBnd - res.psiAxis;
+  var sum = new Float64Array(nbin), area = new Float64Array(nbin);
+  for (var i = 0; i < mi; i++)
+    for (var j = 0; j < mj; j++) {
+      var c = cur[i * mj + j];
+      if (c === 0) continue;
+      var x = (res.psi[(i + 1) * nz + (j + 1)] - res.psiAxis) / span;
+      x = x < 0 ? 0 : (x > 1 ? 0.999999 : x);
+      var b = Math.min(nbin - 1, (x * nbin) | 0);
+      sum[b] += c; area[b] += da;
+    }
+  var xs = new Float64Array(nbin), js = new Float64Array(nbin);
+  for (var b2 = 0; b2 < nbin; b2++) {
+    xs[b2] = (b2 + 0.5) / nbin;
+    js[b2] = area[b2] > 0 ? sum[b2] / area[b2] : NaN;
+  }
+  return { x: xs, j: js };
+}
+
 /** Deterministic normal deviates, so a given seed reproduces a run. */
 function rng(seed) {
   var s = seed >>> 0 || 1;
@@ -221,18 +255,21 @@ function reconRun(msg) {
   var chan = Float64Array.from(msg.chan);
   var psiExt = psiExtOf(chan);
   var out = { type: 'recon', source: msg.source };
-  var meas, wts, ip, truth = null, truthProf = null;
+  var meas, wts, ip, truth = null, truthProf = null, truthRes = null,
+      truthCur = null;
 
   if (msg.source === 'twin') {
     // 1. truth: a forward free-boundary solve
     var t;
     try { t = freeSolve(chan, msg.prof, msg.ip, msg.solve); }
     catch (e) { post({ type: 'error', where: 'truth', message: e.message }); return; }
+    truthRes = t;
     truth = summarize(t);
     // 2. the current distribution the solver actually built, and the
     //    profiles it implies (recovered from the converged field)
     truthProf = P.analyticTruth(grid, t, msg.prof, M.limiter.r, M.limiter.z, 201);
     var cur = P.fittedCurrentAnalytic(grid, t, msg.prof, truthProf);
+    truthCur = cur;
     // 3. synthetic loop readings through the SAME rows the fit uses
     meas = P.loopModel(loopsM, cur, grid, MEAS_SCALE);
     var amp = 0;
@@ -327,10 +364,16 @@ function reconRun(msg) {
   out.ipFitted = P.totalCurrent(fitCur);
   out.profiles = P.fittedProfiles(res.coefs, msg.npp, msg.nff,
                                   res.psiAxis, res.psiBnd, 201);
+  out.q = P.qProfile(grid, res, out.profiles, M.limiter.r, M.limiter.z,
+                     F_EDGE, { nq: 20, ntheta: 121 });
+  out.jphi = currentProfile(grid, res, fitCur);
   if (truth) {
     out.truth = truth;
     out.truthProfiles = { x: truthProf.x, pprime: truthProf.pprime,
                           ffprime: truthProf.ffprime, p: truthProf.p };
+    out.truthQ = P.qProfile(grid, truthRes, out.truthProfiles, M.limiter.r,
+                            M.limiter.z, F_EDGE, { nq: 20, ntheta: 121 });
+    out.truthJphi = currentProfile(grid, truthRes, truthCur);
   }
   post(out);
 }
