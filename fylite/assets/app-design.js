@@ -49,15 +49,11 @@
       var td1 = document.createElement('td');
       td1.textContent = el.name + (combo.length > 1 ? '+' : '');
       var td2 = document.createElement('td');
-      td2.className = 'num';
-      td2.style.color = 'var(--muted)';
-      td2.textContent = 'R=' + el.r.toFixed(2) + ' Z=' + el.z.toFixed(2);
-      var td3 = document.createElement('td');
       var inp = document.createElement('input');
       inp.type = 'number'; inp.step = '10';
-      td3.appendChild(inp);
+      td2.appendChild(inp);
       coilInputs.push(inp);
-      tr.append(td1, td2, td3);
+      tr.append(td1, td2);
       tb.appendChild(tr);
     });
   }
