@@ -51,6 +51,11 @@
       var td2 = document.createElement('td');
       var inp = document.createElement('input');
       inp.type = 'number'; inp.step = '10';
+      // typing a current repaints the figure at once: the coil fill IS the
+      // current, so leaving it stale until the next solve would show a
+      // colour that no longer matches the number next to it.  Programmatic
+      // `.value =` fires no input event, so setCurrents() cannot loop here.
+      inp.addEventListener('input', draw);
       td2.appendChild(inp);
       coilInputs.push(inp);
       tr.append(td1, td2);
