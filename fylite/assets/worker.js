@@ -77,8 +77,9 @@ function freeSolve(chan, prof, ip, opts) {
 
 /** Everything the plots need from a solved field. */
 function summarize(res) {
-  var poly = P.lcfs(grid, res.psi, res.psiAxis, res.psiBnd, res.axisR,
-                    res.axisZ, M.limiter.r, M.limiter.z, 181);
+  var poly = P.boundarySurface(grid, res.psi, res.psiAxis, res.psiBnd,
+                               res.axisR, res.axisZ, M.limiter.r,
+                               M.limiter.z, 181);
   var sm = P.shapeMetrics(poly);
   var flat = new Float64Array(poly.length * 2);
   poly.forEach(function (p, i) { flat[2 * i] = p[0]; flat[2 * i + 1] = p[1]; });

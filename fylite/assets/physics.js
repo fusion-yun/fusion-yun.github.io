@@ -383,14 +383,33 @@
    * traced around the axis by ray casting, which gives an ORDERED
    * outline (the marching-squares soup does not) and is what the shape
    * metrics and the design target want.
+   *
+   * X-POINT GUARD.  A ray aimed straight at a saddle keeps s*psi above
+   * s*psi_bnd all the way to the X point, so it reports a radius far
+   * beyond where its neighbours stop: r(theta) measured from the axis is
+   * simply not a usable parameterization of a separatrix corner, and a
+   * single ray threading the neck comes back as a needle in the outline.
+   * Measured on the bundled shot: one ray out of 181 (theta = -109 deg)
+   * returned r = 0.986 m against neighbours at 0.745 / 0.748, dragging
+   * z_min to -0.948 m and kappa to 1.79 — an artefact, not a shape.
+   *
+   * The excursion is rejected on a resolution argument, not a taste one:
+   * psi lives on a 25 mm grid, while this tracer steps 6 mm and then
+   * bisects 40 times, so any channel it can follow but its neighbours
+   * cannot is bilinear-interpolation detail below the resolution of the
+   * field itself.  A neck that IS resolved widens over several rays, its
+   * neighbours grow with it, and the relative test below leaves it alone.
    */
   function lcfs(grid, psi, psiAxis, psiBnd, axisR, axisZ, limR, limZ, ntheta) {
-    var n = ntheta || 181, out = [];
+    var n = ntheta || 181;
     var rmax = Math.max(grid.r[grid.nr - 1] - axisR, axisR - grid.r[0]);
     var zmax = Math.max(grid.z[grid.nz - 1] - axisZ, axisZ - grid.z[0]);
     var span = Math.hypot(rmax, zmax);
+    var rad = new Float64Array(n), cs = new Float64Array(n),
+        sn = new Float64Array(n);
     for (var q = 0; q < n; q++) {
       var th = 2 * Math.PI * q / n, cr = Math.cos(th), cz = Math.sin(th);
+      cs[q] = cr; sn[q] = cz;
       var lo = 0, hi = 0, step = 0.25 * Math.min(grid.dr, grid.dz), found = false;
       for (var t = step; t <= span; t += step) {
         var v = sample(grid, psi, axisR + cr * t, axisZ + cz * t);
@@ -399,7 +418,7 @@
           lo = t - step; hi = t; found = true; break;
         }
       }
-      if (!found) continue;
+      if (!found) { rad[q] = NaN; continue; }
       for (var k = 0; k < 40; k++) {
         var mid = 0.5 * (lo + hi), rr = axisR + cr * mid, zz = axisZ + cz * mid;
         var vv = sample(grid, psi, rr, zz);
@@ -407,9 +426,72 @@
           lo = mid;
         else hi = mid;
       }
-      out.push([axisR + cr * lo, axisZ + cz * lo]);
+      rad[q] = lo;
     }
+    clipNeckExcursions(rad, n);
+    var out = [];
+    for (q = 0; q < n; q++)
+      if (isFinite(rad[q]))
+        out.push([axisR + cs[q] * rad[q], axisZ + sn[q] * rad[q]]);
     return out;
+  }
+
+  /**
+   * Pull rays that overshoot their angular neighbourhood back to it.
+   * Compares each radius with the median of a 5-ray window (cyclic,
+   * NaN-tolerant) and clips anything beyond `TOL` times that median.  Two
+   * passes, so a leak two rays wide is caught as well; a genuinely wide
+   * feature moves the median with it and survives untouched.
+   */
+  /**
+   * The drawn / measured boundary is taken this far INSIDE the boundary
+   * flux, as a fraction of the axis-to-boundary span.
+   *
+   * The separatrix itself is a bad surface to measure: at an X point it
+   * has a corner where r(theta) from the axis is not a usable
+   * parameterization, and a level set at exactly psi_bnd leaks through
+   * any neck the tracer can resolve — and this tracer resolves necks far
+   * below the 25 mm grid the field is defined on.  Measured on the
+   * bundled synthetic case, the boundary trace grew a tongue reaching
+   * z = -0.956 m while every interior surface stopped near -0.55 m; at
+   * 0.2 % inside, the tongue was gone (neighbour-to-neighbour jump
+   * 23.1 % -> 3.1 %).  A corner that vanishes under a 0.2 % change of
+   * level is interpolation detail, not geometry — an X point that is
+   * genuinely resolved survives, because the interior surfaces crowd
+   * toward it and move with it.
+   *
+   * 0.5 % keeps a margin over the 0.2 % where the pathology closed, and
+   * costs about 1 % in the reported elongation.
+   */
+  var BOUNDARY_INSET = 0.005;
+
+  /** The boundary surface used for drawing and for the shape metrics. */
+  function boundarySurface(grid, psi, psiAxis, psiBnd, axisR, axisZ,
+                           limR, limZ, ntheta) {
+    var lev = psiAxis + (psiBnd - psiAxis) * (1 - BOUNDARY_INSET);
+    return lcfs(grid, psi, psiAxis, lev, axisR, axisZ, limR, limZ, ntheta);
+  }
+
+  var NECK_TOL = 1.25;
+  function clipNeckExcursions(rad, n) {
+    if (n < 7) return;
+    for (var pass = 0; pass < 2; pass++) {
+      var src = rad.slice(), changed = false;
+      for (var i = 0; i < n; i++) {
+        if (!isFinite(src[i])) continue;
+        var win = [];
+        for (var d = -2; d <= 2; d++) {
+          if (d === 0) continue;
+          var v = src[(i + d + n) % n];
+          if (isFinite(v)) win.push(v);
+        }
+        if (win.length < 3) continue;
+        win.sort(function (a, b) { return a - b; });
+        var med = win[win.length >> 1];
+        if (src[i] > NECK_TOL * med) { rad[i] = med; changed = true; }
+      }
+      if (!changed) break;
+    }
   }
 
   /** R0 / a / kappa / delta of a closed outline. */
@@ -508,7 +590,8 @@
     loopModel: loopModel,
     totalCurrent: totalCurrent,
     analyticTruth: analyticTruth, fittedProfiles: fittedProfiles,
-    contour: contour, lcfs: lcfs, shapeMetrics: shapeMetrics,
+    contour: contour, lcfs: lcfs, boundarySurface: boundarySurface,
+    BOUNDARY_INSET: BOUNDARY_INSET, shapeMetrics: shapeMetrics,
     millerBoundary: millerBoundary,
     cholSolve: cholSolve, ridgeLstsq: ridgeLstsq,
   };
