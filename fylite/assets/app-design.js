@@ -1,0 +1,267 @@
+// Discharge-design page controller.
+//
+// The page owns the UI; every solve happens in worker.js, which owns the
+// wasm instance.  Design runs are a sequence of solves, so the worker
+// streams progress messages back between passes.
+
+(function () {
+  'use strict';
+
+  var M = self.FYLITE_MACHINE, P = self.FyPhys;
+  var worker = new Worker('assets/worker.js');
+  var grid = null, state = null, referenceLcfs = null;
+  var busy = false;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var SLIDERS = ['r0', 'a', 'kappa', 'du', 'dl', 'z0', 'ip', 'beta0', 'emp',
+                 'enp', 'gamma', 'passes'];
+  var DIGITS = { r0: 2, a: 3, kappa: 2, du: 2, dl: 2, z0: 3, ip: 0, beta0: 2,
+                 emp: 2, enp: 2, gamma: 2, passes: 0 };
+
+  function readTarget() {
+    return { r0: +$('r0').value, a: +$('a').value, kappa: +$('kappa').value,
+             deltaU: +$('du').value, deltaL: +$('dl').value, z0: +$('z0').value };
+  }
+  function readProf() {
+    return { beta0: +$('beta0').value, emp: +$('emp').value,
+             enp: +$('enp').value, r0: M.reference.rcentr };
+  }
+  function readIp() { return +$('ip').value * 1e3; }
+
+  function syncLabels() {
+    SLIDERS.forEach(function (k) {
+      var el = $('v-' + k);
+      if (el) el.textContent = (+$(k).value).toFixed(DIGITS[k]);
+    });
+  }
+
+  // --- coil current table ---------------------------------------------------
+
+  var coilInputs = [];
+  function buildCoilTable() {
+    var tb = $('coils');
+    tb.innerHTML = '';
+    M.channels.forEach(function (combo, c) {
+      var el = M.coils[combo[0][0]];
+      var tr = document.createElement('tr');
+      var td1 = document.createElement('td');
+      td1.textContent = el.name + (combo.length > 1 ? '+' : '');
+      var td2 = document.createElement('td');
+      td2.className = 'num';
+      td2.style.color = 'var(--muted)';
+      td2.textContent = 'R=' + el.r.toFixed(2) + ' Z=' + el.z.toFixed(2);
+      var td3 = document.createElement('td');
+      var inp = document.createElement('input');
+      inp.type = 'number'; inp.step = '10';
+      td3.appendChild(inp);
+      coilInputs.push(inp);
+      tr.append(td1, td2, td3);
+      tb.appendChild(tr);
+    });
+  }
+  function showCurrents(chan) {
+    coilInputs.forEach(function (inp, i) {
+      inp.value = (chan[i] / 1e3).toFixed(1);
+    });
+  }
+  function readCurrents() {
+    return Float64Array.from(coilInputs, function (i) { return +i.value * 1e3; });
+  }
+
+  // --- drawing --------------------------------------------------------------
+
+  function draw() {
+    var t = readTarget();
+    var tgt = P.millerBoundary(t, 121);
+    var flat = new Float64Array(tgt.length * 2);
+    tgt.forEach(function (p, i) { flat[2 * i] = p[0]; flat[2 * i + 1] = p[1]; });
+    FyPlot.poloidal($('cross'), {
+      machine: M, grid: grid,
+      view: $('wide').checked ? FyPlot.deviceView(M) : null,
+      psi: state && state.psi, psiAxis: state && state.psiAxis,
+      psiBnd: state && state.psiBnd, nLevels: 12,
+      lcfs: state && state.lcfs,
+      target: flat,
+      reference: referenceLcfs,
+      axis: state && [state.axisR, state.axisZ],
+      xpoint: state && state.bndKind === 1 ? [state.xptR, state.xptZ] : null,
+      caption: state ? (state.bndKind === 1 ? 'X 点边界' : '限制器边界') : '',
+    });
+    drawShapeTable(t);
+    drawScalars();
+  }
+
+  function drawShapeTable(t) {
+    var rows = [['R₀ [m]', t.r0, state && state.shape.r0, 3],
+                ['a [m]', t.a, state && state.shape.a, 3],
+                ['κ', t.kappa, state && state.shape.kappa, 3],
+                ['δ 上', t.deltaU, state && state.shape.deltaU, 3],
+                ['δ 下', t.deltaL, state && state.shape.deltaL, 3]];
+    $('shape').innerHTML = rows.map(function (r) {
+      var got = r[2], d = got === null || got === undefined ? null : got - r[1];
+      var cls = d === null ? '' : (Math.abs(d) < 0.03 ? 'good' : '');
+      return '<tr><td>' + r[0] + '</td><td class="num">' + r[1].toFixed(r[3]) +
+        '</td><td class="num">' + (got == null ? '—' : got.toFixed(r[3])) +
+        '</td><td class="num ' + cls + '">' +
+        (d === null ? '—' : (d >= 0 ? '+' : '') + d.toFixed(r[3])) + '</td></tr>';
+    }).join('');
+  }
+
+  function drawScalars() {
+    if (!state) { $('scalars').innerHTML = ''; return; }
+    var rows = [
+      ['磁轴 (R, Z) [m]', state.axisR.toFixed(3) + ', ' + state.axisZ.toFixed(3)],
+      ['ψ 轴 / ψ 边界 [Wb]', state.psiAxis.toFixed(3) + ' / ' + state.psiBnd.toFixed(3)],
+      ['极向磁通跨度 [Wb/rad]', ((state.psiAxis - state.psiBnd) / (2 * Math.PI)).toFixed(4)],
+      ['I<sub>p</sub> [kA]', (state.ip / 1e3).toFixed(1)],
+      ['边界类型', state.bndKind === 1 ? 'X 点 (偏滤器)' : '限制器'],
+      ['虚拟垂直反馈电流 [kA]', (state.fbAmp / 1e3).toFixed(1)],
+      ['Picard 迭代 / 残差', state.iterations + ' / ' + state.residual.toExponential(2)],
+    ];
+    $('scalars').innerHTML = rows.map(function (r) {
+      return '<tr><td>' + r[0] + '</td><td class="num">' + r[1] + '</td></tr>';
+    }).join('');
+  }
+
+  function drawHistory(history) {
+    var x = [], y = [];
+    history.forEach(function (h) {
+      if (h.err == null || !isFinite(h.err)) return;
+      x.push(h.pass); y.push(h.err);
+    });
+    FyPlot.xy($('hist'), {
+      series: [{ x: x, y: y, color: FyPlot.palette($('hist')).accent,
+                 kind: 'line' },
+               { x: x, y: y, color: FyPlot.palette($('hist')).accent,
+                 kind: 'dots', radius: 3 }],
+      xlabel: '退火趟数', ylabel: '位形误差', ymin: 0,
+    });
+  }
+
+  function drawCurrents(before, after) {
+    var col = FyPlot.palette($('curr'));
+    var x = [];
+    for (var i = 0; i < after.length; i++) x.push(i + 1);
+    var s = [{ x: x, y: Array.from(after, function (v) { return v / 1e3; }),
+               color: col.accent, kind: 'bars', label: '设计后' }];
+    if (before) s.unshift({ x: x, y: Array.from(before, function (v) { return v / 1e3; }),
+                            color: col.muted, kind: 'bars', label: '设计前' });
+    FyPlot.xy($('curr'), { series: s, xlabel: 'PF 通道', ylabel: 'kA·匝',
+                           zeroLine: true });
+  }
+
+  // --- worker plumbing ------------------------------------------------------
+
+  function setBusy(on, text) {
+    busy = on;
+    ['run', 'solve', 'reset', 'apply'].forEach(function (id) {
+      $(id).disabled = on;
+    });
+    if (text !== undefined) $('status').textContent = text;
+    $('status').className = 'status';
+  }
+
+  var beforeCurrents = null;
+
+  worker.onmessage = function (ev) {
+    var m = ev.data;
+    if (m.type === 'ready') {
+      grid = m.grid;
+      setBusy(false, 'wasm ABI v' + m.abi + ' 就绪（线圈响应 ' +
+              m.timing.coils + ' ms）。正在求解参考放电…');
+      resetToReference();
+      return;
+    }
+    if (m.type === 'error') {
+      setBusy(false);
+      $('status').textContent = '求解失败：' + m.message;
+      $('status').className = 'status err';
+      return;
+    }
+    if (m.type === 'progress') {
+      $('progress').style.width = (100 * m.pass / m.total) + '%';
+      $('status').textContent = '设计迭代 ' + m.pass + ' / ' + m.total +
+        '，位形误差 ' + (isFinite(m.err) ? m.err.toFixed(4) : '—');
+      return;
+    }
+    if (m.type === 'solve') {
+      state = m.result;
+      if (!referenceLcfs) referenceLcfs = m.result.lcfs;
+      showCurrents(m.chan);
+      draw();
+      setBusy(false, '自由边界求解完成：' + m.result.iterations + ' 次迭代，残差 ' +
+              m.result.residual.toExponential(2));
+      $('progress').style.width = '0';
+      return;
+    }
+    if (m.type === 'design') {
+      state = m.result;
+      showCurrents(m.chan);
+      draw();
+      drawHistory(m.history);
+      drawCurrents(beforeCurrents, m.chan);
+      var failed = m.history.filter(function (h) { return h.error; });
+      setBusy(false, '设计完成：取第 ' + m.pass + ' 趟结果（位形误差 ' +
+              m.history.filter(function (h) { return h.pass === m.pass; })[0].err.toFixed(4) +
+              '）' + (failed.length ? '；第 ' + failed[0].pass + ' 趟求解发散，已停止退火' : ''));
+      $('progress').style.width = '100%';
+      return;
+    }
+  };
+
+  function resetToReference() {
+    setBusy(true, '正在求解参考放电 EAST #' + M.reference.shot + ' …');
+    referenceLcfs = null;
+    showCurrents(M.reference.aturns);
+    worker.postMessage({ cmd: 'solve', chan: Array.from(M.reference.aturns),
+                         prof: readProf(), ip: readIp() });
+  }
+
+  // --- events ---------------------------------------------------------------
+
+  SLIDERS.forEach(function (k) {
+    $(k).addEventListener('input', function () { syncLabels(); draw(); });
+  });
+
+  $('run').addEventListener('click', function () {
+    if (busy) return;
+    var n = +$('passes').value;
+    // stiff -> loose: the first passes stay near the starting scenario,
+    // the last ones are free enough to reach the target
+    var sched = [];
+    for (var i = 0; i < n; i++)
+      sched.push(0.10 * Math.pow(0.005 / 0.10, i / Math.max(1, n - 1)));
+    beforeCurrents = readCurrents();
+    setBusy(true, '设计迭代中…');
+    $('progress').style.width = '0';
+    worker.postMessage({
+      cmd: 'design', chan: Array.from(beforeCurrents),
+      target: readTarget(), prof: readProf(), ip: readIp(),
+      schedule: sched, gamma: +$('gamma').value, nPoints: 24,
+      xWeight: $('usex').checked ? 1.0 : 0,
+      xpoint: { r: +$('xr').value, z: +$('xz').value },
+      solve: { maxIter: 600, relax: 0.3 },
+    });
+  });
+
+  $('solve').addEventListener('click', function () {
+    if (busy) return;
+    setBusy(true, '自由边界求解中…');
+    worker.postMessage({ cmd: 'solve', chan: Array.from(readCurrents()),
+                         prof: readProf(), ip: readIp() });
+  });
+  $('apply').addEventListener('click', function () { $('solve').click(); });
+  $('reset').addEventListener('click', function () { if (!busy) resetToReference(); });
+  $('wide').addEventListener('change', draw);
+
+  window.addEventListener('resize', function () {
+    draw();
+    if (state) drawCurrents(beforeCurrents, readCurrents());
+  });
+
+  buildCoilTable();
+  syncLabels();
+  showCurrents(M.reference.aturns);
+  draw();
+  worker.postMessage({ cmd: 'init' });
+})();

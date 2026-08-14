@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>动理学平衡重构 · fylite</title>
+<meta name="description" content="在浏览器中用 fylite 的 WebAssembly 内核做托卡马克平衡重构：磁通环测量加动理学压强约束，拟合 p′/FF′ 多项式剖面。">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="top">
+  <h1>动理学平衡重构</h1>
+  <span class="sub">磁测量 + 压强约束 → p′/FF′ 拟合 → 平衡场</span>
+  <nav>
+    <a href="index.html">fylite 首页</a>
+    <a href="discharge.html">放电设计</a>
+    <a href="https://fusion-yun.github.io/">FuYun</a>
+  </nav>
+</header>
+
+<main>
+<div class="layout">
+
+  <!-- ------------------------------------------------ controls -->
+  <div>
+    <div class="panel">
+      <h2>数据源</h2>
+      <div class="tabs">
+        <button id="tab-real" class="on">真实测量</button>
+        <button id="tab-twin">合成孪生</button>
+      </div>
+      <p class="note" id="src-note"></p>
+    </div>
+
+    <div class="panel" id="twin-panel" hidden>
+      <h2>真值（正解生成）</h2>
+      <div class="ctl"><label>I<sub>p</sub> [kA] <span class="val" id="v-ip"></span></label>
+        <input type="range" id="ip" min="150" max="800" step="5" value="450"></div>
+      <div class="ctl"><label>β<sub>0</sub> <span class="val" id="v-beta0"></span></label>
+        <input type="range" id="beta0" min="0.1" max="0.95" step="0.01" value="0.60"></div>
+      <div class="ctl"><label>e<sub>mp</sub> <span class="val" id="v-emp"></span></label>
+        <input type="range" id="emp" min="0.6" max="3.0" step="0.05" value="1.40"></div>
+      <div class="ctl"><label>e<sub>np</sub> <span class="val" id="v-enp"></span></label>
+        <input type="range" id="enp" min="0.6" max="3.0" step="0.05" value="1.10"></div>
+      <div class="ctl"><label>磁通环噪声 σ / max|ψ| <span class="val" id="v-noise"></span></label>
+        <input type="range" id="noise" min="0" max="0.05" step="0.001" value="0.005"></div>
+      <div class="ctl"><label>随机种子 <span class="val" id="v-seed"></span></label>
+        <input type="range" id="seed" min="1" max="99" step="1" value="7"></div>
+    </div>
+
+    <div class="panel">
+      <h2>动理学约束</h2>
+      <div class="check"><input type="checkbox" id="kin" checked>
+        <label for="kin">加入压强约束行</label></div>
+      <div class="ctl"><label>压强点数 <span class="val" id="v-kpts"></span></label>
+        <input type="range" id="kpts" min="3" max="15" step="1" value="9"></div>
+      <div class="ctl"><label>相对权重 <span class="val" id="v-kw"></span></label>
+        <input type="range" id="kw" min="0.005" max="1.0" step="0.005" value="0.2"></div>
+      <div class="ctl"><label>压强测量噪声 <span class="val" id="v-knoise"></span></label>
+        <input type="range" id="knoise" min="0" max="0.2" step="0.005" value="0.03"></div>
+      <p class="note" id="kin-note"></p>
+    </div>
+
+    <div class="panel">
+      <h2>拟合基与求解</h2>
+      <div class="row">
+        <div class="ctl"><label>p′ 阶数 n<sub>pp</sub></label>
+          <select id="npp"><option>1</option><option selected>2</option><option>3</option></select></div>
+        <div class="ctl"><label>FF′ 阶数 n<sub>ff</sub></label>
+          <select id="nff"><option>1</option><option selected>2</option><option>3</option></select></div>
+      </div>
+      <div class="ctl"><label>解析预热轮数 <span class="val" id="v-warmup"></span></label>
+        <input type="range" id="warmup" min="10" max="150" step="5" value="40"></div>
+      <div class="ctl"><label>最大外迭代 <span class="val" id="v-maxit"></span></label>
+        <input type="range" id="maxit" min="200" max="1500" step="50" value="800"></div>
+      <div class="buttons">
+        <button id="run">运行重构</button>
+      </div>
+      <div class="bar"><div id="progress"></div></div>
+      <div class="status" id="status">正在加载 WebAssembly 内核…</div>
+    </div>
+  </div>
+
+  <!-- ------------------------------------------------ figures -->
+  <div>
+    <div class="panel grid2">
+      <figure>
+        <canvas id="cross" class="tall"></canvas>
+        <figcaption>重构磁面（细线）与最后闭合磁面（红）。绿虚线是参照物：
+          真实测量下为 EFIT 自身给出的边界，合成孪生下为真值边界。
+          圆点是 35 个极向磁通环，按拟合残差着色（灰色＝权重为零，未参与拟合）。</figcaption>
+      </figure>
+      <div>
+        <table><thead><tr><th>标量</th><th>重构</th><th>参照</th></tr></thead>
+          <tbody id="scalars"></tbody></table>
+        <h3>拟合系数（约化基 x<sup>k</sup>−x<sup>n</sup>）</h3>
+        <table><thead><tr><th>通道</th><th>系数</th></tr></thead>
+          <tbody id="coefs"></tbody></table>
+        <p class="note" id="fitnote"></p>
+      </div>
+    </div>
+
+    <div class="panel grid3">
+      <figure>
+        <canvas id="pres" class="short"></canvas>
+        <figcaption>压强剖面 p(ψ̄)：重构值由拟合的 p′ 沿归一磁通积分得到。</figcaption>
+      </figure>
+      <figure>
+        <canvas id="pp" class="short"></canvas>
+        <figcaption>p′(ψ̄)，单位 Pa/(Wb/rad)。</figcaption>
+      </figure>
+      <figure>
+        <canvas id="ffp" class="short"></canvas>
+        <figcaption>FF′(ψ̄)。</figcaption>
+      </figure>
+    </div>
+
+    <div class="panel">
+      <figure>
+        <canvas id="loops" class="short"></canvas>
+        <figcaption>35 道磁通环：测量值与前向模型值（由拟合系数重算的等离子体电流分布回算）。</figcaption>
+      </figure>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  全部计算在您的浏览器内完成，由 <code>fylite_rs.wasm</code>（fylite Rust 内核的
+  WebAssembly 构建，仅二进制）执行；页面本身不含求解器源码，也不上传任何数据。
+  <a href="index.html">说明与出处</a>
+</footer>
+
+<script src="assets/machine.js"></script>
+<script src="assets/physics.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/app-recon.js"></script>
+</body>
+</html>
