@@ -92,13 +92,19 @@ function summarize(res, prof) {
   var sm = P.shapeMetrics(poly);
   var flat = new Float64Array(poly.length * 2);
   poly.forEach(function (p, i) { flat[2 * i] = p[0]; flat[2 * i + 1] = p[1]; });
-  var prof2 = null;
+  var prof2 = null, q2 = null;
   if (prof) {
     var t = P.analyticTruth(grid, res, prof, M.limiter.r, M.limiter.z, 201);
     prof2 = { x: t.x, pprime: t.pprime, ffprime: t.ffprime, p: t.p, jc: t.jc };
+    // q and F(psi) as well: without them a g-file export would be a
+    // g-file with two empty columns
+    try {
+      q2 = P.qProfile(grid, res, prof2, M.limiter.r, M.limiter.z, F_EDGE,
+                      { nq: 20, ntheta: 121 });
+    } catch (e) { q2 = null; }
   }
   return {
-    profiles: prof2,
+    profiles: prof2, q: q2,
     psi: res.psi, psiAxis: res.psiAxis, psiBnd: res.psiBnd,
     axisR: res.axisR, axisZ: res.axisZ, ip: res.ip, residual: res.residual,
     iterations: res.iterations, bndKind: res.bndKind,
@@ -303,7 +309,7 @@ function reconRun(msg) {
   } else {
     meas = Float64Array.from(M.reference.loopMeas);
     wts = Float64Array.from(M.reference.loopWeights);
-    ip = M.reference.ip;
+    ip = msg.ipOverride || M.reference.ip;
     out.sigma = 0;
   }
   // channel mask from the UI (drop loops the user switched off)
@@ -314,9 +320,12 @@ function reconRun(msg) {
   var xp = [], pmeas = [], wp = [];
   if (msg.kinetic && msg.kinetic.on) {
     var n = msg.kinetic.points, pref = null;
+    // an imported profile wins over the bundled one; the twin always uses
+    // its own truth, which is the whole point of the twin
+    var ext = msg.kinetic.pressure;
     if (msg.source === 'twin') pref = function (x) { return truthProf.pAt(x); };
     else {
-      var pr = M.reference.pres, m = pr.length;
+      var pr = (ext && ext.length) ? ext : M.reference.pres, m = pr.length;
       pref = function (x) {
         var t2 = x * (m - 1), k = Math.min(m - 2, Math.max(0, t2 | 0));
         return pr[k] + (t2 - k) * (pr[k + 1] - pr[k]);

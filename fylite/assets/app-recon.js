@@ -6,6 +6,7 @@
   var M = self.FYLITE_MACHINE, R = M.reference;
   var worker = new Worker('assets/worker.js');
   var grid = null, last = null, source = 'real', busy = false;
+  var importedPressure = null, importedIp = null;
 
   var $ = function (id) { return document.getElementById(id); };
   var SLIDERS = ['ip', 'beta0', 'emp', 'enp', 'noise', 'seed', 'kpts', 'kw',
@@ -191,7 +192,9 @@
 
   function setBusy(on, text) {
     busy = on;
-    $('run').disabled = on;
+    ['run', 'gimport', 'gexport'].forEach(function (id) {
+      if ($(id)) $(id).disabled = on;
+    });
     if (text !== undefined) $('status').textContent = text;
     $('status').className = 'status';
   }
@@ -240,9 +243,86 @@
       npp: +$('npp').value, nff: +$('nff').value,
       warmup: +$('warmup').value,
       solve: { maxIter: +$('maxit').value, relax: 0.3 },
+      ipOverride: importedIp,
       kinetic: { on: $('kin').checked, points: +$('kpts').value,
-                 weight: +$('kw').value, noise: +$('knoise').value },
+                 weight: +$('kw').value, noise: +$('knoise').value,
+                 pressure: importedPressure },
     });
+  }
+
+  // --- g-file exchange --------------------------------------------------------
+
+  function pairs(flat) {
+    var out = [];
+    for (var i = 0; i + 1 < flat.length; i += 2) out.push([flat[i], flat[i + 1]]);
+    return out;
+  }
+
+  /** The reconstruction as an EFIT g-file. */
+  function exportGfile() {
+    if (!last) {
+      $('status').textContent = '还没有可导出的结果，请先「重构」。';
+      $('status').className = 'status warn';
+      return;
+    }
+    var r = last.result, pr = last.profiles, q = last.q, nw = M.grid.nr;
+    var txt = FyGeqdsk.format({
+      grid: M.grid, psi: r.psi, psiAxis: r.psiAxis, psiBnd: r.psiBnd,
+      axisR: r.axisR, axisZ: r.axisZ, ip: r.ip,
+      rcentr: R.rcentr, bcentr: R.bcentr,
+      fpol: q ? Array.from(q.f) : [],
+      pres: Array.from(pr.p),
+      pprime: Array.from(pr.pprime), ffprime: Array.from(pr.ffprime),
+      qpsi: q ? FyGeqdsk.qOnUniform(q.x, q.q, nw) : new Array(nw).fill(0),
+      boundary: pairs(r.lcfs), limiter: M.limiter,
+      caseName: 'fylite recon ' + (source === 'real' ? '#' + R.shot : 'twin') +
+                ' ' + new Date().toISOString().slice(0, 19).replace('T', ' '),
+    });
+    FyGeqdsk.saveText('g_fylite_recon.00000', txt);
+    setBusy(false, '已导出 g 文件（' + nw + '×' + M.grid.nz +
+            '，本地保存，未上传）。');
+  }
+
+  /**
+   * Take a g-file's pressure profile as the kinetic constraint, plus its Ip.
+   * Only the real-measurement source uses it — the twin constrains against
+   * its own truth by construction.
+   */
+  function importGfile() {
+    FyGeqdsk.openText(function (text, name, err) {
+      if (err || text === null) {
+        $('status').textContent = '读取失败：' + (err && err.message || name);
+        $('status').className = 'status err';
+        return;
+      }
+      var g;
+      try { g = FyGeqdsk.parse(text); }
+      catch (e) {
+        $('status').textContent = '解析失败：' + e.message;
+        $('status').className = 'status err';
+        return;
+      }
+      if (!g.pres || !g.pres.length) {
+        $('status').textContent = '该 g 文件没有压强剖面。';
+        $('status').className = 'status err';
+        return;
+      }
+      importedPressure = g.pres.slice();
+      importedIp = Math.abs(g.current) || null;
+      if (source !== 'real') setSource('real');
+      $('kin').checked = true;
+      $('kin-note').innerHTML = '压强点取自导入的 <strong>' + name +
+        '</strong>（' + g.pres.length + ' 点），I<sub>p</sub> = ' +
+        (importedIp / 1e3).toFixed(1) + ' kA。'
+        + '<button type="button" class="link-btn" id="kin-reset">改回随包剖面</button>';
+      $('kin-reset').addEventListener('click', function () {
+        importedPressure = null; importedIp = null;
+        setSource('real');
+        run();
+      });
+      setBusy(false, '已导入 ' + name + '，正在按其压强剖面重构…');
+      run();
+    }, '.00000,.geqdsk,g*,text/plain');
   }
 
   // --- events ---------------------------------------------------------------
@@ -253,6 +333,8 @@
   $('tab-real').addEventListener('click', function () { setSource('real'); });
   $('tab-twin').addEventListener('click', function () { setSource('twin'); });
   $('run').addEventListener('click', run);
+  $('gexport').addEventListener('click', exportGfile);
+  $('gimport').addEventListener('click', importGfile);
   window.addEventListener('resize', drawAll);
 
   syncLabels();

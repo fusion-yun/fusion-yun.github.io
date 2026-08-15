@@ -330,7 +330,7 @@
 
   function setBusy(on, text) {
     busy = on;
-    ['run', 'solve', 'reset'].forEach(function (id) {
+    ['run', 'solve', 'reset', 'gimport', 'gexport'].forEach(function (id) {
       $(id).disabled = on;
     });
     if (text !== undefined) $('status').textContent = text;
@@ -405,6 +405,89 @@
                          prof: readProf(), ip: readIp() });
   }
 
+  // --- g-file exchange --------------------------------------------------------
+
+  /** The current solution as an EFIT g-file. */
+  function exportGfile() {
+    if (!state || !state.profiles) {
+      $('status').textContent = '还没有可导出的解，请先「正解」或「反解」。';
+      $('status').className = 'status warn';
+      return;
+    }
+    var pr = state.profiles, q = state.q;
+    var nw = M.grid.nr;
+    var txt = FyGeqdsk.format({
+      grid: M.grid, psi: state.psi,
+      psiAxis: state.psiAxis, psiBnd: state.psiBnd,
+      axisR: state.axisR, axisZ: state.axisZ, ip: state.ip,
+      rcentr: M.reference.rcentr, bcentr: M.reference.bcentr,
+      fpol: q ? Array.from(q.f) : [],
+      pres: Array.from(pr.p),
+      pprime: Array.from(pr.pprime), ffprime: Array.from(pr.ffprime),
+      qpsi: q ? FyGeqdsk.qOnUniform(q.x, q.q, nw) : new Array(nw).fill(0),
+      boundary: pairs(state.lcfs),
+      limiter: M.limiter,
+      caseName: 'fylite design ' + stamp(),
+    });
+    FyGeqdsk.saveText('g_fylite_design.00000', txt);
+    setBusy(false, '已导出 g 文件（' + nw + '×' + M.grid.nz + '，本地保存，未上传）。');
+  }
+
+  function pairs(flat) {
+    var out = [];
+    for (var i = 0; i + 1 < flat.length; i += 2) out.push([flat[i], flat[i + 1]]);
+    return out;
+  }
+  function stamp() {
+    var d = new Date();
+    return d.toISOString().slice(0, 19).replace('T', ' ');
+  }
+
+  /**
+   * Take a g-file's own boundary as the design TARGET, plus its Ip.  The
+   * field itself is not adopted: this page solves for coil currents, and
+   * an imported psi map would have no coil set behind it.
+   */
+  function importGfile() {
+    FyGeqdsk.openText(function (text, name, err) {
+      if (err || text === null) {
+        $('status').textContent = '读取失败：' + (err && err.message || name);
+        $('status').className = 'status err';
+        return;
+      }
+      var g, sm;
+      try {
+        g = FyGeqdsk.parse(text);
+        sm = FyGeqdsk.boundaryShape(g);
+        if (!sm) throw new Error('该 g 文件没有边界点（nbbbs = 0）');
+      } catch (e) {
+        $('status').textContent = '解析失败：' + e.message;
+        $('status').className = 'status err';
+        return;
+      }
+      setNum('r0', sm.r0);
+      setNum('z0', 0.5 * (sm.zmin + sm.zmax));
+      setRange('a', sm.a);
+      setRange('kappa', sm.kappa);
+      setRange('du', sm.deltaU);
+      setRange('dl', sm.deltaL);
+      setRange('ip', Math.abs(g.current) / 1e3);
+      syncLabels();
+      draw();
+      setBusy(false, '已从 ' + name + ' 取目标位形：R₀=' + sm.r0.toFixed(3) +
+              ' a=' + sm.a.toFixed(3) + ' κ=' + sm.kappa.toFixed(2) +
+              ' δ=' + sm.deltaU.toFixed(2) + '/' + sm.deltaL.toFixed(2) +
+              '，I_p=' + (Math.abs(g.current) / 1e3).toFixed(1) +
+              ' kA。点「反解」求线圈电流。');
+    }, '.00000,.geqdsk,g*,text/plain');
+  }
+
+  /** Write into a range input, clamped to its own bounds. */
+  function setRange(id, v) {
+    var el = $(id);
+    el.value = clamp(v, +el.min, +el.max);
+  }
+
   // --- events ---------------------------------------------------------------
 
   SLIDERS.forEach(function (k) {
@@ -439,6 +522,8 @@
                          prof: readProf(), ip: readIp() });
   });
   $('reset').addEventListener('click', function () { if (!busy) resetToReference(); });
+  $('gexport').addEventListener('click', exportGfile);
+  $('gimport').addEventListener('click', importGfile);
   ['wide', 'showref'].forEach(function (id) {
     $(id).addEventListener('change', draw);
   });
