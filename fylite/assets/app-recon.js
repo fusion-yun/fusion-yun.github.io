@@ -6,7 +6,7 @@
   var M = self.FYLITE_MACHINE, R = M.reference;
   var worker = new Worker('assets/worker.js');
   var grid = null, last = null, source = 'real', busy = false;
-  var importedPressure = null, importedIp = null;
+  var importedPressure = null, importedIp = null, kernelInfo = null;
 
   var $ = function (id) { return document.getElementById(id); };
   var SLIDERS = ['ip', 'beta0', 'emp', 'enp', 'noise', 'seed', 'kpts', 'kw',
@@ -192,7 +192,7 @@
 
   function setBusy(on, text) {
     busy = on;
-    ['run', 'gimport', 'gexport'].forEach(function (id) {
+    ['run', 'ioimport', 'ioexport'].forEach(function (id) {
       if ($(id)) $(id).disabled = on;
     });
     if (text !== undefined) $('status').textContent = text;
@@ -203,6 +203,7 @@
     var m = ev.data;
     if (m.type === 'ready') {
       grid = m.grid;
+      kernelInfo = { abi: m.abi, timing: m.timing };
       setBusy(false, '计算内核就绪（线圈响应矩阵 ' + m.timing.coils +
               ' ms，磁通环响应矩阵 ' + m.timing.loops + ' ms）。');
       drawAll();
@@ -325,6 +326,97 @@
     }, '.00000,.geqdsk,g*,text/plain');
   }
 
+  // --- JSON session -----------------------------------------------------------
+
+  var CONTROLS = ['ip', 'beta0', 'emp', 'enp', 'noise', 'seed',
+                  'kin', 'kpts', 'kw', 'knoise', 'npp', 'nff',
+                  'warmup', 'maxit'];
+
+  function exportJson() {
+    var cfg = FySession.collect(CONTROLS);
+    cfg['fylite:source'] = source;
+    if (importedPressure) {
+      cfg['fylite:imported_pressure'] = FySession.sig(importedPressure, 7);
+      cfg['fylite:imported_ip'] = importedIp;
+    }
+    var doc = FySession.envelope('reconstruction', cfg, kernelInfo);
+    if (last) {
+      var r = last.result;
+      doc['fylite:result'] = {
+        equilibrium: FySession.equilibrium(M.grid, r, last.profiles, last.q),
+        magnetics: FySession.magnetics(M, last.meas, last.model, last.wts),
+        pf_active: FySession.pfActive(M, R.aturns),
+        'fylite:coefficients': Array.from(r.coefs),
+        'fylite:shape': r.shape,
+        'fylite:boundary_kind': r.bndKind === 1 ? 'x_point' : 'limiter',
+        'fylite:chi2': last.chi2,
+        'fylite:n_fitted': last.nfit,
+        'fylite:iterations': r.iterations,
+        'fylite:residual': r.residual,
+      };
+      if (last.kineticX && last.kineticX.length)
+        doc['fylite:result']['fylite:kinetic_points'] = {
+          psi_norm: FySession.sig(last.kineticX, 7),
+          pressure: FySession.sig(last.kineticP, 7),
+        };
+      if (last.truth)
+        doc['fylite:result']['fylite:truth'] =
+          FySession.equilibrium(M.grid, last.truth, last.truthProfiles,
+                                last.truthQ);
+    }
+    FyGeqdsk.saveText('fylite_recon_session.json',
+                      JSON.stringify(doc, null, 1));
+    setBusy(false, '已导出 JSON 会话（' + (last ? '含结果' : '仅配置') +
+            '，本地保存，未上传）。');
+  }
+
+  function importJson() {
+    FyGeqdsk.openText(function (text, name, err) {
+      if (err || text === null) {
+        $('status').textContent = '读取失败：' + (err && err.message || name);
+        $('status').className = 'status err';
+        return;
+      }
+      var doc;
+      try { doc = FySession.parse(text); }
+      catch (e) {
+        $('status').textContent = '解析失败：' + e.message;
+        $('status').className = 'status err';
+        return;
+      }
+      if (doc['fylite:page'] !== 'reconstruction') {
+        $('status').textContent = '这份会话来自「' + doc['fylite:page'] +
+          '」页，请在那一页导入。';
+        $('status').className = 'status warn';
+        return;
+      }
+      var cfg = doc['fylite:config'];
+      var res = FySession.apply(cfg);
+      importedPressure = cfg['fylite:imported_pressure'] || null;
+      importedIp = cfg['fylite:imported_ip'] || null;
+      setSource(cfg['fylite:source'] === 'twin' ? 'twin' : 'real');
+      syncLabels();
+      // NOT setBusy(true) here: run() starts with `if (busy) return`, so
+      // marking busy before calling it silently swallows the run
+      setBusy(false, '已导入 ' + name + '（' + res.applied.length + ' 项配置' +
+              (res.skipped.length ? '，跳过 ' + res.skipped.length + ' 项未知' : '') +
+              '）。');
+      run();
+    }, '.json,application/json');
+  }
+
+
+  /** Say what the two verbs will do in the format now selected. */
+  function ioHint() {
+    var json = $('iofmt').value === 'json';
+    $('ioexport').title = json
+      ? '把当前配置与结果导出为 fyo 语义的 JSON 会话'
+      : '把当前平衡写成 EFIT g 文件';
+    $('ioimport').title = json
+      ? '导入本页导出的 JSON 会话（配置，必要时连同结果一并重算）'
+      : ('从 g 文件读取压强剖面与 I_p 作为动理学约束');
+  }
+
   // --- events ---------------------------------------------------------------
 
   SLIDERS.forEach(function (k) {
@@ -333,8 +425,15 @@
   $('tab-real').addEventListener('click', function () { setSource('real'); });
   $('tab-twin').addEventListener('click', function () { setSource('twin'); });
   $('run').addEventListener('click', run);
-  $('gexport').addEventListener('click', exportGfile);
-  $('gimport').addEventListener('click', importGfile);
+  // one pair of verbs; the selector picks which pair of handlers runs
+  $('ioexport').addEventListener('click', function () {
+    ($('iofmt').value === 'json' ? exportJson : exportGfile)();
+  });
+  $('ioimport').addEventListener('click', function () {
+    ($('iofmt').value === 'json' ? importJson : importGfile)();
+  });
+  $('iofmt').addEventListener('change', ioHint);
+  ioHint();
   window.addEventListener('resize', drawAll);
 
   syncLabels();

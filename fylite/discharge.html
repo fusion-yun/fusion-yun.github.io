@@ -44,8 +44,12 @@
         <button id="run">反解</button>
         <button id="solve" class="ghost" title="按当前线圈电流正算一次平衡，不做反解迭代">正解</button>
         <button id="reset" class="ghost">回到参考放电</button>
-        <button id="gimport" class="ghost" title="从 g 文件读取边界形状与 Ip 作为目标">导入 g 文件</button>
-        <button id="gexport" class="ghost" title="把当前平衡写成 EFIT g 文件">导出 g 文件</button>
+        <select id="iofmt" class="io-fmt" title="导入/导出使用的文件格式">
+          <option value="gfile">g 文件 (GEQDSK)</option>
+          <option value="json">JSON 会话 (fyo)</option>
+        </select>
+        <button id="ioimport" class="ghost">导入</button>
+        <button id="ioexport" class="ghost">导出</button>
       </div>
       <div class="bar"><div id="progress"></div></div>
       <div class="status" id="status">正在加载计算内核…</div>
@@ -176,6 +180,7 @@
 <script src="assets/machine.js"></script>
 <script src="assets/physics.js"></script>
 <script src="assets/geqdsk.js"></script>
+<script src="assets/session.js"></script>
 <script src="assets/plot.js"></script>
 <script src="assets/app-design.js"></script>
 </body>

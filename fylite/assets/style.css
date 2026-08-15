@@ -236,3 +236,9 @@ header.top nav { align-items: center; }
   background: none; border: none; color: var(--accent); padding: 0 0 0 6px;
   font: inherit; font-size: 12.5px; cursor: pointer; text-decoration: underline;
 }
+
+.panel.toolbar .io-fmt {
+  flex: 0 0 auto; width: auto; padding: 6px 8px; font-size: 13px;
+  background: var(--bg); color: var(--fg);
+  border: 1px solid var(--grid); border-radius: 6px; align-self: center;
+}
