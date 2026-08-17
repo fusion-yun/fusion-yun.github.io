@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640" role="img" aria-label="Fuyun — integrated modelling and knowledge computing">
+  <!-- Fuyun logo, centered on a 1280x640 (2:1) transparent banner canvas.
+       Same construction and palette as docs/figures/fytok_logo.svg in the FyTok repo:
+       #FF8C00 plasma orange on the highlighted glyphs (F, y — they spell "Fy"),
+       #003366 navy on the rest. -->
+  <svg x="40" y="40" width="1200" height="560" viewBox="0 0 240 100" preserveAspectRatio="xMidYMid meet">
+    <rect width="238" height="98" x="1" y="1" rx="12" fill="none" stroke="#e1e4e8" stroke-width="1"/>
+    <text x="50%" y="43%" font-family="Arial, sans-serif" font-size="54" font-weight="bold" dominant-baseline="middle" text-anchor="middle">
+      <tspan fill="#FF8C00" font-style="italic">F</tspan><tspan fill="#003366">u</tspan><tspan fill="#FF8C00" font-style="italic">y</tspan><tspan fill="#003366">un</tspan>
+    </text>
+    <line x1="40" y1="64" x2="200" y2="64" stroke="#003366" stroke-width="1" stroke-opacity="0.1" />
+    <text x="50%" y="81%" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="6" fill="#42526E" dominant-baseline="middle" text-anchor="middle" font-weight="500" textLength="190" lengthAdjust="spacing">INTEGRATED MODELLING · KNOWLEDGE COMPUTING</text>
+  </svg>
+</svg>

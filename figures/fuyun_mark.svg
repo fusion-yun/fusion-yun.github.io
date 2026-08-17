@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="512" height="512" role="img" aria-label="Fy — the Fuyun mark">
+  <!-- Fuyun mark: the two highlighted glyphs of the wordmark, "Fy".
+       Same card and palette as fuyun_logo.svg. -->
+  <rect width="98" height="98" x="1" y="1" rx="18" fill="none" stroke="#e1e4e8" stroke-width="1"/>
+  <text x="50%" y="56%" font-family="Arial, sans-serif" font-size="62" font-weight="bold" font-style="italic" dominant-baseline="middle" text-anchor="middle">
+    <tspan fill="#FF8C00">F</tspan><tspan fill="#003366">y</tspan>
+  </text>
+</svg>
