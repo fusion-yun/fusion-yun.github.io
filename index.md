@@ -1,7 +1,7 @@
 ---
 layout: default
 title: FuYun —— 聚变集成建模与知识计算
-description: FuYun：本体命名空间 spo / fyo、fylite 在线演示、构成与许可。
+description: FuYun：本体命名空间 spo / fyo、FyLite 在线演示、许可。
 ---
 
 <p align="center"><img src="./figures/fuyun_logo.svg" alt="FuYun" width="520"></p>
@@ -22,8 +22,7 @@ description: FuYun：本体命名空间 spo / fyo、fylite 在线演示、构成
 ## 在线演示
 
 [**FyLite 在线演示**](./fylite/) —— FyLite 用于**测试与展示聚变分析、建模、设计类应用的
-基本功能集**；其 Rust 内核编译为 WebAssembly，在浏览器内直接运行，**无服务端计算**，
-打开即用：
+基本功能集**；计算全部在浏览器内完成，无需安装，打开即用：
 
 - [**放电设计**](./fylite/discharge.html) —— 给定目标截面形状与等离子体参数，反解所需的
   极向场线圈电流，再正算一遍自由边界 Grad–Shafranov 平衡，校验真正得到的位形。
@@ -67,7 +66,7 @@ FyO `imports: [spo]`。引用方式（远程 `@context`）：
 | :--- | :--- | :--- |
 | 站点其余部分 | 页面、散文、图形、样式 | [CC BY-ND 4.0](./LICENSE) |
 | `/spo/` `/fyo/` | 本体制品（LinkML 源、清单、编译 OWL / SHACL / JSON-LD）| [CC BY-ND 4.0](./spo/LICENSE) |
-| `/fylite/` | fylite 二进制制品（WebAssembly 模块与装载脚本）| [二进制再分发许可](./fylite/LICENSE) |
+| `/fylite/` | FyLite 二进制制品与装载脚本 | [二进制再分发许可](./fylite/LICENSE) |
 
 Copyright © 2024–2026 YU Zhi（于治），中国科学院合肥物质科学研究院等离子体物理研究所（ASIPP）。
 
@@ -83,6 +82,5 @@ the fusion-domain ontology (apparatus core plus a semantic lift of IMAS DD 4.1.1
 SHACL and JSON-LD, resolvable directly from their prefix IRIs. Both are **`v0.draft`, not stable
 namespaces**. It also hosts [**FyLite**](./fylite/), which exercises and demonstrates the basic
 capability set of fusion analysis, modelling and design applications — tokamak equilibrium design
-and reconstruction in the browser, its Rust kernel running as WebAssembly with no server-side
-compute.
+and reconstruction, computed entirely in the browser with nothing to install.
 Source repositories are not public; see [LICENSE](./LICENSE) for the per-path terms.
