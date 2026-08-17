@@ -1,0 +1,56 @@
+fylite — Binary Redistribution License (source not published)
+Copyright (c) 2026 YU Zhi (于治), ASIPP — Institute of Plasma Physics,
+Chinese Academy of Sciences — and the SimPLA-Fusion project contributors.
+All rights reserved.
+
+This notice governs the material served under `/fylite/` on this site: compiled binary
+artifacts (WebAssembly modules) and the loader scripts distributed with them.  It is
+Part C of the site-wide notice in ../LICENSE, restated here so it travels with the
+artifacts.  This material is NOT under a Creative Commons licence.
+
+1. BINARY GRANT (free of charge)
+   Permission is granted, free of charge, to any person obtaining a copy of these
+   artifacts to use, run, and redistribute them VERBATIM, for any purpose, including
+   commercially, provided that:
+   (a) this notice is reproduced with any redistribution;
+   (b) attribution is given to YU Zhi / ASIPP and the SimPLA-Fusion project;
+   (c) the artifact is not altered (see Section 3).
+   No fee is charged and none may be demanded for the artifact itself.
+
+2. SOURCE CODE IS NOT PUBLISHED
+   No licence to fylite source code is granted by this notice.  The source repository is
+   not public, and nothing here obliges the copyright holder to publish, disclose, or
+   deliver source code, build scripts, or intermediate artifacts.
+
+3. RESTRICTIONS
+   Without prior written permission of the copyright holder, you may NOT:
+   (a) distribute a modified artifact, or any work derived from one;
+   (b) decompile, disassemble, or otherwise reverse engineer an artifact, except to the
+       extent such an act cannot lawfully be prohibited;
+   (c) remove or alter this notice or the attributions required by Section 4;
+   (d) represent the artifact as your own work, or use the names YU Zhi, ASIPP, or
+       SimPLA-Fusion to endorse a derived product.
+
+4. SCOPE AND RETAINED UPSTREAM OBLIGATIONS
+   fylite vendors third-party physics codes whose upstream terms forbid redistribution
+   or publication (an EFIT lineage held by ASIPP / General Atomics; GRAY; PENCIL and
+   JINTRAC support units).  The grant in Section 1 extends ONLY to artifacts built from
+   the derived distribution from which those components, and every build artifact
+   derived from them, have been removed.  An artifact built from, linked against, or
+   embedding any such component is NOT covered by Section 1 and MUST NOT be
+   redistributed.
+
+   Where an artifact carries GACODE-derived components (Apache-2.0) or clean-room
+   reimplementations of them, the attribution and NOTICE obligations of Apache-2.0 apply
+   and MUST be satisfied by any redistribution.
+
+   Where terms differ, THE MOST RESTRICTIVE APPLICABLE TERM GOVERNS.  The authoritative
+   per-component provenance record is maintained with the fylite source distribution
+   (its `LICENSE` and `LICENSE.binary`).
+
+5. NO WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+   INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+   PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE
+   LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM, OUT OF, OR IN
+   CONNECTION WITH THE SOFTWARE OR ITS USE.

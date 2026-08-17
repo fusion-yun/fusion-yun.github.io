@@ -1,109 +1,34 @@
-fusion-yun.github.io — Licensing Notice
-Copyright (c) 2024-2026 YU Zhi (于治), ASIPP
+spo — the Sp ecosystem upper ontology
+Copyright (c) 2026 YU Zhi (于治), ASIPP
 Institute of Plasma Physics, Chinese Academy of Sciences (ASIPP), Hefei, China
 All rights reserved except as granted below.
 
-This site publishes three kinds of material under three different terms.
-The path a file is served from determines which part governs it.
-
-  ---------------------------------------------------------------------
-  Part   Material                                    Terms
-  ---------------------------------------------------------------------
-  A      The site itself — pages, prose, figures,    CC BY-ND 4.0
-         images, styles (everything not covered
-         by Part B or Part C)
-  B      /spo/... and /fyo/... — the SpO and FyO     CC BY-ND 4.0
-         ontology artifacts (LinkML schemas,
-         manifests, catalogs, compiled OWL /
-         SHACL / JSON-LD, accompanying prose)
-  C      /fylite/... — fylite binary artifacts       Binary redistribution,
-         (WebAssembly modules, loader scripts)       free of charge;
-                                                     source not published
-  ---------------------------------------------------------------------
-
-Each published tree also carries its own copy of the applicable terms, so that the
-licence travels with the material: `/spo/LICENSE`, `/fyo/LICENSE`, `/fylite/LICENSE`.
-Those copies restate Parts B and C; this file remains the authoritative notice.
-
-
-PART A — THE SITE (CC BY-ND 4.0)
-================================
-
 SPDX-License-Identifier: CC-BY-ND-4.0
+
+The spo ontology artifact — its LinkML schemas, manifest, catalog, compiled
+OWL / SHACL / JSON-LD serializations, and accompanying prose — is licensed
+under the Creative Commons Attribution-NoDerivatives 4.0 International
+License (CC BY-ND 4.0).
 
   Deed:       https://creativecommons.org/licenses/by-nd/4.0/
   Legal code: https://creativecommons.org/licenses/by-nd/4.0/legalcode
+  Published:  https://fusion-yun.github.io/spo/v0.draft/
 
-You may copy and redistribute this material in any medium or format, for any
+You may copy and redistribute this artifact in any medium or format, for any
 purpose, including commercially, with attribution to YU Zhi / ASIPP.  You may
-not distribute a modified version of it.  The complete legal code is
-reproduced at the end of this file.
+not distribute a modified version of it.
 
-
-PART B — SpO AND FyO ONTOLOGY ARTIFACTS (CC BY-ND 4.0)
-=====================================================
-
-SPDX-License-Identifier: CC-BY-ND-4.0
-
-The material served under /spo/ and /fyo/ is licensed under the same terms as
-Part A.  These are published copies; the upstream artifacts carry the
-identical notice in their own repositories.
-
-NOTE ON IMPORTING.  Referencing these ontologies from another schema (a LinkML
+NOTE ON IMPORTING.  Referencing this ontology from another schema (a LinkML
 `imports:` entry, a JSON-LD `@context` prefix, an `owl:imports` statement, or
 an `@type` / CURIE assertion in instance data) does NOT create a modified
-version of them and is NOT restricted by the NoDerivatives term.  What the
-term restricts is redistributing an altered copy of the artifacts' own files.
+version of it and is NOT restricted by the NoDerivatives term.  What the term
+restricts is redistributing an altered copy of the artifact's own files.
 
+SCOPE.  This notice governs the spo artifact only.  Other material in the
+spmodel repository is governed by the repository LICENSE.
 
-PART C — fylite BINARY ARTIFACTS (binary redistribution, source not published)
-=============================================================================
+The complete legal code of CC BY-ND 4.0 follows.
 
-The material served under /fylite/ consists of compiled binary artifacts
-(WebAssembly modules and the loader scripts distributed with them).  It is
-NOT under a Creative Commons licence.
-
-GRANT.  Permission is granted, free of charge, to any person obtaining a copy
-of these artifacts to use, run, and redistribute them VERBATIM, for any
-purpose, including commercially, provided that this notice is reproduced with
-any redistribution and attribution is given to YU Zhi / ASIPP and the
-SimPLA-Fusion project.
-
-SOURCE.  No licence to fylite source code is granted.  The source repository
-is not public, and nothing here obliges the copyright holder to publish,
-disclose, or deliver source code or build scripts.
-
-RESTRICTIONS.  Without prior written permission you may not distribute a
-modified artifact or any work derived from one; may not decompile,
-disassemble, or otherwise reverse engineer an artifact, except to the extent
-such an act cannot lawfully be prohibited; and may not remove or alter this
-notice.
-
-SCOPE.  Artifacts published here are built from the derived distribution
-`fusion-yun/fylite`, from which the restricted vendored components (EFIT
-lineage, GRAY, PENCIL / JINTRAC) and every build artifact derived from them
-have been removed.  This grant extends ONLY to such artifacts.  Any artifact
-built from, linked against, or embedding a restricted component is NOT
-covered and MUST NOT be redistributed.
-
-RETAINED UPSTREAM OBLIGATIONS.  Where an artifact carries GACODE-derived
-components or clean-room reimplementations of them (Apache-2.0), the
-attribution and NOTICE obligations of Apache-2.0 apply and must be satisfied
-by any redistribution.  Where terms differ, the most restrictive applicable
-term governs.  The full per-component provenance record is maintained with
-the fylite source distribution (`LICENSE` and `LICENSE.binary`).
-
-
-HISTORICAL NOTE
-===============
-
-Before 2026-08-17 this repository carried a CC0 1.0 Universal public-domain
-dedication.  That dedication is irrevocable for material already published
-under it; the terms above apply from 2026-08-17 onward.
-
-
-=======================================================================
-COMPLETE LEGAL CODE OF CC BY-ND 4.0 (applies to Parts A and B)
 =======================================================================
 
 Attribution-NoDerivatives 4.0 International
