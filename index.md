@@ -79,14 +79,25 @@ FyO `imports: [spo]`。引用方式（远程 `@context`）：
 
 ## In brief (English)
 
-**FuYun** is a suite of software for integrated modelling and knowledge computing in fusion
-science and engineering. This site publishes its two language-neutral ontology namespaces —
-[**spo**](./spo/v0.draft/), the upper ontology (BFO-grounded), and [**fyo**](./fyo/v0.draft/),
-the fusion-domain ontology (apparatus core plus a semantic lift of IMAS DD 4.1.1) — as OWL,
-SHACL and JSON-LD, resolvable directly from their prefix IRIs. Both are **`v0.draft`, not stable
-namespaces**. It also hosts [**FyLite**](./fylite/), which exercises and demonstrates the basic
-capability set of fusion analysis, modelling and design applications — tokamak equilibrium design
-and reconstruction, computed entirely in the browser with nothing to install.
+**FuYun** is integrated-modelling software for fusion research and engineering. Machine
+description, diagnostic measurements, equilibrium and transport all sit under one data
+convention, so a discharge can be carried from measurement to profiles, and from shape design
+to verification, in a single chain that someone else can run again and get the same answer.
+Machine geometry, coil and diagnostic layout and discharge data follow the IMAS Data
+Dictionary, so an analysis written for one device carries over to another; equilibrium,
+transport and source models are separate blocks, so one can be swapped for a comparison run
+without touching the rest; and inputs, code versions and acceptance criteria are recorded
+alongside every result.
+
+Two parts are published here. [**FyLite**](./fylite/) exercises and demonstrates the basic
+capability set of fusion analysis, modelling and design applications — tokamak equilibrium
+design and reconstruction, computed entirely in the browser with nothing to install. The
+**spo** and **fyo** vocabularies state what each field in the data *is*; they are written in
+LinkML and published as OWL, SHACL and JSON-LD, resolvable straight from their prefix IRIs
+([spo](./spo/v0.draft/), the upper vocabulary; [fyo](./fyo/v0.draft/), the fusion-domain one,
+covering the apparatus and a semantic lift of IMAS DD 4.1.1). Both are **`v0.draft`, not
+stable namespaces**.
+
 Source repositories are not public; see [LICENSE](./LICENSE) for the per-path terms.
 
 ---
