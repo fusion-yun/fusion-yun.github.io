@@ -1,0 +1,19 @@
+# Site identity for FuYun.
+# Kept in the repository (rather than inherited from GitHub Pages settings) so the
+# title, description and theme are reproducible from the source tree alone.
+# actions/configure-pages injects `baseurl` / `url` at build time.
+
+title: FuYun
+description: 面向聚变科学与工程的集成建模与知识计算
+lang: zh-CN
+
+theme: jekyll-theme-primer
+
+plugins:
+  - jekyll-seo-tag
+
+# Repository documentation is for maintainers, not site visitors.
+# NOTE: LICENSE must stay published — /LICENSE is linked from the site and from
+# the per-tree notices under /spo/, /fyo/ and /fylite/.
+exclude:
+  - README.md
