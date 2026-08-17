@@ -1,0 +1,454 @@
+id: https://fusion-yun.github.io/fyo/v0.draft/imas/v4/breeding_blanket
+name: fyo-imas-breeding_blanket
+title: fyo IDS `breeding_blanket` (lifted, DD 4.1.1)
+description: 'Semantic lift of IMAS DD IDS `breeding_blanket` onto SpO/BFO (FYTOK-ADR-102): structures
+  grounded as ICEs, time-slice AoS elements as spo:TimeSlice, leaves annotated with their spo carrier
+  classes (Signal / Field / Function / QuantityValue / TimeAxis). Layout is preserved in dd_* annotations
+  (reverse map ω).'
+license: CC-BY-ND-4.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  fyo: https://fusion-yun.github.io/fyo/v0.draft/
+  spo: https://fusion-yun.github.io/spo/v0.draft/
+  imas: https://imas.iter.org/dd/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+default_prefix: fyo
+default_range: string
+imports:
+- linkml:types
+- spo
+- fyo-core
+- fyo-common
+annotations:
+  generated_by: dd2fyo 0.1.0
+  dd_version: 4.1.1
+  dd_source: ../imas/v4/breeding_blanket.linkml.yaml (mechanical layer)
+  fyo_category: device
+  fyo_root_class: BreedingBlanket
+  provenance: DO NOT EDIT — regenerate via ontology/dd2fyo.py.
+classes:
+  BreedingBlanket:
+    is_a: IDS
+    description: Description of the breeding blanket and neutron shield (if any, the shield is considered
+      as an additional layer of a given blanket module)
+    annotations:
+      dd_path: breeding_blanket
+      fyo_category: device
+    attributes:
+      ids_properties:
+        range: IdsProperties
+        description: Interface Data Structure properties. This element identifies the node above as an
+          IDS
+      module:
+        range: BbModule
+        multivalued: true
+        description: Set of modules composing the blanket
+        annotations:
+          dd_max_occurs: '6'
+          dd_coordinate1: 1...N
+      time_slice:
+        range: BbTimeSlice
+        multivalued: true
+        description: Dynamic quantities for a set of time_slices
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+      modules_pol_n:
+        range: integer
+        description: Number of blanket modules in a poloidal cross section
+        annotations:
+          dd_type: static
+      modules_n:
+        range: integer
+        description: Total number of blanket modules
+        annotations:
+          dd_type: static
+      pb_li_volume:
+        range: float
+        description: Volume of PbLi contained in the blanket
+        annotations:
+          dd_type: static
+          dd_units: m^3
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      li6_fraction:
+        range: float
+        description: Fraction of Li6 isotope over the total amount of Li in the blanket
+        annotations:
+          dd_type: static
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      steel_temperature_limit_max:
+        range: float
+        description: Maximum allowed temperature for steel
+        annotations:
+          dd_type: static
+          dd_units: K
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      code:
+        range: IdsCode
+        description: Generic decription of the code-specific parameters for the code that has produced
+          this IDS
+      time:
+        range: float
+        multivalued: true
+        description: Generic time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  BbModule:
+    is_a: InformationContentEntity
+    description: Set of modules composing the blanket
+    annotations:
+      dd_type_name: bb_module
+      dd_path: breeding_blanket/module
+    attributes:
+      name:
+        range: string
+        description: Short string identifier (unique for a given device)
+        annotations:
+          dd_type: static
+      layer:
+        range: BbModuleLayer
+        multivalued: true
+        description: Set of layers in the blanket module
+        annotations:
+          dd_max_occurs: '6'
+          dd_coordinate1: 1...N
+      cooling:
+        range: BbModuleCooling
+        description: Cooling system of this module
+      time_slice:
+        range: BbModuleTimeSlice
+        multivalued: true
+        description: Dynamic quantities at various time slices
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+      top_cap_thickness:
+        range: float
+        description: Top cap poloidal thickness
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      bottom_cap_thickness:
+        range: float
+        description: Bottom cap poloidal thickness
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      side_wall_thickness:
+        range: float
+        description: Side wall thickness
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  BbModuleLayer:
+    is_a: InformationContentEntity
+    description: Set of layers in the blanket module
+    annotations:
+      dd_type_name: bb_module_layer
+      dd_path: breeding_blanket/module/layer
+    attributes:
+      name:
+        range: string
+        description: Short string identifier (unique for a given device)
+        annotations:
+          dd_type: static
+      material:
+        range: Identifier
+        multivalued: true
+        description: Set of materials entering the composition of this layer
+        annotations:
+          dd_max_occurs: '4'
+          dd_coordinate1: 1...N
+      material_volume_fraction:
+        range: float
+        multivalued: true
+        description: Volume fraction of each material entering the composition of this layer
+        annotations:
+          dd_type: static
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../material
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../material
+      midplane_thickness:
+        range: float
+        description: Thickness of this layer evaluated at the midplane
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      time_slice:
+        range: BbModuleLayerTimeSlice
+        multivalued: true
+        description: Dynamic quantities at various time slices
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+  BbModuleLayerTimeSlice:
+    is_a: TimeSlice
+    description: Dynamic quantities at various time slices
+    annotations:
+      dd_type_name: bb_module_layer_time_slice
+      dd_path: breeding_blanket/module/layer/time_slice
+      fyo_lift: time_slice
+    attributes:
+      midplane_power_density_nuclear:
+        range: float
+        description: Nuclear heating power density in the layer, evaluated at midplane
+        annotations:
+          dd_type: dynamic
+          dd_units: W.m^-3
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      power_nuclear:
+        range: float
+        description: Nuclear power heating this layer
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      time:
+        range: float
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  BbModuleCooling:
+    is_a: InformationContentEntity
+    description: Cooling system of this module
+    annotations:
+      dd_type_name: bb_module_cooling
+      dd_path: breeding_blanket/module/cooling
+    attributes:
+      coolant:
+        range: Identifier
+        description: Cooling material
+      time_slice:
+        range: BbModuleCoolingTimeSlice
+        multivalued: true
+        description: Dynamic quantities at various time slices
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+  BbModuleCoolingTimeSlice:
+    is_a: TimeSlice
+    description: Dynamic quantities at various time slices
+    annotations:
+      dd_type_name: bb_module_cooling_time_slice
+      dd_path: breeding_blanket/module/cooling/time_slice
+      fyo_lift: time_slice
+    attributes:
+      temperature_inlet:
+        range: float
+        description: Inlet coolant temperature
+        annotations:
+          dd_type: dynamic
+          dd_units: K
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      pressure_inlet:
+        range: float
+        description: Inlet coolant pressure
+        annotations:
+          dd_type: dynamic
+          dd_units: Pa
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      temperature_outlet:
+        range: float
+        description: Outlet coolant temperature
+        annotations:
+          dd_type: dynamic
+          dd_units: K
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      time:
+        range: float
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  BbModuleTimeSlice:
+    is_a: TimeSlice
+    description: Dynamic quantities at various time slices
+    annotations:
+      dd_type_name: bb_module_time_slice
+      dd_path: breeding_blanket/module/time_slice
+      fyo_lift: time_slice
+    attributes:
+      midplane_wall_distance:
+        range: float
+        multivalued: true
+        description: Radial distance from the first wall evaluated at the midplane (0.0 at the first wall)
+        annotations:
+          dd_type: dynamic
+          dd_units: m
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      midplane_power_density_nuclear:
+        range: float
+        multivalued: true
+        description: Nuclear heating power density in the module, evaluated at midplane
+        annotations:
+          dd_type: dynamic
+          dd_units: W.m^-3
+          dd_ndim: 1
+          dd_coordinate1: ../midplane_wall_distance
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../midplane_wall_distance
+      escape_flux_max:
+        range: float
+        description: Maximum neutron flux escaping from the back of the blanket module
+        annotations:
+          dd_type: dynamic
+          dd_units: W.m^-2
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      wall_flux_max:
+        range: float
+        description: Maximum neutron flux at the first wall
+        annotations:
+          dd_type: dynamic
+          dd_units: W.m^-2
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      power_incident_neutron:
+        range: float
+        description: Total incident neutron power on the blanket module
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      power_incident_radiated:
+        range: float
+        description: Total incident radiative power on the blanket module
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      power_thermal_extracted:
+        range: float
+        description: Total thermal power that is extracted from the blanket module
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      power_thermal_neutrons:
+        range: float
+        description: Total neutron power (deposited + generated) in the blanket module
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      power_thermal_radiated:
+        range: float
+        description: Total radiated power (incident - reflected) in the blanket module
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      tritium_breeding_ratio:
+        range: float
+        description: Number of tritium atoms created for each fusion neutron (TBR)
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      time:
+        range: float
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  BbTimeSlice:
+    is_a: TimeSlice
+    description: Dynamic quantities for a set of time_slices
+    annotations:
+      dd_type_name: bb_time_slice
+      dd_path: breeding_blanket/time_slice
+      fyo_lift: time_slice
+    attributes:
+      power_nuclear_blanket:
+        range: float
+        description: Nuclear heating power on the blanket
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      power_nuclear_shields:
+        range: float
+        description: Nuclear heating power on the shields
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      tritium_breeding_ratio:
+        range: float
+        description: Number of tritium atoms created for each fusion neutron (TBR)
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      energy_multiplication_factor:
+        range: float
+        description: Energy multiplication factor
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      time:
+        range: float
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity

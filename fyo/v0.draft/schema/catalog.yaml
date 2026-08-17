@@ -1,0 +1,25 @@
+# catalog.yaml — language-neutral LinkML import catalog for fyo (FYTOK-ADR-101 D3, layout per
+# FYTOK-ADR-102; mirrors SPM-ADR-107 D3).
+#
+# Resolves fyo's own module names / IRIs to schema FILES without Python. The upstream ``spo``
+# import is NOT duplicated here — it is delegated to spo's neutral catalog (the Python binding
+# merges this with ``spo.importmap()``; a non-Python consumer reads both catalogs). Files are
+# relative to this catalog's directory (``fyo/schema/``).
+#
+# The generated per-IDS lift modules resolve through the generated manifest
+# (../imas/v<major>/manifest.yaml); only the durable hand-curated module and the shared
+# generated ``fyo-common`` are cataloged here by name.
+version: 0.6.0
+
+by_name:
+  fyo-core: fyo-core.linkml.yaml
+  fyo-common: ../imas/v4/fyo-common.linkml.yaml
+
+by_iri:
+  https://fusion-yun.github.io/fyo/v0.draft/core: fyo-core.linkml.yaml
+  https://fusion-yun.github.io/fyo/v0.draft/imas/v4/common: ../imas/v4/fyo-common.linkml.yaml
+
+# Upstream resolution (informative): ``imports: [spo]`` resolves through the spo artifact's
+# own schema/catalog.yaml (spmodel/ontology). The Python binding does this via spo.importmap().
+delegates:
+  spo: https://fusion-yun.github.io/spo/v0.draft/spo

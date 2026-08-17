@@ -1,0 +1,36 @@
+# catalog.yaml — language-neutral LinkML import catalog for spo (SPM-ADR-107 D3).
+#
+# Resolves a downstream schema's ``imports: [spo]`` (or a bare module / module IRI) to a
+# schema FILE, WITHOUT any Python. This REPLACES the old Python-computed importmap
+# (``spo_importmap()`` walking ``spo.MODULES`` / ``spo.ONTOLOGY_DIR``). A consumer in any
+# language reads this file and prefixes the relative ``file`` with its local absolute schema
+# directory to feed its LinkML tooling (e.g. ``SchemaView(..., importmap=...)``).
+#
+# ``by_name`` mirrors manifest ``modules`` (the authoritative set); ``by_iri`` adds RDF-native
+# resolution so a module IRI resolves to its file (foundation for future w3id/PURL redirects,
+# SPM-ADR-107 OI-1). Files are relative to this catalog's directory.
+version: 0.3.0
+
+by_name:
+  spo: spo.linkml.yaml
+  spo-core: spo-core.linkml.yaml
+  spo-types: spo-types.linkml.yaml
+  spo-domain: spo-domain.linkml.yaml
+  spo-geometry: spo-geometry.linkml.yaml
+  spo-signal: spo-signal.linkml.yaml
+  spo-time: spo-time.linkml.yaml
+  spo-quantity: spo-quantity.linkml.yaml
+  spo-vocab: spo-vocab.linkml.yaml
+  spo-provenance: spo-provenance.linkml.yaml
+
+by_iri:
+  https://fusion-yun.github.io/spo/v0.draft/spo: spo.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.draft/core: spo-core.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.draft/types: spo-types.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.draft/domain: spo-domain.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.draft/geometry: spo-geometry.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.draft/signal: spo-signal.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.draft/time: spo-time.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.draft/quantity: spo-quantity.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.draft/vocab: spo-vocab.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.draft/provenance: spo-provenance.linkml.yaml

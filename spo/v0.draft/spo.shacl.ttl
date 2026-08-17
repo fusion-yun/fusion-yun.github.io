@@ -1,0 +1,1490 @@
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix spo: <https://fusion-yun.github.io/spo/v0.draft/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://purl.obolibrary.org/obo/BFO_0000002> a sh:NodeShape ;
+    rdfs:comment "An entity that persists through time keeping its identity, with no temporal parts (BFO continuant)." ;
+    sh:closed false ;
+    sh:ignoredProperties ( spo:dimension_vector spo:is_function_of spo:dual_view_of spo:is_record_of spo:repository spo:discretizes_spacetime spo:discretizes_time spo:description spo:about_occurrent spo:has_coordinate_system spo:has_domain <http://qudt.org/schema/qudt/hasQuantityKind> spo:equivalent_representation spo:coordinate spo:has_time_axis spo:index spo:ucum_code rdf:type spo:of_quality spo:describes_region spo:prescribes spo:has_slice spo:commit spo:version spo:of_coordinate_system spo:chart_kind spo:metric_kind spo:name spo:geometry_role spo:numeric_value spo:draws_from spo:representation_of spo:time spo:at_instant spo:slice_of <http://purl.obolibrary.org/obo/BFO_0000051> spo:timebase_source spo:at_time spo:has_spatial_base spo:has_provenance spo:samples spo:symbol <http://purl.obolibrary.org/obo/IAO_0000136> spo:uses_library <http://purl.obolibrary.org/obo/RO_0000052> spo:occupies spo:unit spo:data spo:has_channel spo:executed_code spo:has_metric <http://qudt.org/schema/qudt/hasUnit> spo:coordinate_axis spo:quantity_kind spo:manifold_dim ) ;
+    sh:targetClass <http://purl.obolibrary.org/obo/BFO_0000002> .
+
+<http://purl.obolibrary.org/obo/BFO_0000004> a sh:NodeShape ;
+    rdfs:comment "A continuant that is the bearer of qualities and does not depend on other entities (BFO independent continuant)." ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type <http://purl.obolibrary.org/obo/BFO_0000051> spo:occupies spo:coordinate ) ;
+    sh:targetClass <http://purl.obolibrary.org/obo/BFO_0000004> .
+
+<http://purl.obolibrary.org/obo/BFO_0000008> a sh:NodeShape ;
+    rdfs:comment "A region of time (BFO temporal region). A dynamic quantity is a Quality over a TemporalRegion; DD `time_slice[]` dissolves to a TemporalRegion domain (C-1 / L1)." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:targetClass <http://purl.obolibrary.org/obo/BFO_0000008> .
+
+<http://purl.obolibrary.org/obo/BFO_0000020> a sh:NodeShape ;
+    rdfs:comment "A continuant that depends on one specific bearer (BFO SDC)." ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type <http://purl.obolibrary.org/obo/RO_0000052> ) ;
+    sh:targetClass <http://purl.obolibrary.org/obo/BFO_0000020> .
+
+<http://purl.obolibrary.org/obo/BFO_0000031> a sh:NodeShape ;
+    rdfs:comment "A continuant that can be copied across bearers (BFO GDC). Base of information artifacts and scenarios." ;
+    sh:closed false ;
+    sh:ignoredProperties ( spo:dimension_vector spo:is_function_of spo:dual_view_of spo:is_record_of spo:repository spo:discretizes_spacetime spo:discretizes_time spo:description spo:about_occurrent spo:has_coordinate_system spo:has_domain <http://qudt.org/schema/qudt/hasQuantityKind> spo:equivalent_representation spo:has_time_axis spo:index spo:ucum_code rdf:type spo:of_quality spo:describes_region spo:prescribes spo:has_slice spo:commit spo:version spo:of_coordinate_system spo:chart_kind spo:metric_kind spo:name spo:geometry_role spo:numeric_value spo:draws_from spo:representation_of spo:time spo:at_instant spo:slice_of spo:timebase_source spo:at_time spo:has_spatial_base spo:has_provenance spo:samples spo:symbol <http://purl.obolibrary.org/obo/IAO_0000136> spo:uses_library <http://purl.obolibrary.org/obo/RO_0000052> spo:unit spo:data spo:has_channel spo:executed_code spo:has_metric <http://qudt.org/schema/qudt/hasUnit> spo:coordinate_axis spo:quantity_kind spo:manifold_dim ) ;
+    sh:targetClass <http://purl.obolibrary.org/obo/BFO_0000031> .
+
+<http://purl.obolibrary.org/obo/BFO_0000035> a sh:NodeShape ;
+    rdfs:comment "The instantaneous temporal boundary of a process (BFO 2020). Parented on Occurrent, following BFO's own hierarchy — a process boundary is not itself a process. Added with ContinuantFiatBoundary, for the same reason (SPM-REPORT-104)." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:targetClass <http://purl.obolibrary.org/obo/BFO_0000035> .
+
+<http://purl.obolibrary.org/obo/BFO_0000140> a sh:NodeShape ;
+    rdfs:comment "A zero-, one- or two-dimensional immaterial entity whose location is fixed relative to some material entity, and which never has a spatial region as continuant part (BFO 2020 elucidation). Carrier of a demarcation drawn on a thing rather than found in it — a region's fiat boundary, a nominal surface. Added when the conformance gate found `sp.mathx.region.FiatBoundary` anchored to a BFO term the T-Box did not carry: the ontology is authoritative, so the gap was the ontology's (SPM-REPORT-104)." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:targetClass <http://purl.obolibrary.org/obo/BFO_0000140> .
+
+<http://purl.obolibrary.org/obo/BFO_0000141> a sh:NodeShape ;
+    rdfs:comment "An independent continuant with no material parts (BFO immaterial entity). Base of regions / sites." ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type spo:coordinate ) ;
+    sh:targetClass <http://purl.obolibrary.org/obo/BFO_0000141> .
+
+<http://purl.obolibrary.org/obo/IAO_0000030> a sh:NodeShape ;
+    rdfs:comment "A generically dependent continuant that is about something (IAO information content entity). An IDS as a whole is an ICE. The is_about slot is the REALITY / DESCRIPTION bridge: the EAST tokamak is a MaterialEntity; a drawing of its vacuum vessel, a machine-description IDS, or a reconstructed equilibrium are ICEs ABOUT it — never the thing itself." ;
+    sh:closed true ;
+    sh:ignoredProperties ( spo:dimension_vector spo:is_function_of spo:dual_view_of spo:is_record_of spo:repository spo:discretizes_spacetime spo:discretizes_time spo:description spo:about_occurrent spo:has_coordinate_system spo:has_domain <http://qudt.org/schema/qudt/hasQuantityKind> spo:equivalent_representation spo:has_time_axis spo:index spo:ucum_code rdf:type spo:of_quality spo:describes_region spo:prescribes spo:has_slice spo:commit spo:version spo:of_coordinate_system spo:chart_kind spo:metric_kind spo:name spo:geometry_role spo:numeric_value spo:draws_from spo:representation_of spo:time spo:at_instant spo:slice_of spo:timebase_source spo:at_time spo:has_spatial_base spo:samples spo:symbol spo:uses_library <http://purl.obolibrary.org/obo/RO_0000052> spo:unit spo:data spo:has_channel spo:executed_code spo:has_metric <http://qudt.org/schema/qudt/hasUnit> spo:coordinate_axis spo:quantity_kind spo:manifold_dim ) ;
+    sh:property [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:has_provenance ] ;
+    sh:targetClass <http://purl.obolibrary.org/obo/IAO_0000030> .
+
+<http://purl.obolibrary.org/obo/IAO_0000104> a sh:NodeShape ;
+    rdfs:comment "A directive information content entity that prescribes a planned process (IAO plan specification). A pulse_schedule (reference waveforms / setpoints) is a PlanSpecification prescribing a discharge (C-10). class_uri version-sensitive — verify." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:has_provenance ] ;
+    sh:targetClass <http://purl.obolibrary.org/obo/IAO_0000104> .
+
+<http://purl.obolibrary.org/obo/OBI_0000011> a sh:NodeShape ;
+    rdfs:comment "A process that realizes a plan specification (OBI planned process). An experiment / planned discharge." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class <http://purl.obolibrary.org/obo/BFO_0000011> ;
+            sh:description "The 4D spacetime region over which this process unfolds (4D extension bridge)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path spo:has_spacetime_extent ],
+        [ sh:datatype xsd:string ;
+            sh:description "An information content entity produced by this process (e.g. an IDS)." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path spo:has_output ],
+        [ sh:datatype xsd:string ;
+            sh:description "This planned process realizes a plan / specification — a pulse_schedule for a discharge, or a Code (the program text) for a ComputationalProcess (program = GDC, run = Process, result = ICE output)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path <http://purl.obolibrary.org/obo/BFO_0000055> ],
+        [ sh:datatype xsd:string ;
+            sh:description "An information / material input consumed by this process." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path spo:has_input ] ;
+    sh:targetClass <http://purl.obolibrary.org/obo/OBI_0000011> .
+
+<http://qudt.org/schema/qudt/QuantityValue> a sh:NodeShape ;
+    rdfs:comment "A scalar physical quantity value — numeric value + Unit + QuantityKind (the lift of a DD FLT_0D leaf with units; e.g. `vacuum_toroidal_field/b0` at one instant). The information counterpart of a fully determinate Quality; for quantities extended over a Domain use ContinuousQuantity (Field/Signal) instead." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class <http://qudt.org/schema/qudt/QuantityKind> ;
+            sh:description "The QuantityKind this value/quantity determines (determinable ← determinate)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path <http://qudt.org/schema/qudt/hasQuantityKind> ],
+        [ sh:class <http://qudt.org/schema/qudt/Unit> ;
+            sh:description "The Unit the numeric value is expressed in." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path <http://qudt.org/schema/qudt/hasUnit> ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path spo:has_provenance ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 5 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000019> ;
+            sh:description "The world-side Quality (SDC inhering in a MaterialEntity) this information is about — the reality/description bridge for scalar values (iao:is_about specialization)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path spo:of_quality ],
+        [ sh:datatype xsd:float ;
+            sh:description "The numeric value in has_unit." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path spo:numeric_value ] ;
+    sh:targetClass <http://qudt.org/schema/qudt/QuantityValue> .
+
+spo:ComputationRecord a sh:NodeShape ;
+    rdfs:comment "The record of a ComputationalProcess — a run manifest: which Code (program, GDC) was executed, with which inputs, producing which outputs (workflow-run document, solver log). Completes the program / computation / result triangle: Code (plan, GDC) — ComputationalProcess (occurrent, realizes the Code) — output ICEs (results) — this record (information about the run, distinct from the results themselves)." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class <http://purl.obolibrary.org/obo/BFO_0000015> ;
+            sh:description "The process this record is about and generated by (iao:is_about + prov:wasGeneratedBy)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path spo:is_record_of ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path spo:has_provenance ],
+        [ sh:class spo:Code ;
+            sh:description "The Code (program) whose execution this record documents (prov:used the plan)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path spo:executed_code ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ] ;
+    sh:targetClass spo:ComputationRecord .
+
+spo:ComputationalProcess a sh:NodeShape ;
+    rdfs:comment "A computational process (a code run) producing simulated / reconstructed data. Reproducible given (code, inputs, version). When it consumes measured inputs (e.g. an equilibrium reconstruction over real magnetics) its output is reconstructed (measured-derived)." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "An information / material input consumed by this process." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:has_input ],
+        [ sh:datatype xsd:string ;
+            sh:description "An information content entity produced by this process (e.g. an IDS)." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path spo:has_output ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000011> ;
+            sh:description "The 4D spacetime region over which this process unfolds (4D extension bridge)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path spo:has_spacetime_extent ] ;
+    sh:targetClass spo:ComputationalProcess .
+
+spo:Curve a sh:NodeShape ;
+    rdfs:comment "A 1-D geometric object / manifold_dim 1 (e.g. flux-surface outline, limiter contour). Analytic children (Line / Ray / Segment / Circle / Ellipse) are sp_mathx plugin specializations dispatched by ``sp:plugin_name``; all lift here as spo:Curve." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path spo:has_provenance ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Topological (manifold) dimension of the primitive — 0 point / 1 curve / 2 surface / 3 solid." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:manifold_dim ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000006> ;
+            sh:description "The SpatialRegion this geometry describes." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path spo:describes_region ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 5 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:class spo:CoordinateSystem ;
+            sh:description "The CoordinateSystem this geometry's control points are expressed in (default Cartesian)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path spo:has_coordinate_system ],
+        [ sh:datatype xsd:string ;
+            sh:description "The role this geometry plays (boundary / axis / limiter / outline …) — a controlled vocabulary value." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path spo:geometry_role ] ;
+    sh:targetClass spo:Curve .
+
+spo:DesignSpecification a sh:NodeShape ;
+    rdfs:comment "A DIRECTIVE information content entity that prescribes a material artifact to be realized — an engineering drawing of the EAST vacuum vessel, a coil winding spec. Distinguish three stances toward one MaterialEntity: (1) the thing itself (MaterialEntity); (2) the prescription of it (this class — exists before/independent of the thing; the as-designed view); (3) the description of it as built (a plain descriptive ICE with is_about — an as-measured machine-description dataset). Design and as-built descriptions may disagree; only (3) is truth-evaluable against reality. IAO alignment IRI [TBD]." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class <http://purl.obolibrary.org/obo/BFO_0000040> ;
+            sh:description "The material entity (kind) this design specification prescribes." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path spo:prescribes ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path spo:has_provenance ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ] ;
+    sh:targetClass spo:DesignSpecification .
+
+spo:EngineeringDetermination a sh:NodeShape ;
+    rdfs:comment "An engineering survey / calibration / design determination establishing a static device fact (e.g. a probe position). Invariant on the discharge timescale." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class <http://purl.obolibrary.org/obo/BFO_0000011> ;
+            sh:description "The 4D spacetime region over which this process unfolds (4D extension bridge)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path spo:has_spacetime_extent ],
+        [ sh:datatype xsd:string ;
+            sh:description "An information content entity produced by this process (e.g. an IDS)." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path spo:has_output ],
+        [ sh:datatype xsd:string ;
+            sh:description "An information / material input consumed by this process." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:has_input ] ;
+    sh:targetClass spo:EngineeringDetermination .
+
+spo:Field a sh:NodeShape ;
+    rdfs:comment "A continuous quantity over a (spatial / general) Domain — scalar or tensor (SoA leaf, L3; rank-1 → Function). Sibling of Signal under ContinuousQuantity." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 7 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:datatype xsd:string ;
+            sh:description "The unit of the quantity (UCUM / QUDT string; authority external to fytok — SpData sp:phys)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path spo:unit ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000040> ;
+            sh:description "This quality inheres in its material bearer (BFO/RO inheres_in)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path <http://purl.obolibrary.org/obo/RO_0000052> ],
+        [ sh:class spo:ContinuousQuantity ;
+            sh:description "A peer ContinuousQuantity re-presenting the SAME Quality on a different Domain / grid / coordinate chart (equilibrium profiles_2d rectangular vs flux-surface grid). Symmetric; conversion between peers is interpolation / chart transform, not new information." ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 5 ;
+            sh:path spo:equivalent_representation ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000019> ;
+            sh:description "The world-side Quality this quantity re-presents (iao:is_about specialization narrowed to qualities). Several representations on different Domains share one referent Quality." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 4 ;
+            sh:path spo:representation_of ],
+        [ sh:class spo:Domain ;
+            sh:description "The Domain this field is defined over (C-3, replaces DD coordinate-by-path; bound via graph_connect)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path spo:has_domain ],
+        [ sh:class spo:Domain ;
+            sh:description "The Domain this quality is a function of (C-4)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path spo:is_function_of ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 6 ;
+            sh:path spo:has_provenance ] ;
+    sh:targetClass spo:Field .
+
+spo:Function a sh:NodeShape ;
+    rdfs:comment "The one-dimensional Field — a rank-1 continuous quantity over a 1-D Domain (L3). NAMING (convention, see artifact/field.md §1): CamelCase `spo:Function` is this T-Box class (data: values over a domain); lowercase `spo:function` is the SpData document DSL for TYPED MATH FUNCTION specifications (args/returns/body — a mapping rule, GDC). The IRIs are distinct (case-sensitive); never mix the two in prose or CURIEs." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class spo:Domain ;
+            sh:description "The Domain this quality is a function of (C-4)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path spo:is_function_of ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 7 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:class spo:Domain ;
+            sh:description "The Domain this field is defined over (C-3, replaces DD coordinate-by-path; bound via graph_connect)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path spo:has_domain ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 6 ;
+            sh:path spo:has_provenance ],
+        [ sh:class spo:ContinuousQuantity ;
+            sh:description "A peer ContinuousQuantity re-presenting the SAME Quality on a different Domain / grid / coordinate chart (equilibrium profiles_2d rectangular vs flux-surface grid). Symmetric; conversion between peers is interpolation / chart transform, not new information." ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 5 ;
+            sh:path spo:equivalent_representation ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000040> ;
+            sh:description "This quality inheres in its material bearer (BFO/RO inheres_in)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path <http://purl.obolibrary.org/obo/RO_0000052> ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000019> ;
+            sh:description "The world-side Quality this quantity re-presents (iao:is_about specialization narrowed to qualities). Several representations on different Domains share one referent Quality." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 4 ;
+            sh:path spo:representation_of ],
+        [ sh:datatype xsd:string ;
+            sh:description "The unit of the quantity (UCUM / QUDT string; authority external to fytok — SpData sp:phys)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path spo:unit ] ;
+    sh:targetClass spo:Function .
+
+spo:GeoObject a sh:NodeShape ;
+    rdfs:comment "Base of geometric primitives; the concrete carrier is sp_mathx (``geom.base.GeoObject`` — control-point ``points`` array, pluggable ``GeometryKernel`` engine). Manifold dimension distinguishes the four concrete children below (SPM-SDD-06 DE-MATHX-05)." ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "The role this geometry plays (boundary / axis / limiter / outline …) — a controlled vocabulary value." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path spo:geometry_role ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path spo:has_provenance ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Topological (manifold) dimension of the primitive — 0 point / 1 curve / 2 surface / 3 solid." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:manifold_dim ],
+        [ sh:class spo:CoordinateSystem ;
+            sh:description "The CoordinateSystem this geometry's control points are expressed in (default Cartesian)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path spo:has_coordinate_system ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 5 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000006> ;
+            sh:description "The SpatialRegion this geometry describes." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path spo:describes_region ] ;
+    sh:targetClass spo:GeoObject .
+
+spo:Geometry a sh:NodeShape ;
+    rdfs:comment "An information content entity describing the geometry of a SpatialRegion (C-5). Bound to a sp_mathx GeoObject." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type spo:discretizes_spacetime spo:has_spatial_base spo:has_time_axis spo:manifold_dim ) ;
+    sh:property [ sh:class spo:CoordinateSystem ;
+            sh:description "The CoordinateSystem this geometry's control points are expressed in (default Cartesian)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path spo:has_coordinate_system ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000006> ;
+            sh:description "The SpatialRegion this geometry describes." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path spo:describes_region ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 4 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:datatype xsd:string ;
+            sh:description "The role this geometry plays (boundary / axis / limiter / outline …) — a controlled vocabulary value." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path spo:geometry_role ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path spo:has_provenance ] ;
+    sh:targetClass spo:Geometry .
+
+spo:Identifier a sh:NodeShape ;
+    rdfs:comment "The DD identifier triple (name / index / description). The triple is a controlled-vocabulary value; the vocabulary it draws from is a T-Box enum / class (C-8)." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "Short string key." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path spo:name ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Integer index into the vocabulary." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path spo:index ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 5 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:datatype xsd:string ;
+            sh:description "Human-readable description." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path spo:description ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path spo:has_provenance ],
+        [ sh:class spo:ControlledVocabulary ;
+            sh:description "The controlled vocabulary this identifier value draws from (value → vocabulary, A-Box → T-Box)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path spo:draws_from ] ;
+    sh:targetClass spo:Identifier .
+
+spo:MeasurementProcess a sh:NodeShape ;
+    rdfs:comment "A real-world measurement / observation process producing measured data; part of a discharge (a PlannedProcess instance = shot). Unrepeatable — its output is about a unique spatiotemporal particular (this shot at this time), hence read-only / not reproducible / per-shot distinct." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "An information content entity produced by this process (e.g. an IDS)." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path spo:has_output ],
+        [ sh:datatype xsd:string ;
+            sh:description "An information / material input consumed by this process." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:has_input ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000011> ;
+            sh:description "The 4D spacetime region over which this process unfolds (4D extension bridge)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path spo:has_spacetime_extent ] ;
+    sh:targetClass spo:MeasurementProcess .
+
+spo:Point a sh:NodeShape ;
+    rdfs:comment "A 0-D geometric object / manifold_dim 0 (e.g. magnetic axis, X-point). Carrier sp_mathx geom.point.Point." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 5 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000006> ;
+            sh:description "The SpatialRegion this geometry describes." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path spo:describes_region ],
+        [ sh:class spo:CoordinateSystem ;
+            sh:description "The CoordinateSystem this geometry's control points are expressed in (default Cartesian)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path spo:has_coordinate_system ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path spo:has_provenance ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Topological (manifold) dimension of the primitive — 0 point / 1 curve / 2 surface / 3 solid." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:manifold_dim ],
+        [ sh:datatype xsd:string ;
+            sh:description "The role this geometry plays (boundary / axis / limiter / outline …) — a controlled vocabulary value." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path spo:geometry_role ] ;
+    sh:targetClass spo:Point .
+
+spo:ProcessRecord a sh:NodeShape ;
+    rdfs:comment "The RECORD of a process — an ICE generated by and about an Occurrent (prov:Entity wasGeneratedBy the Activity). The experiment / record split: a Shot (PlannedProcess) is unrepeatable and unstorable; what a data system holds is its ProcessRecord (the shot file, the populated IDS set, the logbook entry). The record is mutable/versionable and may be partial or wrong about the process; the process itself is neither." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type spo:executed_code ) ;
+    sh:property [ sh:class <http://purl.obolibrary.org/obo/BFO_0000015> ;
+            sh:description "The process this record is about and generated by (iao:is_about + prov:wasGeneratedBy)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path spo:is_record_of ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path spo:has_provenance ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ] ;
+    sh:targetClass spo:ProcessRecord .
+
+spo:ProvenanceMixin a sh:NodeShape ;
+    rdfs:comment "Orthogonal provenance carried by any domain ICE (L7). Provenance time (creation_date / version order) is distinct from physical time (manifold coordinate). Also carries the data **modality** (static-device / measured / reconstructed / simulated) — derived from the generating process, orthogonal to the domain category (FYTOK-REPORT-05 §rpt05-modality)." ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:boolean ;
+            sh:description "Whether the data can be regenerated identically — true for simulated / reconstructed / static device, false for measured (a unique, unrepeatable discharge event)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path spo:reproducible ],
+        [ sh:datatype xsd:string ;
+            sh:description "Provenance time of generation (≠ physical time)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 5 ;
+            sh:path prov:generatedAtTime ],
+        [ sh:datatype xsd:string ;
+            sh:description "DD / Access-Layer version the data was written with (prov:Entity)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 6 ;
+            sh:path spo:version_put ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000015> ;
+            sh:description "The process that generated the data — MeasurementProcess / ComputationalProcess / EngineeringDetermination (spo-core). The truthmaker of `modality`." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path spo:generated_by_process ],
+        [ sh:description "The provenance modality of the data — how it was generated, orthogonal to its domain category. Derived from the generating process (and DD code/source), NOT from DD `type` (§rpt05-modality)." ;
+            sh:in ( "static_device" "measured" "reconstructed" "simulated" ) ;
+            sh:maxCount 1 ;
+            sh:order 1 ;
+            sh:path spo:modality ],
+        [ sh:class spo:Code ;
+            sh:description "The Code (activity / agent) that produced this artifact." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path prov:wasGeneratedBy ],
+        [ sh:datatype xsd:string ;
+            sh:description "The agent that provided the data (DD ids_properties/provider → prov:Agent)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path prov:wasAttributedTo ] ;
+    sh:targetClass spo:ProvenanceMixin .
+
+spo:Region a sh:NodeShape ;
+    rdfs:comment "Base of spatial / temporal / spatiotemporal regions." ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:targetClass spo:Region .
+
+spo:Solid a sh:NodeShape ;
+    rdfs:comment "A 3-D geometric object / manifold_dim 3 (Box / Ball / Cylinder / Toroidal / swept solids)." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 5 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:class spo:CoordinateSystem ;
+            sh:description "The CoordinateSystem this geometry's control points are expressed in (default Cartesian)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path spo:has_coordinate_system ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path spo:has_provenance ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Topological (manifold) dimension of the primitive — 0 point / 1 curve / 2 surface / 3 solid." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:manifold_dim ],
+        [ sh:datatype xsd:string ;
+            sh:description "The role this geometry plays (boundary / axis / limiter / outline …) — a controlled vocabulary value." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path spo:geometry_role ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000006> ;
+            sh:description "The SpatialRegion this geometry describes." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path spo:describes_region ] ;
+    sh:targetClass spo:Solid .
+
+spo:SpacetimeMesh a sh:NodeShape ;
+    rdfs:comment "A discretized 4D domain — a Mesh whose discretized region is a SpacetimeRegion (4D extension stratum). Two constructions: (a) product form, a spatial base Mesh extruded along a TimeAxis (the common shot-data case: same spatial grid, many instants); (b) a genuinely unstructured 4D GGD (moving/adaptive grids: the spatial grid itself is time-dependent, e.g. per-time-slice equilibrium grids — then the product decomposition is per-interval, not global). Fields over a SpacetimeMesh subsume both AoS and SoA: layout becomes a storage detail of the same 4D Field." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "The role this geometry plays (boundary / axis / limiter / outline …) — a controlled vocabulary value." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path spo:geometry_role ],
+        [ sh:class spo:TimeAxis ;
+            sh:description "The TimeAxis this aggregate/mesh is sampled on." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path spo:has_time_axis ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 7 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 6 ;
+            sh:path spo:has_provenance ],
+        [ sh:class spo:CoordinateSystem ;
+            sh:description "The CoordinateSystem this geometry's control points are expressed in (default Cartesian)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 5 ;
+            sh:path spo:has_coordinate_system ],
+        [ sh:class spo:Mesh ;
+            sh:description "The spatial base Mesh of a product-form SpacetimeMesh (absent for unstructured 4D grids)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path spo:has_spatial_base ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000006> ;
+            sh:description "The SpatialRegion this geometry describes." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path spo:describes_region ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000011> ;
+            sh:description "The SpacetimeRegion this 4D mesh discretizes." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path spo:discretizes_spacetime ] ;
+    sh:targetClass spo:SpacetimeMesh .
+
+spo:SpacetimeWorm a sh:NodeShape ;
+    rdfs:comment "A four-dimensionally extended individual (its temporal parts are time slices). A DD `time_slice[]` array is the discretized worm; the 3D continuant view is its foliated slice. Identity rests in the 4D intension artifact (SPM-CONOPS-01). Conservative extension — does not alter the 3D core axioms." ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class <http://purl.obolibrary.org/obo/BFO_0000011> ;
+            sh:description "The spacetime region this worm occupies." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path spo:occupies_spacetime ],
+        [ sh:datatype xsd:string ;
+            sh:description "The 3D+Time foliated view of this worm (slice ⊣ stack; SPM-CONOPS-01). Read-time derivation, not a persisted distinct datum." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path spo:foliates_to ] ;
+    sh:targetClass spo:SpacetimeWorm .
+
+spo:Surface a sh:NodeShape ;
+    rdfs:comment "A 2-D geometric object / manifold_dim 2 (Plane / Disc / Polygon / Sphere shell / ToroidalSurface)." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class spo:CoordinateSystem ;
+            sh:description "The CoordinateSystem this geometry's control points are expressed in (default Cartesian)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path spo:has_coordinate_system ],
+        [ sh:datatype xsd:string ;
+            sh:description "The role this geometry plays (boundary / axis / limiter / outline …) — a controlled vocabulary value." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path spo:geometry_role ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path spo:has_provenance ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 5 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000006> ;
+            sh:description "The SpatialRegion this geometry describes." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path spo:describes_region ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Topological (manifold) dimension of the primitive — 0 point / 1 curve / 2 surface / 3 solid." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:manifold_dim ] ;
+    sh:targetClass spo:Surface .
+
+spo:TimeSeries a sh:NodeShape ;
+    rdfs:comment "The SoA layout — per-quantity channels over a shared or embedded TimeAxis (DD signal pattern; a control-room trend plot). Each channel is a spo-signal Signal (a quantity over the time domain). Convenient for single-quantity-over-time access; dual to the AoS TimeSliceSeries via dual_view_of (slice the stack)." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class spo:TimeAxis ;
+            sh:description "The TimeAxis this aggregate/mesh is sampled on." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path spo:has_time_axis ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000003> ;
+            sh:description "The temporally extended referent (SpacetimeWorm / Process) this aggregate is the information content of (iao:is_about specialization). Two aggregates about the same referent with different layouts are dual views, not distinct claims about the world." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path spo:about_occurrent ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path spo:has_provenance ],
+        [ sh:class spo:Signal ;
+            sh:description "The per-quantity Signal channels of this SoA aggregate." ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path spo:has_channel ],
+        [ sh:class spo:TemporalAggregate ;
+            sh:description "The other-layout aggregate carrying the same content about the same referent (AoS ↔ SoA; the slice ⊣ stack adjunction). Symmetric; a read-time transform (sampling one way, regrouping the other), not a persisted distinct datum." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path spo:dual_view_of ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 5 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ] ;
+    sh:targetClass spo:TimeSeries .
+
+<http://purl.obolibrary.org/obo/BFO_0000038> a sh:NodeShape ;
+    rdfs:comment "A one-dimensional temporal region (BFO temporal interval) — the extent a Signal or a discharge phase covers (e.g. flat-top). A TimeAxis discretizes a TimeInterval." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:targetClass <http://purl.obolibrary.org/obo/BFO_0000038> .
+
+<http://purl.obolibrary.org/obo/BFO_0000148> a sh:NodeShape ;
+    rdfs:comment "A zero-dimensional temporal region (BFO temporal instant) — the referent of one time-slice timestamp. A `time_slice[i]/time` value denotes a TimeInstant on the shot/simulation timeline." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:targetClass <http://purl.obolibrary.org/obo/BFO_0000148> .
+
+<http://qudt.org/schema/qudt/Unit> a sh:NodeShape ;
+    rdfs:comment "A measurement unit as an ICE — carrier of the UCUM code / QUDT IRI the `unit` strings across Spo schemas point into. Authority is the external unit system (UCUM/QUDT via the SpData `sp:phys` registry); this class is the T-Box landing, not a unit database." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class <http://qudt.org/schema/qudt/QuantityKind> ;
+            sh:description "The QuantityKind this unit conventionally measures." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path spo:quantity_kind ],
+        [ sh:datatype xsd:string ;
+            sh:description "UCUM unit expression (e.g. Wb, m2.s-1, eV)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:ucum_code ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path spo:has_provenance ] ;
+    sh:targetClass <http://qudt.org/schema/qudt/Unit> .
+
+spo:ControlledVocabulary a sh:NodeShape ;
+    rdfs:comment "A controlled vocabulary (the determinable). Its permissible values are the determinates (DD *_identifier.xml entries)." ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:has_provenance ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ] ;
+    sh:targetClass spo:ControlledVocabulary .
+
+spo:Library a sh:NodeShape ;
+    rdfs:comment "A dependency library used by a Code (DD code/library[]) — a prov:SoftwareAgent." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:name ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path spo:version ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 5 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path spo:commit ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path spo:repository ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path spo:has_provenance ] ;
+    sh:targetClass spo:Library .
+
+spo:Mesh a sh:NodeShape ;
+    rdfs:comment "A discretized domain (DD GGD generic_grid). Binds to sp_mathx Mesh / DEC: space = Domain, grid_subset = named subdomain / boundary, objects_per_dimension = topology chain (C-7). Not mirrored verbatim from DD." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type spo:has_spatial_base spo:has_time_axis spo:discretizes_spacetime ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path spo:has_provenance ],
+        [ sh:class spo:CoordinateSystem ;
+            sh:description "The CoordinateSystem this geometry's control points are expressed in (default Cartesian)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path spo:has_coordinate_system ],
+        [ sh:datatype xsd:string ;
+            sh:description "The role this geometry plays (boundary / axis / limiter / outline …) — a controlled vocabulary value." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path spo:geometry_role ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 4 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000006> ;
+            sh:description "The SpatialRegion this geometry describes." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path spo:describes_region ] ;
+    sh:targetClass spo:Mesh .
+
+spo:Metric a sh:NodeShape ;
+    rdfs:comment "The metric tensor g_ij of a CoordinateSystem — the first fundamental form giving the line element ds² = g_ij dx^i dx^j, the volume element √det g, and (via its inverse g^ij) the Hodge star used by sp_mathx DEC. Identity for Cartesian charts; diagonal for the standard curvilinear charts. Carrier sp_mathx metric.Metric." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path spo:has_provenance ],
+        [ sh:class spo:CoordinateSystem ;
+            sh:description "The CoordinateSystem this metric measures." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path spo:of_coordinate_system ],
+        [ sh:datatype xsd:string ;
+            sh:description "Structural form of the metric — euclidean (identity) / diagonal / general." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:metric_kind ] ;
+    sh:targetClass spo:Metric .
+
+spo:Signal a sh:NodeShape ;
+    rdfs:comment "A continuous quantity over the **time domain** (a TemporalRegion) — scalar or tensor (DD signal_flt_Nd, C-2). Sibling of Field (space / general domain) under ContinuousQuantity, not a subtype of it. Corresponds to the engineering carrier sp.mathx.signal.Signal — a Function over a time domain (the temporal analogue of Field, a Function over a Mesh), converged from sp_phys to sp_mathx (L1) as the domain-agnostic quantity-over-time. Bound via class_type (engineering-dispatch FQCN, distinct from the semantic class_uri; SPM-REPORT-15 C-3)." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:float ;
+            sh:description "Signal time base — the DD/A-Box serialization column of the time axis (alias \".../time\")." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path spo:time ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000040> ;
+            sh:description "This quality inheres in its material bearer (BFO/RO inheres_in)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 5 ;
+            sh:path <http://purl.obolibrary.org/obo/RO_0000052> ],
+        [ sh:datatype xsd:string ;
+            sh:description "The unit of the quantity (UCUM / QUDT string; authority external to fytok — SpData sp:phys)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 6 ;
+            sh:path spo:unit ],
+        [ sh:class spo:ContinuousQuantity ;
+            sh:description "A peer ContinuousQuantity re-presenting the SAME Quality on a different Domain / grid / coordinate chart (equilibrium profiles_2d rectangular vs flux-surface grid). Symmetric; conversion between peers is interpolation / chart transform, not new information." ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 8 ;
+            sh:path spo:equivalent_representation ],
+        [ sh:class spo:Domain ;
+            sh:description "The Domain this field is defined over (C-3, replaces DD coordinate-by-path; bound via graph_connect)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path spo:has_domain ],
+        [ sh:datatype xsd:float ;
+            sh:description "Signal samples over the time base — the DD/A-Box serialization column (runtime carrier is a Function)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path spo:data ],
+        [ sh:description "Where the time axis came from — IDS-homogeneous timebase vs per-signal embedded timebase (for reverse mapping)." ;
+            sh:in ( "homogeneous" "embedded" "heterogeneous" ) ;
+            sh:maxCount 1 ;
+            sh:order 0 ;
+            sh:path spo:timebase_source ],
+        [ sh:class spo:Domain ;
+            sh:description "The Domain this quality is a function of (C-4)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 4 ;
+            sh:path spo:is_function_of ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000019> ;
+            sh:description "The world-side Quality this quantity re-presents (iao:is_about specialization narrowed to qualities). Several representations on different Domains share one referent Quality." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 7 ;
+            sh:path spo:representation_of ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 9 ;
+            sh:path spo:has_provenance ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 10 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ] ;
+    sh:targetClass spo:Signal .
+
+spo:TimeSlice a sh:NodeShape ;
+    rdfs:comment "One AoS element — the complete state description of a system at one TimeInstant (the foliated 3D view of the 4D referent at fixed t; DD `time_slice[]` element, e.g. one equilibrium reconstruction). Identity note: a TimeSlice is a VIEW indexed by (referent, instant), not an independent individual — the individual is the 4D referent." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 4 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000148> ;
+            sh:description "The TimeInstant this slice is the state description of." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path spo:at_instant ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path spo:has_provenance ],
+        [ sh:datatype xsd:float ;
+            sh:description "The timestamp of this slice (seconds on the shot/simulation timeline; A-Box scalar)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:at_time ],
+        [ sh:class spo:TimeSliceSeries ;
+            sh:description "The TimeSliceSeries this slice is an element of (view → aggregate)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path spo:slice_of ] ;
+    sh:targetClass spo:TimeSlice .
+
+spo:TimeSliceSeries a sh:NodeShape ;
+    rdfs:comment "The AoS layout — an ordered array of TimeSlice structs (DD `time_slice[]`): the discretized SpacetimeWorm, foliated per instant. Convenient for whole-state-at-t access (equilibrium at t); dual to the SoA TimeSeries via dual_view_of (stack the slices)." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class spo:TimeSlice ;
+            sh:description "The ordered TimeSlice elements (AoS axis; order = TimeAxis order)." ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path spo:has_slice ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path spo:has_provenance ],
+        [ sh:class spo:TimeAxis ;
+            sh:description "The TimeAxis this aggregate/mesh is sampled on." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path spo:has_time_axis ],
+        [ sh:class spo:TemporalAggregate ;
+            sh:description "The other-layout aggregate carrying the same content about the same referent (AoS ↔ SoA; the slice ⊣ stack adjunction). Symmetric; a read-time transform (sampling one way, regrouping the other), not a persisted distinct datum." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path spo:dual_view_of ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 5 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000003> ;
+            sh:description "The temporally extended referent (SpacetimeWorm / Process) this aggregate is the information content of (iao:is_about specialization). Two aggregates about the same referent with different layouts are dual views, not distinct claims about the world." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path spo:about_occurrent ] ;
+    sh:targetClass spo:TimeSliceSeries .
+
+<http://qudt.org/schema/qudt/QuantityKind> a sh:NodeShape ;
+    rdfs:comment "A kind of physical quantity — the DETERMINABLE (\"electron temperature\", \"poloidal flux\") as an ICE, independent of any bearer, domain, or unit. A concrete measured or computed quantity (Quality in the world; ContinuousQuantity/QuantityValue as information) determines a QuantityKind. Aligns qudt:QuantityKind; fusion-specific kinds are enumerated downstream (fyo), not here." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "QUDT dimension-vector expression (e.g. L2 M T-2); authority external (QUDT)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:dimension_vector ],
+        [ sh:datatype xsd:string ;
+            sh:description "Conventional symbol (e.g. T_e, psi)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path spo:symbol ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path spo:has_provenance ] ;
+    sh:targetClass <http://qudt.org/schema/qudt/QuantityKind> .
+
+spo:Code a sh:NodeShape ;
+    rdfs:comment "The code that produced an IDS (DD code = name / commit / version / repository) — a prov:SoftwareAgent + prov:Activity." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 5 ;
+            sh:path spo:has_provenance ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path spo:commit ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path spo:version ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path spo:name ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path spo:repository ],
+        [ sh:class spo:Library ;
+            sh:description "A library this code depends on." ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path spo:uses_library ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 6 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ] ;
+    sh:targetClass spo:Code .
+
+<http://purl.obolibrary.org/obo/BFO_0000003> a sh:NodeShape ;
+    rdfs:comment "An entity that unfolds in time and has temporal parts (BFO occurrent)." ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type spo:has_spacetime_extent spo:has_input <http://purl.obolibrary.org/obo/BFO_0000055> spo:has_output spo:occupies_spacetime spo:foliates_to ) ;
+    sh:targetClass <http://purl.obolibrary.org/obo/BFO_0000003> .
+
+<http://purl.obolibrary.org/obo/BFO_0000015> a sh:NodeShape ;
+    rdfs:comment "An occurrent that depends on material participants (BFO process). Unifies physical evolution / computation / measurement (FYTOK-REPORT-05 §rpt05-cat-process)." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type <http://purl.obolibrary.org/obo/BFO_0000055> ) ;
+    sh:property [ sh:class <http://purl.obolibrary.org/obo/BFO_0000011> ;
+            sh:description "The 4D spacetime region over which this process unfolds (4D extension bridge)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path spo:has_spacetime_extent ],
+        [ sh:datatype xsd:string ;
+            sh:description "An information / material input consumed by this process." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:has_input ],
+        [ sh:datatype xsd:string ;
+            sh:description "An information content entity produced by this process (e.g. an IDS)." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path spo:has_output ] ;
+    sh:targetClass <http://purl.obolibrary.org/obo/BFO_0000015> .
+
+spo:TemporalAggregate a sh:NodeShape ;
+    rdfs:comment "A temporally indexed information aggregate — the information content of a temporally extended referent (a SpacetimeWorm / Process) sampled on a TimeAxis. Abstract parent of the two LAYOUTS of the same content: TimeSliceSeries (AoS) and TimeSeries (SoA). The layout choice is representational, orthogonal to the referent's identity." ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type spo:has_channel spo:has_slice ) ;
+    sh:property [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 4 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path spo:has_provenance ],
+        [ sh:class spo:TemporalAggregate ;
+            sh:description "The other-layout aggregate carrying the same content about the same referent (AoS ↔ SoA; the slice ⊣ stack adjunction). Symmetric; a read-time transform (sampling one way, regrouping the other), not a persisted distinct datum." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path spo:dual_view_of ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000003> ;
+            sh:description "The temporally extended referent (SpacetimeWorm / Process) this aggregate is the information content of (iao:is_about specialization). Two aggregates about the same referent with different layouts are dual views, not distinct claims about the world." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path spo:about_occurrent ],
+        [ sh:class spo:TimeAxis ;
+            sh:description "The TimeAxis this aggregate/mesh is sampled on." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path spo:has_time_axis ] ;
+    sh:targetClass spo:TemporalAggregate .
+
+spo:ContinuousQuantity a sh:NodeShape ;
+    rdfs:comment "A continuous physical quantity defined over a Domain — scalar or tensor (the information content of a Quality that is_function_of the Domain and inheres_in a MaterialEntity, C-4). Field (space / general domain) and Signal (time domain) are its sibling specializations. MULTI-REPRESENTATION: one Quality may be re-presented by several ContinuousQuantity instances on different Domains / grids / charts (DD equilibrium profiles_2d[i] per grid_type) — each carries representation_of to the shared Quality and equivalent_representation to its peers; the representations differ in discretization, not in referent." ;
+    sh:closed false ;
+    sh:ignoredProperties ( rdf:type spo:time spo:data spo:timebase_source ) ;
+    sh:property [ sh:class spo:ContinuousQuantity ;
+            sh:description "A peer ContinuousQuantity re-presenting the SAME Quality on a different Domain / grid / coordinate chart (equilibrium profiles_2d rectangular vs flux-surface grid). Symmetric; conversion between peers is interpolation / chart transform, not new information." ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 5 ;
+            sh:path spo:equivalent_representation ],
+        [ sh:class spo:Domain ;
+            sh:description "The Domain this field is defined over (C-3, replaces DD coordinate-by-path; bound via graph_connect)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path spo:has_domain ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 7 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000019> ;
+            sh:description "The world-side Quality this quantity re-presents (iao:is_about specialization narrowed to qualities). Several representations on different Domains share one referent Quality." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 4 ;
+            sh:path spo:representation_of ],
+        [ sh:class spo:Domain ;
+            sh:description "The Domain this quality is a function of (C-4)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path spo:is_function_of ],
+        [ sh:datatype xsd:string ;
+            sh:description "The unit of the quantity (UCUM / QUDT string; authority external to fytok — SpData sp:phys)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path spo:unit ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000040> ;
+            sh:description "This quality inheres in its material bearer (BFO/RO inheres_in)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path <http://purl.obolibrary.org/obo/RO_0000052> ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 6 ;
+            sh:path spo:has_provenance ] ;
+    sh:targetClass spo:ContinuousQuantity .
+
+spo:TimeAxis a sh:NodeShape ;
+    rdfs:comment "The discretized time coordinate — an ordered sequence of sample instants over a TimeInterval (an ICE; the information-level counterpart of the region it discretizes). Unifies the DD timebases: the IDS-homogeneous root `time[]`, a per-signal embedded `.../time`, and an AoS `time_slice[]/time` column are all TimeAxis instances; which one a datum rides is recorded by spo-signal `timebase_source`." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:float ;
+            sh:description "The sample instants (seconds); externalized array (A-Box column)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path spo:samples ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000038> ;
+            sh:description "The TimeInterval this axis discretizes." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path spo:discretizes_time ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path spo:has_provenance ] ;
+    sh:targetClass spo:TimeAxis .
+
+<http://purl.obolibrary.org/obo/BFO_0000019> a sh:NodeShape ;
+    rdfs:comment "A specifically dependent continuant that inheres in its bearer (BFO quality). A measurable physical attribute." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class <http://purl.obolibrary.org/obo/BFO_0000040> ;
+            sh:description "This quality inheres in its material bearer (BFO/RO inheres_in)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path <http://purl.obolibrary.org/obo/RO_0000052> ] ;
+    sh:targetClass <http://purl.obolibrary.org/obo/BFO_0000019> .
+
+<http://purl.obolibrary.org/obo/BFO_0000040> a sh:NodeShape ;
+    rdfs:comment "A continuant that occupies a spatial region and can be identified as a whole (BFO material entity). Devices / equipment / plasma referent." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "This material entity occupies a spatial region. (slot_uri [TBD] — verify BFO/RO IRI.)" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:occupies ],
+        [ sh:datatype xsd:string ;
+            sh:description "Parthood (BFO has_part). Device assembly chains (coil → turn → conductor)." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path <http://purl.obolibrary.org/obo/BFO_0000051> ] ;
+    sh:targetClass <http://purl.obolibrary.org/obo/BFO_0000040> .
+
+<http://purl.obolibrary.org/obo/BFO_0000011> a sh:NodeShape ;
+    rdfs:comment "A region of spacetime (BFO spatiotemporal region). 4D extension stratum (FYTOK-REPORT-05 §rpt05-4d): the four-dimensional intension whose 3D+Time foliation is the canonical view." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:targetClass <http://purl.obolibrary.org/obo/BFO_0000011> .
+
+<http://purl.obolibrary.org/obo/BFO_0000006> a sh:NodeShape ;
+    rdfs:comment "A region of space (BFO spatial region). The base manifold a field rides; bound to sp_mathx geometry." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:targetClass <http://purl.obolibrary.org/obo/BFO_0000006> .
+
+spo:Domain a sh:NodeShape ;
+    rdfs:comment "A mathematical domain a quantity is defined over (an axis / grid / mesh). Coordinates are Domains, not path strings (C-3). Mesh / discretization detail is owned by sp_mathx (OI-2)." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:description "The controlled coordinate name this Domain realizes (continuous physical axis)." ;
+            sh:in ( "time" "psi" "psi_norm" "rho_tor" "rho_tor_norm" "rho_pol_norm" "phi" "theta" "volume" "area" "r" "z" "dim1" "dim2" ) ;
+            sh:maxCount 1 ;
+            sh:order 0 ;
+            sh:path spo:coordinate ] ;
+    sh:targetClass spo:Domain .
+
+spo:CoordinateSystem a sh:NodeShape ;
+    rdfs:comment "A coordinate chart — an ordered tuple of coordinate axes plus the metric that measures lengths / areas / volumes on it (IMAS ``coordinate_system`` / ``grid_type``). Cartesian (x,y,z), polar (r,θ), cylindrical (r,z,φ), spherical (r,φ,θ) and toroidal charts are the built-in kinds; the metric is Euclidean-identity unless the chart is curvilinear. COCOS orientation of flux charts is a fusion-domain concern owned by fyo (SPM-ADR-104 D2)." ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class spo:Metric ;
+            sh:description "The metric tensor of this coordinate system." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path spo:has_metric ],
+        [ sh:class <http://purl.obolibrary.org/obo/BFO_0000001> ;
+            sh:description "The entity this information is about (IAO is_about) — matter (a device), a quality (a temperature), or an occurrent (a shot). The generic reality → description arrow every descriptive ICE carries." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 4 ;
+            sh:path <http://purl.obolibrary.org/obo/IAO_0000136> ],
+        [ sh:datatype xsd:string ;
+            sh:description "Named chart family — cartesian / polar / cylindrical / spherical / toroidal (selects the built-in metric)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path spo:chart_kind ],
+        [ sh:datatype xsd:string ;
+            sh:description "Orthogonal provenance information (FYTOK-REPORT-05 §rpt05-provenance, L7)." ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path spo:has_provenance ],
+        [ sh:datatype xsd:string ;
+            sh:description "An ordered coordinate axis of the chart. Values draw on the ContinuousCoordinate vocabulary (x / y / z / r / z / phi / theta / psi …). Each axis carries a physical unit." ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path spo:coordinate_axis ] ;
+    sh:targetClass spo:CoordinateSystem .
+
+<http://purl.obolibrary.org/obo/BFO_0000001> a sh:NodeShape ;
+    rdfs:comment "Anything that exists (BFO entity) — the common root of Continuant and Occurrent. Added as the range of cross-quadrant relations (is_about can target matter, qualities, or processes alike)." ;
+    sh:closed false ;
+    sh:ignoredProperties ( spo:dimension_vector spo:is_function_of spo:dual_view_of spo:is_record_of spo:repository spo:discretizes_spacetime spo:discretizes_time spo:description spo:about_occurrent <http://purl.obolibrary.org/obo/BFO_0000055> spo:has_coordinate_system spo:has_domain <http://qudt.org/schema/qudt/hasQuantityKind> spo:equivalent_representation spo:coordinate spo:has_time_axis spo:index spo:ucum_code rdf:type spo:of_quality spo:has_output spo:describes_region spo:prescribes spo:has_slice spo:commit spo:has_spacetime_extent spo:version spo:of_coordinate_system spo:foliates_to spo:chart_kind spo:metric_kind spo:name spo:geometry_role spo:numeric_value spo:draws_from spo:representation_of spo:time spo:at_instant spo:slice_of <http://purl.obolibrary.org/obo/BFO_0000051> spo:timebase_source spo:at_time spo:occupies_spacetime spo:has_spatial_base spo:has_provenance spo:samples spo:symbol <http://purl.obolibrary.org/obo/IAO_0000136> spo:uses_library <http://purl.obolibrary.org/obo/RO_0000052> spo:occupies spo:unit spo:data spo:has_channel spo:executed_code spo:has_metric <http://qudt.org/schema/qudt/hasUnit> spo:has_input spo:coordinate_axis spo:quantity_kind spo:manifold_dim ) ;
+    sh:targetClass <http://purl.obolibrary.org/obo/BFO_0000001> .
+
+

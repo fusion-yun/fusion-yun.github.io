@@ -1,0 +1,2693 @@
+id: https://fusion-yun.github.io/fyo/v0.draft/imas/v4/gyrokinetics_local
+name: fyo-imas-gyrokinetics_local
+title: fyo IDS `gyrokinetics_local` (lifted, DD 4.1.1)
+description: 'Semantic lift of IMAS DD IDS `gyrokinetics_local` onto SpO/BFO (FYTOK-ADR-102): structures
+  grounded as ICEs, time-slice AoS elements as spo:TimeSlice, leaves annotated with their spo carrier
+  classes (Signal / Field / Function / QuantityValue / TimeAxis). Layout is preserved in dd_* annotations
+  (reverse map ω).'
+license: CC-BY-ND-4.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  fyo: https://fusion-yun.github.io/fyo/v0.draft/
+  spo: https://fusion-yun.github.io/spo/v0.draft/
+  imas: https://imas.iter.org/dd/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+default_prefix: fyo
+default_range: string
+imports:
+- linkml:types
+- spo
+- fyo-core
+- fyo-common
+annotations:
+  generated_by: dd2fyo 0.1.0
+  dd_version: 4.1.1
+  dd_source: ../imas/v4/gyrokinetics_local.linkml.yaml (mechanical layer)
+  fyo_category: physics-state
+  fyo_root_class: GyrokineticsLocal
+  provenance: DO NOT EDIT — regenerate via ontology/dd2fyo.py.
+classes:
+  GyrokineticsLocal:
+    is_a: IDS
+    description: Description of a local gyrokinetic simulation (delta-f, flux-tube). All quantities within
+      this IDS are normalized (apart from time and from the normalizing quantities structure), thus independent
+      of rhostar, consistently with the local approximation and a spectral representation is assumed in
+      the perpendicular plane (i.e. homogeneous turbulence).
+    annotations:
+      dd_path: gyrokinetics_local
+      fyo_category: physics-state
+    attributes:
+      ids_properties:
+        range: IdsProperties
+        description: Interface Data Structure properties. This element identifies the node above as an
+          IDS
+      normalizing_quantities:
+        range: GyrokineticsInputNormalizing
+        description: Physical quantities used for normalization (useful to link to the original simulation/experience)
+      flux_surface:
+        range: GyrokineticsFluxSurface
+        description: Flux surface characteristics
+      linear:
+        range: GyrokineticsLinear
+        description: Linear simulation
+      non_linear:
+        range: GyrokineticsNonLinear
+        description: Non-linear simulation
+      model:
+        range: GyrokineticsModel
+        description: Assumptions of the GK calculations
+      species_all:
+        range: GyrokineticsInputSpeciesGlobal
+        description: Physical quantities common to all species
+      species:
+        range: GyrokineticsSpecies
+        multivalued: true
+        description: Set of species (including electrons) used in the calculation and related quantities
+        annotations:
+          dd_max_occurs: '10'
+          dd_coordinate1: 1...N
+      collisions:
+        range: GyrokineticsCollisions
+        description: Collisions related quantities
+      code:
+        range: CodeConstant
+        description: Generic decription of the code-specific parameters for the code that has produced
+          this IDS
+  GyrokineticsInputNormalizing:
+    is_a: InformationContentEntity
+    description: Physical quantities used for normalization (useful to link to the original simulation/experience)
+    annotations:
+      dd_type_name: gyrokinetics_input_normalizing
+      dd_path: gyrokinetics_local/normalizing_quantities
+    attributes:
+      t_e:
+        range: float
+        description: Electron temperature at outboard equatorial midplane of the flux surface (angle_pol
+          = 0)
+        annotations:
+          dd_type: constant
+          dd_units: eV
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      n_e:
+        range: float
+        description: Electron density at outboard equatorial midplane of the flux surface (angle_pol =
+          0)
+        annotations:
+          dd_type: constant
+          dd_units: m^-3
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      r:
+        range: float
+        description: Major radius of the flux surface of interest, defined as (min(R)+max(R))/2
+        annotations:
+          dd_type: constant
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      b_field_phi:
+        range: float
+        description: Toroidal magnetic field at major radius r
+        annotations:
+          dd_type: constant
+          dd_units: T
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  GyrokineticsFluxSurface:
+    is_a: InformationContentEntity
+    description: Flux surface characteristics
+    annotations:
+      dd_type_name: gyrokinetics_flux_surface
+      dd_path: gyrokinetics_local/flux_surface
+    attributes:
+      r_minor_norm:
+        range: float
+        description: normalized minor radius of the flux surface of interest = 1/2 * (max(R) - min(R))/L_ref
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      elongation:
+        range: float
+        description: Elongation
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      delongation_dr_minor_norm:
+        range: float
+        description: Derivative of the elongation with respect to r_minor_norm
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      dgeometric_axis_r_dr_minor:
+        range: float
+        description: Derivative of the major radius of the surface geometric axis with respect to r_minor
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      dgeometric_axis_z_dr_minor:
+        range: float
+        description: Derivative of the height of the surface geometric axis with respect to r_minor
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      q:
+        range: float
+        description: Safety factor
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      magnetic_shear_r_minor:
+        range: float
+        description: Magnetic shear, defined as r_minor_norm/q . dq/dr_minor_norm (different definition
+          from the equilibrium IDS)
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      pressure_gradient_norm:
+        range: float
+        description: normalized pressure gradient (derivative with respect to r_minor_norm)
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      ip_sign:
+        range: float
+        description: Sign of the plasma current
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      b_field_phi_sign:
+        range: float
+        description: Sign of the toroidal magnetic field
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      shape_coefficients_c:
+        range: float
+        multivalued: true
+        description: '''c'' coefficients in the formula defining the shape of the flux surface'
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      dc_dr_minor_norm:
+        range: float
+        multivalued: true
+        description: Derivative of the 'c' shape coefficients with respect to r_minor_norm
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../shape_coefficients_c
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../shape_coefficients_c
+      shape_coefficients_s:
+        range: float
+        multivalued: true
+        description: '''s'' coefficients in the formula defining the shape of the flux surface'
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      ds_dr_minor_norm:
+        range: float
+        multivalued: true
+        description: Derivative of the 's' shape coefficients with respect to r_minor_norm
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../shape_coefficients_s
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../shape_coefficients_s
+  GyrokineticsLinear:
+    is_a: InformationContentEntity
+    description: Linear simulation
+    annotations:
+      dd_type_name: gyrokinetics_linear
+      dd_path: gyrokinetics_local/linear
+    attributes:
+      wavevector:
+        range: GyrokineticsWavevector
+        multivalued: true
+        description: Set of wavevectors
+        annotations:
+          dd_max_occurs: '10'
+          dd_coordinate1: 1...N
+  GyrokineticsWavevector:
+    is_a: InformationContentEntity
+    description: Set of wavevectors
+    annotations:
+      dd_type_name: gyrokinetics_wavevector
+      dd_path: gyrokinetics_local/linear/wavevector
+    attributes:
+      radial_wavevector_norm:
+        range: float
+        description: normalized radial component of the wavevector
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      binormal_wavevector_norm:
+        range: float
+        description: normalized binormal component of the wavevector
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      eigenmode:
+        range: GyrokineticsEigenmode
+        multivalued: true
+        description: Set of eigenmode for this wavector
+        annotations:
+          dd_max_occurs: '5'
+          dd_coordinate1: 1...N
+  GyrokineticsEigenmode:
+    is_a: InformationContentEntity
+    description: Set of eigenmode for this wavector
+    annotations:
+      dd_type_name: gyrokinetics_eigenmode
+      dd_path: gyrokinetics_local/linear/wavevector/eigenmode
+    attributes:
+      poloidal_turns:
+        range: integer
+        description: Number of poloidal turns considered in the flux-tube simulation
+        annotations:
+          dd_type: constant
+      growth_rate_norm:
+        range: float
+        description: Growth rate
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      frequency_norm:
+        range: float
+        description: Frequency
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      growth_rate_tolerance:
+        range: float
+        description: Relative tolerance on the growth rate (convergence of the simulation)
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      angle_pol:
+        range: float
+        multivalued: true
+        description: Poloidal angle grid. The angle is defined with respect to (R0,Z0) with R0=(Rmax-Rmin)/2
+          and Z0=(Zmax-Zmin)/2. It is increasing clockwise. So (r,theta,phi) is right-handed. theta=0
+          for Z=Z0 and R>R0 (LFS)
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      time_norm:
+        range: float
+        multivalued: true
+        description: normalized time of the gyrokinetic simulation
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      fields:
+        range: GyrokineticsEigenmodeFields
+        description: Electrostatic potential, magnetic field and magnetic vector potential
+      code:
+        range: CodePartialConstant
+        description: Code-specific parameters used for this eigenmode
+      initial_value_run:
+        range: integer
+        description: Flag = 1 if this is an initial value run, 0 for an eigenvalue run
+        annotations:
+          dd_type: constant
+      moments_norm_gyrocenter:
+        range: GyrokineticsMomentsLinear
+        description: Moments (normalized) of the perturbed distribution function of gyrocenters
+      moments_norm_particle:
+        range: GyrokineticsMomentsLinear
+        description: Moments (normalized) of the perturbed distribution function of particles
+      moments_norm_gyrocenter_bessel_0:
+        range: GyrokineticsMomentsLinear
+        description: Moments (normalized) of the perturbed distribution function of gyrocenters times
+          0th order Bessel function of the first kind
+      moments_norm_gyrocenter_bessel_1:
+        range: GyrokineticsMomentsLinear
+        description: Moments (normalized) of the perturbed distribution function of gyrocenters times
+          1st order Bessel function of the first kind
+      linear_weights:
+        range: GyrokineticsFluxes
+        description: normalized fluxes in the laboratory frame
+      linear_weights_rotating_frame:
+        range: GyrokineticsFluxes
+        description: normalized fluxes in the rotating frame
+  GyrokineticsEigenmodeFields:
+    is_a: InformationContentEntity
+    description: Electrostatic potential, magnetic field and magnetic vector potential
+    annotations:
+      dd_type_name: gyrokinetics_eigenmode_fields
+      dd_path: gyrokinetics_local/linear/wavevector/eigenmode/fields
+    attributes:
+      phi_potential_perturbed_weight:
+        range: float
+        multivalued: true
+        description: Amplitude of the perturbed electrostatic potential normalized to the sum of amplitudes
+          of all perturbed fields
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../time_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../time_norm
+      phi_potential_perturbed_parity:
+        range: float
+        multivalued: true
+        description: Parity of the perturbed electrostatic potential with respect to theta = 0 (poloidal
+          angle)
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../time_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../time_norm
+      a_field_parallel_perturbed_weight:
+        range: float
+        multivalued: true
+        description: Amplitude of the perturbed parallel vector potential normalized to the sum of amplitudes
+          of all perturbed fields
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../time_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../time_norm
+      a_field_parallel_perturbed_parity:
+        range: float
+        multivalued: true
+        description: Parity of the perturbed parallel vector potential with respect to theta = 0 (poloidal
+          angle)
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../time_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../time_norm
+      b_field_parallel_perturbed_weight:
+        range: float
+        multivalued: true
+        description: Amplitude of the perturbed parallel magnetic field normalized to the sum of amplitudes
+          of all perturbed fields
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../time_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../time_norm
+      b_field_parallel_perturbed_parity:
+        range: float
+        multivalued: true
+        description: Parity of the perturbed parallel magnetic field with respect to theta = 0 (poloidal
+          angle)
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../time_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../time_norm
+      phi_potential_perturbed_norm:
+        range: complex
+        multivalued: true
+        description: normalized perturbed electrostatic potential
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: ../../angle_pol
+          dd_coordinate2: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../angle_pol,../../time_norm
+      a_field_parallel_perturbed_norm:
+        range: complex
+        multivalued: true
+        description: normalized perturbed parallel vector potential
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: ../../angle_pol
+          dd_coordinate2: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../angle_pol,../../time_norm
+      b_field_parallel_perturbed_norm:
+        range: complex
+        multivalued: true
+        description: normalized perturbed parallel magnetic field
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: ../../angle_pol
+          dd_coordinate2: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../angle_pol,../../time_norm
+  CodePartialConstant:
+    is_a: InformationContentEntity
+    description: Code-specific parameters used for this eigenmode
+    annotations:
+      dd_type_name: code_partial_constant
+      dd_path: gyrokinetics_local/linear/wavevector/eigenmode/code
+    attributes:
+      parameters:
+        range: string
+        description: List of the code specific parameters in XML format
+        annotations:
+          dd_type: constant
+      output_flag:
+        range: integer
+        description: 'Output flag : 0 means the run is successful, other values mean some difficulty has
+          been encountered, the exact meaning is then code specific. Negative values mean the result shall
+          not be used.'
+        annotations:
+          dd_type: constant
+  GyrokineticsMomentsLinear:
+    is_a: InformationContentEntity
+    description: Moments (normalized) of the perturbed distribution function of gyrocenters
+    annotations:
+      dd_type_name: gyrokinetics_moments_linear
+      dd_path: gyrokinetics_local/linear/wavevector/eigenmode/moments_norm_gyrocenter
+    attributes:
+      density:
+        range: complex
+        multivalued: true
+        description: normalized density
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: ../../../../../species
+          dd_coordinate2: ../../angle_pol
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../../../../species,../../angle_pol,../../time_norm
+      j_parallel:
+        range: complex
+        multivalued: true
+        description: normalized parallel current density
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: ../../../../../species
+          dd_coordinate2: ../../angle_pol
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../../../../species,../../angle_pol,../../time_norm
+      pressure_parallel:
+        range: complex
+        multivalued: true
+        description: Normalized parallel pressure
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: ../../../../../species
+          dd_coordinate2: ../../angle_pol
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../../../../species,../../angle_pol,../../time_norm
+      pressure_perpendicular:
+        range: complex
+        multivalued: true
+        description: Normalized perpendicular pressure
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: ../../../../../species
+          dd_coordinate2: ../../angle_pol
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../../../../species,../../angle_pol,../../time_norm
+      pressure:
+        range: complex
+        multivalued: true
+        description: Normalised pressure, defined as the sum of pressure_parallel and pressure_perpendicular
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: ../../../../../species
+          dd_coordinate2: ../../angle_pol
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../../../../species,../../angle_pol,../../time_norm
+      heat_flux_parallel:
+        range: complex
+        multivalued: true
+        description: Normalized parallel heat flux (integral of 0.5 * m * v_par * v^2)
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: ../../../../../species
+          dd_coordinate2: ../../angle_pol
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../../../../species,../../angle_pol,../../time_norm
+      v_parallel_energy_perpendicular:
+        range: complex
+        multivalued: true
+        description: Normalized moment (integral over 0.5 * m * v_par * v_perp^2)
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: ../../../../../species
+          dd_coordinate2: ../../angle_pol
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../../../../species,../../angle_pol,../../time_norm
+      v_perpendicular_square_energy:
+        range: complex
+        multivalued: true
+        description: Normalized moment (integral over 0.5 * m * v_perp^2 * v^2)
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: ../../../../../species
+          dd_coordinate2: ../../angle_pol
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../../../../species,../../angle_pol,../../time_norm
+  GyrokineticsFluxes:
+    is_a: InformationContentEntity
+    description: normalized fluxes in the laboratory frame
+    annotations:
+      dd_type_name: gyrokinetics_fluxes
+      dd_path: gyrokinetics_local/linear/wavevector/eigenmode/linear_weights
+    attributes:
+      particles_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the normalized particle
+          flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../../../../species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../../../species
+      particles_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the normalized
+          particle flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../../../../species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../../../species
+      particles_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the normalized particle
+          flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../../../../species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../../../species
+      energy_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the normalized energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../../../../species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../../../species
+      energy_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the normalized
+          energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../../../../species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../../../species
+      energy_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the normalized energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../../../../species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../../../species
+      momentum_phi_parallel_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the parallel component of
+          the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../../../../species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../../../species
+      momentum_phi_parallel_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the parallel
+          component of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../../../../species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../../../species
+      momentum_phi_parallel_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the parallel component of
+          the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../../../../species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../../../species
+      momentum_phi_perpendicular_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the perpendicular component
+          of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../../../../species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../../../species
+      momentum_phi_perpendicular_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the perpendicular
+          component of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../../../../species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../../../species
+      momentum_phi_perpendicular_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the perpendicular component
+          of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../../../../species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../../../species
+  GyrokineticsNonLinear:
+    is_a: InformationContentEntity
+    description: Non-linear simulation
+    annotations:
+      dd_type_name: gyrokinetics_non_linear
+      dd_path: gyrokinetics_local/non_linear
+    attributes:
+      binormal_wavevector_norm:
+        range: float
+        multivalued: true
+        description: Array of normalized binormal wavevectors
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      radial_wavevector_norm:
+        range: float
+        multivalued: true
+        description: Array of normalized radial wavevectors
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      angle_pol:
+        range: float
+        multivalued: true
+        description: Poloidal angle grid. The angle is defined with respect to (R0,Z0) with R0=(Rmax-Rmin)/2
+          and Z0=(Zmax-Zmin)/2. It is increasing clockwise. So (r,theta,phi) is right-handed. theta=0
+          for Z=Z0 and R>R0 (LFS)
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      time_norm:
+        range: float
+        multivalued: true
+        description: normalized time of the gyrokinetic simulation
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      time_interval_norm:
+        range: float
+        multivalued: true
+        description: normalized time interval used to average fluxes in non-linear runs
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: 1...2
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...2
+      quasi_linear:
+        range: integer
+        description: Flag = 1 if the non-linear fluxes are in fact calculated by a quasi-linear model,
+          0 if non-linear
+        annotations:
+          dd_type: constant
+      code:
+        range: CodePartialConstant
+        description: Code-specific parameters used for the non-linear simulation
+      fluxes_5d:
+        range: GyrokineticsFluxesNl5d
+        description: 5D fluxes
+      fluxes_4d:
+        range: GyrokineticsFluxesNl4d
+        description: 4D fluxes (time averaged)
+      fluxes_3d:
+        range: GyrokineticsFluxesNl3d
+        description: 3D fluxes (time and flux surface averaged)
+      fluxes_3d_k_x_sum:
+        range: GyrokineticsFluxesNl3dSumKx
+        description: 3D fluxes (flux surface averaged, summed over kx)
+      fluxes_2d_k_x_sum:
+        range: GyrokineticsFluxesNl2dSumKx
+        description: 2D fluxes (time and flux-surface averaged), summed over kx
+      fluxes_2d_k_x_k_y_sum:
+        range: GyrokineticsFluxesNl2dSumKxKy
+        description: 2D fluxes (flux-surface averaged), summed over kx and ky
+      fluxes_1d:
+        range: GyrokineticsFluxesNl1d
+        description: 1D fluxes (flux-surface and time averaged), summed over kx and ky
+      fields_4d:
+        range: GyrokineticsFieldsNl4d
+        description: 4D fields
+      fields_intensity_3d:
+        range: GyrokineticsFieldsNl3d
+        description: 3D fields (time averaged)
+      fields_intensity_2d_surface_average:
+        range: GyrokineticsFieldsNl2dFsAverage
+        description: 2D fields (time averaged and flux surface averaged)
+      fields_zonal_2d:
+        range: GyrokineticsFieldsNl2dKy0
+        description: 2D zonal fields (taken at ky=0, flux surface averaged)
+      fields_intensity_1d:
+        range: GyrokineticsFieldsNl1d
+        description: 1D fields (summed over kx, time averaged and flux surface averaged)
+      fluxes_5d_rotating_frame:
+        range: GyrokineticsFluxesNl5d
+        description: 5D fluxes in the rotating frame
+      fluxes_4d_rotating_frame:
+        range: GyrokineticsFluxesNl4d
+        description: 4D fluxes (time averaged) in the rotating frame
+      fluxes_3d_rotating_frame:
+        range: GyrokineticsFluxesNl3d
+        description: 3D fluxes (time and flux surface averaged) in the rotating frame
+      fluxes_3d_k_x_sum_rotating_frame:
+        range: GyrokineticsFluxesNl3dSumKx
+        description: 3D fluxes (flux surface averaged, summed over kx)
+      fluxes_2d_k_x_sum_rotating_frame:
+        range: GyrokineticsFluxesNl2dSumKx
+        description: 2D fluxes (time and flux-surface averaged), summed over kx in the rotating frame
+      fluxes_2d_k_x_k_y_sum_rotating_frame:
+        range: GyrokineticsFluxesNl2dSumKxKy
+        description: 2D fluxes (flux-surface averaged), summed over kx and ky in the rotating frame
+      fluxes_1d_rotating_frame:
+        range: GyrokineticsFluxesNl1d
+        description: 1D fluxes (flux-surface and time averaged), summed over kx and ky in the rotating
+          frame
+  GyrokineticsFluxesNl5d:
+    is_a: InformationContentEntity
+    description: 5D fluxes
+    annotations:
+      dd_type_name: gyrokinetics_fluxes_nl_5d
+      dd_path: gyrokinetics_local/non_linear/fluxes_5d
+    attributes:
+      particles_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the normalized particle
+          flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 5
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          dd_coordinate5: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol,../../time_norm
+      particles_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the normalized
+          particle flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 5
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          dd_coordinate5: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol,../../time_norm
+      particles_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the normalized particle
+          flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 5
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          dd_coordinate5: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol,../../time_norm
+      energy_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the normalized energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 5
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          dd_coordinate5: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol,../../time_norm
+      energy_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the normalized
+          energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 5
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          dd_coordinate5: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol,../../time_norm
+      energy_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the normalized energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 5
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          dd_coordinate5: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol,../../time_norm
+      momentum_phi_parallel_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the parallel component of
+          the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 5
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          dd_coordinate5: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol,../../time_norm
+      momentum_phi_parallel_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the parallel
+          component of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 5
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          dd_coordinate5: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol,../../time_norm
+      momentum_phi_parallel_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the parallel component of
+          the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 5
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          dd_coordinate5: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol,../../time_norm
+      momentum_phi_perpendicular_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the perpendicular component
+          of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 5
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          dd_coordinate5: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol,../../time_norm
+      momentum_phi_perpendicular_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the perpendicular
+          component of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 5
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          dd_coordinate5: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol,../../time_norm
+      momentum_phi_perpendicular_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the perpendicular component
+          of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 5
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          dd_coordinate5: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol,../../time_norm
+  GyrokineticsFluxesNl4d:
+    is_a: InformationContentEntity
+    description: 4D fluxes (time averaged)
+    annotations:
+      dd_type_name: gyrokinetics_fluxes_nl_4d
+      dd_path: gyrokinetics_local/non_linear/fluxes_4d
+    attributes:
+      particles_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the normalized particle
+          flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 4
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol
+      particles_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the normalized
+          particle flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 4
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol
+      particles_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the normalized particle
+          flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 4
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol
+      energy_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the normalized energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 4
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol
+      energy_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the normalized
+          energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 4
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol
+      energy_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the normalized energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 4
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol
+      momentum_phi_parallel_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the parallel component of
+          the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 4
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol
+      momentum_phi_parallel_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the parallel
+          component of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 4
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol
+      momentum_phi_parallel_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the parallel component of
+          the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 4
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol
+      momentum_phi_perpendicular_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the perpendicular component
+          of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 4
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol
+      momentum_phi_perpendicular_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the perpendicular
+          component of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 4
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol
+      momentum_phi_perpendicular_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the perpendicular component
+          of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 4
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          dd_coordinate4: ../../angle_pol
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol
+  GyrokineticsFluxesNl3d:
+    is_a: InformationContentEntity
+    description: 3D fluxes (time and flux surface averaged)
+    annotations:
+      dd_type_name: gyrokinetics_fluxes_nl_3d
+      dd_path: gyrokinetics_local/non_linear/fluxes_3d
+    attributes:
+      particles_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the normalized particle
+          flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm
+      particles_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the normalized
+          particle flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm
+      particles_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the normalized particle
+          flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm
+      energy_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the normalized energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm
+      energy_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the normalized
+          energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm
+      energy_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the normalized energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm
+      momentum_phi_parallel_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the parallel component of
+          the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm
+      momentum_phi_parallel_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the parallel
+          component of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm
+      momentum_phi_parallel_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the parallel component of
+          the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm
+      momentum_phi_perpendicular_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the perpendicular component
+          of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm
+      momentum_phi_perpendicular_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the perpendicular
+          component of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm
+      momentum_phi_perpendicular_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the perpendicular component
+          of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../radial_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../radial_wavevector_norm
+  GyrokineticsFluxesNl3dSumKx:
+    is_a: InformationContentEntity
+    description: 3D fluxes (flux surface averaged, summed over kx)
+    annotations:
+      dd_type_name: gyrokinetics_fluxes_nl_3d_sum_kx
+      dd_path: gyrokinetics_local/non_linear/fluxes_3d_k_x_sum
+    attributes:
+      particles_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the normalised particle
+          flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../time_norm
+      particles_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the normalised
+          particle flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../time_norm
+      particles_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the normalised particle
+          flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../time_norm
+      energy_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the normalised energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../time_norm
+      energy_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the normalised
+          energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../time_norm
+      energy_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the normalised energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../time_norm
+      momentum_phi_parallel_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the parallel component of
+          the normalised toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../time_norm
+      momentum_phi_parallel_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the parallel
+          component of the normalised toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../time_norm
+      momentum_phi_parallel_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the parallel component of
+          the normalised toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../time_norm
+      momentum_phi_perpendicular_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the perpendicular component
+          of the normalised toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../time_norm
+      momentum_phi_perpendicular_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the perpendicular
+          component of the normalised toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../time_norm
+      momentum_phi_perpendicular_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the perpendicular component
+          of the normalised toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          dd_coordinate3: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm,../../time_norm
+  GyrokineticsFluxesNl2dSumKx:
+    is_a: InformationContentEntity
+    description: 2D fluxes (time and flux-surface averaged), summed over kx
+    annotations:
+      dd_type_name: gyrokinetics_fluxes_nl_2d_sum_kx
+      dd_path: gyrokinetics_local/non_linear/fluxes_2d_k_x_sum
+    attributes:
+      particles_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the normalized particle
+          flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm
+      particles_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the normalized
+          particle flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm
+      particles_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the normalized particle
+          flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm
+      energy_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the normalized energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm
+      energy_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the normalized
+          energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm
+      energy_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the normalized energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm
+      momentum_phi_parallel_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the parallel component of
+          the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm
+      momentum_phi_parallel_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the parallel
+          component of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm
+      momentum_phi_parallel_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the parallel component of
+          the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm
+      momentum_phi_perpendicular_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the perpendicular component
+          of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm
+      momentum_phi_perpendicular_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the perpendicular
+          component of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm
+      momentum_phi_perpendicular_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the perpendicular component
+          of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../binormal_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../binormal_wavevector_norm
+  GyrokineticsFluxesNl2dSumKxKy:
+    is_a: InformationContentEntity
+    description: 2D fluxes (flux-surface averaged), summed over kx and ky
+    annotations:
+      dd_type_name: gyrokinetics_fluxes_nl_2d_sum_kx_ky
+      dd_path: gyrokinetics_local/non_linear/fluxes_2d_k_x_k_y_sum
+    attributes:
+      particles_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the normalized particle
+          flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../time_norm
+      particles_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the normalized
+          particle flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../time_norm
+      particles_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the normalized particle
+          flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../time_norm
+      energy_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the normalized energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../time_norm
+      energy_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the normalized
+          energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../time_norm
+      energy_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the normalized energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../time_norm
+      momentum_phi_parallel_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the parallel component of
+          the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../time_norm
+      momentum_phi_parallel_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the parallel
+          component of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../time_norm
+      momentum_phi_parallel_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the parallel component of
+          the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../time_norm
+      momentum_phi_perpendicular_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the perpendicular component
+          of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../time_norm
+      momentum_phi_perpendicular_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the perpendicular
+          component of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../time_norm
+      momentum_phi_perpendicular_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the perpendicular component
+          of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: /species
+          dd_coordinate2: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: /species,../../time_norm
+  GyrokineticsFluxesNl1d:
+    is_a: InformationContentEntity
+    description: 1D fluxes (flux-surface and time averaged), summed over kx and ky
+    annotations:
+      dd_type_name: gyrokinetics_fluxes_nl_1d
+      dd_path: gyrokinetics_local/non_linear/fluxes_1d
+    attributes:
+      particles_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the normalized particle
+          flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: /species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: /species
+      particles_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the normalized
+          particle flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: /species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: /species
+      particles_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the normalized particle
+          flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: /species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: /species
+      energy_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the normalized energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: /species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: /species
+      energy_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the normalized
+          energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: /species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: /species
+      energy_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the normalized energy flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: /species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: /species
+      momentum_phi_parallel_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the parallel component of
+          the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: /species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: /species
+      momentum_phi_parallel_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the parallel
+          component of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: /species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: /species
+      momentum_phi_parallel_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the parallel component of
+          the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: /species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: /species
+      momentum_phi_perpendicular_phi_potential:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed electrostatic potential to the perpendicular component
+          of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: /species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: /species
+      momentum_phi_perpendicular_a_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel electromagnetic potential to the perpendicular
+          component of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: /species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: /species
+      momentum_phi_perpendicular_b_field_parallel:
+        range: float
+        multivalued: true
+        description: Contribution of the perturbed parallel magnetic field to the perpendicular component
+          of the normalized toroidal momentum flux
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: /species
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: /species
+  GyrokineticsFieldsNl4d:
+    is_a: InformationContentEntity
+    description: 4D fields
+    annotations:
+      dd_type_name: gyrokinetics_fields_nl_4d
+      dd_path: gyrokinetics_local/non_linear/fields_4d
+    attributes:
+      phi_potential_perturbed_norm:
+        range: complex
+        multivalued: true
+        description: Normalized perturbed electrostatic potential
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 4
+          dd_coordinate1: ../../binormal_wavevector_norm
+          dd_coordinate2: ../../radial_wavevector_norm
+          dd_coordinate3: ../../angle_pol
+          dd_coordinate4: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol,../../time_norm
+      a_field_parallel_perturbed_norm:
+        range: complex
+        multivalued: true
+        description: Normalized perturbed parallel vector potential
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 4
+          dd_coordinate1: ../../binormal_wavevector_norm
+          dd_coordinate2: ../../radial_wavevector_norm
+          dd_coordinate3: ../../angle_pol
+          dd_coordinate4: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol,../../time_norm
+      b_field_parallel_perturbed_norm:
+        range: complex
+        multivalued: true
+        description: Normalized perturbed parallel magnetic field
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 4
+          dd_coordinate1: ../../binormal_wavevector_norm
+          dd_coordinate2: ../../radial_wavevector_norm
+          dd_coordinate3: ../../angle_pol
+          dd_coordinate4: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol,../../time_norm
+  GyrokineticsFieldsNl3d:
+    is_a: InformationContentEntity
+    description: 3D fields (time averaged)
+    annotations:
+      dd_type_name: gyrokinetics_fields_nl_3d
+      dd_path: gyrokinetics_local/non_linear/fields_intensity_3d
+    attributes:
+      phi_potential_perturbed_norm:
+        range: float
+        multivalued: true
+        description: Normalized perturbed electrostatic potential
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: ../../binormal_wavevector_norm
+          dd_coordinate2: ../../radial_wavevector_norm
+          dd_coordinate3: ../../angle_pol
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol
+      a_field_parallel_perturbed_norm:
+        range: float
+        multivalued: true
+        description: Normalized perturbed parallel vector potential
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: ../../binormal_wavevector_norm
+          dd_coordinate2: ../../radial_wavevector_norm
+          dd_coordinate3: ../../angle_pol
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol
+      b_field_parallel_perturbed_norm:
+        range: float
+        multivalued: true
+        description: Normalized perturbed parallel magnetic field
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: ../../binormal_wavevector_norm
+          dd_coordinate2: ../../radial_wavevector_norm
+          dd_coordinate3: ../../angle_pol
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../binormal_wavevector_norm,../../radial_wavevector_norm,../../angle_pol
+  GyrokineticsFieldsNl2dFsAverage:
+    is_a: InformationContentEntity
+    description: 2D fields (time averaged and flux surface averaged)
+    annotations:
+      dd_type_name: gyrokinetics_fields_nl_2d_fs_average
+      dd_path: gyrokinetics_local/non_linear/fields_intensity_2d_surface_average
+    attributes:
+      phi_potential_perturbed_norm:
+        range: float
+        multivalued: true
+        description: Normalized perturbed electrostatic potential
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: ../../binormal_wavevector_norm
+          dd_coordinate2: ../../radial_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../binormal_wavevector_norm,../../radial_wavevector_norm
+      a_field_parallel_perturbed_norm:
+        range: float
+        multivalued: true
+        description: Normalized perturbed parallel vector potential
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: ../../binormal_wavevector_norm
+          dd_coordinate2: ../../radial_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../binormal_wavevector_norm,../../radial_wavevector_norm
+      b_field_parallel_perturbed_norm:
+        range: float
+        multivalued: true
+        description: Normalized perturbed parallel magnetic field
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: ../../binormal_wavevector_norm
+          dd_coordinate2: ../../radial_wavevector_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../binormal_wavevector_norm,../../radial_wavevector_norm
+  GyrokineticsFieldsNl2dKy0:
+    is_a: InformationContentEntity
+    description: 2D zonal fields (taken at ky=0, flux surface averaged)
+    annotations:
+      dd_type_name: gyrokinetics_fields_nl_2d_ky0
+      dd_path: gyrokinetics_local/non_linear/fields_zonal_2d
+    attributes:
+      phi_potential_perturbed_norm:
+        range: complex
+        multivalued: true
+        description: normalized perturbed electrostatic potential
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: ../../radial_wavevector_norm
+          dd_coordinate2: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../radial_wavevector_norm,../../time_norm
+      a_field_parallel_perturbed_norm:
+        range: complex
+        multivalued: true
+        description: Normalized perturbed parallel vector potential
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: ../../radial_wavevector_norm
+          dd_coordinate2: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../radial_wavevector_norm,../../time_norm
+      b_field_parallel_perturbed_norm:
+        range: complex
+        multivalued: true
+        description: Normalized perturbed parallel magnetic field
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: ../../radial_wavevector_norm
+          dd_coordinate2: ../../time_norm
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../radial_wavevector_norm,../../time_norm
+  GyrokineticsFieldsNl1d:
+    is_a: InformationContentEntity
+    description: 1D fields (summed over kx, time averaged and flux surface averaged)
+    annotations:
+      dd_type_name: gyrokinetics_fields_nl_1d
+      dd_path: gyrokinetics_local/non_linear/fields_intensity_1d
+    attributes:
+      phi_potential_perturbed_norm:
+        range: float
+        multivalued: true
+        description: Normalized perturbed electrostatic potential
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../binormal_wavevector_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../binormal_wavevector_norm
+      a_field_parallel_perturbed_norm:
+        range: float
+        multivalued: true
+        description: Normalized perturbed parallel vector potential
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../binormal_wavevector_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../binormal_wavevector_norm
+      b_field_parallel_perturbed_norm:
+        range: float
+        multivalued: true
+        description: normalized perturbed parallel magnetic field
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../binormal_wavevector_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../binormal_wavevector_norm
+  GyrokineticsModel:
+    is_a: InformationContentEntity
+    description: Assumptions of the GK calculations
+    annotations:
+      dd_type_name: gyrokinetics_model
+      dd_path: gyrokinetics_local/model
+    attributes:
+      include_a_field_parallel:
+        range: integer
+        description: Flag = 1 if fluctuations of the parallel vector potential are retained, 0 otherwise
+        annotations:
+          dd_type: constant
+      include_b_field_parallel:
+        range: integer
+        description: Flag = 1 if fluctuations of the parallel magnetic field are retained, 0 otherwise
+        annotations:
+          dd_type: constant
+      use_mhd_approximation:
+        range: integer
+        description: Flag = 1 if the geometric dependence of the grad-B drift is approximated to be that
+          of the curvature drift (including the pressure gradient contribution), 0 otherwise. Using this
+          approximation (Flag=1) is only recommended together with the neglect of parallel magnetic field
+          fluctuations
+        annotations:
+          dd_type: constant
+      include_coriolis_drift:
+        range: integer
+        description: Flag = 1 if Coriolis drift is included, 0 otherwise
+        annotations:
+          dd_type: constant
+      include_centrifugal_effects:
+        range: integer
+        description: Flag = 1 if centrifugal effects are retained, 0 otherwise
+        annotations:
+          dd_type: constant
+      collisions_pitch_only:
+        range: integer
+        description: Flag = 1 if only pitch-angle scattering is retained, 0 otherwise
+        annotations:
+          dd_type: constant
+      collisions_momentum_conservation:
+        range: integer
+        description: Flag = 1 if the collision operator conserves momentum, 0 otherwise
+        annotations:
+          dd_type: constant
+      collisions_energy_conservation:
+        range: integer
+        description: Flag = 1 if the collision operator conserves energy, 0 otherwise
+        annotations:
+          dd_type: constant
+      collisions_finite_larmor_radius:
+        range: integer
+        description: Flag = 1 if finite larmor radius effects are retained in the collision operator,
+          0 otherwise
+        annotations:
+          dd_type: constant
+      adiabatic_electrons:
+        range: integer
+        description: Flag = 1 if electrons are adiabatic, 0 otherwise
+        annotations:
+          dd_type: constant
+  GyrokineticsInputSpeciesGlobal:
+    is_a: InformationContentEntity
+    description: Physical quantities common to all species
+    annotations:
+      dd_type_name: gyrokinetics_input_species_global
+      dd_path: gyrokinetics_local/species_all
+    attributes:
+      beta_reference:
+        range: float
+        description: Reference plasma beta (see detailed documentation at the root of the IDS)
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      velocity_phi_norm:
+        range: float
+        description: normalized toroidal velocity of species (all species are assumed to have a purely
+          toroidal velocity with a common toroidal angular frequency)
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      debye_length_norm:
+        range: float
+        description: Debye length computed from the reference quantities (see detailed documentation at
+          the root of the IDS)
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      shearing_rate_norm:
+        range: float
+        description: normalized ExB shearing rate (for non-linear runs only)
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      angle_pol_equilibrium:
+        range: float
+        multivalued: true
+        description: Poloidal angle grid, from -pi to pi, on which the species dependent effective potential
+          energy (which determines the poloidal variation of the density) is expressed. The angle is defined
+          with respect to (R0,Z0) with R0=(Rmax-Rmin)/2 and Z0=(Zmax-Zmin)/2. It is increasing clockwise.
+          So (r,theta,phi) is right-handed. theta=0 for Z=Z0 and R>R0 (LFS)
+        annotations:
+          dd_type: constant
+          dd_units: rad
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+  GyrokineticsSpecies:
+    is_a: InformationContentEntity
+    description: Set of species (including electrons) used in the calculation and related quantities
+    annotations:
+      dd_type_name: gyrokinetics_species
+      dd_path: gyrokinetics_local/species
+    attributes:
+      charge_norm:
+        range: float
+        description: normalized charge
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      mass_norm:
+        range: float
+        description: normalized mass
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      density_norm:
+        range: float
+        description: normalized density
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      density_log_gradient_norm:
+        range: float
+        description: normalized logarithmic gradient (with respect to r_minor_norm) of the density
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      temperature_norm:
+        range: float
+        description: normalized temperature
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      temperature_log_gradient_norm:
+        range: float
+        description: normalized logarithmic gradient (with respect to r_minor_norm) of the temperature
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      velocity_phi_gradient_norm:
+        range: float
+        description: Normalized gradient (with respect to r_minor_norm) of the toroidal velocity
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      potential_energy_norm:
+        range: float
+        multivalued: true
+        description: normalized gradient (with respect to r_minor_norm) of the effective potential energy
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../species_all/angle_pol_equilibrium
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../species_all/angle_pol_equilibrium
+      potential_energy_gradient_norm:
+        range: float
+        multivalued: true
+        description: Effective potential energy determining the poloidal variation of the species background
+          density
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../species_all/angle_pol_equilibrium
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../species_all/angle_pol_equilibrium
+  GyrokineticsCollisions:
+    is_a: InformationContentEntity
+    description: Collisions related quantities
+    annotations:
+      dd_type_name: gyrokinetics_collisions
+      dd_path: gyrokinetics_local/collisions
+    attributes:
+      collisionality_norm:
+        range: float
+        multivalued: true
+        description: normalized collisionality between two species
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: ../../species
+          dd_coordinate2: ../../species
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../species,../../species

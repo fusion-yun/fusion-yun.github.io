@@ -1,0 +1,587 @@
+id: https://fusion-yun.github.io/fyo/v0.draft/imas/v4/charge_exchange
+name: fyo-imas-charge_exchange
+title: fyo IDS `charge_exchange` (lifted, DD 4.1.1)
+description: 'Semantic lift of IMAS DD IDS `charge_exchange` onto SpO/BFO (FYTOK-ADR-102): structures
+  grounded as ICEs, time-slice AoS elements as spo:TimeSlice, leaves annotated with their spo carrier
+  classes (Signal / Field / Function / QuantityValue / TimeAxis). Layout is preserved in dd_* annotations
+  (reverse map ω).'
+license: CC-BY-ND-4.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  fyo: https://fusion-yun.github.io/fyo/v0.draft/
+  spo: https://fusion-yun.github.io/spo/v0.draft/
+  imas: https://imas.iter.org/dd/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+default_prefix: fyo
+default_range: string
+imports:
+- linkml:types
+- spo
+- fyo-core
+- fyo-common
+annotations:
+  generated_by: dd2fyo 0.1.0
+  dd_version: 4.1.1
+  dd_source: ../imas/v4/charge_exchange.linkml.yaml (mechanical layer)
+  fyo_category: diagnostic
+  fyo_root_class: ChargeExchange
+  provenance: DO NOT EDIT — regenerate via ontology/dd2fyo.py.
+classes:
+  ChargeExchange:
+    is_a: IDS
+    description: Charge exchange spectroscopy diagnostic
+    annotations:
+      dd_path: charge_exchange
+      fyo_category: diagnostic
+    attributes:
+      ids_properties:
+        range: IdsProperties
+        description: Interface Data Structure properties. This element identifies the node above as an
+          IDS
+      aperture:
+        range: DetectorAperture
+        description: Description of the collimating aperture of the diagnostic, fill if relevant to all
+          lines-of-sight (channels)
+      etendue:
+        range: float
+        description: Etendue (geometric extent) of the optical system, fill if relevant to all lines-of-sight
+          (channels)
+        annotations:
+          dd_type: static
+          dd_units: m^2.sr
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      etendue_method:
+        range: Identifier
+        description: 'Method used to calculate the etendue. Index = 0 : exact calculation with a 4D integral;
+          1 : approximation with first order formula (detector surface times solid angle subtended by
+          the apertures); 2 : other methods'
+      channel:
+        range: ChargeExchangeChannel
+        multivalued: true
+        description: Set of channels (lines-of-sight). The line-of-sight is defined by the centre of the
+          collimating aperture and the position of the measurements.
+        annotations:
+          dd_max_occurs: '100'
+          dd_coordinate1: 1...N
+      latency:
+        range: float
+        description: Upper bound of the delay between physical information received by the detector and
+          data available on the real-time (RT) network.
+        annotations:
+          dd_type: static
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      code:
+        range: IdsCode
+        description: Generic decription of the code-specific parameters for the code that has produced
+          this IDS
+      time:
+        range: float
+        multivalued: true
+        description: Generic time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  ChargeExchangeChannel:
+    is_a: InformationContentEntity
+    description: Set of channels (lines-of-sight). The line-of-sight is defined by the centre of the collimating
+      aperture and the position of the measurements.
+    annotations:
+      dd_type_name: charge_exchange_channel
+      dd_path: charge_exchange/channel
+    attributes:
+      name:
+        range: string
+        description: Short string identifier (unique for a given device)
+        annotations:
+          dd_type: static
+      description:
+        range: string
+        description: Description, e.g. “channel viewing the upper divertor”
+        annotations:
+          dd_type: static
+      aperture:
+        range: DetectorAperture
+        description: Description of the collimating aperture for this channel
+      etendue:
+        range: float
+        description: Etendue (geometric extent) of the optical system for this channel
+        annotations:
+          dd_type: static
+          dd_units: m^2.sr
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      etendue_method:
+        range: Identifier
+        description: 'Method used to calculate the etendue. Index = 0 : exact calculation with a 4D integral;
+          1 : approximation with first order formula (detector surface times solid angle subtended by
+          the apertures); 2 : other methods'
+      focal_length:
+        range: float
+        description: Focal length of the collector lens
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      cone_diameter:
+        range: float
+        description: Diameter of the base of the optical cone at the entrance pupil
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      image_diameter:
+        range: float
+        description: Diameter at the image plane (typically the diameter of the optical fibre)
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      position:
+        range: Rphiz1dDynamicAos1
+        description: Position of the measurements (assuming point emission)
+      t_i_average:
+        range: SignalFlt1d
+        description: Ion temperature (averaged on charge states and ion species) at the channel measurement
+          point
+        annotations:
+          dd_units: eV
+      t_i_average_method:
+        range: Identifier
+        description: Description of the method used to reconstruct the average ion temperature
+      zeff:
+        range: SignalFlt1d
+        description: Local ionic effective charge at the channel measurement point
+        annotations:
+          dd_units: '1'
+      zeff_method:
+        range: Identifier
+        description: Description of the method used to reconstruct the local effective charge
+      zeff_line_average:
+        range: SignalFlt1d
+        description: Ionic effective charge, line average along the channel line-of-sight
+        annotations:
+          dd_units: '1'
+      zeff_line_average_method:
+        range: Identifier
+        description: Description of the method used to reconstruct the line average effective charge
+      momentum_phi:
+        range: SignalFlt1d
+        description: Total plasma toroidal momentum, summed over ion species and electrons weighted by
+          their density and major radius, i.e. sum_over_species(n*R*m*Vphi), at the channel measurement
+          point
+        annotations:
+          dd_units: kg.m^-1.s^-1
+      momentum_phi_method:
+        range: Identifier
+        description: Description of the method used to reconstruct the total plasma toroidal momentum
+      ion:
+        range: ChargeExchangeChannelIon
+        multivalued: true
+        description: Physical quantities related to ion species and charge stage (H+, D+, T+, He+2, Li+3,
+          Be+4, C+6, N+7, O+8, Ne+10, Si+14, Ar+16 or Ar+18) derived from the measured charge exchange
+          emission of each species, at the position of the measurement
+        annotations:
+          dd_max_occurs: '13'
+          dd_coordinate1: 1...N
+      bes:
+        range: ChargeExchangeChannelBes
+        description: Derived Beam Emission Spectroscopy (BES) parameters
+      ion_fast:
+        range: ChargeExchangeChannelIonFast
+        multivalued: true
+        description: Derived Fast Ion Charge eXchange (FICX) parameters
+        annotations:
+          dd_max_occurs: '5'
+          dd_coordinate1: 1...N
+      spectrum:
+        range: ChargeExchangeChannelSpectrum
+        multivalued: true
+        description: Set of spectra obtained by various gratings
+        annotations:
+          dd_max_occurs: '3'
+          dd_coordinate1: 1...N
+  Rphiz1dDynamicAos1:
+    is_a: InformationContentEntity
+    description: Position of the measurements (assuming point emission)
+    annotations:
+      dd_type_name: rphiz1d_dynamic_aos1
+      dd_path: charge_exchange/channel/position
+    attributes:
+      r:
+        range: SignalFlt1d
+        description: Major radius
+        annotations:
+          dd_units: m
+      phi:
+        range: SignalFlt1d
+        description: Toroidal angle (oriented counter-clockwise when viewing from above)
+        annotations:
+          dd_units: rad
+      z:
+        range: SignalFlt1d
+        description: Height
+        annotations:
+          dd_units: m
+  ChargeExchangeChannelIon:
+    is_a: InformationContentEntity
+    description: Physical quantities related to ion species and charge stage (H+, D+, T+, He+2, Li+3,
+      Be+4, C+6, N+7, O+8, Ne+10, Si+14, Ar+16 or Ar+18) derived from the measured charge exchange emission
+      of each species, at the position of the measurement
+    annotations:
+      dd_type_name: charge_exchange_channel_ion
+      dd_path: charge_exchange/channel/ion
+    attributes:
+      a:
+        range: float
+        description: Mass of atom of the ion
+        annotations:
+          dd_type: constant
+          dd_units: u
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      z_ion:
+        range: float
+        description: Ion charge
+        annotations:
+          dd_type: constant
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      z_n:
+        range: integer
+        description: Nuclear charge
+        annotations:
+          dd_type: constant
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      name:
+        range: string
+        description: String identifying the ion (e.g. H+, D+, T+, He+2, C+6, ...)
+        annotations:
+          dd_type: constant
+      t_i:
+        range: SignalFlt1d
+        description: Ion temperature at the channel measurement point
+        annotations:
+          dd_units: eV
+      t_i_method:
+        range: Identifier
+        description: Description of the method used to derive the ion temperature
+      velocity_phi:
+        range: SignalFlt1d
+        description: Toroidal velocity of the ion (oriented counter-clockwise when seen from above) at
+          the channel measurement point
+        annotations:
+          dd_units: m.s^-1
+      velocity_phi_method:
+        range: Identifier
+        description: Description of the method used to reconstruct the ion toroidal velocity
+        annotations:
+          dd_units: m.s^-1
+      velocity_pol:
+        range: SignalFlt1d
+        description: Poloidal velocity of the ion (oriented clockwise when seen from front on the right
+          side of the tokamak axi-symmetry axis) at the channel measurement point
+        annotations:
+          dd_units: m.s^-1
+      velocity_pol_method:
+        range: Identifier
+        description: Description of the method used to reconstruct the ion poloidal velocity
+      n_i_over_n_e:
+        range: SignalFlt1d
+        description: Ion concentration (ratio of the ion density over the electron density) at the channel
+          measurement point
+        annotations:
+          dd_units: '1'
+      n_i_over_n_e_method:
+        range: Identifier
+        description: Description of the method used to derive the ion concentration
+  ChargeExchangeChannelBes:
+    is_a: InformationContentEntity
+    description: Derived Beam Emission Spectroscopy (BES) parameters
+    annotations:
+      dd_type_name: charge_exchange_channel_bes
+      dd_path: charge_exchange/channel/bes
+    attributes:
+      a:
+        range: float
+        description: Mass of atom of the diagnostic neutral beam particle
+        annotations:
+          dd_type: constant
+          dd_units: u
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      z_ion:
+        range: float
+        description: Ion charge of the diagnostic neutral beam particle
+        annotations:
+          dd_type: constant
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      z_n:
+        range: integer
+        description: Nuclear charge of the diagnostic neutral beam particle
+        annotations:
+          dd_type: constant
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      name:
+        range: string
+        description: String identifying the diagnostic neutral beam particle
+        annotations:
+          dd_type: constant
+      transition_wavelength:
+        range: float
+        description: Unshifted wavelength of the BES transition
+        annotations:
+          dd_type: constant
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      doppler_shift:
+        range: SignalFlt1d
+        description: Doppler shift due to the diagnostic neutral beam particle velocity
+        annotations:
+          dd_units: m
+      lorentz_shift:
+        range: SignalFlt1d
+        description: Lorentz shift due to the Lorentz electric field (vxB) in the frame of the diagnostic
+          neutral beam particles moving with a velocity v across the magnetic field B
+        annotations:
+          dd_units: m
+      radiances:
+        range: SignalFlt2d
+        description: 'Calibrated intensities of the 9 splitted lines (Stark effect due to Lorentz electric
+          field). Note: radiances are integrated over the sightline crossing the neutral beam'
+        annotations:
+          dd_units: m^-2.s^-1.sr^-1
+          dd_coordinate1: 1...9
+          dd_coordinate2: time
+  ChargeExchangeChannelIonFast:
+    is_a: InformationContentEntity
+    description: Derived Fast Ion Charge eXchange (FICX) parameters
+    annotations:
+      dd_type_name: charge_exchange_channel_ion_fast
+      dd_path: charge_exchange/channel/ion_fast
+    attributes:
+      a:
+        range: float
+        description: Mass of atom of the fast ion
+        annotations:
+          dd_type: constant
+          dd_units: u
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      z_ion:
+        range: float
+        description: Fast ion charge
+        annotations:
+          dd_type: constant
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      z_n:
+        range: integer
+        description: Nuclear charge of the fast ion
+        annotations:
+          dd_type: constant
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      name:
+        range: string
+        description: String identifying the fast ion (e.g. H+, D+, T+, He+2, C+6, ...)
+        annotations:
+          dd_type: constant
+      transition_wavelength:
+        range: float
+        description: Unshifted wavelength of the fast ion charge exchange transition
+        annotations:
+          dd_type: constant
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      radiance:
+        range: SignalFlt1d
+        description: 'Calibrated radiance of the fast ion charge exchange spectrum assuming the shape
+          is pre-defined (e.g. by the Fokker-Planck slowing-down function). Note: radiance is integrated
+          over the sightline crossing the neutral beam'
+        annotations:
+          dd_units: m^-2.s^-1.sr^-1
+      radiance_spectral_method:
+        range: Identifier
+        description: Description of the method used to reconstruct the fast ion charge exchange spectrum
+          (e.g. what pre-defined slowing-down and source functions used)
+  ChargeExchangeChannelSpectrum:
+    is_a: InformationContentEntity
+    description: Set of spectra obtained by various gratings
+    annotations:
+      dd_type_name: charge_exchange_channel_spectrum
+      dd_path: charge_exchange/channel/spectrum
+    attributes:
+      grating:
+        range: float
+        description: Number of grating lines per unit length
+        annotations:
+          dd_type: static
+          dd_units: m^-1
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      slit_width:
+        range: float
+        description: Width of the slit (placed in the object focal plane)
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      instrument_function:
+        range: float
+        multivalued: true
+        description: Array of Gaussian widths and amplitudes which as a sum make up the instrument fuction.
+          IF(lambda) = sum( instrument_function(1,i)/sqrt(2 * pi * instrument_function(2,i)^2  ) * exp(
+          -lambda^2/(2 * instrument_function(2,i)^2) )  ),whereby sum( instrument_function(1,i) ) = 1
+        annotations:
+          dd_type: static
+          dd_units: m
+          dd_ndim: 2
+          dd_coordinate1: 1...2
+          dd_coordinate2: 1...N
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...2,1...N
+      exposure_time:
+        range: float
+        description: Exposure time
+        annotations:
+          dd_type: constant
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      wavelengths:
+        range: float
+        multivalued: true
+        description: Measured wavelengths
+        annotations:
+          dd_type: constant
+          dd_units: m
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      intensity_spectrum:
+        range: SignalFlt2d
+        description: Intensity spectrum (not calibrated), i.e. number of photoelectrons detected by unit
+          time by a wavelength pixel of the channel, taking into account electronic gain compensation
+          and channels relative calibration
+        annotations:
+          dd_units: s^-1
+          dd_coordinate1: ../wavelengths
+          dd_coordinate2: time
+      radiance_spectral:
+        range: SignalFlt2d
+        description: Calibrated spectral radiance (radiance per unit wavelength)
+        annotations:
+          dd_units: m^-2.s^-1.sr^-1.m^-1
+          dd_coordinate1: ../wavelengths
+          dd_coordinate2: time
+      processed_line:
+        range: ChargeExchangeChannelProcessedLine
+        multivalued: true
+        description: Set of processed spectral lines
+        annotations:
+          dd_max_occurs: '5'
+          dd_coordinate1: 1...N
+      radiance_calibration:
+        range: float
+        multivalued: true
+        description: Radiance calibration
+        annotations:
+          dd_type: static
+          dd_units: m^-3.sr^-1
+          dd_ndim: 1
+          dd_coordinate1: ../wavelengths
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../wavelengths
+      radiance_calibration_date:
+        range: string
+        description: Date of the radiance calibration (yyyy_mm_dd)
+        annotations:
+          dd_type: static
+      wavelength_calibration_date:
+        range: string
+        description: Date of the wavelength calibration (yyyy_mm_dd)
+        annotations:
+          dd_type: static
+      radiance_continuum:
+        range: SignalFlt2d
+        description: Calibrated continuum intensity  in the middle of the spectrum per unit wavelength
+        annotations:
+          dd_units: m^-2.s^-1.sr^-1.m^-1
+          dd_coordinate1: ../wavelengths
+          dd_coordinate2: time
+  ChargeExchangeChannelProcessedLine:
+    is_a: InformationContentEntity
+    description: Set of processed spectral lines
+    annotations:
+      dd_type_name: charge_exchange_channel_processed_line
+      dd_path: charge_exchange/channel/spectrum/processed_line
+    attributes:
+      name:
+        range: string
+        description: 'String identifying the processed spectral line: Spectroscopy notation emitting element
+          (e.g. D I, Be IV,  W I, C VI), transition - if known - between round brackets (e.g. (3-2) )
+          and indication type of charge exchange - if applicable - between square brackets (e.g. [ACX]
+          or [PCX]). Example for beryllium active charge exchange line at 468.5 nm: ''Be IV (8-6) [ACX]''.
+          Example for impact excitation tungsten line coming from the plasma edge: ''W I'''
+        annotations:
+          dd_type: constant
+      wavelength_central:
+        range: float
+        description: Unshifted central wavelength of the processed spectral line
+        annotations:
+          dd_type: constant
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      radiance:
+        range: SignalFlt1d
+        description: Calibrated, background subtracted radiance (integrated over the spectrum for this
+          line)
+        annotations:
+          dd_units: m^-2.s^-1.sr^-1
+      intensity:
+        range: SignalFlt1d
+        description: Non-calibrated intensity (integrated over the spectrum for this line), i.e. number
+          of photoelectrons detected by unit time, taking into account electronic gain compensation and
+          channels relative calibration
+        annotations:
+          dd_units: s^-1
+      width:
+        range: SignalFlt1d
+        description: Full width at Half Maximum (FWHM) of the emission line
+        annotations:
+          dd_units: m
+      shift:
+        range: SignalFlt1d
+        description: Shift of the emission line wavelength with respected to the unshifted cental wavelength
+          (e.g. Doppler shift)
+        annotations:
+          dd_units: m

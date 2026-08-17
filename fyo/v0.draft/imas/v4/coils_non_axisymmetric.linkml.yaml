@@ -1,0 +1,76 @@
+id: https://fusion-yun.github.io/fyo/v0.draft/imas/v4/coils_non_axisymmetric
+name: fyo-imas-coils_non_axisymmetric
+title: fyo IDS `coils_non_axisymmetric` (lifted, DD 4.1.1)
+description: 'Semantic lift of IMAS DD IDS `coils_non_axisymmetric` onto SpO/BFO (FYTOK-ADR-102): structures
+  grounded as ICEs, time-slice AoS elements as spo:TimeSlice, leaves annotated with their spo carrier
+  classes (Signal / Field / Function / QuantityValue / TimeAxis). Layout is preserved in dd_* annotations
+  (reverse map ω).'
+license: CC-BY-ND-4.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  fyo: https://fusion-yun.github.io/fyo/v0.draft/
+  spo: https://fusion-yun.github.io/spo/v0.draft/
+  imas: https://imas.iter.org/dd/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+default_prefix: fyo
+default_range: string
+imports:
+- linkml:types
+- spo
+- fyo-core
+- fyo-common
+annotations:
+  generated_by: dd2fyo 0.1.0
+  dd_version: 4.1.1
+  dd_source: ../imas/v4/coils_non_axisymmetric.linkml.yaml (mechanical layer)
+  fyo_category: device
+  fyo_root_class: CoilsNonAxisymmetric
+  provenance: DO NOT EDIT — regenerate via ontology/dd2fyo.py.
+classes:
+  CoilsNonAxisymmetric:
+    is_a: IDS
+    description: Non axisymmetric active coils system (e.g. ELM control coils, error field correction
+      coils, ...)
+    annotations:
+      dd_path: coils_non_axisymmetric
+      fyo_category: device
+    attributes:
+      ids_properties:
+        range: IdsProperties
+        description: Interface Data Structure properties. This element identifies the node above as an
+          IDS
+      coil:
+        range: DdCoil
+        multivalued: true
+        description: Set of coils
+        annotations:
+          dd_type: static
+          dd_max_occurs: '32'
+          dd_coordinate1: 1...N
+      latency:
+        range: float
+        description: Upper bound of the delay between input command received from the RT network and actuator
+          starting to react. Applies globally to the system described by this IDS unless specific latencies
+          (e.g. channel-specific or antenna-specific) are provided at a deeper level in the IDS structure.
+        annotations:
+          dd_type: static
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      code:
+        range: IdsCode
+        description: Generic decription of the code-specific parameters for the code that has produced
+          this IDS
+      time:
+        range: float
+        multivalued: true
+        description: Generic time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N

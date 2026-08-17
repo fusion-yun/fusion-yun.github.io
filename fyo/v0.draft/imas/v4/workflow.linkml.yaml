@@ -1,0 +1,183 @@
+id: https://fusion-yun.github.io/fyo/v0.draft/imas/v4/workflow
+name: fyo-imas-workflow
+title: fyo IDS `workflow` (lifted, DD 4.1.1)
+description: 'Semantic lift of IMAS DD IDS `workflow` onto SpO/BFO (FYTOK-ADR-102): structures grounded
+  as ICEs, time-slice AoS elements as spo:TimeSlice, leaves annotated with their spo carrier classes (Signal
+  / Field / Function / QuantityValue / TimeAxis). Layout is preserved in dd_* annotations (reverse map
+  ω).'
+license: CC-BY-ND-4.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  fyo: https://fusion-yun.github.io/fyo/v0.draft/
+  spo: https://fusion-yun.github.io/spo/v0.draft/
+  imas: https://imas.iter.org/dd/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+default_prefix: fyo
+default_range: string
+imports:
+- linkml:types
+- spo
+- fyo-core
+- fyo-common
+annotations:
+  generated_by: dd2fyo 0.1.0
+  dd_version: 4.1.1
+  dd_source: ../imas/v4/workflow.linkml.yaml (mechanical layer)
+  fyo_category: simulation-workflow
+  fyo_root_class: Workflow
+  provenance: DO NOT EDIT — regenerate via ontology/dd2fyo.py.
+classes:
+  Workflow:
+    is_a: IDS
+    description: Description of the workflow that has produced this data entry. The workflow IDS can also
+      be used to communicate information about workflow state between workflow components.
+    annotations:
+      dd_path: workflow
+      fyo_category: simulation-workflow
+    attributes:
+      ids_properties:
+        range: IdsProperties
+        description: Interface Data Structure properties. This element identifies the node above as an
+          IDS
+      time_loop:
+        range: WorkflowTimeLoop
+        description: Description of a workflow based on a time loop which calls components defined in
+          component_list sequentially  during each cycle of the loop (workflow_cycle).
+      code:
+        range: IdsCode
+        description: Generic decription of the code-specific parameters for the code that has produced
+          this IDS
+      time:
+        range: float
+        multivalued: true
+        description: Generic time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  WorkflowTimeLoop:
+    is_a: InformationContentEntity
+    description: Description of a workflow based on a time loop which calls components defined in component_list
+      sequentially  during each cycle of the loop (workflow_cycle).
+    annotations:
+      dd_type_name: workflow_time_loop
+      dd_path: workflow/time_loop
+    attributes:
+      component:
+        range: CodeConstant
+        multivalued: true
+        description: List of components partcipating in the workflow
+        annotations:
+          dd_max_occurs: '20'
+          dd_coordinate1: 1...N
+      time_end:
+        range: float
+        description: Termination time for the workflow main time loop
+        annotations:
+          dd_type: constant
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      workflow_cycle:
+        range: WorkflowCycle
+        multivalued: true
+        description: Set of time slices corresponding to the beginning of workflow cycles (main time loop
+          of the workflow). During each workflow cycle, active components compute their result during
+          their given time_interval. Components having completed their computation are frozen until the
+          end of the workflow cycle. The next workflow cycle begins when the maximum time_interval (over
+          the components) has been reached.
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+  WorkflowCycle:
+    is_a: TimeSlice
+    description: Set of time slices corresponding to the beginning of workflow cycles (main time loop
+      of the workflow). During each workflow cycle, active components compute their result during their
+      given time_interval. Components having completed their computation are frozen until the end of the
+      workflow cycle. The next workflow cycle begins when the maximum time_interval (over the components)
+      has been reached.
+    annotations:
+      dd_type_name: workflow_cycle
+      dd_path: workflow/time_loop/workflow_cycle
+      fyo_lift: time_slice
+    attributes:
+      component:
+        range: WorkflowComponent
+        multivalued: true
+        description: Control parameters for the set of participting components defined in ../../component
+        annotations:
+          dd_max_occurs: '20'
+          dd_coordinate1: 1...N
+      time:
+        range: float
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  WorkflowComponent:
+    is_a: InformationContentEntity
+    description: Control parameters for the set of participting components defined in ../../component
+    annotations:
+      dd_type_name: workflow_component
+      dd_path: workflow/time_loop/workflow_cycle/component
+    attributes:
+      index:
+        range: integer
+        description: Index of the component in the ../../../component array
+        annotations:
+          dd_type: dynamic
+      execution_mode:
+        range: integer
+        description: Component execution mode for current workflow cycle. 0 means the component is not
+          executed and the workflow uses results from previous workflow cycle. 1 means the component is
+          executed for this workflow cycle.
+        annotations:
+          dd_type: dynamic
+      time_interval_request:
+        range: float
+        description: Simulation time interval for which this component is requested to compute its results
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      time_interval_elapsed:
+        range: float
+        description: Simulation time interval for which this component has last computed its results
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      control_float:
+        range: float
+        multivalued: true
+        description: Array of real workflow control parameters used by this component (component specific)
+        annotations:
+          dd_type: dynamic
+          dd_units: mixed
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      control_integer:
+        range: integer
+        multivalued: true
+        description: Array of integer workflow control parameters used by this component (component specific)
+        annotations:
+          dd_type: dynamic
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N

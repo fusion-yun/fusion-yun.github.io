@@ -1,0 +1,733 @@
+id: https://fusion-yun.github.io/fyo/v0.draft/imas/v4/reflectometer_fluctuation
+name: fyo-imas-reflectometer_fluctuation
+title: fyo IDS `reflectometer_fluctuation` (lifted, DD 4.1.1)
+description: 'Semantic lift of IMAS DD IDS `reflectometer_fluctuation` onto SpO/BFO (FYTOK-ADR-102): structures
+  grounded as ICEs, time-slice AoS elements as spo:TimeSlice, leaves annotated with their spo carrier
+  classes (Signal / Field / Function / QuantityValue / TimeAxis). Layout is preserved in dd_* annotations
+  (reverse map ω).'
+license: CC-BY-ND-4.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  fyo: https://fusion-yun.github.io/fyo/v0.draft/
+  spo: https://fusion-yun.github.io/spo/v0.draft/
+  imas: https://imas.iter.org/dd/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+default_prefix: fyo
+default_range: string
+imports:
+- linkml:types
+- spo
+- fyo-core
+- fyo-common
+annotations:
+  generated_by: dd2fyo 0.1.0
+  dd_version: 4.1.1
+  dd_source: ../imas/v4/reflectometer_fluctuation.linkml.yaml (mechanical layer)
+  fyo_category: diagnostic
+  fyo_root_class: ReflectometerFluctuation
+  provenance: DO NOT EDIT — regenerate via ontology/dd2fyo.py.
+classes:
+  ReflectometerFluctuation:
+    is_a: IDS
+    description: Fluctuation reflectometer diagnostic. Multiple reflectometers are considered as independent
+      diagnostics to be handled with different occurrence numbers
+    annotations:
+      dd_path: reflectometer_fluctuation
+      fyo_category: diagnostic
+    attributes:
+      ids_properties:
+        range: IdsProperties
+        description: Interface Data Structure properties. This element identifies the node above as an
+          IDS
+      type:
+        range: string
+        description: Type of reflectometer (frequency_swept, radar, ...)
+        annotations:
+          dd_type: static
+      channel:
+        range: ReflectometerFluctuationChannel
+        multivalued: true
+        description: Set of channels, e.g. different reception antennas or frequency bandwidths of the
+          reflectometer
+        annotations:
+          dd_max_occurs: '5'
+          dd_coordinate1: 1...N
+      psi_normalization:
+        range: PsiNormalization
+        description: Quantities to use to normalize psi, as a function of time
+      latency:
+        range: float
+        description: Upper bound of the delay between physical information received by the detector and
+          data available on the real-time (RT) network.
+        annotations:
+          dd_type: static
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      code:
+        range: IdsCode
+        description: Generic decription of the code-specific parameters for the code that has produced
+          this IDS
+      time:
+        range: float
+        multivalued: true
+        description: Generic time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  ReflectometerFluctuationChannel:
+    is_a: InformationContentEntity
+    description: Set of channels, e.g. different reception antennas or frequency bandwidths of the reflectometer
+    annotations:
+      dd_type_name: reflectometer_fluctuation_channel
+      dd_path: reflectometer_fluctuation/channel
+    attributes:
+      name:
+        range: string
+        description: Short string identifier (unique for a given device)
+        annotations:
+          dd_type: static
+      description:
+        range: string
+        description: Description, e.g. “channel viewing the upper divertor”
+        annotations:
+          dd_type: static
+      mode:
+        range: string
+        description: Detection mode "X" or "O"
+        annotations:
+          dd_type: static
+      antennas_orientation:
+        range: ReflectometerAntennas
+        multivalued: true
+        description: Description of lines of sight and antenna orientation as a function of time
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+      antenna_emission_static:
+        range: FlatObjectStatic
+        description: Static part of the geometry of the emission antenna
+      antenna_detection_static:
+        range: FlatObjectStatic
+        description: Static part of the geometry of the detection antenna, to be filled only if it is
+          distinct from the emission antenna.
+      sweep_time:
+        range: float
+        description: Duration of a sweep
+        annotations:
+          dd_type: static
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      frequencies:
+        range: SignalFlt2d
+        description: Array of frequencies scanned during a sweep
+        annotations:
+          dd_units: Hz
+          dd_coordinate1: 1...N
+      raw_signal:
+        range: ReflectometerFluctuationRaw
+        description: Raw data from IQ detector
+      phase:
+        range: SignalFlt2d
+        description: Measured phase of the probing wave for each frequency and time slice (corresponding
+          to the begin time of a sweep), relative to the phase at launch
+        annotations:
+          dd_units: rad
+          dd_coordinate1: 1...N
+      amplitude:
+        range: SignalFlt2d
+        description: Measured amplitude of the detected probing wave for each frequency and time slice
+          (corresponding to the begin time of a sweep)
+        annotations:
+          dd_units: V
+          dd_coordinate1: 1...N
+      fluctuations_level:
+        range: ReflectometerFluctuationLevel
+        description: Reconstruction of the amplitude of the fluctuations
+      fluctuations_spectrum:
+        range: ReflectometerFluctuationSpectrum
+        description: Spectrum of the fluctuations, obtained by Fourier transform
+      doppler:
+        range: ReflectometerFluctuationDoppler
+        description: Processed data for Doppler reflectometers
+  ReflectometerAntennas:
+    is_a: TimeSlice
+    description: Description of lines of sight and antenna orientation as a function of time
+    annotations:
+      dd_type_name: reflectometer_antennas
+      dd_path: reflectometer_fluctuation/channel/antennas_orientation
+      fyo_lift: time_slice
+    attributes:
+      line_of_sight_emission:
+        range: LineOfSight2pointsDynamicAos3
+        description: Description of the line of sight of the emission antenna. The first point corresponds
+          to the centre of the antenna mouth. The second point correspond to the interception of the line
+          of sight with the reflection surface on the inner wall.
+      line_of_sight_detection:
+        range: LineOfSight2pointsDynamicAos3
+        description: Description of the line of sight of the detection antenna, to be filled only if its
+          position is distinct from the emission antenna. The first point corresponds to the centre of
+          the antenna mouth. The second point correspond to the interception of the line of sight with
+          the reflection surface on the inner wall.
+      antenna_emission:
+        range: FlatObjectOrientationAos3
+        description: Dynamic emission antenna orientation
+      antenna_detection:
+        range: FlatObjectOrientationAos3
+        description: Dynamic detection antenna orientation, to be filled only if it is distinct from the
+          emission antenna.
+      time:
+        range: float
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  FlatObjectOrientationAos3:
+    is_a: InformationContentEntity
+    description: Dynamic emission antenna orientation
+    annotations:
+      dd_type_name: flat_object_orientation_aos3
+      dd_path: reflectometer_fluctuation/channel/antennas_orientation/antenna_emission
+    attributes:
+      x1_unit_vector:
+        range: Xyz0dDynamicAos3
+        description: Components of the X1 direction unit vector in the (X,Y,Z) coordinate system, where
+          X is the major radius axis for phi = 0, Y is the major radius axis for phi = pi/2, and Z is
+          the height axis. The X1 vector is more horizontal than X2 (has a smaller abs(Z) component) and
+          oriented in the positive phi direction (counter-clockwise when viewing from above).
+      x2_unit_vector:
+        range: Xyz0dDynamicAos3
+        description: Components of the X2 direction unit vector in the (X,Y,Z) coordinate system, where
+          X is the major radius axis for phi = 0, Y is the major radius axis for phi = pi/2, and Z is
+          the height axis. The X2 axis is orthonormal so that uX2 = uX3 x uX1.
+      x3_unit_vector:
+        range: Xyz0dDynamicAos3
+        description: Components of the X3 direction unit vector in the (X,Y,Z) coordinate system, where
+          X is the major radius axis for phi = 0, Y is the major radius axis for phi = pi/2, and Z is
+          the height axis. The X3 axis is normal to the detector/aperture plane and oriented towards the
+          plasma.
+  Xyz0dDynamicAos3:
+    is_a: InformationContentEntity
+    description: Components of the X1 direction unit vector in the (X,Y,Z) coordinate system, where X
+      is the major radius axis for phi = 0, Y is the major radius axis for phi = pi/2, and Z is the height
+      axis. The X1 vector is more horizontal than X2 (has a smaller abs(Z) component) and oriented in
+      the positive phi direction (counter-clockwise when viewing from above).
+    annotations:
+      dd_type_name: xyz0d_dynamic_aos3
+      dd_path: reflectometer_fluctuation/channel/antennas_orientation/antenna_emission/x1_unit_vector
+    attributes:
+      x:
+        range: float
+        description: Component along X axis
+        annotations:
+          dd_type: dynamic
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      y:
+        range: float
+        description: Component along Y axis
+        annotations:
+          dd_type: dynamic
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      z:
+        range: float
+        description: Component along Z axis
+        annotations:
+          dd_type: dynamic
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  FlatObjectStatic:
+    is_a: InformationContentEntity
+    description: Static part of the geometry of the emission antenna
+    annotations:
+      dd_type_name: flat_object_static
+      dd_path: reflectometer_fluctuation/channel/antenna_emission_static
+    attributes:
+      geometry_type:
+        range: integer
+        description: Type of geometry used to describe the surface of the detector or aperture (1:'outline',
+          2:'circular', 3:'rectangle'). In case of 'outline', the surface is described by an outline of
+          point in a local coordinate system defined by a centre and three unit vectors X1, X2, X3. Note
+          that there is some flexibility here and the data provider should choose the most convenient
+          coordinate system for the object, respecting the definitions of (X1,X2,X3) indicated below.
+          In case of 'circular', the surface is a circle defined by its centre, radius, and normal vector
+          oriented towards the plasma X3.  In case of 'rectangle', the surface is a rectangle defined
+          by its centre, widths in the X1 and X2 directions, and normal vector oriented towards the plasma
+          X3.
+      centre:
+        range: Rphiz0dStatic
+        description: If geometry_type=2, coordinates of the centre of the circle. If geometry_type=1 or
+          3, coordinates of the origin of the local coordinate system (X1,X2,X3) describing the plane
+          detector/aperture. This origin is located within the detector/aperture area.
+      radius:
+        range: float
+        description: Radius of the circle, used only if geometry_type = 2
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      x1_width:
+        range: float
+        description: Full width of the aperture in the X1 direction, used only if geometry_type = 3
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      x2_width:
+        range: float
+        description: Full width of the aperture in the X2 direction, used only if geometry_type = 3
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      outline:
+        range: X1x21dStatic
+        description: Irregular outline of the detector/aperture in the (X1, X2) coordinate system. Repeat
+          the first point since this is a closed contour
+      surface:
+        range: float
+        description: Surface of the detector/aperture, derived from the above geometric data
+        annotations:
+          dd_type: static
+          dd_units: m^2
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  ReflectometerFluctuationRaw:
+    is_a: InformationContentEntity
+    description: Raw data from IQ detector
+    annotations:
+      dd_type_name: reflectometer_fluctuation_raw
+      dd_path: reflectometer_fluctuation/channel/raw_signal
+    attributes:
+      i_component:
+        range: float
+        multivalued: true
+        description: I component of the IQ detector used to retrieve the phase of signal's envelope
+        annotations:
+          dd_type: dynamic
+          dd_units: V
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../time
+      q_component:
+        range: float
+        multivalued: true
+        description: Q component of the IQ detector used to retrieve the phase of signal's envelope
+        annotations:
+          dd_type: dynamic
+          dd_units: V
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../time
+      time:
+        range: float
+        multivalued: true
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  ReflectometerFluctuationLevel:
+    is_a: InformationContentEntity
+    description: Reconstruction of the amplitude of the fluctuations
+    annotations:
+      dd_type_name: reflectometer_fluctuation_level
+      dd_path: reflectometer_fluctuation/channel/fluctuations_level
+    attributes:
+      dn_e_over_n_e:
+        range: float
+        multivalued: true
+        description: Relative amplitude of the density fluctuations post-processed for swept and fixed
+          frequency (profile/one point)
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../time
+      position:
+        range: ReflectometerFluctuationLevelPosition2d
+        description: Array of positions at which the fluctuation level is computed
+      time_width:
+        range: float
+        description: Width of the time interval over which fluctuating profiles are processed. By convention,
+          the time interval starts at time-time_width and ends at time.
+        annotations:
+          dd_type: constant
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      radial_width:
+        range: float
+        description: Width in the radial direction over which fluctuating profiles are processed
+        annotations:
+          dd_type: constant
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      time:
+        range: float
+        multivalued: true
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  ReflectometerFluctuationLevelPosition2d:
+    is_a: InformationContentEntity
+    description: Array of positions at which the fluctuation level is computed
+    annotations:
+      dd_type_name: reflectometer_fluctuation_level_position_2d
+      dd_path: reflectometer_fluctuation/channel/fluctuations_level/position
+    attributes:
+      r:
+        range: float
+        multivalued: true
+        description: Major radius
+        annotations:
+          dd_type: dynamic
+          dd_units: m
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../../time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../../time
+      z:
+        range: float
+        multivalued: true
+        description: Height
+        annotations:
+          dd_type: dynamic
+          dd_units: m
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../../time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../../time
+      phi:
+        range: float
+        multivalued: true
+        description: Toroidal angle (oriented counter-clockwise when viewing from above)
+        annotations:
+          dd_type: dynamic
+          dd_units: rad
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../../time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../../time
+      psi:
+        range: float
+        multivalued: true
+        description: Poloidal flux
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../../time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../../time
+      rho_tor_norm:
+        range: float
+        multivalued: true
+        description: Normalized toroidal flux coordinate
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../../time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../../time
+      rho_pol_norm:
+        range: float
+        multivalued: true
+        description: Normalized poloidal flux coordinate = sqrt((psi(rho)-psi(magnetic_axis)) / (psi(LCFS)-psi(magnetic_axis)))
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../../time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../../time
+      theta:
+        range: float
+        multivalued: true
+        description: Poloidal angle (oriented clockwise when viewing the poloidal cross section on the
+          right hand side of the tokamak axis of symmetry, with the origin placed on the plasma magnetic
+          axis)
+        annotations:
+          dd_type: dynamic
+          dd_units: rad
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../../time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../../time
+  ReflectometerFluctuationSpectrum:
+    is_a: InformationContentEntity
+    description: Spectrum of the fluctuations, obtained by Fourier transform
+    annotations:
+      dd_type_name: reflectometer_fluctuation_spectrum
+      dd_path: reflectometer_fluctuation/channel/fluctuations_spectrum
+    attributes:
+      power_log:
+        range: float
+        multivalued: true
+        description: Power spectrum in log scale
+        annotations:
+          dd_type: dynamic
+          dd_units: dB
+          dd_ndim: 3
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../frequencies_fourier
+          dd_coordinate3: ../time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../frequencies_fourier,../time
+      frequencies_fourier:
+        range: float
+        multivalued: true
+        description: Array of frequencies used for the Fourier transform
+        annotations:
+          dd_type: constant
+          dd_units: Hz
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      time_width:
+        range: float
+        description: Width of the time interval over which the spectrum is processed. By convention, the
+          time interval starts at time-time_width and ends at time.
+        annotations:
+          dd_type: constant
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      time:
+        range: float
+        multivalued: true
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  ReflectometerFluctuationDoppler:
+    is_a: InformationContentEntity
+    description: Processed data for Doppler reflectometers
+    annotations:
+      dd_type_name: reflectometer_fluctuation_doppler
+      dd_path: reflectometer_fluctuation/channel/doppler
+    attributes:
+      wavenumber:
+        range: float
+        multivalued: true
+        description: Wavenumber probed by the diagnostic
+        annotations:
+          dd_type: dynamic
+          dd_units: m^-1
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      shift:
+        range: float
+        multivalued: true
+        description: Doppler frequency shift (for the main peak of the power spectrum)
+        annotations:
+          dd_type: dynamic
+          dd_units: Hz
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      velocity_pol:
+        range: float
+        multivalued: true
+        description: Poloidal velocity
+        annotations:
+          dd_type: dynamic
+          dd_units: m.s^-1
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      e_field_radial:
+        range: float
+        multivalued: true
+        description: Radial electric field
+        annotations:
+          dd_type: dynamic
+          dd_units: V.m^-1
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      position:
+        range: ReflectometerDopplerPosition1d
+        description: Measurement position
+      time_width:
+        range: float
+        description: Width of the time interval over which fluctuating profiles are processed. By convention,
+          the time interval starts at time-time_width and ends at time.
+        annotations:
+          dd_type: constant
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      radial_width:
+        range: float
+        description: Width in the radial direction over which fluctuating profiles are processed
+        annotations:
+          dd_type: constant
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      time:
+        range: float
+        multivalued: true
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  ReflectometerDopplerPosition1d:
+    is_a: InformationContentEntity
+    description: Measurement position
+    annotations:
+      dd_type_name: reflectometer_doppler_position_1d
+      dd_path: reflectometer_fluctuation/channel/doppler/position
+    attributes:
+      r:
+        range: float
+        multivalued: true
+        description: Major radius
+        annotations:
+          dd_type: dynamic
+          dd_units: m
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      z:
+        range: float
+        multivalued: true
+        description: Height
+        annotations:
+          dd_type: dynamic
+          dd_units: m
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      phi:
+        range: float
+        multivalued: true
+        description: Toroidal angle (oriented counter-clockwise when viewing from above)
+        annotations:
+          dd_type: dynamic
+          dd_units: rad
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      psi:
+        range: float
+        multivalued: true
+        description: Poloidal flux
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      rho_tor_norm:
+        range: float
+        multivalued: true
+        description: Normalized toroidal flux coordinate
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      rho_pol_norm:
+        range: float
+        multivalued: true
+        description: Normalized poloidal flux coordinate = sqrt((psi(rho)-psi(magnetic_axis)) / (psi(LCFS)-psi(magnetic_axis)))
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      theta:
+        range: float
+        multivalued: true
+        description: Poloidal angle (oriented clockwise when viewing the poloidal cross section on the
+          right hand side of the tokamak axis of symmetry, with the origin placed on the plasma magnetic
+          axis)
+        annotations:
+          dd_type: dynamic
+          dd_units: rad
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal

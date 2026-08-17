@@ -1,0 +1,133 @@
+# SPDX-License-Identifier: CC-BY-ND-4.0
+# spo-domain — domains, coordinates, and quantity-over-domain (Field / Function).
+# Closes the dangling ranges the generated Spo schemas reference (Field / Function /
+# TemporalRegion). Realises C-3 (coordinate = Domain, not a path string) and C-4
+# (Quality is_function_of Domain → Field / Function). FYTOK-REPORT-05 §rpt05-cat-physics.
+id: https://fusion-yun.github.io/spo/v0.draft/domain
+name: spo-domain
+title: Spo Domain — Domains, Coordinates, Field / Function
+description: >-
+  Domains (spatial / temporal), the continuous-coordinate vocabulary, and the quantity-over-domain
+  classes (Field, Function) that SoA leaves lift to (C-3 / C-4). A physical quantity field is a
+  Quality that is_function_of a Domain and inheres_in a MaterialEntity.
+license: CC-BY-ND-4.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  sp: https://w3id.org/spdata/v1/
+  spo: https://fusion-yun.github.io/spo/v0.draft/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+  qudt: http://qudt.org/schema/qudt/
+default_prefix: spo
+default_range: string
+imports:
+- linkml:types
+- spo-core.linkml
+annotations:
+  spo_module: domain
+  spo_version: 0.2.0
+
+classes:
+  Domain:
+    is_a: ImmaterialEntity
+    description: >-
+      A mathematical domain a quantity is defined over (an axis / grid / mesh). Coordinates are
+      Domains, not path strings (C-3). Mesh / discretization detail is owned by sp_mathx (OI-2).
+    slots:
+    - coordinate
+
+  SpatialRegion:
+    is_a: Region
+    class_uri: bfo:0000006
+    description: A region of space (BFO spatial region). The base manifold a field rides; bound to sp_mathx geometry.
+
+  TemporalRegion:
+    is_a: Region
+    class_uri: bfo:0000008
+    description: >-
+      A region of time (BFO temporal region). A dynamic quantity is a Quality over a TemporalRegion;
+      DD `time_slice[]` dissolves to a TemporalRegion domain (C-1 / L1).
+
+  ContinuousQuantity:
+    abstract: true
+    is_a: InformationContentEntity
+    description: >-
+      A continuous physical quantity defined over a Domain — scalar or tensor (the information content
+      of a Quality that is_function_of the Domain and inheres_in a MaterialEntity, C-4). Field (space /
+      general domain) and Signal (time domain) are its sibling specializations. MULTI-REPRESENTATION:
+      one Quality may be re-presented by several ContinuousQuantity instances on different Domains /
+      grids / charts (DD equilibrium profiles_2d[i] per grid_type) — each carries representation_of to
+      the shared Quality and equivalent_representation to its peers; the representations differ in
+      discretization, not in referent.
+    slots:
+    - has_domain
+    - is_function_of
+    - inheres_in
+    - unit
+    - representation_of
+    - equivalent_representation
+
+  Field:
+    is_a: ContinuousQuantity
+    description: >-
+      A continuous quantity over a (spatial / general) Domain — scalar or tensor (SoA leaf, L3;
+      rank-1 → Function). Sibling of Signal under ContinuousQuantity.
+
+  Function:
+    is_a: Field
+    description: >-
+      The one-dimensional Field — a rank-1 continuous quantity over a 1-D Domain (L3).
+      NAMING (convention, see artifact/field.md §1): CamelCase `spo:Function` is this T-Box
+      class (data: values over a domain); lowercase `spo:function` is the SpData document DSL
+      for TYPED MATH FUNCTION specifications (args/returns/body — a mapping rule, GDC). The
+      IRIs are distinct (case-sensitive); never mix the two in prose or CURIEs.
+
+slots:
+  coordinate:
+    description: The controlled coordinate name this Domain realizes (continuous physical axis).
+    range: ContinuousCoordinate
+  has_domain:
+    description: The Domain this field is defined over (C-3, replaces DD coordinate-by-path; bound via graph_connect).
+    range: Domain
+  is_function_of:
+    description: The Domain this quality is a function of (C-4).
+    range: Domain
+  unit:
+    description: The unit of the quantity (UCUM / QUDT string; authority external to fytok — SpData sp:phys).
+    range: string
+  representation_of:
+    description: >-
+      The world-side Quality this quantity re-presents (iao:is_about specialization narrowed to
+      qualities). Several representations on different Domains share one referent Quality.
+    range: Quality
+  equivalent_representation:
+    description: >-
+      A peer ContinuousQuantity re-presenting the SAME Quality on a different Domain / grid /
+      coordinate chart (equilibrium profiles_2d rectangular vs flux-surface grid). Symmetric;
+      conversion between peers is interpolation / chart transform, not new information.
+    range: ContinuousQuantity
+    multivalued: true
+    annotations:
+      symmetric: "true"
+
+enums:
+  ContinuousCoordinate:
+    description: Continuous physical coordinate axes recognized as Domains (dd2fyo.config continuous_coordinates).
+    permissible_values:
+      time: {description: Time axis (TemporalRegion)}
+      psi: {description: Poloidal flux}
+      psi_norm: {description: Normalized poloidal flux}
+      rho_tor: {description: Toroidal flux radius}
+      rho_tor_norm: {description: Normalized toroidal flux radius}
+      rho_pol_norm: {description: Normalized poloidal flux radius}
+      phi: {description: Toroidal angle / toroidal flux}
+      theta:
+        description: >-
+          Poloidal angle — the flux-coordinate poloidal axis, oriented so (grad rho_tor,
+          grad theta, grad phi) is right-handed (equilibrium coordinate_system / profiles_2d)
+      volume: {description: Enclosed volume}
+      area: {description: Enclosed area}
+      r: {description: Major radius R}
+      z: {description: Vertical coordinate Z}
+      dim1: {description: Grid first dimension (grid_type-defined)}
+      dim2: {description: Grid second dimension (grid_type-defined)}

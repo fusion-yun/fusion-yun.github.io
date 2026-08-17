@@ -1,0 +1,466 @@
+id: https://fusion-yun.github.io/fyo/v0.draft/imas/v4/pf_active
+name: fyo-imas-pf_active
+title: fyo IDS `pf_active` (lifted, DD 4.1.1)
+description: 'Semantic lift of IMAS DD IDS `pf_active` onto SpO/BFO (FYTOK-ADR-102): structures grounded
+  as ICEs, time-slice AoS elements as spo:TimeSlice, leaves annotated with their spo carrier classes (Signal
+  / Field / Function / QuantityValue / TimeAxis). Layout is preserved in dd_* annotations (reverse map
+  ω).'
+license: CC-BY-ND-4.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  fyo: https://fusion-yun.github.io/fyo/v0.draft/
+  spo: https://fusion-yun.github.io/spo/v0.draft/
+  imas: https://imas.iter.org/dd/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+default_prefix: fyo
+default_range: string
+imports:
+- linkml:types
+- spo
+- fyo-core
+- fyo-common
+annotations:
+  generated_by: dd2fyo 0.1.0
+  dd_version: 4.1.1
+  dd_source: ../imas/v4/pf_active.linkml.yaml (mechanical layer)
+  fyo_category: device
+  fyo_root_class: PfActive
+  provenance: DO NOT EDIT — regenerate via ontology/dd2fyo.py.
+classes:
+  PfActive:
+    is_a: IDS
+    description: Description of the axisymmetric active poloidal field (PF) coils and supplies; includes
+      the limits of these systems; includes the forces on them; does not include non-axisymmetric coil
+      systems
+    annotations:
+      dd_path: pf_active
+      fyo_category: device
+    attributes:
+      ids_properties:
+        range: IdsProperties
+        description: Interface Data Structure properties. This element identifies the node above as an
+          IDS
+      coil:
+        range: PfCoils
+        multivalued: true
+        description: Active PF coils
+        annotations:
+          dd_max_occurs: '32'
+          dd_coordinate1: 1...N
+      force_limits:
+        range: PfForceLimits
+        description: Description of force limits on the axisymmetric PF coil system
+      circuit:
+        range: PfCircuits
+        multivalued: true
+        description: Circuits, connecting multiple PF coils to multiple supplies, defining the current
+          and voltage relationships in the system
+        annotations:
+          dd_max_occurs: '32'
+          dd_coordinate1: 1...N
+      supply:
+        range: PfSupplies
+        multivalued: true
+        description: PF power supplies
+        annotations:
+          dd_max_occurs: '32'
+          dd_coordinate1: 1...N
+      latency:
+        range: float
+        description: Upper bound of the delay between input command received from the RT network and actuator
+          starting to react. Applies globally to the system described by this IDS unless specific latencies
+          (e.g. channel-specific or antenna-specific) are provided at a deeper level in the IDS structure.
+        annotations:
+          dd_type: static
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      code:
+        range: IdsCode
+        description: Generic decription of the code-specific parameters for the code that has produced
+          this IDS
+      time:
+        range: float
+        multivalued: true
+        description: Generic time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  PfCoils:
+    is_a: InformationContentEntity
+    description: Active PF coils
+    annotations:
+      dd_type_name: pf_coils
+      dd_path: pf_active/coil
+    attributes:
+      name:
+        range: string
+        description: Short string identifier (unique for a given device)
+        annotations:
+          dd_type: static
+      description:
+        range: string
+        description: Description, e.g. “channel viewing the upper divertor”
+        annotations:
+          dd_type: static
+      function:
+        range: Identifier
+        multivalued: true
+        description: Set of functions for which this coil may be used
+        annotations:
+          dd_max_occurs: '6'
+          dd_coordinate1: 1...N
+      resistance:
+        range: float
+        description: Coil resistance
+        annotations:
+          dd_type: static
+          dd_units: ohm
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      resistance_additional:
+        range: SignalFlt1d
+        description: Additional resistance due to e.g. dynamically switchable resistors. The coil effective
+          resistance is obtained by adding this dynamic quantity to the static resistance of the coil.
+        annotations:
+          dd_units: ohm
+      energy_limit_max:
+        range: float
+        description: Maximum Energy to be dissipated in the coil
+        annotations:
+          dd_type: static
+          dd_units: J
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      current_limit_max:
+        range: float
+        multivalued: true
+        description: Maximum tolerable current in the conductor
+        annotations:
+          dd_type: static
+          dd_units: A
+          dd_ndim: 2
+          dd_coordinate1: ../b_field_max
+          dd_coordinate2: ../temperature
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../b_field_max,../temperature
+      b_field_max:
+        range: float
+        multivalued: true
+        description: List of values of the maximum magnetic field on the conductor surface (coordinate
+          for current_limit_max)
+        annotations:
+          dd_type: static
+          dd_units: T
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      temperature:
+        range: float
+        multivalued: true
+        description: List of values of the conductor temperature (coordinate for current_limit_max)
+        annotations:
+          dd_type: static
+          dd_units: K
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      b_field_max_timed:
+        range: SignalFlt1d
+        description: Maximum absolute value of the magnetic field on the conductor surface
+        annotations:
+          dd_units: T
+      element:
+        range: PfCoilsElements
+        multivalued: true
+        description: Each PF coil is comprised of a number of cross-section elements described  individually
+          and connected serially
+        annotations:
+          dd_max_occurs: '328'
+          dd_coordinate1: 1...N
+      geometry:
+        range: Outline2dGeometryStatic
+        description: Cross-sectional shape of the coil
+      current:
+        range: SignalFlt1d
+        description: Current fed in the coil (for 1 turn, to be multiplied by the number of turns to obtain
+          the generated magnetic field), positive when the current is counter-clockwise when seen from
+          above.
+        annotations:
+          dd_units: A
+      voltage:
+        range: SignalFlt1d
+        description: Voltage on the coil terminals (Vside1-Vside2) - including additional resistors if
+          any
+        annotations:
+          dd_units: V
+      force_radial:
+        range: SignalFlt1d
+        description: Radial force applied on this coil (positive when outwards)
+        annotations:
+          dd_units: N
+      force_vertical:
+        range: SignalFlt1d
+        description: Vertical force applied on this coil (positive when upwards)
+        annotations:
+          dd_units: N
+      force_radial_crushing:
+        range: SignalFlt1d
+        description: Radial crushing force applied on this coil (positive when compressive)
+        annotations:
+          dd_units: N
+      force_vertical_crushing:
+        range: SignalFlt1d
+        description: Vertical crushing force applied on this coil (positive when compressive)
+        annotations:
+          dd_units: N
+  PfForceLimits:
+    is_a: InformationContentEntity
+    description: Description of force limits on the axisymmetric PF coil system
+    annotations:
+      dd_type_name: pf_force_limits
+      dd_path: pf_active/force_limits
+    attributes:
+      combination_matrix:
+        range: float
+        multivalued: true
+        description: Force limits are expressed as a linear combination of the forces on each individual
+          coil. The weights of the linear combination are given by this matrix, while the limits are given
+          by the sibling nodes limit_min and limit_max. Each row of this matrix corresponds to a force
+          limit. The columns represent, for each coil, the 4 types of forces on the coil namely [coil1_radial,
+          coil1_vertical, coil1_radial_crush, coil1_vertical_crush, coil2_radial, coil2_vertical, coil2_radial_crush,
+          coil2_vertical_crush, ...]. There are therefore 4*coils_n columns.
+        annotations:
+          dd_type: static
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: ../limit_max
+          dd_coordinate2: 1...N
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../limit_max,1...N
+      limit_max:
+        range: float
+        multivalued: true
+        description: Maximum force limit, for each limit (line of the combination matrix). EMPTY_FLT value
+          means unbounded
+        annotations:
+          dd_type: static
+          dd_units: N
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      limit_min:
+        range: float
+        multivalued: true
+        description: Minimum force limit, for each limit (line of the combination matrix). EMPTY_FLT value
+          means unbounded
+        annotations:
+          dd_type: static
+          dd_units: N
+          dd_ndim: 1
+          dd_coordinate1: ../limit_max
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../limit_max
+      force:
+        range: SignalFlt1d
+        description: Force (positive when upwards for a vertical force, positive when outwards for a radial
+          force)
+        annotations:
+          dd_units: N
+  PfCircuits:
+    is_a: InformationContentEntity
+    description: Circuits, connecting multiple PF coils to multiple supplies, defining the current and
+      voltage relationships in the system
+    annotations:
+      dd_type_name: pf_circuits
+      dd_path: pf_active/circuit
+    attributes:
+      name:
+        range: string
+        description: Short string identifier (unique for a given device)
+        annotations:
+          dd_type: static
+      description:
+        range: string
+        description: Description, e.g. “channel viewing the upper divertor”
+        annotations:
+          dd_type: static
+      type:
+        range: string
+        description: Type of the circuit
+        annotations:
+          dd_type: static
+      connections:
+        range: integer
+        multivalued: true
+        description: Description of the supplies and coils connections (nodes) across the circuit. Nodes
+          of the circuit are listed as the first dimension of the matrix. Supplies (listed first) and
+          coils (listed second) are listed as the second dimension. Thus the second dimension has a size
+          equal to (N_supplies+N_coils). N_supplies (resp. N_coils) is the total number of supplies (resp.
+          coils) listed in the supply (resp.coil) array of structure, i.e. including also supplies/coils
+          that are not part of the actual circuit. The (i,j) matrix elements are 1 if the j-th supply
+          or coil side is connected to the i-th node by its positive side, -1 if connected by its negative
+          side, or 0 if not connected.
+        annotations:
+          dd_type: static
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: 1...N
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,1...N
+      voltage:
+        range: SignalFlt1d
+        description: Voltage on the circuit between the sides of the group of supplies (only for circuits
+          with a single supply or in which supplies are grouped)
+        annotations:
+          dd_units: V
+      current:
+        range: SignalFlt1d
+        description: Current in the circuit between the sides of the group of supplies (only for circuits
+          with a single supply or in which supplies are grouped)
+        annotations:
+          dd_units: A
+  PfSupplies:
+    is_a: InformationContentEntity
+    description: PF power supplies
+    annotations:
+      dd_type_name: pf_supplies
+      dd_path: pf_active/supply
+    attributes:
+      name:
+        range: string
+        description: Short string identifier (unique for a given device)
+        annotations:
+          dd_type: static
+      description:
+        range: string
+        description: Description, e.g. “channel viewing the upper divertor”
+        annotations:
+          dd_type: static
+      type:
+        range: integer
+        description: Type of the supply; TBD add free description of non-linear power supplies
+        annotations:
+          dd_type: static
+      resistance:
+        range: float
+        description: Power supply internal resistance
+        annotations:
+          dd_type: static
+          dd_units: ohm
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      delay:
+        range: float
+        description: Pure delay in the supply
+        annotations:
+          dd_type: static
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      filter_numerator:
+        range: float
+        multivalued: true
+        description: 'Coefficients of the numerator, in increasing order : a0 + a1*s + ... + an*s^n; used
+          for a linear supply description'
+        annotations:
+          dd_type: static
+          dd_units: mixed
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      filter_denominator:
+        range: float
+        multivalued: true
+        description: 'Coefficients of the denominator, in increasing order : b0 + b1*s + ... + bm*s^m;
+          used for a linear supply description'
+        annotations:
+          dd_type: static
+          dd_units: mixed
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      current_limit_max:
+        range: float
+        description: Maximum current in the supply
+        annotations:
+          dd_type: static
+          dd_units: A
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      current_limit_min:
+        range: float
+        description: Minimum current in the supply
+        annotations:
+          dd_type: static
+          dd_units: A
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      voltage_limit_max:
+        range: float
+        description: Maximum voltage from the supply
+        annotations:
+          dd_type: static
+          dd_units: V
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      voltage_limit_min:
+        range: float
+        description: Minimum voltage from the supply
+        annotations:
+          dd_type: static
+          dd_units: V
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      current_limiter_gain:
+        range: float
+        description: Gain to prevent overcurrent in a linear model of the supply
+        annotations:
+          dd_type: static
+          dd_units: V
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      energy_limit_max:
+        range: float
+        description: Maximum energy to be dissipated in the supply during a pulse
+        annotations:
+          dd_type: static
+          dd_units: J
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      nonlinear_model:
+        range: string
+        description: Description of the nonlinear transfer function of the supply
+        annotations:
+          dd_type: static
+      voltage:
+        range: SignalFlt1d
+        description: Voltage at the supply output (Vside1-Vside2)
+        annotations:
+          dd_units: V
+      current:
+        range: SignalFlt1d
+        description: Current at the supply output, defined positive if it flows from point 1 to point
+          2 in the circuit connected to the supply (outside the supply)
+        annotations:
+          dd_units: A
