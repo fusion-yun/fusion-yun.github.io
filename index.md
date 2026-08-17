@@ -21,8 +21,9 @@ description: FuYun：本体命名空间 spo / fyo、fylite 在线演示、构成
 
 ## 在线演示
 
-[**fylite 在线演示**](./fylite/) —— fylite 的 Rust 平衡内核编译为 WebAssembly，
-在浏览器内直接运行，**无服务端计算**，打开即用：
+[**FyLite 在线演示**](./fylite/) —— FyLite 用于**测试与展示聚变分析、建模、设计类应用的
+基本功能集**；其 Rust 内核编译为 WebAssembly，在浏览器内直接运行，**无服务端计算**，
+打开即用：
 
 - [**放电设计**](./fylite/discharge.html) —— 给定目标截面形状与等离子体参数，反解所需的
   极向场线圈电流，再正算一遍自由边界 Grad–Shafranov 平衡，校验真正得到的位形。
@@ -80,6 +81,8 @@ science and engineering. This site publishes its two language-neutral ontology n
 [**spo**](./spo/v0.draft/), the upper ontology (BFO-grounded), and [**fyo**](./fyo/v0.draft/),
 the fusion-domain ontology (apparatus core plus a semantic lift of IMAS DD 4.1.1) — as OWL,
 SHACL and JSON-LD, resolvable directly from their prefix IRIs. Both are **`v0.draft`, not stable
-namespaces**. It also hosts [**fylite**](./fylite/), a browser-side tokamak equilibrium
-design-and-reconstruction demo whose Rust kernel runs as WebAssembly with no server-side compute.
+namespaces**. It also hosts [**FyLite**](./fylite/), which exercises and demonstrates the basic
+capability set of fusion analysis, modelling and design applications — tokamak equilibrium design
+and reconstruction in the browser, its Rust kernel running as WebAssembly with no server-side
+compute.
 Source repositories are not public; see [LICENSE](./LICENSE) for the per-path terms.
