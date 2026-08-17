@@ -68,9 +68,6 @@ FyO `imports: [spo]`。引用方式（远程 `@context`）：
 | `/spo/` `/fyo/` | 本体制品（LinkML 源、清单、编译 OWL / SHACL / JSON-LD）| [CC BY-ND 4.0](./spo/LICENSE) |
 | `/fylite/` | FyLite 二进制制品与装载脚本 | [二进制再分发许可](./fylite/LICENSE) |
 
-Copyright © 2024–2026 YU Zhi（于治），中国科学院合肥物质科学研究院等离子体物理研究所（ASIPP）。
-
-
 ---
 
 ## In brief (English)
@@ -84,3 +81,8 @@ namespaces**. It also hosts [**FyLite**](./fylite/), which exercises and demonst
 capability set of fusion analysis, modelling and design applications — tokamak equilibrium design
 and reconstruction, computed entirely in the browser with nothing to install.
 Source repositories are not public; see [LICENSE](./LICENSE) for the per-path terms.
+
+---
+
+<p align="center"><small>Copyright © 2024–2026 中国科学院合肥物质科学研究院等离子体物理研究所（ASIPP）<br>
+Institute of Plasma Physics, Chinese Academy of Sciences</small></p>
