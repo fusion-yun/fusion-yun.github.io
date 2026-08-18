@@ -46,18 +46,18 @@ description: FuYun：本体命名空间 spo / fyo、FyLite 在线演示、许可
 消费，无需 Python 或 LinkML。两个命名空间以本站为权威主机，前缀 IRI **含尾斜杠**，
 CURIE 以字符串拼接展开。
 
-两个命名空间仍为**非稳定草案**：术语可在无弃用期的情况下变更；发布目录已改为**按版本命名**（`vX.Y.gHASH` 开发版 / `vX.Y.Z` 正式版，入口页重定向到当前版本），schema 内声明的 `v0.draft` 前缀 IRI 为待迁移的历史命名（其固定发布目录已移除）；
+两个命名空间仍为**非稳定开发版**：术语可在无弃用期的情况下变更。源内 IRI 版本段恒为 **`latest`**（随最新构建解析）；发布目录按版本命名（`vX.Y.gHASH` 开发版 / `vX.Y.Z` 正式版），各版本目录内的 IRI 在部署时改写为实际版本；
 首个正式发布将另铸 `v1` 段。
 
 | 本体 | 范围 | 命名空间 | 制品 |
 | :--- | :--- | :--- | :--- |
-| **SpO** | 上层本体：BFO-3D 核 + 4D 时空扩展、量—域—场—信号、时间 AoS/SoA 对偶、几何、受控词表、溯源 | `spo: https://fusion-yun.github.io/spo/v0.draft/` | [浏览（latest）](./spo/latest/)——`latest/` 为最新构建的稳定镜像；版本目录按源仓 `VERSION` 派生命名（`vX.Y.gHASH` 开发版 / `vX.Y.Z` 正式版） |
-| **FyO** | 聚变域本体：装置层手工核心（Machine / Coil / Plasma / Diagnostic 等）+ IMAS DD 4.1.1 的语义提升层（82 IDS），接地于 SpO/BFO | `fyo: https://fusion-yun.github.io/fyo/v0.draft/` | [浏览（latest）](./fyo/latest/)——`latest/` 为最新构建的稳定镜像；版本目录按源仓 `VERSION` 派生命名（`vX.Y.gHASH` 开发版 / `vX.Y.Z` 正式版） |
+| **SpO** | 上层本体：BFO-3D 核 + 4D 时空扩展、量—域—场—信号、时间 AoS/SoA 对偶、几何、受控词表、溯源 | `spo: https://fusion-yun.github.io/spo/latest/` | [浏览（latest）](./spo/latest/)——`latest/` 为最新构建的稳定镜像；版本目录按源仓 `VERSION` 派生命名（`vX.Y.gHASH` 开发版 / `vX.Y.Z` 正式版） |
+| **FyO** | 聚变域本体：装置层手工核心（Machine / Coil / Plasma / Diagnostic 等）+ IMAS DD 4.1.1 的语义提升层（82 IDS），接地于 SpO/BFO | `fyo: https://fusion-yun.github.io/fyo/latest/` | [浏览（latest）](./fyo/latest/)——`latest/` 为最新构建的稳定镜像；版本目录按源仓 `VERSION` 派生命名（`vX.Y.gHASH` 开发版 / `vX.Y.Z` 正式版） |
 
 FyO `imports: [spo]`。引用方式（远程 `@context`）：
 
 ```json
-{ "@context": "https://fusion-yun.github.io/fyo/v0.draft/context.jsonld" }
+{ "@context": "https://fusion-yun.github.io/fyo/latest/context.jsonld" }
 ```
 
 以 `imports:` / `@context` / `owl:imports` / `@type` 引用本体**不构成**演绎作品，
@@ -95,7 +95,7 @@ design and reconstruction, computed entirely in the browser with nothing to inst
 **spo** and **fyo** vocabularies state what each field in the data *is*; they are written in
 LinkML and published as OWL, SHACL and JSON-LD, resolvable straight from their prefix IRIs
 ([spo](./spo/), the upper vocabulary; [fyo](./fyo/), the fusion-domain one,
-covering the apparatus and a semantic lift of IMAS DD 4.1.1). Both are **`v0.draft`, not
+covering the apparatus and a semantic lift of IMAS DD 4.1.1). Both are **development namespaces, not
 stable namespaces**.
 
 Source repositories are not public; see [LICENSE](./LICENSE) for the per-path terms.
