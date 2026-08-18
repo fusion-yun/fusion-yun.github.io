@@ -1,23 +1,26 @@
-@prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+@prefix bfo: <http://purl.obolibrary.org/obo/BFO_> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix iao: <http://purl.obolibrary.org/obo/IAO_> .
 @prefix linkml: <https://w3id.org/linkml/> .
+@prefix obi: <http://purl.obolibrary.org/obo/OBI_> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix qudt: <http://qudt.org/schema/qudt/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix spo: <https://fusion-yun.github.io/spo/v0.3.ga7510c78/> .
+@prefix spo: <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 spo:ComputationRecord a owl:Class ;
     rdfs:label "ComputationRecord" ;
     rdfs:subClassOf [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:executed_code ],
-        [ a owl:Restriction ;
             owl:allValuesFrom spo:Code ;
             owl:onProperty spo:executed_code ],
         [ a owl:Restriction ;
             owl:maxCardinality 1 ;
+            owl:onProperty spo:executed_code ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
             owl:onProperty spo:executed_code ],
         spo:ProcessRecord ;
     skos:definition "The record of a ComputationalProcess — a run manifest: which Code (program, GDC) was executed, with which inputs, producing which outputs (workflow-run document, solver log). Completes the program / computation / result triangle: Code (plan, GDC) — ComputationalProcess (occurrent, realizes the Code) — output ICEs (results) — this record (information about the run, distinct from the results themselves)." ;
@@ -63,41 +66,41 @@ spo:Function a owl:Class ;
 spo:Identifier a owl:Class ;
     rdfs:label "Identifier" ;
     rdfs:subClassOf [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:name ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty spo:name ],
+        [ a owl:Restriction ;
             owl:maxCardinality 1 ;
             owl:onProperty spo:name ],
         [ a owl:Restriction ;
-            owl:minCardinality 0 ;
+            owl:maxCardinality 1 ;
             owl:onProperty spo:draws_from ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:index ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:name ],
         [ a owl:Restriction ;
             owl:allValuesFrom spo:ControlledVocabulary ;
             owl:onProperty spo:draws_from ],
         [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:description ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:index ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:description ],
-        [ a owl:Restriction ;
             owl:allValuesFrom xsd:string ;
             owl:onProperty spo:description ],
-        [ a owl:Restriction ;
-            owl:allValuesFrom xsd:string ;
-            owl:onProperty spo:name ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:draws_from ],
         [ a owl:Restriction ;
             owl:allValuesFrom xsd:integer ;
             owl:onProperty spo:index ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:draws_from ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:index ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:index ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:description ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:description ],
         spo:InformationContentEntity ;
     skos:definition "The DD identifier triple (name / index / description). The triple is a controlled-vocabulary value; the vocabulary it draws from is a T-Box enum / class (C-8)." ;
     skos:inScheme spo:vocab .
@@ -114,165 +117,165 @@ spo:PlanSpecification a owl:Class ;
     rdfs:label "PlanSpecification" ;
     rdfs:subClassOf spo:InformationContentEntity ;
     skos:definition "A directive information content entity that prescribes a planned process (IAO plan specification). A pulse_schedule (reference waveforms / setpoints) is a PlanSpecification prescribing a discharge (C-10). class_uri version-sensitive — verify." ;
-    skos:exactMatch IAO:0000104 ;
+    skos:exactMatch iao:0000104 ;
     skos:inScheme spo:vocab .
 
 spo:PlannedProcess a owl:Class ;
     rdfs:label "PlannedProcess" ;
     rdfs:subClassOf [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
+            owl:minCardinality 0 ;
             owl:onProperty spo:realizes ],
         [ a owl:Restriction ;
             owl:allValuesFrom xsd:string ;
             owl:onProperty spo:realizes ],
         [ a owl:Restriction ;
-            owl:minCardinality 0 ;
+            owl:maxCardinality 1 ;
             owl:onProperty spo:realizes ],
         spo:Process ;
     skos:definition "A process that realizes a plan specification (OBI planned process). An experiment / planned discharge." ;
-    skos:exactMatch <http://purl.obolibrary.org/obo/OBI_0000011> ;
+    skos:exactMatch obi:0000011 ;
     skos:inScheme spo:core .
 
 spo:ProvenanceMixin a owl:Class ;
     rdfs:label "ProvenanceMixin" ;
     rdfs:subClassOf [ a owl:Restriction ;
             owl:maxCardinality 1 ;
-            owl:onProperty spo:reproducible ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:creation_date ],
+            owl:onProperty spo:provider ],
         [ a owl:Restriction ;
             owl:minCardinality 0 ;
-            owl:onProperty spo:version_put ],
+            owl:onProperty spo:creation_date ],
         [ a owl:Restriction ;
             owl:allValuesFrom spo:Process ;
             owl:onProperty spo:generated_by_process ],
         [ a owl:Restriction ;
-            owl:allValuesFrom xsd:boolean ;
-            owl:onProperty spo:reproducible ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:modality ],
-        [ a owl:Restriction ;
-            owl:allValuesFrom xsd:string ;
-            owl:onProperty spo:provider ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:provider ],
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:creation_date ],
         [ a owl:Restriction ;
             owl:maxCardinality 1 ;
             owl:onProperty spo:generated_by_process ],
         [ a owl:Restriction ;
-            owl:allValuesFrom spo:DataModality ;
+            owl:minCardinality 0 ;
             owl:onProperty spo:modality ],
         [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:produced_by ],
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty spo:creation_date ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:generated_by_process ],
         [ a owl:Restriction ;
             owl:minCardinality 0 ;
             owl:onProperty spo:produced_by ],
         [ a owl:Restriction ;
             owl:maxCardinality 1 ;
-            owl:onProperty spo:provider ],
+            owl:onProperty spo:version_put ],
         [ a owl:Restriction ;
             owl:allValuesFrom xsd:string ;
+            owl:onProperty spo:provider ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom spo:DataModality ;
+            owl:onProperty spo:modality ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:reproducible ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:modality ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:produced_by ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:reproducible ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty spo:version_put ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:provider ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
             owl:onProperty spo:version_put ],
         [ a owl:Restriction ;
             owl:allValuesFrom spo:Code ;
             owl:onProperty spo:produced_by ],
         [ a owl:Restriction ;
-            owl:allValuesFrom xsd:string ;
-            owl:onProperty spo:creation_date ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:reproducible ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:modality ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:version_put ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:creation_date ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:generated_by_process ] ;
+            owl:allValuesFrom xsd:boolean ;
+            owl:onProperty spo:reproducible ] ;
     skos:definition "Orthogonal provenance carried by any domain ICE (L7). Provenance time (creation_date / version order) is distinct from physical time (manifold coordinate). Also carries the data **modality** (static-device / measured / reconstructed / simulated) — derived from the generating process, orthogonal to the domain category (FYTOK-REPORT-05 §rpt05-modality)." ;
     skos:inScheme spo:provenance .
 
 spo:QuantityValue a owl:Class ;
     rdfs:label "QuantityValue" ;
     rdfs:subClassOf [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
+            owl:allValuesFrom spo:Quality ;
             owl:onProperty spo:of_quality ],
         [ a owl:Restriction ;
             owl:minCardinality 0 ;
-            owl:onProperty spo:has_unit ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:numeric_value ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:of_quality ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:has_quantity_kind ],
-        [ a owl:Restriction ;
-            owl:allValuesFrom xsd:float ;
-            owl:onProperty spo:numeric_value ],
-        [ a owl:Restriction ;
-            owl:allValuesFrom spo:QuantityKind ;
             owl:onProperty spo:has_quantity_kind ],
         [ a owl:Restriction ;
             owl:allValuesFrom spo:Unit ;
             owl:onProperty spo:has_unit ],
         [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:has_quantity_kind ],
-        [ a owl:Restriction ;
-            owl:allValuesFrom spo:Quality ;
-            owl:onProperty spo:of_quality ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
+            owl:minCardinality 0 ;
             owl:onProperty spo:numeric_value ],
         [ a owl:Restriction ;
             owl:maxCardinality 1 ;
             owl:onProperty spo:has_unit ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:has_unit ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:of_quality ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:of_quality ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom spo:QuantityKind ;
+            owl:onProperty spo:has_quantity_kind ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:numeric_value ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:float ;
+            owl:onProperty spo:numeric_value ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:has_quantity_kind ],
         spo:InformationContentEntity ;
     skos:definition "A scalar physical quantity value — numeric value + Unit + QuantityKind (the lift of a DD FLT_0D leaf with units; e.g. `vacuum_toroidal_field/b0` at one instant). The information counterpart of a fully determinate Quality; for quantities extended over a Domain use ContinuousQuantity (Field/Signal) instead." ;
-    skos:exactMatch <http://qudt.org/schema/qudt/QuantityValue> ;
+    skos:exactMatch qudt:QuantityValue ;
     skos:inScheme spo:quantity .
 
 spo:SpacetimeMesh a owl:Class ;
     rdfs:label "SpacetimeMesh" ;
     rdfs:subClassOf [ a owl:Restriction ;
-            owl:allValuesFrom spo:SpacetimeRegion ;
-            owl:onProperty spo:discretizes_spacetime ],
+            owl:minCardinality 0 ;
+            owl:onProperty spo:has_time_axis ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:has_spatial_base ],
         [ a owl:Restriction ;
             owl:allValuesFrom spo:Mesh ;
             owl:onProperty spo:has_spatial_base ],
         [ a owl:Restriction ;
             owl:maxCardinality 1 ;
-            owl:onProperty spo:has_time_axis ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
             owl:onProperty spo:has_spatial_base ],
         [ a owl:Restriction ;
             owl:allValuesFrom spo:TimeAxis ;
             owl:onProperty spo:has_time_axis ],
         [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:has_spatial_base ],
+            owl:allValuesFrom spo:SpacetimeRegion ;
+            owl:onProperty spo:discretizes_spacetime ],
         [ a owl:Restriction ;
             owl:minCardinality 0 ;
             owl:onProperty spo:discretizes_spacetime ],
         [ a owl:Restriction ;
-            owl:minCardinality 0 ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:discretizes_spacetime ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
             owl:onProperty spo:has_time_axis ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:discretizes_spacetime ],
         spo:Mesh ;
     skos:definition "A discretized 4D domain — a Mesh whose discretized region is a SpacetimeRegion (4D extension stratum). Two constructions: (a) product form, a spatial base Mesh extruded along a TimeAxis (the common shot-data case: same spatial grid, many instants); (b) a genuinely unstructured 4D GGD (moving/adaptive grids: the spatial grid itself is time-dependent, e.g. per-time-slice equilibrium grids — then the product decomposition is per-interval, not global). Fields over a SpacetimeMesh subsume both AoS and SoA: layout becomes a storage detail of the same 4D Field." ;
     skos:inScheme spo:time ;
@@ -287,16 +290,13 @@ spo:coordinate_unit a owl:DatatypeProperty ;
 spo:spo.owl.ttl a owl:Ontology ;
     rdfs:label "spo" ;
     dcterms:license "Apache-2.0" ;
-    dcterms:title "Spo Common Ontology (aggregator)" ;
-    skos:definition "Single-import aggregator for the Spo common ontology: BFO-3D core + 4D extension, types, domains, geometry, signals, time (AoS/SoA duality + spacetime mesh), quantity kinds/units, vocabularies, provenance. Per-IDS generated schemas `imports: [spo]`." ;
-    spo:spo_module "aggregator" ;
-    spo:spo_version "0.2.0" .
+    dcterms:title "spo — aggregator (build-time only; not a source module)" .
 
 spo:ContinuantFiatBoundary a owl:Class ;
     rdfs:label "ContinuantFiatBoundary" ;
     rdfs:subClassOf spo:ImmaterialEntity ;
     skos:definition "A zero-, one- or two-dimensional immaterial entity whose location is fixed relative to some material entity, and which never has a spatial region as continuant part (BFO 2020 elucidation). Carrier of a demarcation drawn on a thing rather than found in it — a region's fiat boundary, a nominal surface. Added when the conformance gate found `sp.mathx.region.FiatBoundary` anchored to a BFO term the T-Box did not carry: the ontology is authoritative, so the gap was the ontology's (SPM-REPORT-104)." ;
-    skos:exactMatch <http://purl.obolibrary.org/obo/BFO_0000140> ;
+    skos:exactMatch bfo:0000140 ;
     skos:inScheme spo:core .
 
 spo:Curve a owl:Class ;
@@ -315,16 +315,16 @@ spo:ProcessBoundary a owl:Class ;
     rdfs:label "ProcessBoundary" ;
     rdfs:subClassOf spo:Occurrent ;
     skos:definition "The instantaneous temporal boundary of a process (BFO 2020). Parented on Occurrent, following BFO's own hierarchy — a process boundary is not itself a process. Added with ContinuantFiatBoundary, for the same reason (SPM-REPORT-104)." ;
-    skos:exactMatch <http://purl.obolibrary.org/obo/BFO_0000035> ;
+    skos:exactMatch bfo:0000035 ;
     skos:inScheme spo:core .
 
 spo:ProcessRecord a owl:Class ;
     rdfs:label "ProcessRecord" ;
     rdfs:subClassOf [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
+            owl:allValuesFrom spo:Process ;
             owl:onProperty spo:is_record_of ],
         [ a owl:Restriction ;
-            owl:allValuesFrom spo:Process ;
+            owl:maxCardinality 1 ;
             owl:onProperty spo:is_record_of ],
         [ a owl:Restriction ;
             owl:minCardinality 0 ;
@@ -342,23 +342,23 @@ spo:Solid a owl:Class ;
 spo:SpacetimeWorm a owl:Class ;
     rdfs:label "SpacetimeWorm" ;
     rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom spo:SpacetimeRegion ;
+            owl:onProperty spo:occupies_spacetime ],
+        [ a owl:Restriction ;
             owl:minCardinality 0 ;
+            owl:onProperty spo:foliates_to ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:foliates_to ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
             owl:onProperty spo:occupies_spacetime ],
         [ a owl:Restriction ;
             owl:allValuesFrom xsd:string ;
             owl:onProperty spo:foliates_to ],
         [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:foliates_to ],
-        [ a owl:Restriction ;
-            owl:allValuesFrom spo:SpacetimeRegion ;
-            owl:onProperty spo:occupies_spacetime ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:occupies_spacetime ],
-        [ a owl:Restriction ;
             owl:minCardinality 0 ;
-            owl:onProperty spo:foliates_to ],
+            owl:onProperty spo:occupies_spacetime ],
         spo:Occurrent ;
     skos:definition "A four-dimensionally extended individual (its temporal parts are time slices). A DD `time_slice[]` array is the discretized worm; the 3D continuant view is its foliated slice. Identity rests in the 4D intension artifact (SPM-CONOPS-01). Conservative extension — does not alter the 3D core axioms." ;
     skos:inScheme spo:core ;
@@ -383,72 +383,72 @@ spo:TimeSeries a owl:Class ;
     skos:inScheme spo:time ;
     spo:layout "soa" .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#area> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#area> a owl:Class ;
     rdfs:label "area" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Enclosed area" .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#dim1> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#dim1> a owl:Class ;
     rdfs:label "dim1" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Grid first dimension (grid_type-defined)" .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#dim2> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#dim2> a owl:Class ;
     rdfs:label "dim2" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Grid second dimension (grid_type-defined)" .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#phi> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#phi> a owl:Class ;
     rdfs:label "phi" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Toroidal angle / toroidal flux" .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#psi> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#psi> a owl:Class ;
     rdfs:label "psi" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Poloidal flux" .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#psi_norm> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#psi_norm> a owl:Class ;
     rdfs:label "psi_norm" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Normalized poloidal flux" .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#r> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#r> a owl:Class ;
     rdfs:label "r" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Major radius R" .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#rho_pol_norm> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#rho_pol_norm> a owl:Class ;
     rdfs:label "rho_pol_norm" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Normalized poloidal flux radius" .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#rho_tor> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#rho_tor> a owl:Class ;
     rdfs:label "rho_tor" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Toroidal flux radius" .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#rho_tor_norm> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#rho_tor_norm> a owl:Class ;
     rdfs:label "rho_tor_norm" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Normalized toroidal flux radius" .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#theta> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#theta> a owl:Class ;
     rdfs:label "theta" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Poloidal angle — the flux-coordinate poloidal axis, oriented so (grad rho_tor, grad theta, grad phi) is right-handed (equilibrium coordinate_system / profiles_2d)" .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#time> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#time> a owl:Class ;
     rdfs:label "time" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Time axis (TemporalRegion)" .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#volume> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#volume> a owl:Class ;
     rdfs:label "volume" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Enclosed volume" .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#z> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#z> a owl:Class ;
     rdfs:label "z" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Vertical coordinate Z" .
@@ -459,22 +459,22 @@ spo:ControlledVocabulary a owl:Class ;
     skos:definition "A controlled vocabulary (the determinable). Its permissible values are the determinates (DD *_identifier.xml entries)." ;
     skos:inScheme spo:vocab .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/DataModality#measured> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/DataModality#measured> a owl:Class ;
     rdfs:label "measured" ;
     rdfs:subClassOf spo:DataModality ;
     skos:definition "Acquired by a real measurement process during a specific discharge; read-only, NOT reproducible, per-shot distinct." .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/DataModality#reconstructed> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/DataModality#reconstructed> a owl:Class ;
     rdfs:label "reconstructed" ;
     rdfs:subClassOf spo:DataModality ;
     skos:definition "Computed from measured inputs (e.g. EFIT equilibrium over real magnetics) — measured-derived, reproducible given the inputs." .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/DataModality#simulated> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/DataModality#simulated> a owl:Class ;
     rdfs:label "simulated" ;
     rdfs:subClassOf spo:DataModality ;
     skos:definition "Computed from a model independent of any real discharge; reproducible from (code, inputs, version)." .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/DataModality#static_device> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/DataModality#static_device> a owl:Class ;
     rdfs:label "static_device" ;
     rdfs:subClassOf spo:DataModality ;
     skos:definition "A static, invariant fact about the physical device (e.g. probe position); engineering-determined, constant." .
@@ -490,37 +490,37 @@ spo:GenericallyDependentContinuant a owl:Class ;
     rdfs:subClassOf spo:Continuant,
         spo:InformationContentEntity ;
     skos:definition "A continuant that can be copied across bearers (BFO GDC). Base of information artifacts and scenarios." ;
-    skos:exactMatch <http://purl.obolibrary.org/obo/BFO_0000031> ;
+    skos:exactMatch bfo:0000031 ;
     skos:inScheme spo:core .
 
 spo:Geometry a owl:Class ;
     rdfs:label "Geometry" ;
     rdfs:subClassOf [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
+            owl:minCardinality 0 ;
             owl:onProperty spo:has_coordinate_system ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom spo:CoordinateSystem ;
+            owl:onProperty spo:has_coordinate_system ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:describes_region ],
         [ a owl:Restriction ;
             owl:minCardinality 0 ;
             owl:onProperty spo:describes_region ],
         [ a owl:Restriction ;
             owl:maxCardinality 1 ;
-            owl:onProperty spo:describes_region ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
             owl:onProperty spo:has_coordinate_system ],
         [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:geometry_role ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
+            owl:allValuesFrom xsd:string ;
             owl:onProperty spo:geometry_role ],
         [ a owl:Restriction ;
             owl:allValuesFrom spo:SpatialRegion ;
             owl:onProperty spo:describes_region ],
         [ a owl:Restriction ;
-            owl:allValuesFrom spo:CoordinateSystem ;
-            owl:onProperty spo:has_coordinate_system ],
+            owl:minCardinality 0 ;
+            owl:onProperty spo:geometry_role ],
         [ a owl:Restriction ;
-            owl:allValuesFrom xsd:string ;
+            owl:maxCardinality 1 ;
             owl:onProperty spo:geometry_role ],
         spo:InformationContentEntity ;
     skos:definition "An information content entity describing the geometry of a SpatialRegion (C-5). Bound to a sp_mathx GeoObject." ;
@@ -530,39 +530,39 @@ spo:Library a owl:Class ;
     rdfs:label "Library" ;
     rdfs:subClassOf [ a owl:Restriction ;
             owl:minCardinality 0 ;
+            owl:onProperty spo:commit ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty spo:commit ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty spo:repository ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:commit ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:name ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:version ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
             owl:onProperty spo:name ],
         [ a owl:Restriction ;
             owl:allValuesFrom xsd:string ;
-            owl:onProperty spo:commit ],
+            owl:onProperty spo:version ],
         [ a owl:Restriction ;
             owl:maxCardinality 1 ;
             owl:onProperty spo:version ],
         [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:name ],
-        [ a owl:Restriction ;
-            owl:allValuesFrom xsd:string ;
-            owl:onProperty spo:repository ],
-        [ a owl:Restriction ;
             owl:minCardinality 0 ;
             owl:onProperty spo:repository ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:commit ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:version ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:commit ],
         [ a owl:Restriction ;
             owl:maxCardinality 1 ;
             owl:onProperty spo:repository ],
         [ a owl:Restriction ;
-            owl:allValuesFrom xsd:string ;
-            owl:onProperty spo:version ],
-        [ a owl:Restriction ;
-            owl:allValuesFrom xsd:string ;
+            owl:minCardinality 0 ;
             owl:onProperty spo:name ],
         spo:InformationContentEntity ;
     skos:definition "A dependency library used by a Code (DD code/library[]) — a prov:SoftwareAgent." ;
@@ -574,6 +574,9 @@ spo:Metric a owl:Class ;
             owl:maxCardinality 1 ;
             owl:onProperty spo:of_coordinate_system ],
         [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:of_coordinate_system ],
+        [ a owl:Restriction ;
             owl:maxCardinality 1 ;
             owl:onProperty spo:metric_kind ],
         [ a owl:Restriction ;
@@ -585,9 +588,6 @@ spo:Metric a owl:Class ;
         [ a owl:Restriction ;
             owl:allValuesFrom xsd:string ;
             owl:onProperty spo:metric_kind ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:of_coordinate_system ],
         spo:InformationContentEntity ;
     skos:definition "The metric tensor g_ij of a CoordinateSystem — the first fundamental form giving the line element ds² = g_ij dx^i dx^j, the volume element √det g, and (via its inverse g^ij) the Hodge star used by sp_mathx DEC. Identity for Cartesian charts; diagonal for the standard curvilinear charts. Carrier sp_mathx metric.Metric." ;
     skos:inScheme spo:geometry .
@@ -597,43 +597,31 @@ spo:SpecificallyDependentContinuant a owl:Class ;
     rdfs:subClassOf spo:Continuant,
         spo:Quality ;
     skos:definition "A continuant that depends on one specific bearer (BFO SDC)." ;
-    skos:exactMatch <http://purl.obolibrary.org/obo/BFO_0000020> ;
+    skos:exactMatch bfo:0000020 ;
     skos:inScheme spo:core .
 
 spo:TimeInstant a owl:Class ;
     rdfs:label "TimeInstant" ;
     rdfs:subClassOf spo:TemporalRegion ;
     skos:definition "A zero-dimensional temporal region (BFO temporal instant) — the referent of one time-slice timestamp. A `time_slice[i]/time` value denotes a TimeInstant on the shot/simulation timeline." ;
-    skos:exactMatch <http://purl.obolibrary.org/obo/BFO_0000148> ;
+    skos:exactMatch bfo:0000148 ;
     skos:inScheme spo:time .
 
 spo:TimeInterval a owl:Class ;
     rdfs:label "TimeInterval" ;
     rdfs:subClassOf spo:TemporalRegion ;
     skos:definition "A one-dimensional temporal region (BFO temporal interval) — the extent a Signal or a discharge phase covers (e.g. flat-top). A TimeAxis discretizes a TimeInterval." ;
-    skos:exactMatch <http://purl.obolibrary.org/obo/BFO_0000038> ;
+    skos:exactMatch bfo:0000038 ;
     skos:inScheme spo:time .
 
 spo:TimeSlice a owl:Class ;
     rdfs:label "TimeSlice" ;
     rdfs:subClassOf [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:at_time ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:at_instant ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:at_instant ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:at_time ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:slice_of ],
-        [ a owl:Restriction ;
             owl:allValuesFrom spo:TimeSliceSeries ;
             owl:onProperty spo:slice_of ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:at_instant ],
         [ a owl:Restriction ;
             owl:minCardinality 0 ;
             owl:onProperty spo:slice_of ],
@@ -641,23 +629,35 @@ spo:TimeSlice a owl:Class ;
             owl:allValuesFrom spo:TimeInstant ;
             owl:onProperty spo:at_instant ],
         [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:at_time ],
+        [ a owl:Restriction ;
             owl:allValuesFrom xsd:float ;
+            owl:onProperty spo:at_time ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:at_instant ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:slice_of ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
             owl:onProperty spo:at_time ],
         spo:InformationContentEntity ;
     skos:definition "One AoS element — the complete state description of a system at one TimeInstant (the foliated 3D view of the 4D referent at fixed t; DD `time_slice[]` element, e.g. one equilibrium reconstruction). Identity note: a TimeSlice is a VIEW indexed by (referent, instant), not an independent individual — the individual is the 4D referent." ;
     skos:inScheme spo:time .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/TimebaseSource#embedded> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/TimebaseSource#embedded> a owl:Class ;
     rdfs:label "embedded" ;
     rdfs:subClassOf spo:TimebaseSource ;
     skos:definition "Per-signal embedded timebase (signal_*/time)" .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/TimebaseSource#heterogeneous> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/TimebaseSource#heterogeneous> a owl:Class ;
     rdfs:label "heterogeneous" ;
     rdfs:subClassOf spo:TimebaseSource ;
     skos:definition "Per-node timebase (homogeneous_time = 0)" .
 
-<https://fusion-yun.github.io/spo/v0.3.ga7510c78/TimebaseSource#homogeneous> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.3.gb78c7ece/TimebaseSource#homogeneous> a owl:Class ;
     rdfs:label "homogeneous" ;
     rdfs:subClassOf spo:TimebaseSource ;
     skos:definition "Shared IDS-level timebase (ids_properties/homogeneous_time = 1)" .
@@ -665,17 +665,17 @@ spo:TimeSlice a owl:Class ;
 spo:Unit a owl:Class ;
     rdfs:label "Unit" ;
     rdfs:subClassOf [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:quantity_kind ],
-        [ a owl:Restriction ;
             owl:maxCardinality 1 ;
-            owl:onProperty spo:quantity_kind ],
-        [ a owl:Restriction ;
-            owl:allValuesFrom spo:QuantityKind ;
             owl:onProperty spo:quantity_kind ],
         [ a owl:Restriction ;
             owl:allValuesFrom xsd:string ;
             owl:onProperty spo:ucum_code ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:quantity_kind ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom spo:QuantityKind ;
+            owl:onProperty spo:quantity_kind ],
         [ a owl:Restriction ;
             owl:minCardinality 0 ;
             owl:onProperty spo:ucum_code ],
@@ -684,7 +684,7 @@ spo:Unit a owl:Class ;
             owl:onProperty spo:ucum_code ],
         spo:InformationContentEntity ;
     skos:definition "A measurement unit as an ICE — carrier of the UCUM code / QUDT IRI the `unit` strings across Spo schemas point into. Authority is the external unit system (UCUM/QUDT via the SpData `sp:phys` registry); this class is the T-Box landing, not a unit database." ;
-    skos:exactMatch <http://qudt.org/schema/qudt/Unit> ;
+    skos:exactMatch qudt:Unit ;
     skos:inScheme spo:quantity .
 
 spo:coordinate_axis a owl:DatatypeProperty ;
@@ -738,7 +738,7 @@ spo:IndependentContinuant a owl:Class ;
     rdfs:subClassOf [ owl:unionOf ( spo:ImmaterialEntity spo:MaterialEntity ) ],
         spo:Continuant ;
     skos:definition "A continuant that is the bearer of qualities and does not depend on other entities (BFO independent continuant)." ;
-    skos:exactMatch <http://purl.obolibrary.org/obo/BFO_0000004> ;
+    skos:exactMatch bfo:0000004 ;
     skos:inScheme spo:core .
 
 spo:Mesh a owl:Class ;
@@ -750,15 +750,6 @@ spo:Mesh a owl:Class ;
 spo:QuantityKind a owl:Class ;
     rdfs:label "QuantityKind" ;
     rdfs:subClassOf [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:dimension_vector ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:symbol ],
-        [ a owl:Restriction ;
-            owl:allValuesFrom xsd:string ;
-            owl:onProperty spo:dimension_vector ],
-        [ a owl:Restriction ;
             owl:maxCardinality 1 ;
             owl:onProperty spo:dimension_vector ],
         [ a owl:Restriction ;
@@ -767,40 +758,49 @@ spo:QuantityKind a owl:Class ;
         [ a owl:Restriction ;
             owl:allValuesFrom xsd:string ;
             owl:onProperty spo:symbol ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty spo:dimension_vector ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:symbol ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:dimension_vector ],
         spo:InformationContentEntity ;
     skos:definition "A kind of physical quantity — the DETERMINABLE (\"electron temperature\", \"poloidal flux\") as an ICE, independent of any bearer, domain, or unit. A concrete measured or computed quantity (Quality in the world; ContinuousQuantity/QuantityValue as information) determines a QuantityKind. Aligns qudt:QuantityKind; fusion-specific kinds are enumerated downstream (fyo), not here." ;
-    skos:exactMatch <http://qudt.org/schema/qudt/QuantityKind> ;
+    skos:exactMatch qudt:QuantityKind ;
     skos:inScheme spo:quantity .
 
 spo:Signal a owl:Class ;
     rdfs:label "Signal" ;
     rdfs:subClassOf [ a owl:Restriction ;
             owl:maxCardinality 1 ;
-            owl:onProperty spo:data ],
-        [ a owl:Restriction ;
-            owl:allValuesFrom xsd:float ;
-            owl:onProperty spo:time ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:time ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
             owl:onProperty spo:timebase_source ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:data ],
-        [ a owl:Restriction ;
-            owl:allValuesFrom xsd:float ;
-            owl:onProperty spo:data ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:time ],
         [ a owl:Restriction ;
             owl:allValuesFrom spo:TimebaseSource ;
             owl:onProperty spo:timebase_source ],
         [ a owl:Restriction ;
             owl:minCardinality 0 ;
+            owl:onProperty spo:time ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:data ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:float ;
+            owl:onProperty spo:data ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:float ;
+            owl:onProperty spo:time ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
             owl:onProperty spo:timebase_source ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:time ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:data ],
         spo:ContinuousQuantity ;
     skos:definition "A continuous quantity over the **time domain** (a TemporalRegion) — scalar or tensor (DD signal_flt_Nd, C-2). Sibling of Field (space / general domain) under ContinuousQuantity, not a subtype of it. Corresponds to the engineering carrier sp.mathx.signal.Signal — a Function over a time domain (the temporal analogue of Field, a Function over a Mesh), converged from sp_phys to sp_mathx (L1) as the domain-agnostic quantity-over-time. Bound via class_type (engineering-dispatch FQCN, distinct from the semantic class_uri; SPM-REPORT-15 C-3)." ;
     skos:inScheme spo:signal ;
@@ -812,36 +812,36 @@ spo:SpatialRegion a owl:Class ;
     rdfs:label "SpatialRegion" ;
     rdfs:subClassOf spo:Region ;
     skos:definition "A region of space (BFO spatial region). The base manifold a field rides; bound to sp_mathx geometry." ;
-    skos:exactMatch <http://purl.obolibrary.org/obo/BFO_0000006> ;
+    skos:exactMatch bfo:0000006 ;
     skos:inScheme spo:domain .
 
 spo:TemporalRegion a owl:Class ;
     rdfs:label "TemporalRegion" ;
     rdfs:subClassOf spo:Region ;
     skos:definition "A region of time (BFO temporal region). A dynamic quantity is a Quality over a TemporalRegion; DD `time_slice[]` dissolves to a TemporalRegion domain (C-1 / L1)." ;
-    skos:exactMatch <http://purl.obolibrary.org/obo/BFO_0000008> ;
+    skos:exactMatch bfo:0000008 ;
     skos:inScheme spo:domain .
 
 spo:TimeAxis a owl:Class ;
     rdfs:label "TimeAxis" ;
     rdfs:subClassOf [ a owl:Restriction ;
-            owl:allValuesFrom spo:TimeInterval ;
+            owl:maxCardinality 1 ;
             owl:onProperty spo:discretizes_time ],
         [ a owl:Restriction ;
             owl:minCardinality 0 ;
-            owl:onProperty spo:discretizes_time ],
+            owl:onProperty spo:samples ],
         [ a owl:Restriction ;
             owl:allValuesFrom xsd:float ;
             owl:onProperty spo:samples ],
         [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
+            owl:minCardinality 0 ;
             owl:onProperty spo:discretizes_time ],
         [ a owl:Restriction ;
             owl:maxCardinality 1 ;
             owl:onProperty spo:samples ],
         [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:samples ],
+            owl:allValuesFrom spo:TimeInterval ;
+            owl:onProperty spo:discretizes_time ],
         spo:InformationContentEntity ;
     skos:definition "The discretized time coordinate — an ordered sequence of sample instants over a TimeInterval (an ICE; the information-level counterpart of the region it discretizes). Unifies the DD timebases: the IDS-homogeneous root `time[]`, a per-signal embedded `.../time`, and an AoS `time_slice[]/time` column are all TimeAxis instances; which one a datum rides is recorded by spo-signal `timebase_source`." ;
     skos:inScheme spo:time .
@@ -849,10 +849,10 @@ spo:TimeAxis a owl:Class ;
 spo:TimeSliceSeries a owl:Class ;
     rdfs:label "TimeSliceSeries" ;
     rdfs:subClassOf [ a owl:Restriction ;
-            owl:allValuesFrom spo:TimeSlice ;
+            owl:minCardinality 0 ;
             owl:onProperty spo:has_slice ],
         [ a owl:Restriction ;
-            owl:minCardinality 0 ;
+            owl:allValuesFrom spo:TimeSlice ;
             owl:onProperty spo:has_slice ],
         spo:TemporalAggregate ;
     skos:definition "The AoS layout — an ordered array of TimeSlice structs (DD `time_slice[]`): the discretized SpacetimeWorm, foliated per instant. Convenient for whole-state-at-t access (equilibrium at t); dual to the SoA TimeSeries via dual_view_of (stack the slices)." ;
@@ -1172,46 +1172,46 @@ spo:version_put a owl:DatatypeProperty ;
 spo:Code a owl:Class ;
     rdfs:label "Code" ;
     rdfs:subClassOf [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:repository ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:commit ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:version ],
-        [ a owl:Restriction ;
-            owl:allValuesFrom xsd:string ;
-            owl:onProperty spo:commit ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:name ],
-        [ a owl:Restriction ;
             owl:allValuesFrom spo:Library ;
             owl:onProperty spo:uses_library ],
         [ a owl:Restriction ;
             owl:maxCardinality 1 ;
-            owl:onProperty spo:name ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:repository ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:uses_library ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:version ],
+            owl:onProperty spo:commit ],
         [ a owl:Restriction ;
             owl:allValuesFrom xsd:string ;
-            owl:onProperty spo:version ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
             owl:onProperty spo:commit ],
         [ a owl:Restriction ;
             owl:allValuesFrom xsd:string ;
             owl:onProperty spo:repository ],
         [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:repository ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:name ],
+        [ a owl:Restriction ;
             owl:allValuesFrom xsd:string ;
+            owl:onProperty spo:version ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:version ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty spo:name ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:version ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:commit ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:uses_library ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:repository ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
             owl:onProperty spo:name ],
         spo:InformationContentEntity ;
     skos:definition "The code that produced an IDS (DD code = name / commit / version / repository) — a prov:SoftwareAgent + prov:Activity." ;
@@ -1222,63 +1222,63 @@ spo:Continuant a owl:Class ;
     rdfs:subClassOf [ owl:unionOf ( spo:GenericallyDependentContinuant spo:IndependentContinuant spo:SpecificallyDependentContinuant ) ],
         spo:Entity ;
     skos:definition "An entity that persists through time keeping its identity, with no temporal parts (BFO continuant)." ;
-    skos:exactMatch <http://purl.obolibrary.org/obo/BFO_0000002> ;
+    skos:exactMatch bfo:0000002 ;
     skos:inScheme spo:core .
 
 spo:ContinuousQuantity a owl:Class ;
     rdfs:label "ContinuousQuantity" ;
     rdfs:subClassOf [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:unit ],
+            owl:allValuesFrom spo:ContinuousQuantity ;
+            owl:onProperty spo:equivalent_representation ],
         [ a owl:Restriction ;
             owl:maxCardinality 1 ;
             owl:onProperty spo:inheres_in ],
         [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:representation_of ],
+            owl:minCardinality 0 ;
+            owl:onProperty spo:equivalent_representation ],
+        [ owl:unionOf ( spo:Field spo:Signal ) ],
         [ a owl:Restriction ;
             owl:allValuesFrom xsd:string ;
             owl:onProperty spo:unit ],
         [ a owl:Restriction ;
-            owl:allValuesFrom spo:MaterialEntity ;
-            owl:onProperty spo:inheres_in ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:has_domain ],
-        [ a owl:Restriction ;
-            owl:allValuesFrom spo:ContinuousQuantity ;
-            owl:onProperty spo:equivalent_representation ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:inheres_in ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:unit ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:representation_of ],
-        [ owl:unionOf ( spo:Field spo:Signal ) ],
-        [ a owl:Restriction ;
             owl:allValuesFrom spo:Domain ;
             owl:onProperty spo:has_domain ],
         [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:has_domain ],
+            owl:minCardinality 0 ;
+            owl:onProperty spo:is_function_of ],
         [ a owl:Restriction ;
             owl:allValuesFrom spo:Domain ;
             owl:onProperty spo:is_function_of ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:is_function_of ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:equivalent_representation ],
         [ a owl:Restriction ;
             owl:allValuesFrom spo:Quality ;
             owl:onProperty spo:representation_of ],
         [ a owl:Restriction ;
             owl:minCardinality 0 ;
+            owl:onProperty spo:inheres_in ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:has_domain ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:unit ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:unit ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
             owl:onProperty spo:is_function_of ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:representation_of ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom spo:MaterialEntity ;
+            owl:onProperty spo:inheres_in ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:has_domain ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:representation_of ],
         spo:InformationContentEntity ;
     skos:definition "A continuous physical quantity defined over a Domain — scalar or tensor (the information content of a Quality that is_function_of the Domain and inheres_in a MaterialEntity, C-4). Field (space / general domain) and Signal (time domain) are its sibling specializations. MULTI-REPRESENTATION: one Quality may be re-presented by several ContinuousQuantity instances on different Domains / grids / charts (DD equilibrium profiles_2d[i] per grid_type) — each carries representation_of to the shared Quality and equivalent_representation to its peers; the representations differ in discretization, not in referent." ;
     skos:inScheme spo:domain .
@@ -1286,29 +1286,29 @@ spo:ContinuousQuantity a owl:Class ;
 spo:CoordinateSystem a owl:Class ;
     rdfs:label "CoordinateSystem" ;
     rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty spo:chart_kind ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:chart_kind ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:has_metric ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:has_metric ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:chart_kind ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty spo:coordinate_axis ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:coordinate_axis ],
+        [ a owl:Restriction ;
             owl:allValuesFrom spo:Metric ;
             owl:onProperty spo:has_metric ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:chart_kind ],
-        [ a owl:Restriction ;
-            owl:allValuesFrom xsd:string ;
-            owl:onProperty spo:chart_kind ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:has_metric ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:has_metric ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:coordinate_axis ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:chart_kind ],
-        [ a owl:Restriction ;
-            owl:allValuesFrom xsd:string ;
-            owl:onProperty spo:coordinate_axis ],
         spo:InformationContentEntity ;
     skos:definition "A coordinate chart — an ordered tuple of coordinate axes plus the metric that measures lengths / areas / volumes on it (IMAS ``coordinate_system`` / ``grid_type``). Cartesian (x,y,z), polar (r,θ), cylindrical (r,z,φ), spherical (r,φ,θ) and toroidal charts are the built-in kinds; the metric is Euclidean-identity unless the chart is curvilinear. COCOS orientation of flux charts is a fusion-domain concern owned by fyo (SPM-ADR-104 D2)." ;
     skos:inScheme spo:geometry .
@@ -1317,20 +1317,20 @@ spo:Entity a owl:Class ;
     rdfs:label "Entity" ;
     rdfs:subClassOf [ owl:unionOf ( spo:Continuant spo:Occurrent ) ] ;
     skos:definition "Anything that exists (BFO entity) — the common root of Continuant and Occurrent. Added as the range of cross-quadrant relations (is_about can target matter, qualities, or processes alike)." ;
-    skos:exactMatch <http://purl.obolibrary.org/obo/BFO_0000001> ;
+    skos:exactMatch bfo:0000001 ;
     skos:inScheme spo:core .
 
 spo:GeoObject a owl:Class ;
     rdfs:label "GeoObject" ;
     rdfs:subClassOf [ owl:unionOf ( spo:Curve spo:Point spo:Solid spo:Surface ) ],
         [ a owl:Restriction ;
-            owl:allValuesFrom xsd:integer ;
+            owl:maxCardinality 1 ;
             owl:onProperty spo:manifold_dim ],
         [ a owl:Restriction ;
             owl:minCardinality 0 ;
             owl:onProperty spo:manifold_dim ],
         [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
+            owl:allValuesFrom xsd:integer ;
             owl:onProperty spo:manifold_dim ],
         spo:Geometry ;
     skos:definition "Base of geometric primitives; the concrete carrier is sp_mathx (``geom.base.GeoObject`` — control-point ``points`` array, pluggable ``GeometryKernel`` engine). Manifold dimension distinguishes the four concrete children below (SPM-SDD-06 DE-MATHX-05)." ;
@@ -1341,7 +1341,7 @@ spo:ImmaterialEntity a owl:Class ;
     rdfs:subClassOf [ owl:unionOf ( spo:ContinuantFiatBoundary spo:Domain spo:Region ) ],
         spo:IndependentContinuant ;
     skos:definition "An independent continuant with no material parts (BFO immaterial entity). Base of regions / sites." ;
-    skos:exactMatch <http://purl.obolibrary.org/obo/BFO_0000141> ;
+    skos:exactMatch bfo:0000141 ;
     skos:inScheme spo:core .
 
 spo:Region a owl:Class ;
@@ -1354,30 +1354,30 @@ spo:Region a owl:Class ;
 spo:TemporalAggregate a owl:Class ;
     rdfs:label "TemporalAggregate" ;
     rdfs:subClassOf [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:dual_view_of ],
-        [ a owl:Restriction ;
-            owl:allValuesFrom spo:Occurrent ;
-            owl:onProperty spo:about_occurrent ],
-        [ a owl:Restriction ;
-            owl:allValuesFrom spo:TimeAxis ;
-            owl:onProperty spo:has_time_axis ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:has_time_axis ],
-        [ a owl:Restriction ;
             owl:allValuesFrom spo:TemporalAggregate ;
             owl:onProperty spo:dual_view_of ],
         [ a owl:Restriction ;
             owl:maxCardinality 1 ;
             owl:onProperty spo:about_occurrent ],
         [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:dual_view_of ],
+        [ a owl:Restriction ;
             owl:minCardinality 0 ;
             owl:onProperty spo:about_occurrent ],
+        [ owl:unionOf ( spo:TimeSeries spo:TimeSliceSeries ) ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty spo:has_time_axis ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom spo:TimeAxis ;
+            owl:onProperty spo:has_time_axis ],
         [ a owl:Restriction ;
             owl:minCardinality 0 ;
             owl:onProperty spo:has_time_axis ],
-        [ owl:unionOf ( spo:TimeSeries spo:TimeSliceSeries ) ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom spo:Occurrent ;
+            owl:onProperty spo:about_occurrent ],
         [ a owl:Restriction ;
             owl:minCardinality 0 ;
             owl:onProperty spo:dual_view_of ],
@@ -1388,13 +1388,13 @@ spo:TemporalAggregate a owl:Class ;
 spo:Domain a owl:Class ;
     rdfs:label "Domain" ;
     rdfs:subClassOf [ a owl:Restriction ;
-            owl:allValuesFrom spo:ContinuousCoordinate ;
-            owl:onProperty spo:coordinate ],
-        [ a owl:Restriction ;
             owl:minCardinality 0 ;
             owl:onProperty spo:coordinate ],
         [ a owl:Restriction ;
             owl:maxCardinality 1 ;
+            owl:onProperty spo:coordinate ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom spo:ContinuousCoordinate ;
             owl:onProperty spo:coordinate ],
         spo:ImmaterialEntity ;
     skos:definition "A mathematical domain a quantity is defined over (an axis / grid / mesh). Coordinates are Domains, not path strings (C-3). Mesh / discretization detail is owned by sp_mathx (OI-2)." ;
@@ -1403,36 +1403,36 @@ spo:Domain a owl:Class ;
 spo:Quality a owl:Class ;
     rdfs:label "Quality" ;
     rdfs:subClassOf [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:inheres_in ],
+        [ a owl:Restriction ;
             owl:maxCardinality 1 ;
             owl:onProperty spo:inheres_in ],
         [ a owl:Restriction ;
             owl:allValuesFrom spo:MaterialEntity ;
             owl:onProperty spo:inheres_in ],
-        [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:inheres_in ],
         spo:SpecificallyDependentContinuant ;
     skos:definition "A specifically dependent continuant that inheres in its bearer (BFO quality). A measurable physical attribute." ;
-    skos:exactMatch <http://purl.obolibrary.org/obo/BFO_0000019> ;
+    skos:exactMatch bfo:0000019 ;
     skos:inScheme spo:core .
 
 spo:TimebaseSource a owl:Class ;
     rdfs:label "TimebaseSource" ;
-    owl:unionOf ( <https://fusion-yun.github.io/spo/v0.3.ga7510c78/TimebaseSource#homogeneous> <https://fusion-yun.github.io/spo/v0.3.ga7510c78/TimebaseSource#embedded> <https://fusion-yun.github.io/spo/v0.3.ga7510c78/TimebaseSource#heterogeneous> ) ;
+    owl:unionOf ( <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/TimebaseSource#homogeneous> <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/TimebaseSource#embedded> <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/TimebaseSource#heterogeneous> ) ;
     skos:inScheme spo:signal ;
-    linkml:permissible_values <https://fusion-yun.github.io/spo/v0.3.ga7510c78/TimebaseSource#embedded>,
-        <https://fusion-yun.github.io/spo/v0.3.ga7510c78/TimebaseSource#heterogeneous>,
-        <https://fusion-yun.github.io/spo/v0.3.ga7510c78/TimebaseSource#homogeneous> .
+    linkml:permissible_values <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/TimebaseSource#embedded>,
+        <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/TimebaseSource#heterogeneous>,
+        <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/TimebaseSource#homogeneous> .
 
 spo:DataModality a owl:Class ;
     rdfs:label "DataModality" ;
-    owl:unionOf ( <https://fusion-yun.github.io/spo/v0.3.ga7510c78/DataModality#static_device> <https://fusion-yun.github.io/spo/v0.3.ga7510c78/DataModality#measured> <https://fusion-yun.github.io/spo/v0.3.ga7510c78/DataModality#reconstructed> <https://fusion-yun.github.io/spo/v0.3.ga7510c78/DataModality#simulated> ) ;
+    owl:unionOf ( <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/DataModality#static_device> <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/DataModality#measured> <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/DataModality#reconstructed> <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/DataModality#simulated> ) ;
     skos:definition "The provenance modality of a datum (FYTOK-REPORT-05 §rpt05-modality). Orthogonal to the domain category; derived from the generating process, not from DD `type` (which only gives static/dynamic)." ;
     skos:inScheme spo:provenance ;
-    linkml:permissible_values <https://fusion-yun.github.io/spo/v0.3.ga7510c78/DataModality#measured>,
-        <https://fusion-yun.github.io/spo/v0.3.ga7510c78/DataModality#reconstructed>,
-        <https://fusion-yun.github.io/spo/v0.3.ga7510c78/DataModality#simulated>,
-        <https://fusion-yun.github.io/spo/v0.3.ga7510c78/DataModality#static_device> .
+    linkml:permissible_values <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/DataModality#measured>,
+        <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/DataModality#reconstructed>,
+        <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/DataModality#simulated>,
+        <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/DataModality#static_device> .
 
 spo:MaterialEntity a owl:Class ;
     rdfs:label "MaterialEntity" ;
@@ -1444,16 +1444,16 @@ spo:MaterialEntity a owl:Class ;
             owl:onProperty spo:occupies ],
         [ a owl:Restriction ;
             owl:allValuesFrom xsd:string ;
-            owl:onProperty spo:has_part ],
+            owl:onProperty spo:occupies ],
         [ a owl:Restriction ;
             owl:minCardinality 0 ;
             owl:onProperty spo:occupies ],
         [ a owl:Restriction ;
             owl:allValuesFrom xsd:string ;
-            owl:onProperty spo:occupies ],
+            owl:onProperty spo:has_part ],
         spo:IndependentContinuant ;
     skos:definition "A continuant that occupies a spatial region and can be identified as a whole (BFO material entity). Devices / equipment / plasma referent." ;
-    skos:exactMatch <http://purl.obolibrary.org/obo/BFO_0000040> ;
+    skos:exactMatch bfo:0000040 ;
     skos:inScheme spo:core .
 
 spo:Occurrent a owl:Class ;
@@ -1461,7 +1461,7 @@ spo:Occurrent a owl:Class ;
     rdfs:subClassOf [ owl:unionOf ( spo:Process spo:ProcessBoundary spo:SpacetimeWorm ) ],
         spo:Entity ;
     skos:definition "An entity that unfolds in time and has temporal parts (BFO occurrent)." ;
-    skos:exactMatch <http://purl.obolibrary.org/obo/BFO_0000003> ;
+    skos:exactMatch bfo:0000003 ;
     skos:inScheme spo:core .
 
 spo:commit a owl:DatatypeProperty .
@@ -1486,24 +1486,24 @@ spo:SpacetimeRegion a owl:Class ;
     rdfs:label "SpacetimeRegion" ;
     rdfs:subClassOf spo:Region ;
     skos:definition "A region of spacetime (BFO spatiotemporal region). 4D extension stratum (FYTOK-REPORT-05 §rpt05-4d): the four-dimensional intension whose 3D+Time foliation is the canonical view." ;
-    skos:exactMatch <http://purl.obolibrary.org/obo/BFO_0000011> ;
+    skos:exactMatch bfo:0000011 ;
     skos:inScheme spo:core ;
     spo:spo_stratum "4d_extension" .
 
 spo:Process a owl:Class ;
     rdfs:label "Process" ;
     rdfs:subClassOf [ a owl:Restriction ;
-            owl:allValuesFrom xsd:string ;
-            owl:onProperty spo:has_input ],
-        [ a owl:Restriction ;
             owl:maxCardinality 1 ;
             owl:onProperty spo:has_spacetime_extent ],
         [ a owl:Restriction ;
             owl:minCardinality 0 ;
-            owl:onProperty spo:has_input ],
+            owl:onProperty spo:has_output ],
         [ a owl:Restriction ;
             owl:minCardinality 0 ;
-            owl:onProperty spo:has_output ],
+            owl:onProperty spo:has_input ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty spo:has_input ],
         [ a owl:Restriction ;
             owl:allValuesFrom spo:SpacetimeRegion ;
             owl:onProperty spo:has_spacetime_extent ],
@@ -1515,54 +1515,54 @@ spo:Process a owl:Class ;
             owl:onProperty spo:has_spacetime_extent ],
         spo:Occurrent ;
     skos:definition "An occurrent that depends on material participants (BFO process). Unifies physical evolution / computation / measurement (FYTOK-REPORT-05 §rpt05-cat-process)." ;
-    skos:exactMatch <http://purl.obolibrary.org/obo/BFO_0000015> ;
+    skos:exactMatch bfo:0000015 ;
     skos:inScheme spo:core .
 
 spo:name a owl:DatatypeProperty .
 
 spo:ContinuousCoordinate a owl:Class ;
     rdfs:label "ContinuousCoordinate" ;
-    owl:unionOf ( <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#time> <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#psi> <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#psi_norm> <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#rho_tor> <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#rho_tor_norm> <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#rho_pol_norm> <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#phi> <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#theta> <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#volume> <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#area> <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#r> <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#z> <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#dim1> <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#dim2> ) ;
+    owl:unionOf ( <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#time> <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#psi> <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#psi_norm> <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#rho_tor> <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#rho_tor_norm> <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#rho_pol_norm> <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#phi> <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#theta> <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#volume> <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#area> <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#r> <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#z> <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#dim1> <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#dim2> ) ;
     skos:definition "Continuous physical coordinate axes recognized as Domains (dd2fyo.config continuous_coordinates)." ;
     skos:inScheme spo:domain ;
-    linkml:permissible_values <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#area>,
-        <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#dim1>,
-        <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#dim2>,
-        <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#phi>,
-        <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#psi>,
-        <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#psi_norm>,
-        <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#r>,
-        <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#rho_pol_norm>,
-        <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#rho_tor>,
-        <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#rho_tor_norm>,
-        <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#theta>,
-        <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#time>,
-        <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#volume>,
-        <https://fusion-yun.github.io/spo/v0.3.ga7510c78/ContinuousCoordinate#z> .
+    linkml:permissible_values <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#area>,
+        <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#dim1>,
+        <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#dim2>,
+        <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#phi>,
+        <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#psi>,
+        <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#psi_norm>,
+        <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#r>,
+        <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#rho_pol_norm>,
+        <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#rho_tor>,
+        <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#rho_tor_norm>,
+        <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#theta>,
+        <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#time>,
+        <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#volume>,
+        <https://fusion-yun.github.io/spo/v0.3.gb78c7ece/ContinuousCoordinate#z> .
 
 spo:InformationContentEntity a owl:Class ;
     rdfs:label "InformationContentEntity" ;
     rdfs:subClassOf [ a owl:Restriction ;
-            owl:minCardinality 0 ;
-            owl:onProperty spo:has_provenance ],
-        [ a owl:Restriction ;
-            owl:maxCardinality 1 ;
-            owl:onProperty spo:is_about ],
-        [ a owl:Restriction ;
             owl:allValuesFrom xsd:string ;
             owl:onProperty spo:has_provenance ],
         [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:is_about ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty spo:has_provenance ],
+        [ a owl:Restriction ;
             owl:maxCardinality 1 ;
             owl:onProperty spo:has_provenance ],
         [ a owl:Restriction ;
-            owl:minCardinality 0 ;
+            owl:maxCardinality 1 ;
             owl:onProperty spo:is_about ],
         [ a owl:Restriction ;
             owl:allValuesFrom spo:Entity ;
             owl:onProperty spo:is_about ],
         spo:GenericallyDependentContinuant ;
     skos:definition "A generically dependent continuant that is about something (IAO information content entity). An IDS as a whole is an ICE. The is_about slot is the REALITY / DESCRIPTION bridge: the EAST tokamak is a MaterialEntity; a drawing of its vacuum vessel, a machine-description IDS, or a reconstructed equilibrium are ICEs ABOUT it — never the thing itself." ;
-    skos:exactMatch IAO:0000030 ;
+    skos:exactMatch iao:0000030 ;
     skos:inScheme spo:core .
 
 spo:time a owl:DatatypeProperty ;

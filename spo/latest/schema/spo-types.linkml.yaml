@@ -3,7 +3,7 @@
 # DD data_type groups (FLT_0D..7D / INT_* / CPX_* / STR_*) map here: scalar ranges are LinkML
 # builtins; `complex` is added; rank-≥1 arrays are externalized (SPM-ADR-14 C-5c / data_handle)
 # and carried by annotation, not inlined as a list. FYTOK-REPORT-05 §rpt05-cs-common.
-id: https://fusion-yun.github.io/spo/v0.3.ga7510c78/types
+id: https://fusion-yun.github.io/spo/v0.3.gb78c7ece/types
 name: spo-types
 title: Spo Types — Primitive & Dimensional Type Vocabulary
 description: Scalar primitives + complex + array-externalization convention shared by all Spo schemas.
@@ -11,7 +11,7 @@ license: Apache-2.0
 prefixes:
   linkml: https://w3id.org/linkml/
   sp: https://w3id.org/spdata/v1/
-  spo: https://fusion-yun.github.io/spo/v0.3.ga7510c78/
+  spo: https://fusion-yun.github.io/spo/v0.3.gb78c7ece/
   xsd: http://www.w3.org/2001/XMLSchema#
 default_prefix: spo
 default_range: string
