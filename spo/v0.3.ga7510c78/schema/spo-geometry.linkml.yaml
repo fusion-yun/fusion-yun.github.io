@@ -2,7 +2,7 @@
 # spo-geometry — geometry as information describing spatial regions (C-5) + grids (C-7).
 # DD rz*/outline/contour/generic_grid lift here; mesh / DEC topology is owned by sp_mathx
 # (OI-2) — Spo holds the binding, not a re-implemented mesh ontology. FYTOK-REPORT-05.
-id: https://fusion-yun.github.io/spo/v0.3.g8bbea372/geometry
+id: https://fusion-yun.github.io/spo/v0.3.ga7510c78/geometry
 name: spo-geometry
 title: Spo Geometry — Geometric Description of Spatial Regions
 description: >-
@@ -13,7 +13,7 @@ license: Apache-2.0
 prefixes:
   linkml: https://w3id.org/linkml/
   sp: https://w3id.org/spdata/v1/
-  spo: https://fusion-yun.github.io/spo/v0.3.g8bbea372/
+  spo: https://fusion-yun.github.io/spo/v0.3.ga7510c78/
   iao: http://purl.obolibrary.org/obo/IAO_
 default_prefix: spo
 default_range: string

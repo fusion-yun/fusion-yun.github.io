@@ -3,7 +3,7 @@
 # Closes the dangling ranges the generated Spo schemas reference (Field / Function /
 # TemporalRegion). Realises C-3 (coordinate = Domain, not a path string) and C-4
 # (Quality is_function_of Domain → Field / Function). FYTOK-REPORT-05 §rpt05-cat-physics.
-id: https://fusion-yun.github.io/spo/v0.3.g8bbea372/domain
+id: https://fusion-yun.github.io/spo/v0.3.ga7510c78/domain
 name: spo-domain
 title: Spo Domain — Domains, Coordinates, Field / Function
 description: >-
@@ -14,7 +14,7 @@ license: Apache-2.0
 prefixes:
   linkml: https://w3id.org/linkml/
   sp: https://w3id.org/spdata/v1/
-  spo: https://fusion-yun.github.io/spo/v0.3.g8bbea372/
+  spo: https://fusion-yun.github.io/spo/v0.3.ga7510c78/
   bfo: http://purl.obolibrary.org/obo/BFO_
   iao: http://purl.obolibrary.org/obo/IAO_
   qudt: http://qudt.org/schema/qudt/
