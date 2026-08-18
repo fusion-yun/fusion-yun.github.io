@@ -5,7 +5,7 @@
 #
 # IRIs follow BFO 2020 / OBO Foundry / W3C PROV (version-sensitive — verify against the
 # pinned ontology release). T-Box only (SPM-ADR-14 D1); no runtime dependency.
-id: https://fusion-yun.github.io/spo/v0.draft/core
+id: https://fusion-yun.github.io/spo/v0.3.g1a92cb44/core
 name: spo-core
 title: Spo Core — BFO-3D Upper Anchors + 4D Spacetime Extension
 description: >-
@@ -18,7 +18,7 @@ license: CC-BY-ND-4.0
 prefixes:
   linkml: https://w3id.org/linkml/
   sp: https://w3id.org/spdata/v1/
-  spo: https://fusion-yun.github.io/spo/v0.draft/
+  spo: https://fusion-yun.github.io/spo/v0.3.g1a92cb44/
   bfo: http://purl.obolibrary.org/obo/BFO_
   iao: http://purl.obolibrary.org/obo/IAO_
   obi: http://purl.obolibrary.org/obo/OBI_

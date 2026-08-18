@@ -14,7 +14,7 @@
 #   * A 4D spacetime grid is a Mesh whose discretized region is a SpacetimeRegion:
 #     SpacetimeMesh = spatial base mesh × TimeAxis (product form) or an unstructured 4D GGD.
 # BFO IRIs per BFO 2020 / OBO Foundry (version-sensitive). T-Box only; no runtime dependency.
-id: https://fusion-yun.github.io/spo/v0.draft/time
+id: https://fusion-yun.github.io/spo/v0.3.g1a92cb44/time
 name: spo-time
 title: Spo Time — Instants, Time Axis, AoS/SoA Duality, Spacetime Mesh
 description: >-
@@ -27,7 +27,7 @@ license: CC-BY-ND-4.0
 prefixes:
   linkml: https://w3id.org/linkml/
   sp: https://w3id.org/spdata/v1/
-  spo: https://fusion-yun.github.io/spo/v0.draft/
+  spo: https://fusion-yun.github.io/spo/v0.3.g1a92cb44/
   bfo: http://purl.obolibrary.org/obo/BFO_
   iao: http://purl.obolibrary.org/obo/IAO_
 default_prefix: spo
