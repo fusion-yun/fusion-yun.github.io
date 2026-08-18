@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>spo — the Sp ecosystem upper ontology</title>
+<style>*{box-sizing:border-box}body{margin:0;padding:2rem 1.25rem;font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;color:#1a1a1a;background:#fff}
+main{max-width:52rem;margin:0 auto}h1{font-size:1.9rem;margin:0 0 .25rem;letter-spacing:-.01em}
+.sub{color:#555;margin:0 0 .35rem;font-size:1.05rem}.draft{display:inline-block;margin:.5rem 0 1.5rem;padding:.15rem .55rem;border:1px solid #b45309;color:#b45309;border-radius:.25rem;font-size:.78rem;font-weight:600;letter-spacing:.03em}
+h2{font-size:1.15rem;margin:2.2rem 0 .6rem;padding-bottom:.3rem;border-bottom:1px solid #e5e5e5}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}code{background:#f4f4f5;padding:.1rem .35rem;border-radius:.25rem;font-size:.88em}
+pre{background:#fafafa;border:1px solid #e5e5e5;border-radius:.4rem;padding:.8rem 1rem;overflow-x:auto;font-size:.86rem;line-height:1.55}
+table{border-collapse:collapse;width:100%;margin:.5rem 0;font-size:.93rem;display:block;overflow-x:auto}
+th,td{text-align:left;padding:.45rem .7rem;border-bottom:1px solid #ececec;vertical-align:top}th{font-weight:600;color:#444;white-space:nowrap}
+a{color:#0b5cad}.mods{columns:3;column-gap:1.4rem;font-size:.86rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;line-height:1.5}
+.mods span{display:block;break-inside:avoid}footer{margin-top:3rem;padding-top:1rem;border-top:1px solid #e5e5e5;color:#666;font-size:.85rem}
+@media(max-width:640px){.mods{columns:1}}
+@media(prefers-color-scheme:dark){body{background:#141416;color:#e6e6e6}.sub,th{color:#a9a9ad}code{background:#232326}pre{background:#1b1b1e;border-color:#2e2e33}
+h2,td,th,footer{border-color:#2e2e33}a{color:#7ab6f5}footer{color:#96969c}}</style></head><body><main>
+<h1>spo</h1>
+<p class="sub">the Sp ecosystem upper ontology</p>
+<p class="draft">v0.draft — NOT A STABLE NAMESPACE</p>
+<p>A BFO-grounded upper ontology for scientific data and modelling: the 3D normative core plus a conservative 4D spacetime extension, quantities over domains, fields, functions and signals, the time ontology (AoS/SoA duality), geometry, controlled vocabularies, and provenance. Domain ontologies such as <a href="../../fyo/v0.draft/">fyo</a> ground on it.</p>
+
+<h2>Namespace</h2>
+<pre>spo: https://fusion-yun.github.io/spo/v0.draft/</pre>
+<p>The trailing slash is part of the prefix: a CURIE expands by concatenation, so
+<code>spo:Example</code> resolves to <code>https://fusion-yun.github.io/spo/v0.draft/Example</code>.</p>
+<table><tbody>
+<tr><th>Artifact version</th><td>0.3.0</td></tr>
+<tr><th>Namespace status</th><td><strong>draft</strong> — terms may change without a deprecation
+period. The first ratified release will mint a separate <code>v1</code> namespace.</td></tr>
+<tr><th>Upstream import</th><td>none — spo is the upper layer</td></tr>
+<tr><th>Owner</th><td>SpModel (<code>SP-ADR-101</code> D2); source not published here</td></tr>
+<tr><th>Licence</th><td><a href="../LICENSE">CC BY-ND 4.0</a> — YU Zhi (于治), ASIPP</td></tr>
+</tbody></table>
+
+<h2>Artifacts</h2>
+<table><thead><tr><th>File</th><th>Consumer</th></tr></thead><tbody><tr><td><a href='context.jsonld'><code>context.jsonld</code></a></td><td>JSON-LD processors (remote @context)</td></tr><tr><td><a href='spo.owl.ttl'><code>spo.owl.ttl</code></a></td><td>OWL 2 reasoners, RDF stores</td></tr><tr><td><a href='spo.shacl.ttl'><code>spo.shacl.ttl</code></a></td><td>SHACL validators (A-Box conformance)</td></tr></tbody></table>
+<p>Sources are mirrored under <a href="schema/"><code>schema/</code></a>; every module IRI
+resolves to its LinkML file through the neutral catalog.</p>
+
+<h2>Using it</h2>
+<p>Reference the vocabulary from a JSON-LD document:</p>
+<pre>{
+  "@context": { "spo": "https://fusion-yun.github.io/spo/v0.draft/" },
+  "@type": "spo:Example"
+}</pre>
+<p>Or load the remote context directly:</p>
+<pre>{ "@context": "https://fusion-yun.github.io/spo/v0.draft/context.jsonld" }</pre>
+<p>Referencing this ontology — a LinkML <code>imports:</code> entry, a JSON-LD
+<code>@context</code> prefix, an <code>owl:imports</code> statement, or an <code>@type</code>
+assertion — does <strong>not</strong> create a derivative work and is not restricted by the
+NoDerivatives licence term.</p>
+
+<h2>Modules (10)</h2>
+<div class="mods"><span>spo-core</span><span>spo-types</span><span>spo-domain</span><span>spo-geometry</span><span>spo-signal</span><span>spo-time</span><span>spo-quantity</span><span>spo-vocab</span><span>spo-provenance</span><span>spo</span></div>
+
+<footer>Copyright &copy; 2026 YU Zhi (于治), ASIPP — Institute of Plasma Physics,
+Chinese Academy of Sciences. Published under CC BY-ND 4.0.</footer>
+</main></body></html>

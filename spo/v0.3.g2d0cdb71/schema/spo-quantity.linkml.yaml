@@ -1,0 +1,100 @@
+# SPDX-License-Identifier: CC-BY-ND-4.0
+# spo-quantity — the general PHYSICAL-PROPERTY ontology: quantity kinds (determinables),
+# units, and scalar quantity values, QUDT-aligned.
+#
+# Design intent: separate the three things the word "quantity" conflates —
+#   * the DETERMINABLE (QuantityKind, "electron temperature" as such — a GDC/ICE);
+#   * the DETERMINATE instance in the world (spo-core Quality, the SDC inhering in matter);
+#   * the INFORMATION about it (spo-domain ContinuousQuantity / QuantityValue here — ICEs
+#     that are about a Quality; the only layer data systems actually store).
+# Units/dimensions authority stays external (UCUM strings, QUDT IRIs; SpData `sp:phys` is the
+# ecosystem registry) — this module gives them T-Box landing classes, not a re-implemented
+# unit system. T-Box only; no runtime dependency.
+id: https://fusion-yun.github.io/spo/v0.draft/quantity
+name: spo-quantity
+title: Spo Quantity — Quantity Kinds, Units, Scalar Values
+description: >-
+  Physical-property ontology: QuantityKind (determinable), Unit (UCUM/QUDT carrier), and
+  QuantityValue (scalar value + unit + kind — the FLT_0D-with-units lift). Field/Signal
+  (continuous quantities over a Domain) live in spo-domain/spo-signal and reference these
+  via has_quantity_kind / unit.
+license: CC-BY-ND-4.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  sp: https://w3id.org/spdata/v1/
+  spo: https://fusion-yun.github.io/spo/v0.draft/
+  qudt: http://qudt.org/schema/qudt/
+  iao: http://purl.obolibrary.org/obo/IAO_
+default_prefix: spo
+default_range: string
+imports:
+- linkml:types
+- spo-core.linkml
+annotations:
+  spo_module: quantity
+  spo_version: 0.1.0
+
+classes:
+  QuantityKind:
+    is_a: InformationContentEntity
+    class_uri: qudt:QuantityKind
+    description: >-
+      A kind of physical quantity — the DETERMINABLE ("electron temperature", "poloidal
+      flux") as an ICE, independent of any bearer, domain, or unit. A concrete measured or
+      computed quantity (Quality in the world; ContinuousQuantity/QuantityValue as
+      information) determines a QuantityKind. Aligns qudt:QuantityKind; fusion-specific
+      kinds are enumerated downstream (fyo), not here.
+    attributes:
+      dimension_vector:
+        range: string
+        description: QUDT dimension-vector expression (e.g. L2 M T-2); authority external (QUDT).
+      symbol:
+        range: string
+        description: Conventional symbol (e.g. T_e, psi).
+
+  Unit:
+    is_a: InformationContentEntity
+    class_uri: qudt:Unit
+    description: >-
+      A measurement unit as an ICE — carrier of the UCUM code / QUDT IRI the `unit` strings
+      across Spo schemas point into. Authority is the external unit system (UCUM/QUDT via the
+      SpData `sp:phys` registry); this class is the T-Box landing, not a unit database.
+    attributes:
+      ucum_code:
+        range: string
+        description: UCUM unit expression (e.g. Wb, m2.s-1, eV).
+      quantity_kind:
+        range: QuantityKind
+        description: The QuantityKind this unit conventionally measures.
+
+  QuantityValue:
+    is_a: InformationContentEntity
+    class_uri: qudt:QuantityValue
+    description: >-
+      A scalar physical quantity value — numeric value + Unit + QuantityKind (the lift of a
+      DD FLT_0D leaf with units; e.g. `vacuum_toroidal_field/b0` at one instant). The
+      information counterpart of a fully determinate Quality; for quantities extended over a
+      Domain use ContinuousQuantity (Field/Signal) instead.
+    attributes:
+      numeric_value:
+        range: float
+        description: The numeric value in has_unit.
+    slots:
+    - has_unit
+    - has_quantity_kind
+    - of_quality
+
+slots:
+  has_unit:
+    slot_uri: qudt:hasUnit
+    description: The Unit the numeric value is expressed in.
+    range: Unit
+  has_quantity_kind:
+    slot_uri: qudt:hasQuantityKind
+    description: The QuantityKind this value/quantity determines (determinable ← determinate).
+    range: QuantityKind
+  of_quality:
+    description: >-
+      The world-side Quality (SDC inhering in a MaterialEntity) this information is about —
+      the reality/description bridge for scalar values (iao:is_about specialization).
+    range: Quality
