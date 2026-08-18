@@ -51,8 +51,8 @@ CURIE 以字符串拼接展开。
 
 | 本体 | 范围 | 命名空间 | 制品 |
 | :--- | :--- | :--- | :--- |
-| **SpO** | 上层本体：BFO-3D 核 + 4D 时空扩展、量—域—场—信号、时间 AoS/SoA 对偶、几何、受控词表、溯源 | `spo: https://fusion-yun.github.io/spo/v0.draft/` | [浏览（当前版本）](./spo/)——版本目录按源仓 `VERSION` 派生命名（`vX.Y.gHASH` 开发版 / `vX.Y.Z` 正式版），入口页自动重定向 |
-| **FyO** | 聚变域本体：装置层手工核心（Machine / Coil / Plasma / Diagnostic 等）+ IMAS DD 4.1.1 的语义提升层（82 IDS），接地于 SpO/BFO | `fyo: https://fusion-yun.github.io/fyo/v0.draft/` | [浏览（当前版本）](./fyo/)——版本目录按源仓 `VERSION` 派生命名（`vX.Y.gHASH` 开发版 / `vX.Y.Z` 正式版），入口页自动重定向 |
+| **SpO** | 上层本体：BFO-3D 核 + 4D 时空扩展、量—域—场—信号、时间 AoS/SoA 对偶、几何、受控词表、溯源 | `spo: https://fusion-yun.github.io/spo/v0.draft/` | [浏览（latest）](./spo/latest/)——`latest/` 为最新构建的稳定镜像；版本目录按源仓 `VERSION` 派生命名（`vX.Y.gHASH` 开发版 / `vX.Y.Z` 正式版） |
+| **FyO** | 聚变域本体：装置层手工核心（Machine / Coil / Plasma / Diagnostic 等）+ IMAS DD 4.1.1 的语义提升层（82 IDS），接地于 SpO/BFO | `fyo: https://fusion-yun.github.io/fyo/v0.draft/` | [浏览（latest）](./fyo/latest/)——`latest/` 为最新构建的稳定镜像；版本目录按源仓 `VERSION` 派生命名（`vX.Y.gHASH` 开发版 / `vX.Y.Z` 正式版） |
 
 FyO `imports: [spo]`。引用方式（远程 `@context`）：
 
