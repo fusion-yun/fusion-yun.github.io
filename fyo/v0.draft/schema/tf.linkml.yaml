@@ -1,0 +1,187 @@
+id: https://fusion-yun.github.io/fyo/v0.draft/tf
+name: fyo-imas-tf
+title: fyo IDS `tf` (lifted, DD 4.1.1)
+description: 'Semantic lift of IMAS DD IDS `tf` onto SpO/BFO (FYTOK-ADR-102): structures grounded as ICEs,
+  time-slice AoS elements as spo:TimeSlice, leaves annotated with their spo carrier classes (Signal /
+  Field / Function / QuantityValue / TimeAxis). Layout is preserved in dd_* annotations (reverse map ω).'
+license: CC-BY-ND-4.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  fyo: https://fusion-yun.github.io/fyo/v0.draft/
+  spo: https://fusion-yun.github.io/spo/v0.draft/
+  imas: https://imas.iter.org/dd/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+default_prefix: fyo
+default_range: string
+imports:
+- linkml:types
+- spo
+- fyo-core
+- fyo-common
+annotations:
+  generated_by: dd2fyo 0.1.0
+  dd_version: 4.1.1
+  dd_source: IMAS DD schemas/tf/dd_tf.xsd via dd2linkml (mechanical layer — transient build artifact,
+    not in-tree)
+  fyo_category: device
+  fyo_root_class: Tf
+  provenance: DO NOT EDIT — regenerate via scripts/dd2fyo.py.
+classes:
+  Tf:
+    is_a: IDS
+    description: Toroidal field coils
+    annotations:
+      dd_path: tf
+      fyo_category: device
+    attributes:
+      ids_properties:
+        range: IdsProperties
+        description: Interface Data Structure properties. This element identifies the node above as an
+          IDS
+      r0:
+        range: float
+        description: Reference major radius of the device (from the official description of the device).
+          This node is the placeholder for this official machine description quantity (typically the middle
+          of the vessel at the equatorial midplane, although the exact definition may depend on the device)
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      is_periodic:
+        range: integer
+        description: Flag indicating whether coils are described one by one in the coil() structure (flag=0)
+          or whether the coil structure represents only coils having different characteristics (flag =
+          1, n_coils must be filled in that case). In the latter case, the coil() sequence is repeated
+          periodically around the torus.
+        annotations:
+          dd_type: static
+      coils_n:
+        range: integer
+        description: Number of coils around the torus, in case is_periodic = 1
+        annotations:
+          dd_type: static
+      coil:
+        range: DdCoil
+        multivalued: true
+        description: Set of coils around the tokamak
+        annotations:
+          dd_type: static
+          dd_max_occurs: '32'
+          dd_coordinate1: 1...N
+      field_map:
+        range: TfGgd
+        multivalued: true
+        description: Map of the vacuum field at various time slices, represented using the generic grid
+          description
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+      b_field_phi_vacuum_r:
+        range: SignalFlt1d
+        description: Vacuum field times major radius in the toroidal field magnet. Positive sign means
+          anti-clockwise when viewed from above
+        annotations:
+          dd_units: T.m
+      delta_b_field_phi_vacuum_r:
+        range: SignalFlt1d
+        description: Variation of (vacuum field times major radius in the toroidal field magnet) from
+          the start of the plasma.
+        annotations:
+          dd_units: T.m
+      latency:
+        range: float
+        description: Upper bound of the delay between input command received from the RT network and actuator
+          starting to react. Applies globally to the system described by this IDS unless specific latencies
+          (e.g. channel-specific or antenna-specific) are provided at a deeper level in the IDS structure.
+        annotations:
+          dd_type: static
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      code:
+        range: IdsCode
+        description: Generic decription of the code-specific parameters for the code that has produced
+          this IDS
+      time:
+        range: float
+        multivalued: true
+        description: Generic time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  TfGgd:
+    is_a: TimeSlice
+    description: Map of the vacuum field at various time slices, represented using the generic grid description
+    annotations:
+      dd_type_name: tf_ggd
+      dd_path: tf/field_map
+      fyo_lift: time_slice
+    attributes:
+      grid:
+        range: GenericGridDynamic
+        description: Grid description
+      b_field_r:
+        range: GenericGridScalar
+        multivalued: true
+        description: R component of the vacuum magnetic field, given on various grid subsets
+        annotations:
+          dd_units: T
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      b_field_z:
+        range: GenericGridScalar
+        multivalued: true
+        description: Z component of the vacuum magnetic field, given on various grid subsets
+        annotations:
+          dd_units: T
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      b_field_tor:
+        range: GenericGridScalar
+        multivalued: true
+        description: Toroidal component of the vacuum magnetic field, given on various grid subsets
+        annotations:
+          dd_units: T
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      a_field_r:
+        range: GenericGridScalar
+        multivalued: true
+        description: R component of the vacuum vector potential, given on various grid subsets
+        annotations:
+          dd_units: T.m
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      a_field_z:
+        range: GenericGridScalar
+        multivalued: true
+        description: Z component of the vacuum vector potential, given on various grid subsets
+        annotations:
+          dd_units: T.m
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      a_field_tor:
+        range: GenericGridScalar
+        multivalued: true
+        description: Toroidal component of the vacuum vector potential, given on various grid subsets
+        annotations:
+          dd_units: T.m
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      time:
+        range: float
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity

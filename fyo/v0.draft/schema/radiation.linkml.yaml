@@ -1,0 +1,812 @@
+id: https://fusion-yun.github.io/fyo/v0.draft/radiation
+name: fyo-imas-radiation
+title: fyo IDS `radiation` (lifted, DD 4.1.1)
+description: 'Semantic lift of IMAS DD IDS `radiation` onto SpO/BFO (FYTOK-ADR-102): structures grounded
+  as ICEs, time-slice AoS elements as spo:TimeSlice, leaves annotated with their spo carrier classes (Signal
+  / Field / Function / QuantityValue / TimeAxis). Layout is preserved in dd_* annotations (reverse map
+  ω).'
+license: CC-BY-ND-4.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  fyo: https://fusion-yun.github.io/fyo/v0.draft/
+  spo: https://fusion-yun.github.io/spo/v0.draft/
+  imas: https://imas.iter.org/dd/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+default_prefix: fyo
+default_range: string
+imports:
+- linkml:types
+- spo
+- fyo-core
+- fyo-common
+annotations:
+  generated_by: dd2fyo 0.1.0
+  dd_version: 4.1.1
+  dd_source: IMAS DD schemas/radiation/dd_radiation.xsd via dd2linkml (mechanical layer — transient build
+    artifact, not in-tree)
+  fyo_category: physics-state
+  fyo_root_class: Radiation
+  provenance: DO NOT EDIT — regenerate via scripts/dd2fyo.py.
+classes:
+  Radiation:
+    is_a: IDS
+    description: Radiation emitted by the plasma and neutrals
+    annotations:
+      dd_path: radiation
+      fyo_category: physics-state
+    attributes:
+      ids_properties:
+        range: IdsProperties
+        description: Interface Data Structure properties. This element identifies the node above as an
+          IDS
+      vacuum_toroidal_field:
+        range: BTorVacuum1
+        description: Characteristics of the vacuum toroidal field (used in rho_tor definition)
+      grid_ggd:
+        range: GenericGridAos3Root
+        multivalued: true
+        description: Grid (using the Generic Grid Description), for various time slices. The timebase
+          of this array of structure must be a subset of the process/ggd timebases
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+      process:
+        range: RadiationProcess
+        multivalued: true
+        description: Set of emission processes. The radiation characteristics are described at the level
+          of the originating entity. For instance describe line radiation from neutrals under profiles_1d/neutral.
+          Line and recombination radiation under profiles_1d/ion. Bremsstrahlung radiation under profiles_1d/neutral
+          and ion ...
+        annotations:
+          dd_max_occurs: '20'
+          dd_coordinate1: 1...N
+      code:
+        range: IdsCode
+        description: Generic decription of the code-specific parameters for the code that has produced
+          this IDS
+      time:
+        range: float
+        multivalued: true
+        description: Generic time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  RadiationProcess:
+    is_a: InformationContentEntity
+    description: Set of emission processes. The radiation characteristics are described at the level of
+      the originating entity. For instance describe line radiation from neutrals under profiles_1d/neutral.
+      Line and recombination radiation under profiles_1d/ion. Bremsstrahlung radiation under profiles_1d/neutral
+      and ion ...
+    annotations:
+      dd_type_name: radiation_process
+      dd_path: radiation/process
+    attributes:
+      identifier:
+        range: Identifier
+        description: Process identifier
+      global_quantities:
+        range: RadiationProcessGlobal
+        multivalued: true
+        description: Scalar volume integrated quantities
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+      profiles_1d:
+        range: RadiationProcessProfiles1d
+        multivalued: true
+        description: Emissivity radial profiles for various time slices
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+      ggd:
+        range: RadiationProcessGgd
+        multivalued: true
+        description: Emissivities represented using the general grid description, for various time slices
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+  RadiationProcessGlobal:
+    is_a: TimeSlice
+    description: Scalar volume integrated quantities
+    annotations:
+      dd_type_name: radiation_process_global
+      dd_path: radiation/process/global_quantities
+      fyo_lift: time_slice
+    attributes:
+      inside_lcfs:
+        range: RadiationProcessGlobalVolume
+        description: Emissions from the core plasma, inside the last closed flux surface
+      inside_vessel:
+        range: RadiationProcessGlobalVolume
+        description: Total emissions inside the vacuum vessel
+      time:
+        range: float
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  RadiationProcessGlobalVolume:
+    is_a: InformationContentEntity
+    description: Emissions from the core plasma, inside the last closed flux surface
+    annotations:
+      dd_type_name: radiation_process_global_volume
+      dd_path: radiation/process/global_quantities/inside_lcfs
+    attributes:
+      power:
+        range: float
+        description: Total power emitted by all species
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      power_ion_total:
+        range: float
+        description: Total power emitted by all ion species
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      power_neutral_total:
+        range: float
+        description: Total power emitted by all neutral species
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      power_electrons:
+        range: float
+        description: Power emitted by electrons
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  RadiationProcessProfiles1d:
+    is_a: TimeSlice
+    description: Emissivity radial profiles for various time slices
+    annotations:
+      dd_type_name: radiation_process_profiles_1d
+      dd_path: radiation/process/profiles_1d
+      fyo_lift: time_slice
+    attributes:
+      grid:
+        range: CoreRadialGrid
+        description: Radial grid
+      electrons:
+        range: RadiationProcessProfiles1dElectrons
+        description: Processs terms related to electrons
+      emissivity_ion_total:
+        range: float
+        multivalued: true
+        description: Emissivity (summed over ion  species)
+        annotations:
+          dd_type: dynamic
+          dd_units: W.m^-3
+          dd_ndim: 1
+          dd_coordinate1: ../grid/rho_tor_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../grid/rho_tor_norm
+      power_inside_ion_total:
+        range: float
+        multivalued: true
+        description: Total power from ion species (summed over ion  species) inside the flux surface (volume
+          integral of the emissivity inside the flux surface)
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../grid/rho_tor_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../grid/rho_tor_norm
+      emissivity_neutral_total:
+        range: float
+        multivalued: true
+        description: Emissivity (summed over neutral  species)
+        annotations:
+          dd_type: dynamic
+          dd_units: W.m^-3
+          dd_ndim: 1
+          dd_coordinate1: ../grid/rho_tor_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../grid/rho_tor_norm
+      power_inside_neutral_total:
+        range: float
+        multivalued: true
+        description: Total power from ion species (summed over neutral species) inside the flux surface
+          (volume integral of the emissivity inside the flux surface)
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../grid/rho_tor_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../grid/rho_tor_norm
+      ion:
+        range: RadiationProcessProfiles1dIons
+        multivalued: true
+        description: Process terms related to the different ion species
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      neutral:
+        range: RadiationProcessProfiles1dNeutral
+        multivalued: true
+        description: Process terms related to the different neutral species
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      time:
+        range: float
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  RadiationProcessProfiles1dElectrons:
+    is_a: InformationContentEntity
+    description: Processs terms related to electrons
+    annotations:
+      dd_type_name: radiation_process_profiles_1d_electrons
+      dd_path: radiation/process/profiles_1d/electrons
+    attributes:
+      emissivity:
+        range: float
+        multivalued: true
+        description: Emissivity from this species
+        annotations:
+          dd_type: dynamic
+          dd_units: W.m^-3
+          dd_ndim: 1
+          dd_coordinate1: ../../grid/rho_tor_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../grid/rho_tor_norm
+      power_inside:
+        range: float
+        multivalued: true
+        description: Radiated power from inside the flux surface (volume integral of the emissivity inside
+          the flux surface)
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../grid/rho_tor_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../grid/rho_tor_norm
+  RadiationProcessProfiles1dIons:
+    is_a: InformationContentEntity
+    description: Process terms related to the different ion species
+    annotations:
+      dd_type_name: radiation_process_profiles_1d_ions
+      dd_path: radiation/process/profiles_1d/ion
+    attributes:
+      element:
+        range: PlasmaCompositionNeutralElement
+        multivalued: true
+        description: List of elements forming the atom or molecule
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      z_ion:
+        range: float
+        description: Ion charge (of the dominant ionization state; lumped ions are allowed)
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      name:
+        range: string
+        description: String identifying ion (e.g. H+, D+, T+, He+2, C+, ...)
+        annotations:
+          dd_type: dynamic
+      neutral_index:
+        range: integer
+        description: Index of the corresponding neutral species in the ../../neutral array
+        annotations:
+          dd_type: dynamic
+      emissivity:
+        range: float
+        multivalued: true
+        description: Emissivity from this species
+        annotations:
+          dd_type: dynamic
+          dd_units: W.m^-3
+          dd_ndim: 1
+          dd_coordinate1: ../../grid/rho_tor_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../grid/rho_tor_norm
+      power_inside:
+        range: float
+        multivalued: true
+        description: Radiated power from inside the flux surface (volume integral of the emissivity inside
+          the flux surface)
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../grid/rho_tor_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../grid/rho_tor_norm
+      multiple_states_flag:
+        range: integer
+        description: 'Multiple states calculation flag : 0-Only one state is considered; 1-Multiple states
+          are considered and are described in the state structure'
+        annotations:
+          dd_type: dynamic
+      state:
+        range: RadiationProcessProfiles1dIonsChargeStates
+        multivalued: true
+        description: Process terms related to the different charge states of the species (ionization,
+          energy, excitation, ...)
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  RadiationProcessProfiles1dIonsChargeStates:
+    is_a: InformationContentEntity
+    description: Process terms related to the different charge states of the species (ionization, energy,
+      excitation, ...)
+    annotations:
+      dd_type_name: radiation_process_profiles_1d_ions_charge_states
+      dd_path: radiation/process/profiles_1d/ion/state
+    attributes:
+      z_min:
+        range: float
+        description: Minimum Z of the charge state bundle
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      z_max:
+        range: float
+        description: Maximum Z of the charge state bundle
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      name:
+        range: string
+        description: String identifying charge state (e.g. C+, C+2 , C+3, C+4, C+5, C+6, ...)
+        annotations:
+          dd_type: dynamic
+      vibrational_level:
+        range: float
+        description: Vibrational level (can be bundled)
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      vibrational_mode:
+        range: string
+        description: Vibrational mode of this state, e.g. "A_g". Need to define, or adopt a standard nomenclature.
+        annotations:
+          dd_type: dynamic
+      electron_configuration:
+        range: string
+        description: Configuration of atomic orbitals of this state, e.g. 1s2-2s1
+        annotations:
+          dd_type: dynamic
+      emissivity:
+        range: float
+        multivalued: true
+        description: Emissivity from this species
+        annotations:
+          dd_type: dynamic
+          dd_units: W.m^-3
+          dd_ndim: 1
+          dd_coordinate1: ../../../grid/rho_tor_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../grid/rho_tor_norm
+      power_inside:
+        range: float
+        multivalued: true
+        description: Radiated power from inside the flux surface (volume integral of the emissivity inside
+          the flux surface)
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../../grid/rho_tor_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../grid/rho_tor_norm
+  RadiationProcessProfiles1dNeutral:
+    is_a: InformationContentEntity
+    description: Process terms related to the different neutral species
+    annotations:
+      dd_type_name: radiation_process_profiles_1d_neutral
+      dd_path: radiation/process/profiles_1d/neutral
+    attributes:
+      element:
+        range: PlasmaCompositionNeutralElement
+        multivalued: true
+        description: List of elements forming the atom or molecule
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      name:
+        range: string
+        description: String identifying the neutral species (e.g. H, D, T, He, C, ...)
+        annotations:
+          dd_type: dynamic
+      ion_index:
+        range: integer
+        description: Index of the corresponding ion species in the ../../ion array
+        annotations:
+          dd_type: dynamic
+      emissivity:
+        range: float
+        multivalued: true
+        description: Emissivity from this species
+        annotations:
+          dd_type: dynamic
+          dd_units: W.m^-3
+          dd_ndim: 1
+          dd_coordinate1: ../../grid/rho_tor_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../grid/rho_tor_norm
+      power_inside:
+        range: float
+        multivalued: true
+        description: Radiated power from inside the flux surface (volume integral of the emissivity inside
+          the flux surface)
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../grid/rho_tor_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../grid/rho_tor_norm
+      multiple_states_flag:
+        range: integer
+        description: 'Multiple states calculation flag : 0-Only one state is considered; 1-Multiple states
+          are considered and are described in the state structure'
+        annotations:
+          dd_type: dynamic
+      state:
+        range: RadiationProcessProfiles1dNeutralState
+        multivalued: true
+        description: Process terms related to the different charge states of the species (energy, excitation,
+          ...)
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  RadiationProcessProfiles1dNeutralState:
+    is_a: InformationContentEntity
+    description: Process terms related to the different charge states of the species (energy, excitation,
+      ...)
+    annotations:
+      dd_type_name: radiation_process_profiles_1d_neutral_state
+      dd_path: radiation/process/profiles_1d/neutral/state
+    attributes:
+      name:
+        range: string
+        description: String identifying state
+        annotations:
+          dd_type: dynamic
+      vibrational_level:
+        range: float
+        description: Vibrational level (can be bundled)
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      vibrational_mode:
+        range: string
+        description: Vibrational mode of this state, e.g. "A_g". Need to define, or adopt a standard nomenclature.
+        annotations:
+          dd_type: dynamic
+      neutral_type:
+        range: Identifier
+        description: 'Neutral type (if the considered state is a neutral), in terms of energy. ID =1:
+          cold; 2: thermal; 3: fast; 4: NBI'
+      electron_configuration:
+        range: string
+        description: Configuration of atomic orbitals of this state, e.g. 1s2-2s1
+        annotations:
+          dd_type: dynamic
+      emissivity:
+        range: float
+        multivalued: true
+        description: Emissivity from this species
+        annotations:
+          dd_type: dynamic
+          dd_units: W.m^-3
+          dd_ndim: 1
+          dd_coordinate1: ../../../grid/rho_tor_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../grid/rho_tor_norm
+      power_inside:
+        range: float
+        multivalued: true
+        description: Radiated power from inside the flux surface (volume integral of the emissivity inside
+          the flux surface)
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../../grid/rho_tor_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../grid/rho_tor_norm
+  RadiationProcessGgd:
+    is_a: TimeSlice
+    description: Emissivities represented using the general grid description, for various time slices
+    annotations:
+      dd_type_name: radiation_process_ggd
+      dd_path: radiation/process/ggd
+      fyo_lift: time_slice
+    attributes:
+      electrons:
+        range: RadiationProcessGgdElectrons
+        description: Process terms related to electrons
+      ion:
+        range: RadiationProcessGgdIon
+        multivalued: true
+        description: Process terms related to the different ion species
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      neutral:
+        range: RadiationProcessGgdNeutral
+        multivalued: true
+        description: Process terms related to the different neutral species
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      time:
+        range: float
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  RadiationProcessGgdElectrons:
+    is_a: InformationContentEntity
+    description: Process terms related to electrons
+    annotations:
+      dd_type_name: radiation_process_ggd_electrons
+      dd_path: radiation/process/ggd/electrons
+    attributes:
+      emissivity:
+        range: GenericGridScalar
+        multivalued: true
+        description: Emissivity from this species, on various grid subsets
+        annotations:
+          dd_units: W.m^-3
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  RadiationProcessGgdIon:
+    is_a: InformationContentEntity
+    description: Process terms related to the different ion species
+    annotations:
+      dd_type_name: radiation_process_ggd_ion
+      dd_path: radiation/process/ggd/ion
+    attributes:
+      element:
+        range: PlasmaCompositionNeutralElement
+        multivalued: true
+        description: List of elements forming the atom or molecule
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      z_ion:
+        range: float
+        description: Ion charge (of the dominant ionization state; lumped ions are allowed)
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      name:
+        range: string
+        description: String identifying ion (e.g. H+, D+, T+, He+2, C+, ...)
+        annotations:
+          dd_type: dynamic
+      neutral_index:
+        range: integer
+        description: Index of the corresponding neutral species in the ../../neutral array
+        annotations:
+          dd_type: dynamic
+      emissivity:
+        range: GenericGridScalar
+        multivalued: true
+        description: Emissivity from this species, on various grid subsets
+        annotations:
+          dd_units: W.m^-3
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      multiple_states_flag:
+        range: integer
+        description: 'Multiple states calculation flag : 0-Only one state is considered; 1-Multiple states
+          are considered and are described in the state structure'
+        annotations:
+          dd_type: dynamic
+      state:
+        range: RadiationProcessGgdIonChargeStates
+        multivalued: true
+        description: Process terms related to the different charge states of the species (ionization,
+          energy, excitation, ...)
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  RadiationProcessGgdIonChargeStates:
+    is_a: InformationContentEntity
+    description: Process terms related to the different charge states of the species (ionization, energy,
+      excitation, ...)
+    annotations:
+      dd_type_name: radiation_process_ggd_ion_charge_states
+      dd_path: radiation/process/ggd/ion/state
+    attributes:
+      z_min:
+        range: float
+        description: Minimum Z of the charge state bundle
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      z_max:
+        range: float
+        description: Maximum Z of the charge state bundle
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      name:
+        range: string
+        description: String identifying charge state (e.g. C+, C+2 , C+3, C+4, C+5, C+6, ...)
+        annotations:
+          dd_type: dynamic
+      vibrational_level:
+        range: float
+        description: Vibrational level (can be bundled)
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      vibrational_mode:
+        range: string
+        description: Vibrational mode of this state, e.g. "A_g". Need to define, or adopt a standard nomenclature.
+        annotations:
+          dd_type: dynamic
+      electron_configuration:
+        range: string
+        description: Configuration of atomic orbitals of this state, e.g. 1s2-2s1
+        annotations:
+          dd_type: dynamic
+      emissivity:
+        range: GenericGridScalar
+        multivalued: true
+        description: Emissivity from this state, on various grid subsets
+        annotations:
+          dd_units: W.m^-3
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  RadiationProcessGgdNeutral:
+    is_a: InformationContentEntity
+    description: Process terms related to the different neutral species
+    annotations:
+      dd_type_name: radiation_process_ggd_neutral
+      dd_path: radiation/process/ggd/neutral
+    attributes:
+      element:
+        range: PlasmaCompositionNeutralElement
+        multivalued: true
+        description: List of elements forming the atom or molecule
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      name:
+        range: string
+        description: String identifying the neutral species (e.g. H, D, T, He, C, ...)
+        annotations:
+          dd_type: dynamic
+      ion_index:
+        range: integer
+        description: Index of the corresponding ion species in the ../../ion array
+        annotations:
+          dd_type: dynamic
+      emissivity:
+        range: GenericGridScalar
+        multivalued: true
+        description: Emissivity from this species, on various grid subsets
+        annotations:
+          dd_units: W.m^-3
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      multiple_states_flag:
+        range: integer
+        description: 'Multiple states calculation flag : 0-Only one state is considered; 1-Multiple states
+          are considered and are described in the state structure'
+        annotations:
+          dd_type: dynamic
+      state:
+        range: RadiationProcessGgdNeutralState
+        multivalued: true
+        description: Process terms related to the different charge states of the species (energy, excitation,
+          ...)
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  RadiationProcessGgdNeutralState:
+    is_a: InformationContentEntity
+    description: Process terms related to the different charge states of the species (energy, excitation,
+      ...)
+    annotations:
+      dd_type_name: radiation_process_ggd_neutral_state
+      dd_path: radiation/process/ggd/neutral/state
+    attributes:
+      name:
+        range: string
+        description: String identifying state
+        annotations:
+          dd_type: dynamic
+      vibrational_level:
+        range: float
+        description: Vibrational level (can be bundled)
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      vibrational_mode:
+        range: string
+        description: Vibrational mode of this state, e.g. "A_g". Need to define, or adopt a standard nomenclature.
+        annotations:
+          dd_type: dynamic
+      neutral_type:
+        range: Identifier
+        description: 'Neutral type (if the considered state is a neutral), in terms of energy. ID =1:
+          cold; 2: thermal; 3: fast; 4: NBI'
+      electron_configuration:
+        range: string
+        description: Configuration of atomic orbitals of this state, e.g. 1s2-2s1
+        annotations:
+          dd_type: dynamic
+      emissivity:
+        range: GenericGridScalar
+        multivalued: true
+        description: Emissivity from this state, on various grid subsets
+        annotations:
+          dd_units: W.m^-3
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
