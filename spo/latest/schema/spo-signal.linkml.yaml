@@ -1,16 +1,16 @@
-# SPDX-License-Identifier: CC-BY-ND-4.0
+# SPDX-License-Identifier: Apache-2.0
 # spo-signal — time-series signals (C-2). DD signal_flt_Nd (data + embedded timebase) lifts to a
 # Signal: an information content entity / quality over a time Domain. Unifies the IDS-homogeneous
 # timebase and the per-signal embedded timebase (recording the source). FYTOK-REPORT-05 §rpt05-cat-process.
-id: https://fusion-yun.github.io/spo/v0.3.g1a92cb44/signal
+id: https://fusion-yun.github.io/spo/v0.3.g8bbea372/signal
 name: spo-signal
 title: Spo Signal — Time-Series Signals over a Time Domain
 description: A measured / computed time series — a quantity over a TemporalRegion, with its (time, data) samples as A-Box.
-license: CC-BY-ND-4.0
+license: Apache-2.0
 prefixes:
   linkml: https://w3id.org/linkml/
   sp: https://w3id.org/spdata/v1/
-  spo: https://fusion-yun.github.io/spo/v0.3.g1a92cb44/
+  spo: https://fusion-yun.github.io/spo/v0.3.g8bbea372/
 default_prefix: spo
 default_range: string
 imports:

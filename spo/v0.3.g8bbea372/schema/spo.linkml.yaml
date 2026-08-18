@@ -1,19 +1,19 @@
-# SPDX-License-Identifier: CC-BY-ND-4.0
+# SPDX-License-Identifier: Apache-2.0
 # spo — aggregator schema. Imports the full hand-written Spo common ontology (axis-1). Generated
 # per-IDS Spo schemas import this single name (`spo`) to bring all common classes into scope.
 # FYTOK-REPORT-05 §rpt05-cs-common.
-id: https://fusion-yun.github.io/spo/v0.3.g1a92cb44/spo
+id: https://fusion-yun.github.io/spo/v0.3.g8bbea372/spo
 name: spo
 title: Spo Common Ontology (aggregator)
 description: >-
   Single-import aggregator for the Spo common ontology: BFO-3D core + 4D extension, types, domains,
   geometry, signals, time (AoS/SoA duality + spacetime mesh), quantity kinds/units, vocabularies,
   provenance. Per-IDS generated schemas `imports: [spo]`.
-license: CC-BY-ND-4.0
+license: Apache-2.0
 prefixes:
   linkml: https://w3id.org/linkml/
   sp: https://w3id.org/spdata/v1/
-  spo: https://fusion-yun.github.io/spo/v0.3.g1a92cb44/
+  spo: https://fusion-yun.github.io/spo/v0.3.g8bbea372/
 default_prefix: spo
 default_range: string
 imports:

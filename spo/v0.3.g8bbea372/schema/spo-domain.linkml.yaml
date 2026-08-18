@@ -1,20 +1,20 @@
-# SPDX-License-Identifier: CC-BY-ND-4.0
+# SPDX-License-Identifier: Apache-2.0
 # spo-domain — domains, coordinates, and quantity-over-domain (Field / Function).
 # Closes the dangling ranges the generated Spo schemas reference (Field / Function /
 # TemporalRegion). Realises C-3 (coordinate = Domain, not a path string) and C-4
 # (Quality is_function_of Domain → Field / Function). FYTOK-REPORT-05 §rpt05-cat-physics.
-id: https://fusion-yun.github.io/spo/v0.3.g1a92cb44/domain
+id: https://fusion-yun.github.io/spo/v0.3.g8bbea372/domain
 name: spo-domain
 title: Spo Domain — Domains, Coordinates, Field / Function
 description: >-
   Domains (spatial / temporal), the continuous-coordinate vocabulary, and the quantity-over-domain
   classes (Field, Function) that SoA leaves lift to (C-3 / C-4). A physical quantity field is a
   Quality that is_function_of a Domain and inheres_in a MaterialEntity.
-license: CC-BY-ND-4.0
+license: Apache-2.0
 prefixes:
   linkml: https://w3id.org/linkml/
   sp: https://w3id.org/spdata/v1/
-  spo: https://fusion-yun.github.io/spo/v0.3.g1a92cb44/
+  spo: https://fusion-yun.github.io/spo/v0.3.g8bbea372/
   bfo: http://purl.obolibrary.org/obo/BFO_
   iao: http://purl.obolibrary.org/obo/IAO_
   qudt: http://qudt.org/schema/qudt/

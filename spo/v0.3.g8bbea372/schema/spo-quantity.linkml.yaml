@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: CC-BY-ND-4.0
+# SPDX-License-Identifier: Apache-2.0
 # spo-quantity — the general PHYSICAL-PROPERTY ontology: quantity kinds (determinables),
 # units, and scalar quantity values, QUDT-aligned.
 #
@@ -10,7 +10,7 @@
 # Units/dimensions authority stays external (UCUM strings, QUDT IRIs; SpData `sp:phys` is the
 # ecosystem registry) — this module gives them T-Box landing classes, not a re-implemented
 # unit system. T-Box only; no runtime dependency.
-id: https://fusion-yun.github.io/spo/v0.3.g1a92cb44/quantity
+id: https://fusion-yun.github.io/spo/v0.3.g8bbea372/quantity
 name: spo-quantity
 title: Spo Quantity — Quantity Kinds, Units, Scalar Values
 description: >-
@@ -18,11 +18,11 @@ description: >-
   QuantityValue (scalar value + unit + kind — the FLT_0D-with-units lift). Field/Signal
   (continuous quantities over a Domain) live in spo-domain/spo-signal and reference these
   via has_quantity_kind / unit.
-license: CC-BY-ND-4.0
+license: Apache-2.0
 prefixes:
   linkml: https://w3id.org/linkml/
   sp: https://w3id.org/spdata/v1/
-  spo: https://fusion-yun.github.io/spo/v0.3.g1a92cb44/
+  spo: https://fusion-yun.github.io/spo/v0.3.g8bbea372/
   qudt: http://qudt.org/schema/qudt/
   iao: http://purl.obolibrary.org/obo/IAO_
 default_prefix: spo

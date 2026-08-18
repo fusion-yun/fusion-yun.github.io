@@ -21,16 +21,16 @@ h2,td,th,footer{border-color:#2e2e33}a{color:#7ab6f5}footer{color:#96969c}}</sty
 <p>A BFO-grounded upper ontology for scientific data and modelling: the 3D normative core plus a conservative 4D spacetime extension, quantities over domains, fields, functions and signals, the time ontology (AoS/SoA duality), geometry, controlled vocabularies, and provenance. Domain ontologies such as <a href="../../fyo/v0.7/">fyo</a> ground on it.</p>
 
 <h2>Namespace</h2>
-<pre>spo: https://fusion-yun.github.io/spo/v0.3.g1a92cb44/</pre>
+<pre>spo: https://fusion-yun.github.io/spo/v0.3.g8bbea372/</pre>
 <p>The trailing slash is part of the prefix: a CURIE expands by concatenation, so
-<code>spo:Example</code> resolves to <code>https://fusion-yun.github.io/spo/v0.3.g1a92cb44/Example</code>.</p>
+<code>spo:Example</code> resolves to <code>https://fusion-yun.github.io/spo/v0.3.g8bbea372/Example</code>.</p>
 <table><tbody>
 <tr><th>Artifact version</th><td>0.3.0</td></tr>
 <tr><th>Namespace status</th><td><strong>draft</strong> — terms may change without a deprecation
 period. The first ratified release will mint a separate <code>v1</code> namespace.</td></tr>
 <tr><th>Upstream import</th><td>none — spo is the upper layer</td></tr>
 <tr><th>Owner</th><td>SpModel (<code>SP-ADR-101</code> D2); source not published here</td></tr>
-<tr><th>Licence</th><td><a href="../LICENSE">CC BY-ND 4.0</a> — YU Zhi (于治), ASIPP</td></tr>
+<tr><th>Licence</th><td><a href="../LICENSE">Apache 2.0</a> — YU Zhi (于治), ASIPP</td></tr>
 </tbody></table>
 
 <h2>Artifacts</h2>
@@ -41,11 +41,11 @@ resolves to its LinkML file through the neutral catalog.</p>
 <h2>Using it</h2>
 <p>Reference the vocabulary from a JSON-LD document:</p>
 <pre>{
-  "@context": { "spo": "https://fusion-yun.github.io/spo/v0.3.g1a92cb44/" },
+  "@context": { "spo": "https://fusion-yun.github.io/spo/v0.3.g8bbea372/" },
   "@type": "spo:Example"
 }</pre>
 <p>Or load the remote context directly:</p>
-<pre>{ "@context": "https://fusion-yun.github.io/spo/v0.3.g1a92cb44/context.jsonld" }</pre>
+<pre>{ "@context": "https://fusion-yun.github.io/spo/v0.3.g8bbea372/context.jsonld" }</pre>
 <p>Referencing this ontology — a LinkML <code>imports:</code> entry, a JSON-LD
 <code>@context</code> prefix, an <code>owl:imports</code> statement, or an <code>@type</code>
 assertion — does <strong>not</strong> create a derivative work and is not restricted by the
@@ -55,5 +55,5 @@ NoDerivatives licence term.</p>
 <div class="mods"><span>spo-core</span><span>spo-types</span><span>spo-domain</span><span>spo-geometry</span><span>spo-signal</span><span>spo-time</span><span>spo-quantity</span><span>spo-vocab</span><span>spo-provenance</span><span>spo</span></div>
 
 <footer>Copyright &copy; 2026 YU Zhi (于治), ASIPP — Institute of Plasma Physics,
-Chinese Academy of Sciences. Published under CC BY-ND 4.0.</footer>
+Chinese Academy of Sciences. Published under Apache 2.0.</footer>
 </main></body></html>

@@ -1,11 +1,11 @@
-# SPDX-License-Identifier: CC-BY-ND-4.0
+# SPDX-License-Identifier: Apache-2.0
 # spo-core — BFO-3D upper anchors + 4D spacetime extension (hand-written, durable).
 # Axis-1 common ontology root (FYTOK-REPORT-05 §转换体系). Per-IDS generated Spo
 # schemas import this (via the `spo` aggregator) instead of redefining BFO classes.
 #
 # IRIs follow BFO 2020 / OBO Foundry / W3C PROV (version-sensitive — verify against the
 # pinned ontology release). T-Box only (SPM-ADR-14 D1); no runtime dependency.
-id: https://fusion-yun.github.io/spo/v0.3.g1a92cb44/core
+id: https://fusion-yun.github.io/spo/v0.3.g8bbea372/core
 name: spo-core
 title: Spo Core — BFO-3D Upper Anchors + 4D Spacetime Extension
 description: >-
@@ -14,11 +14,11 @@ description: >-
   (SpacetimeRegion / SpacetimeWorm, bridged to the 3D core by slice ⊣ stack). FYTOK-REPORT-05
   §rpt05-4d. Domain-specific classes live in sibling modules (spo-domain / -geometry / -signal /
   -vocab / -provenance / -types).
-license: CC-BY-ND-4.0
+license: Apache-2.0
 prefixes:
   linkml: https://w3id.org/linkml/
   sp: https://w3id.org/spdata/v1/
-  spo: https://fusion-yun.github.io/spo/v0.3.g1a92cb44/
+  spo: https://fusion-yun.github.io/spo/v0.3.g8bbea372/
   bfo: http://purl.obolibrary.org/obo/BFO_
   iao: http://purl.obolibrary.org/obo/IAO_
   obi: http://purl.obolibrary.org/obo/OBI_

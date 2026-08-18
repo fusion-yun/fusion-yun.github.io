@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: CC-BY-ND-4.0
+# SPDX-License-Identifier: Apache-2.0
 # spo-time — the general TIME ontology: time regions refined to instants/intervals, the
 # discretized TimeAxis, and the AoS/SoA duality made first-class (TimeSlice vs TimeSeries as
 # two REPRESENTATIONS of one temporally extended referent), plus the 4D SpacetimeMesh.
@@ -14,7 +14,7 @@
 #   * A 4D spacetime grid is a Mesh whose discretized region is a SpacetimeRegion:
 #     SpacetimeMesh = spatial base mesh × TimeAxis (product form) or an unstructured 4D GGD.
 # BFO IRIs per BFO 2020 / OBO Foundry (version-sensitive). T-Box only; no runtime dependency.
-id: https://fusion-yun.github.io/spo/v0.3.g1a92cb44/time
+id: https://fusion-yun.github.io/spo/v0.3.g8bbea372/time
 name: spo-time
 title: Spo Time — Instants, Time Axis, AoS/SoA Duality, Spacetime Mesh
 description: >-
@@ -23,11 +23,11 @@ description: >-
   TimeSliceSeries (AoS, array of TimeSlice) and TimeSeries (SoA, channels of Signal) — makes
   the AoS/SoA duality explicit (dual_view_of, slice ⊣ stack); SpacetimeMesh discretizes a
   SpacetimeRegion (4D grid adaptation).
-license: CC-BY-ND-4.0
+license: Apache-2.0
 prefixes:
   linkml: https://w3id.org/linkml/
   sp: https://w3id.org/spdata/v1/
-  spo: https://fusion-yun.github.io/spo/v0.3.g1a92cb44/
+  spo: https://fusion-yun.github.io/spo/v0.3.g8bbea372/
   bfo: http://purl.obolibrary.org/obo/BFO_
   iao: http://purl.obolibrary.org/obo/IAO_
 default_prefix: spo

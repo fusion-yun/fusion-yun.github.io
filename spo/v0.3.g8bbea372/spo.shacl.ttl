@@ -2,7 +2,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
-@prefix spo: <https://fusion-yun.github.io/spo/v0.3.g1a92cb44/> .
+@prefix spo: <https://fusion-yun.github.io/spo/v0.3.g8bbea372/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://purl.obolibrary.org/obo/BFO_0000002> a sh:NodeShape ;
