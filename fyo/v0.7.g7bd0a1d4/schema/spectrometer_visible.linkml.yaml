@@ -1,0 +1,969 @@
+id: https://fusion-yun.github.io/fyo/v0.draft/spectrometer_visible
+name: fyo-imas-spectrometer_visible
+title: fyo IDS `spectrometer_visible` (lifted, DD 4.1.1)
+description: 'Semantic lift of IMAS DD IDS `spectrometer_visible` onto SpO/BFO (FYTOK-ADR-102): structures
+  grounded as ICEs, time-slice AoS elements as spo:TimeSlice, leaves annotated with their spo carrier
+  classes (Signal / Field / Function / QuantityValue / TimeAxis). Layout is preserved in dd_* annotations
+  (reverse map ω).'
+license: CC-BY-ND-4.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  fyo: https://fusion-yun.github.io/fyo/v0.draft/
+  spo: https://fusion-yun.github.io/spo/v0.draft/
+  imas: https://imas.iter.org/dd/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+default_prefix: fyo
+default_range: string
+imports:
+- linkml:types
+- spo
+- fyo-core
+- fyo-common
+annotations:
+  generated_by: dd2fyo 0.1.0
+  dd_version: 4.1.1
+  dd_source: IMAS DD schemas/spectrometer_visible/dd_spectrometer_visible.xsd via dd2linkml (mechanical
+    layer — transient build artifact, not in-tree)
+  fyo_category: diagnostic
+  fyo_root_class: SpectrometerVisible
+  provenance: DO NOT EDIT — regenerate via scripts/dd2fyo.py.
+classes:
+  SpectrometerVisible:
+    is_a: IDS
+    description: Spectrometer in visible light range diagnostic
+    annotations:
+      dd_path: spectrometer_visible
+      fyo_category: diagnostic
+    attributes:
+      ids_properties:
+        range: IdsProperties
+        description: Interface Data Structure properties. This element identifies the node above as an
+          IDS
+      detector_layout:
+        range: string
+        description: 'Layout of the detector grid employed. Ex: ''4x16'', ''4x32'', ''1x18'''
+        annotations:
+          dd_type: static
+      channel:
+        range: SpectroVisChannel
+        multivalued: true
+        description: Set of channels (detector or pixel of a camera)
+        annotations:
+          dd_max_occurs: '240'
+          dd_coordinate1: 1...N
+      latency:
+        range: float
+        description: Upper bound of the delay between physical information received by the detector and
+          data available on the real-time (RT) network.
+        annotations:
+          dd_type: static
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      code:
+        range: IdsCode
+        description: Generic decription of the code-specific parameters for the code that has produced
+          this IDS
+      time:
+        range: float
+        multivalued: true
+        description: Generic time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  SpectroVisChannel:
+    is_a: InformationContentEntity
+    description: Set of channels (detector or pixel of a camera)
+    annotations:
+      dd_type_name: spectro_vis_channel
+      dd_path: spectrometer_visible/channel
+    attributes:
+      name:
+        range: string
+        description: Name of the channel
+        annotations:
+          dd_type: static
+      object_observed:
+        range: string
+        description: Main object observed by the channel
+        annotations:
+          dd_type: static
+      type:
+        range: Identifier
+        description: 'Type of spectrometer the channel is connected to (index=1: grating, 2: filter)'
+      detector:
+        range: DetectorAperture
+        description: Detector description
+      aperture:
+        range: DetectorAperture
+        multivalued: true
+        description: Description of a set of collimating apertures
+        annotations:
+          dd_max_occurs: '5'
+          dd_coordinate1: 1...N
+      etendue:
+        range: float
+        description: Etendue (geometric extent) of the channel's optical system
+        annotations:
+          dd_type: static
+          dd_units: m^2.sr
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      etendue_method:
+        range: Identifier
+        description: 'Method used to calculate the etendue. Index = 0 : exact calculation with a 4D integral;
+          1 : approximation with first order formula (detector surface times solid angle subtended by
+          the apertures); 2 : other methods'
+      line_of_sight:
+        range: LineOfSight2points
+        description: Description of the line of sight of the channel, given by 2 points
+      detector_image:
+        range: DetectorImage
+        description: Image of the detector or pixel on the focal plane of the optical system
+      fibre_image:
+        range: DetectorImage
+        description: Image of the optical fibre on the focal plane of the optical system
+      light_collection_efficiencies:
+        range: SpectroVisChannelLightCollection
+        description: Light collection efficiencies (fraction of the local emission detected by the optical
+          system) for a list of points defining regions of interest. To be used for non-pinhole optics.
+      active_spatial_resolution:
+        range: SpectroVisChannelResolution
+        multivalued: true
+        description: In case of active spectroscopy, describes the spatial resolution of the measurement,
+          calculated as a convolution of the atomic smearing, magnetic and beam geometry smearing and
+          detector projection, for a set of time slices
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+      polarizer:
+        range: DetectorAperture
+        description: Polarizer description
+      polarizer_active:
+        range: integer
+        description: Indicator of whether a polarizer is present and active in the optical system (set
+          to 1 in this case, set to 0 or leave empty ottherwise)
+        annotations:
+          dd_type: static
+      grating_spectrometer:
+        range: SpectroVisChannelGrating
+        description: Quantities measured by the channel if connected to a grating spectrometer
+      filter_spectrometer:
+        range: SpectroVisChannelFilter
+        description: Quantities measured by the channel if connected to a filter spectrometer
+      validity_timed:
+        range: SignalInt1d
+        description: Indicator of the validity of the channel as a function of time (0 means valid, negative
+          values mean non-valid)
+      validity:
+        range: integer
+        description: Indicator of the validity of the channel for the whole acquisition period (0 means
+          valid, negative values mean non-valid)
+        annotations:
+          dd_type: static
+      isotope_ratios:
+        range: SpectroVisChannelIsotopes
+        description: Isotope ratios and related information
+      polarization_spectroscopy:
+        range: SpectroVisChannelPolarization
+        description: Physics quantities measured from polarized light spectroscopy
+      geometry_matrix:
+        range: SpectroVisGeometryMatrix
+        description: Description of geometry matrix (ray transfer matrix)
+      optical_element:
+        range: OpticalElement
+        multivalued: true
+        description: Set of optical elements
+        annotations:
+          dd_max_occurs: '10'
+          dd_coordinate1: 1...N
+      fibre_bundle:
+        range: FibreBundle
+        description: Description of the fibre bundle
+  DetectorImage:
+    is_a: InformationContentEntity
+    description: Image of the detector or pixel on the focal plane of the optical system
+    annotations:
+      dd_type_name: detector_image
+      dd_path: spectrometer_visible/channel/detector_image
+    attributes:
+      geometry_type:
+        range: integer
+        description: Type of geometry used to describe the image (1:'outline', 2:'circular')
+      outline:
+        range: Rphiz1dStatic
+        description: Coordinates of the points shaping the polygon of the image
+      circular:
+        range: DetectorImageCircular
+        description: Description of circular or elliptic image
+  DetectorImageCircular:
+    is_a: InformationContentEntity
+    description: Description of circular or elliptic image
+    annotations:
+      dd_type_name: detector_image_circular
+      dd_path: spectrometer_visible/channel/detector_image/circular
+    attributes:
+      radius:
+        range: float
+        description: Radius of the circle
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      ellipticity:
+        range: float
+        description: Ellipticity
+        annotations:
+          dd_type: static
+          dd_units: '1'
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  SpectroVisChannelLightCollection:
+    is_a: InformationContentEntity
+    description: Light collection efficiencies (fraction of the local emission detected by the optical
+      system) for a list of points defining regions of interest. To be used for non-pinhole optics.
+    annotations:
+      dd_type_name: spectro_vis_channel_light_collection
+      dd_path: spectrometer_visible/channel/light_collection_efficiencies
+    attributes:
+      values:
+        range: float
+        multivalued: true
+        description: Values of the light collection efficiencies
+        annotations:
+          dd_type: static
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../positions/r
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../positions/r
+      positions:
+        range: Rphiz1dStatic
+        description: List of positions for which the light collection efficiencies are provided
+  SpectroVisChannelResolution:
+    is_a: TimeSlice
+    description: In case of active spectroscopy, describes the spatial resolution of the measurement,
+      calculated as a convolution of the atomic smearing, magnetic and beam geometry smearing and detector
+      projection, for a set of time slices
+    annotations:
+      dd_type_name: spectro_vis_channel_resolution
+      dd_path: spectrometer_visible/channel/active_spatial_resolution
+      fyo_lift: time_slice
+    attributes:
+      centre:
+        range: Rphiz0dDynamicAos3
+        description: Position of the centre of the spatially resolved zone
+      width:
+        range: Rphiz0dDynamicAos3
+        description: Full width of the spatially resolved zone in the R, Z and phi directions
+      time:
+        range: float
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  SpectroVisChannelGrating:
+    is_a: InformationContentEntity
+    description: Quantities measured by the channel if connected to a grating spectrometer
+    annotations:
+      dd_type_name: spectro_vis_channel_grating
+      dd_path: spectrometer_visible/channel/grating_spectrometer
+    attributes:
+      grating:
+        range: float
+        description: Number of grating lines per unit length
+        annotations:
+          dd_type: static
+          dd_units: m^-1
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      slit_width:
+        range: float
+        description: Width of the slit (placed in the object focal plane)
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      wavelengths:
+        range: float
+        multivalued: true
+        description: Measured wavelengths
+        annotations:
+          dd_type: constant
+          dd_units: m
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      radiance_spectral:
+        range: SignalFlt2d
+        description: Calibrated spectral radiance (radiance per unit wavelength)
+        annotations:
+          dd_units: m^-2.s^-1.sr^-1.m^-1
+          dd_coordinate1: ../wavelengths
+          dd_coordinate2: time
+      intensity_spectrum:
+        range: SignalFlt2d
+        description: Intensity spectrum (not calibrated), i.e. number of photoelectrons detected by unit
+          time by a wavelength pixel of the channel, taking into account electronic gain compensation
+          and channels relative calibration
+        annotations:
+          dd_units: s^-1
+          dd_coordinate1: ../wavelengths
+          dd_coordinate2: time
+      exposure_time:
+        range: float
+        description: Exposure time
+        annotations:
+          dd_type: constant
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      processed_line:
+        range: SpectroVisChannelProcessedLine
+        multivalued: true
+        description: Set of processed spectral lines
+        annotations:
+          dd_max_occurs: '20'
+          dd_coordinate1: 1...N
+      radiance_calibration:
+        range: float
+        multivalued: true
+        description: Radiance calibration
+        annotations:
+          dd_type: static
+          dd_units: m^-3.sr^-1
+          dd_ndim: 1
+          dd_coordinate1: ../wavelengths
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../wavelengths
+      radiance_calibration_date:
+        range: string
+        description: Date of the radiance calibration (yyyy_mm_dd)
+        annotations:
+          dd_type: static
+      wavelength_calibration:
+        range: SpectroVisChannelWavelengthCalibration
+        description: 'Wavelength calibration data. The wavelength is obtained from the pixel index k by:
+          wavelength =  k * gain + offset. k is starting from 1.'
+      wavelength_calibration_date:
+        range: string
+        description: Date of the wavelength calibration (yyyy_mm_dd)
+        annotations:
+          dd_type: static
+      instrument_function:
+        range: float
+        multivalued: true
+        description: Array of Gaussian widths and amplitudes which as a sum make up the instrument function.
+          The instrument function is the shape that would be measured by a grating spectrometer if perfectly
+          monochromatic line emission would be used as input. F(lambda) = 1 / sqrt (2*pi) * sum( instrument_function(1,i)
+          / instrument_function(2,i)  ) * exp( -lambda^2 / (2 * instrument_function(2,i)^2) )  ), whereby
+          sum( instrument_function(1,i) ) = 1
+        annotations:
+          dd_type: static
+          dd_units: m
+          dd_ndim: 2
+          dd_coordinate1: 1...2
+          dd_coordinate2: 1...N
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...2,1...N
+  SpectroVisChannelProcessedLine:
+    is_a: InformationContentEntity
+    description: Set of processed spectral lines
+    annotations:
+      dd_type_name: spectro_vis_channel_processed_line
+      dd_path: spectrometer_visible/channel/grating_spectrometer/processed_line
+    attributes:
+      name:
+        range: string
+        description: 'String identifying the processed line. To avoid ambiguities, the following syntax
+          is used : element with ionization state_wavelength in Angstrom (e.g. WI_4000)'
+        annotations:
+          dd_type: constant
+      wavelength_central:
+        range: float
+        description: Central wavelength of the processed line
+        annotations:
+          dd_type: constant
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      radiance:
+        range: SignalFlt1d
+        description: Calibrated, background subtracted radiance (integrated over the spectrum for this
+          line)
+        annotations:
+          dd_units: m^-2.s^-1.sr^-1
+      intensity:
+        range: SignalFlt1d
+        description: Non-calibrated intensity (integrated over the spectrum for this line)
+        annotations:
+          dd_units: s^-1
+  SpectroVisChannelWavelengthCalibration:
+    is_a: InformationContentEntity
+    description: 'Wavelength calibration data. The wavelength is obtained from the pixel index k by: wavelength
+      =  k * gain + offset. k is starting from 1.'
+    annotations:
+      dd_type_name: spectro_vis_channel_wavelength_calibration
+      dd_path: spectrometer_visible/channel/grating_spectrometer/wavelength_calibration
+    attributes:
+      offset:
+        range: float
+        description: Offset
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      gain:
+        range: float
+        description: Gain
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  SpectroVisChannelFilter:
+    is_a: InformationContentEntity
+    description: Quantities measured by the channel if connected to a filter spectrometer
+    annotations:
+      dd_type_name: spectro_vis_channel_filter
+      dd_path: spectrometer_visible/channel/filter_spectrometer
+    attributes:
+      filter:
+        range: FilterSimpleStatic
+        description: Filter description
+      processed_line:
+        range: SpectroVisChannelProcessedLineFilter
+        multivalued: true
+        description: Set of processed spectral lines (normally a single line is filtered out, but it may
+          happen in some cases that several lines go through the filter).
+        annotations:
+          dd_max_occurs: '20'
+          dd_coordinate1: 1...N
+      output_voltage:
+        range: SignalFlt1d
+        description: Raw voltage output of the whole acquisition chain
+        annotations:
+          dd_units: V
+      photoelectric_voltage:
+        range: SignalFlt1d
+        description: Gain corrected and background subtracted voltage
+        annotations:
+          dd_units: V
+      photon_count:
+        range: SignalFlt1d
+        description: Detected photon count
+        annotations:
+          dd_units: s^-1
+      exposure_time:
+        range: float
+        description: Exposure time
+        annotations:
+          dd_type: constant
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      wavelengths:
+        range: float
+        multivalued: true
+        description: Array of wavelengths for radiance calibration
+        annotations:
+          dd_type: static
+          dd_units: m
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      radiance_calibration:
+        range: float
+        multivalued: true
+        description: Radiance calibration
+        annotations:
+          dd_type: static
+          dd_units: m^-3.sr^-1
+          dd_ndim: 1
+          dd_coordinate1: ../wavelengths
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../wavelengths
+      radiance_calibration_date:
+        range: string
+        description: Date of the radiance calibration (yyyy_mm_dd)
+        annotations:
+          dd_type: static
+      sensitivity:
+        range: float
+        multivalued: true
+        description: Photoelectric sensitivity of the detector. This is the conversion factor from the
+          received power on the detector into electric voltage depending on the wavelength
+        annotations:
+          dd_type: static
+          dd_units: V.W^-1
+          dd_ndim: 1
+          dd_coordinate1: ../wavelengths
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../wavelengths
+  FilterSimpleStatic:
+    is_a: InformationContentEntity
+    description: Filter description
+    annotations:
+      dd_type_name: filter_simple_static
+      dd_path: spectrometer_visible/channel/filter_spectrometer/filter
+    attributes:
+      wavelength_central:
+        range: float
+        description: Central wavelength of the filter
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      wavelength_width:
+        range: float
+        description: Filter transmission function width (at 90% level)
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  SpectroVisChannelProcessedLineFilter:
+    is_a: InformationContentEntity
+    description: Set of processed spectral lines (normally a single line is filtered out, but it may happen
+      in some cases that several lines go through the filter).
+    annotations:
+      dd_type_name: spectro_vis_channel_processed_line_filter
+      dd_path: spectrometer_visible/channel/filter_spectrometer/processed_line
+    attributes:
+      name:
+        range: string
+        description: 'String identifying the processed line. To avoid ambiguities, the following syntax
+          is used : element with ionization state_wavelength in Angstrom (e.g. WI_4000)'
+        annotations:
+          dd_type: constant
+      wavelength_central:
+        range: float
+        description: Central wavelength of the processed line
+        annotations:
+          dd_type: constant
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  SpectroVisChannelIsotopes:
+    is_a: InformationContentEntity
+    description: Isotope ratios and related information
+    annotations:
+      dd_type_name: spectro_vis_channel_isotopes
+      dd_path: spectrometer_visible/channel/isotope_ratios
+    attributes:
+      validity_timed:
+        range: integer
+        multivalued: true
+        description: Indicator of the validity of the isotope ratios as a function of time (0 means valid,
+          negative values mean non-valid)
+        annotations:
+          dd_type: dynamic
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      validity:
+        range: integer
+        description: Indicator of the validity of the isotope ratios for the whole acquisition period
+          (0 means valid, negative values mean non-valid)
+        annotations:
+          dd_type: static
+      signal_to_noise:
+        range: float
+        multivalued: true
+        description: Log10 of the ratio of the powers in two bands, one with the spectral lines of interest
+          (signal) the other without spectral lines (noise).
+        annotations:
+          dd_type: dynamic
+          dd_units: dB
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      method:
+        range: Identifier
+        description: Fitting method used to calculate isotope ratios
+      isotope:
+        range: SpectroVisChannelIsotopesIsotope
+        multivalued: true
+        description: Set of isotopes
+        annotations:
+          dd_max_occurs: '3'
+          dd_coordinate1: 1...N
+      time:
+        range: float
+        multivalued: true
+        description: Timebase for dynamic quantities at this level of the data structure
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  SpectroVisChannelIsotopesIsotope:
+    is_a: InformationContentEntity
+    description: Set of isotopes
+    annotations:
+      dd_type_name: spectro_vis_channel_isotopes_isotope
+      dd_path: spectrometer_visible/channel/isotope_ratios/isotope
+    attributes:
+      element:
+        range: PlasmaCompositionNeutralElementConstant
+        multivalued: true
+        description: List of elements forming the atom or molecule
+        annotations:
+          dd_max_occurs: '5'
+          dd_coordinate1: 1...N
+      name:
+        range: string
+        description: String identifying the species (H, D, T, 3He, 4He)
+        annotations:
+          dd_type: constant
+      density_ratio:
+        range: float
+        multivalued: true
+        description: Ratio of the density of neutrals of this isotope over the summed neutral densities
+          of all other isotopes described in the ../isotope array
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      cold_neutrals_fraction:
+        range: float
+        multivalued: true
+        description: Fraction of cold neutrals for this isotope (n_cold_neutrals/(n_cold_neutrals+n_hot_neutrals))
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      hot_neutrals_fraction:
+        range: float
+        multivalued: true
+        description: Fraction of hot neutrals for this isotope (n_hot_neutrals/(n_cold_neutrals+n_hot_neutrals))
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      cold_neutrals_temperature:
+        range: float
+        multivalued: true
+        description: Temperature of cold neutrals for this isotope
+        annotations:
+          dd_type: dynamic
+          dd_units: eV
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      hot_neutrals_temperature:
+        range: float
+        multivalued: true
+        description: Temperature of hot neutrals for this isotope
+        annotations:
+          dd_type: dynamic
+          dd_units: eV
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      time:
+        range: float
+        multivalued: true
+        description: Timebase for dynamic quantities at this level of the data structure
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  SpectroVisChannelPolarization:
+    is_a: InformationContentEntity
+    description: Physics quantities measured from polarized light spectroscopy
+    annotations:
+      dd_type_name: spectro_vis_channel_polarization
+      dd_path: spectrometer_visible/channel/polarization_spectroscopy
+    attributes:
+      e_field_lh_r:
+        range: float
+        multivalued: true
+        description: Lower Hybrid electric field component in the major radius direction
+        annotations:
+          dd_type: dynamic
+          dd_units: V.m^-1
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      e_field_lh_z:
+        range: float
+        multivalued: true
+        description: Lower Hybrid electric field component in the vertical direction
+        annotations:
+          dd_type: dynamic
+          dd_units: V.m^-1
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      e_field_lh_phi:
+        range: float
+        multivalued: true
+        description: Lower Hybrid electric field component in the toroidal direction
+        annotations:
+          dd_type: dynamic
+          dd_units: V.m^-1
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      b_field_modulus:
+        range: float
+        multivalued: true
+        description: Modulus of the magnetic field (always positive, irrespective of the sign convention
+          for the B-field direction), obtained from Zeeman effect fit
+        annotations:
+          dd_type: dynamic
+          dd_units: T
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      n_e:
+        range: float
+        multivalued: true
+        description: Electron density, obtained from Stark broadening fit
+        annotations:
+          dd_type: dynamic
+          dd_units: m^-3
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      temperature_cold_neutrals:
+        range: float
+        multivalued: true
+        description: Fit of cold neutrals temperature
+        annotations:
+          dd_type: dynamic
+          dd_units: eV
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      temperature_hot_neutrals:
+        range: float
+        multivalued: true
+        description: Fit of hot neutrals temperature
+        annotations:
+          dd_type: dynamic
+          dd_units: eV
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      velocity_cold_neutrals:
+        range: float
+        multivalued: true
+        description: Projection of the cold neutral velocity along the line of sight, positive when going
+          from first point to second point of the line of sight
+        annotations:
+          dd_type: dynamic
+          dd_units: m.s^-1
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      velocity_hot_neutrals:
+        range: float
+        multivalued: true
+        description: Projection of the hot neutral velocity along the line of sight, positive when going
+          from first point to second point of the line of sight
+        annotations:
+          dd_type: dynamic
+          dd_units: m.s^-1
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      time:
+        range: float
+        multivalued: true
+        description: Timebase for dynamic quantities at this level of the data structure
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  SpectroVisGeometryMatrix:
+    is_a: InformationContentEntity
+    description: Description of geometry matrix (ray transfer matrix)
+    annotations:
+      dd_type_name: spectro_vis_geometry_matrix
+      dd_path: spectrometer_visible/channel/geometry_matrix
+    attributes:
+      with_reflections:
+        range: SpectroVisGeometryMatrixStep2
+        description: Geometry matrix with reflections
+      without_reflections:
+        range: SpectroVisGeometryMatrixStep2
+        description: Geometry matrix without reflections
+      interpolated:
+        range: SpectroVisGeometryMatrixInterpolated
+        description: Interpolated geometry matrix for reflected light
+      voxel_map:
+        range: integer
+        multivalued: true
+        description: Voxel map for geometry matrix. The cells with same number are merged in the computation
+          into a single emission source meta-cell (the voxel). Cells with number -1 are excluded. Voxel
+          count starts from 0.
+        annotations:
+          dd_type: static
+          dd_ndim: 3
+          dd_coordinate1: ../emission_grid/dim1
+          dd_coordinate2: ../emission_grid/dim2
+          dd_coordinate3: ../emission_grid/dim3
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../emission_grid/dim1,../emission_grid/dim2,../emission_grid/dim3
+      voxels_n:
+        range: integer
+        description: Number of voxels defined in the voxel_map.
+        annotations:
+          dd_type: static
+      emission_grid:
+        range: GeometryMatrixEmission
+        description: Grid defining the light emission cells
+  SpectroVisGeometryMatrixStep2:
+    is_a: InformationContentEntity
+    description: Geometry matrix with reflections
+    annotations:
+      dd_type_name: spectro_vis_geometry_matrix_step2
+      dd_path: spectrometer_visible/channel/geometry_matrix/with_reflections
+    attributes:
+      data:
+        range: float
+        multivalued: true
+        description: The Ray Transfer Matrix (RTM, or geometry matrix) here provides transformation of
+          the signal from each individual unit light source (voxel) to the receiver (detector or head
+          of an optic fibre). The emission profile has [photons.m^-3.s^-1.sr^-1] units and radiance signal
+          has [photons.m^-2.s^-1.sr^-1] units. So the RTM has [m] units. This data is stored in a sparse
+          form, i.e. the array contains only the non-zero element of the Ray transfer matrix. The voxel
+          index corresponding to an element of this array can be found in voxel_indices
+        annotations:
+          dd_type: static
+          dd_units: m
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      voxel_indices:
+        range: integer
+        multivalued: true
+        description: List of voxel indices (defined in the voxel map) used in the sparse data array
+        annotations:
+          dd_type: static
+          dd_ndim: 1
+          dd_coordinate1: ../data
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../data
+  SpectroVisGeometryMatrixInterpolated:
+    is_a: InformationContentEntity
+    description: Interpolated geometry matrix for reflected light
+    annotations:
+      dd_type_name: spectro_vis_geometry_matrix_interpolated
+      dd_path: spectrometer_visible/channel/geometry_matrix/interpolated
+    attributes:
+      r:
+        range: float
+        multivalued: true
+        description: Major radius of interpolation knots
+        annotations:
+          dd_type: constant
+          dd_units: m
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      z:
+        range: float
+        multivalued: true
+        description: Height of interpolation knots
+        annotations:
+          dd_type: constant
+          dd_units: m
+          dd_ndim: 1
+          dd_coordinate1: ../r
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../r
+      phi:
+        range: float
+        multivalued: true
+        description: Toroidal angle (oriented counter-clockwise when viewing from above) of interpolation
+          knots
+        annotations:
+          dd_type: constant
+          dd_units: rad
+          dd_ndim: 1
+          dd_coordinate1: ../r
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../r
+      data:
+        range: float
+        multivalued: true
+        description: Interpolated Ray Transfer Matrix (RTM, or geometry matrix), which provides transformation
+          of the reflected light from each interpolation knot to the receiver (detector or head of an
+          optic fibre). When convolving with an emission profile, the values must be interpolated to the
+          emission grid and multiplied by the volume of the grid cells. The interpolated matrix is given
+          on an array of interpolation knots of coordinates r, z and phi
+        annotations:
+          dd_type: constant
+          dd_units: m^-2
+          dd_ndim: 1
+          dd_coordinate1: ../r
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../r

@@ -1,0 +1,2109 @@
+id: https://fusion-yun.github.io/fyo/v0.draft/wall
+name: fyo-imas-wall
+title: fyo IDS `wall` (lifted, DD 4.1.1)
+description: 'Semantic lift of IMAS DD IDS `wall` onto SpO/BFO (FYTOK-ADR-102): structures grounded as
+  ICEs, time-slice AoS elements as spo:TimeSlice, leaves annotated with their spo carrier classes (Signal
+  / Field / Function / QuantityValue / TimeAxis). Layout is preserved in dd_* annotations (reverse map
+  ω).'
+license: CC-BY-ND-4.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  fyo: https://fusion-yun.github.io/fyo/v0.draft/
+  spo: https://fusion-yun.github.io/spo/v0.draft/
+  imas: https://imas.iter.org/dd/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+default_prefix: fyo
+default_range: string
+imports:
+- linkml:types
+- spo
+- fyo-core
+- fyo-common
+annotations:
+  generated_by: dd2fyo 0.1.0
+  dd_version: 4.1.1
+  dd_source: IMAS DD schemas/wall/dd_wall.xsd via dd2linkml (mechanical layer — transient build artifact,
+    not in-tree)
+  fyo_category: device
+  fyo_root_class: Wall
+  provenance: DO NOT EDIT — regenerate via scripts/dd2fyo.py.
+classes:
+  Wall:
+    is_a: IDS
+    description: Description of the torus wall and its interaction with the plasma
+    annotations:
+      dd_path: wall
+      fyo_category: device
+    attributes:
+      ids_properties:
+        range: IdsProperties
+        description: Interface Data Structure properties. This element identifies the node above as an
+          IDS
+      temperature_reference:
+        range: TemperatureReference
+        description: Reference temperature for which the machine description data is given in this IDS
+      first_wall_surface_area:
+        range: float
+        description: First wall surface area
+        annotations:
+          dd_type: static
+          dd_units: m^2
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      first_wall_power_flux_peak:
+        range: SignalFlt1d
+        description: Peak power flux on the first wall (including divertors)
+        annotations:
+          dd_units: W.m^-2
+      first_wall_power_flux_peak_outside_divertors:
+        range: SignalFlt1d
+        description: Peak power flux on the first wall (excluding the divertors surface)
+        annotations:
+          dd_units: W.m^-2
+      first_wall_enclosed_volume:
+        range: float
+        description: Volume available to gas or plasma enclosed by the first wall contour
+        annotations:
+          dd_type: static
+          dd_units: m^3
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      global_quantities:
+        range: WallGlobalQuantitites
+        description: Simple 0D description of plasma-wall interaction
+      description_2d:
+        range: Wall2d
+        multivalued: true
+        description: Set of 2D wall descriptions, for each type of possible physics or engineering configurations
+          necessary (gas tight vs wall with ports and holes, coarse vs fine representation, single contour
+          limiter, disjoint gapped plasma facing components, ...). A simplified description of the toroidal
+          extension of the 2D contours is also provided by using the phi_extensions nodes.
+        annotations:
+          dd_max_occurs: '3'
+          dd_coordinate1: 1...N
+      description_ggd:
+        range: WallDescriptionGgd
+        multivalued: true
+        description: Set of 3D wall descriptions, described using the GGD, for each type of possible physics
+          or engineering configurations necessary (gas tight vs wall with ports and holes, coarse vs fine
+          representation, ...).
+        annotations:
+          dd_max_occurs: '3'
+          dd_coordinate1: 1...N
+      code:
+        range: IdsCode
+        description: Generic decription of the code-specific parameters for the code that has produced
+          this IDS
+      time:
+        range: float
+        multivalued: true
+        description: Generic time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  TemperatureReference:
+    is_a: InformationContentEntity
+    description: Reference temperature for which the machine description data is given in this IDS
+    annotations:
+      dd_type_name: temperature_reference
+      dd_path: wall/temperature_reference
+    attributes:
+      description:
+        range: string
+        description: 'Description of how the reference temperature is defined : for which object, at which
+          location, ...'
+        annotations:
+          dd_type: static
+      data:
+        range: float
+        description: Reference temperature
+        annotations:
+          dd_type: static
+          dd_units: K
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  WallGlobalQuantitites:
+    is_a: InformationContentEntity
+    description: Simple 0D description of plasma-wall interaction
+    annotations:
+      dd_type_name: wall_global_quantitites
+      dd_path: wall/global_quantities
+    attributes:
+      electrons:
+        range: WallGlobalQuantititesElectrons
+        description: Quantities related to electrons
+      neutral:
+        range: WallGlobalQuantititesNeutral
+        multivalued: true
+        description: Quantities related to the various neutral species
+        annotations:
+          dd_max_occurs: '12'
+          dd_coordinate1: 1...N
+      temperature:
+        range: float
+        multivalued: true
+        description: Wall temperature
+        annotations:
+          dd_type: dynamic
+          dd_units: K
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_incident:
+        range: float
+        multivalued: true
+        description: Total power incident on the wall. This power is split in the various physical categories
+          listed below
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_conducted:
+        range: float
+        multivalued: true
+        description: Power conducted by the plasma onto the wall
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_convected:
+        range: float
+        multivalued: true
+        description: Power convected by the plasma onto the wall
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_radiated:
+        range: float
+        multivalued: true
+        description: Net radiated power from plasma onto the wall (incident-reflected)
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_black_body:
+        range: float
+        multivalued: true
+        description: Black body radiated power emitted from the wall (emissivity is included)
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_neutrals:
+        range: float
+        multivalued: true
+        description: Net power from neutrals on the wall  (positive means power is deposited on the wall)
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_recombination_plasma:
+        range: float
+        multivalued: true
+        description: Power deposited on the wall due to recombination of plasma ions
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_recombination_neutrals:
+        range: float
+        multivalued: true
+        description: Power deposited on the wall due to recombination of neutrals into a ground state
+          (e.g. molecules)
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_currents:
+        range: float
+        multivalued: true
+        description: Power deposited on the wall due to electric currents (positive means power is deposited
+          on the target)
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_to_cooling:
+        range: float
+        multivalued: true
+        description: Power to cooling systems
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_inner_target_ion_total:
+        range: float
+        multivalued: true
+        description: Total ion (summed over ion species) power on the inner target
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_density_inner_target_max:
+        range: float
+        multivalued: true
+        description: Maximum power density on the inner target
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_density_outer_target_max:
+        range: float
+        multivalued: true
+        description: Maximum power density on the outer target
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      current_phi:
+        range: float
+        multivalued: true
+        description: Toroidal current flowing in the vacuum vessel
+        annotations:
+          dd_type: dynamic
+          dd_units: A
+          dd_ndim: 1
+          dd_coordinate1: ../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+  WallGlobalQuantititesElectrons:
+    is_a: InformationContentEntity
+    description: Quantities related to electrons
+    annotations:
+      dd_type_name: wall_global_quantitites_electrons
+      dd_path: wall/global_quantities/electrons
+    attributes:
+      pumping_speed:
+        range: float
+        multivalued: true
+        description: Pumped particle flux (in equivalent electrons)
+        annotations:
+          dd_type: dynamic
+          dd_units: s^-1
+          dd_ndim: 1
+          dd_coordinate1: ../../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      particle_flux_from_plasma:
+        range: float
+        multivalued: true
+        description: Particle flux from the plasma (in equivalent electrons)
+        annotations:
+          dd_type: dynamic
+          dd_units: s^-1
+          dd_ndim: 1
+          dd_coordinate1: ../../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      particle_flux_from_wall:
+        range: float
+        multivalued: true
+        description: 'Particle flux from the wall corresponding to the conversion into various neutral
+          types (first dimension: 1: cold; 2: thermal; 3: fast), in equivalent electrons'
+        annotations:
+          dd_type: dynamic
+          dd_units: s^-1
+          dd_ndim: 2
+          dd_coordinate1: 1...3
+          dd_coordinate2: ../../../time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...3,../../../time
+      gas_puff:
+        range: float
+        multivalued: true
+        description: Gas puff rate (in equivalent electrons)
+        annotations:
+          dd_type: dynamic
+          dd_units: s^-1
+          dd_ndim: 1
+          dd_coordinate1: ../../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_inner_target:
+        range: float
+        multivalued: true
+        description: Electron power on the inner target
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_outer_target:
+        range: float
+        multivalued: true
+        description: Electron power on the inner target
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../../../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+  WallGlobalQuantititesNeutral:
+    is_a: InformationContentEntity
+    description: Quantities related to the various neutral species
+    annotations:
+      dd_type_name: wall_global_quantitites_neutral
+      dd_path: wall/global_quantities/neutral
+    attributes:
+      element:
+        range: PlasmaCompositionNeutralElementConstant
+        multivalued: true
+        description: List of elements forming the atom or molecule
+        annotations:
+          dd_max_occurs: '5'
+          dd_coordinate1: 1...N
+      name:
+        range: string
+        description: String identifying the species (e.g. H, D, CD4, ...)
+        annotations:
+          dd_type: constant
+      pumping_speed:
+        range: float
+        multivalued: true
+        description: Pumped particle flux for that species
+        annotations:
+          dd_type: dynamic
+          dd_units: s^-1
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      particle_flux_from_plasma:
+        range: float
+        multivalued: true
+        description: Particle flux from the plasma for that species
+        annotations:
+          dd_type: dynamic
+          dd_units: s^-1
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      particle_flux_from_wall:
+        range: float
+        multivalued: true
+        description: 'Particle flux from the wall corresponding to the conversion into various neutral
+          types (first dimension: 1: cold; 2: thermal; 3: fast)'
+        annotations:
+          dd_type: dynamic
+          dd_units: s^-1
+          dd_ndim: 2
+          dd_coordinate1: 1...3
+          dd_coordinate2: /time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...3,/time
+      gas_puff:
+        range: float
+        multivalued: true
+        description: Gas puff rate for that species
+        annotations:
+          dd_type: dynamic
+          dd_units: s^-1
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      wall_inventory:
+        range: float
+        multivalued: true
+        description: Wall inventory, i.e. cumulated exchange of neutral species between plasma and wall
+          from t = 0, positive if a species has gone to the wall, for that species
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      recycling_particles_coefficient:
+        range: float
+        multivalued: true
+        description: 'Particle recycling coefficient corresponding to the conversion into various neutral
+          types (first dimension: 1: cold; 2: thermal; 3: fast)'
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: 1...3
+          dd_coordinate2: /time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...3,/time
+      recycling_energy_coefficient:
+        range: float
+        multivalued: true
+        description: 'Energy recycling coefficient corresponding to the conversion into various neutral
+          types (first dimension: 1: cold; 2: thermal; 3: fast)'
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: 1...3
+          dd_coordinate2: /time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...3,/time
+      incident_species:
+        range: WallGlobalQuantititesNeutralOrigin
+        multivalued: true
+        description: Sputtering coefficients due to a set of incident species
+        annotations:
+          dd_max_occurs: '10'
+          dd_coordinate1: 1...N
+  WallGlobalQuantititesNeutralOrigin:
+    is_a: InformationContentEntity
+    description: Sputtering coefficients due to a set of incident species
+    annotations:
+      dd_type_name: wall_global_quantitites_neutral_origin
+      dd_path: wall/global_quantities/neutral/incident_species
+    attributes:
+      element:
+        range: PlasmaCompositionNeutralElementConstant
+        multivalued: true
+        description: List of elements forming the atom or molecule of the incident species
+        annotations:
+          dd_max_occurs: '5'
+          dd_coordinate1: 1...N
+      name:
+        range: string
+        description: String identifying the incident species (e.g. H, D, CD4, ...)
+        annotations:
+          dd_type: constant
+      angles:
+        range: float
+        multivalued: true
+        description: Array of incident angles of this incident species, on which the physical sputtering
+          coefficient is tabulated
+        annotations:
+          dd_type: constant
+          dd_units: rad
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      energies:
+        range: float
+        multivalued: true
+        description: Array of energies of this incident species, on which the physical sputtering coefficient
+          is tabulated
+        annotations:
+          dd_type: constant
+          dd_units: eV
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      sputtering_physical:
+        range: float
+        multivalued: true
+        description: Effective coefficient of physical sputtering due to this incident species. It is
+          assumed that all sputtered neutrals from the wall have the wall temperature (cold neutrals)
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: ../angles
+          dd_coordinate2: ../energies
+          dd_coordinate3: /time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../angles,../energies,/time
+      sputtering_chemical:
+        range: float
+        multivalued: true
+        description: Effective coefficient of chemical sputtering due to this incident species. It is
+          assumed that all sputtered neutrals from the wall have the wall temperature (cold neutrals)
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      sputtering_physical_coefficient:
+        range: float
+        multivalued: true
+        description: 'Effective coefficient of physical sputtering for various neutral types (first dimension:
+          1: cold; 2: thermal; 3: fast), due to this incident species and for various energies (second
+          dimension)'
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 3
+          dd_coordinate1: 1...3
+          dd_coordinate2: ../energies
+          dd_coordinate3: /time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...3,../energies,/time
+      sputtering_chemical_coefficient:
+        range: float
+        multivalued: true
+        description: 'Effective coefficient of chemical sputtering for various neutral types (first dimension:
+          1: cold; 2: thermal; 3: fast), due to this incident species'
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: 1...3
+          dd_coordinate2: /time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...3,/time
+  Wall2d:
+    is_a: InformationContentEntity
+    description: Set of 2D wall descriptions, for each type of possible physics or engineering configurations
+      necessary (gas tight vs wall with ports and holes, coarse vs fine representation, single contour
+      limiter, disjoint gapped plasma facing components, ...). A simplified description of the toroidal
+      extension of the 2D contours is also provided by using the phi_extensions nodes.
+    annotations:
+      dd_type_name: wall_2d
+      dd_path: wall/description_2d
+    attributes:
+      type:
+        range: Identifier
+        description: Type of the description
+      limiter:
+        range: Wall2dLimiter
+        description: Description of the immobile limiting surface(s) or plasma facing components for defining
+          the Last Closed Flux Surface.
+      mobile:
+        range: Wall2dMobile
+        description: In case of mobile plasma facing components, use the time-dependent description below
+          this node to provide the full outline of the closest PFC surfaces to the plasma. Even in such
+          a case, the 'limiter' structure is still used to provide the outermost limiting surface (can
+          be used e.g. to define the boundary of the mesh of equilibrium reconstruction codes)
+      vessel:
+        range: Vessel2d
+        description: 'Mechanical structure of the vacuum vessel. The vessel is described as a set of nested
+          layers with given physics properties; Two representations are admitted for each vessel unit
+          : annular (two contours) or block elements.'
+  Wall2dLimiter:
+    is_a: InformationContentEntity
+    description: Description of the immobile limiting surface(s) or plasma facing components for defining
+      the Last Closed Flux Surface.
+    annotations:
+      dd_type_name: wall_2d_limiter
+      dd_path: wall/description_2d/limiter
+    attributes:
+      type:
+        range: Identifier
+        description: Type of the limiter description. index = 0 for the official single contour limiter
+          and 1 for the official disjoint PFC structure like first wall. Additional representations needed
+          on a code-by-code basis follow same incremental pair tagging starting on index =2
+      unit:
+        range: Wall2dLimiterUnit
+        multivalued: true
+        description: Set of limiter units. Whenever relevant, multiple units should be ordered so that
+          they define contiguous sections, clockwise in the poloidal direction.
+        annotations:
+          dd_max_occurs: '33'
+          dd_coordinate1: 1...N
+  Wall2dLimiterUnit:
+    is_a: InformationContentEntity
+    description: Set of limiter units. Whenever relevant, multiple units should be ordered so that they
+      define contiguous sections, clockwise in the poloidal direction.
+    annotations:
+      dd_type_name: wall_2d_limiter_unit
+      dd_path: wall/description_2d/limiter/unit
+    attributes:
+      name:
+        range: string
+        description: 'Short string identifier (unique for a given device). Although the details may be
+          machine-specific, a tree-like syntax must be followed, listing first top level components, then
+          going down to finer element description. The tree levels are separated by a /, using a number
+          of levels relevant to the granularity of the description. Example : ic_antenna/a1/bumpers refers
+          to the bumpers of the a1 IC antenna'
+        annotations:
+          dd_type: static
+      description:
+        range: string
+        description: Description, e.g. “channel viewing the upper divertor”
+        annotations:
+          dd_type: static
+      component_type:
+        range: Identifier
+        description: Type of component of this unit
+      outline:
+        range: Rz1dStatic
+        description: Irregular outline of the limiting surface. Repeat the first point in case of a closed
+          contour
+      phi_extensions:
+        range: float
+        multivalued: true
+        description: Simplified description of toroidal angle extensions of the unit, by a list of zones
+          defined by their centre and full width (in toroidal angle).  In each of these zones, the unit
+          outline remains the same. Leave this node empty for an axisymmetric unit. The first dimension
+          gives the centre and full width toroidal angle values for the unit. The second dimension represents
+          the toroidal occurrences of the unit countour (i.e. the number of toroidal zones).
+        annotations:
+          dd_type: static
+          dd_units: rad
+          dd_ndim: 2
+          dd_coordinate1: 1...2
+          dd_coordinate2: 1...N
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...2,1...N
+      resistivity:
+        range: float
+        description: Resistivity of the limiter unit
+        annotations:
+          dd_type: static
+          dd_units: ohm.m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      midplane_thickness:
+        range: float
+        description: Thickness of this unit evaluated at the midplane (whenever relevant)
+        annotations:
+          dd_type: static
+          dd_units: m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      midplane_power_density_nuclear:
+        range: SignalFlt1d
+        description: Nuclear power density heating this unit evaluated at the midplane (whenever relevant)
+        annotations:
+          dd_units: W.m^-3
+      power_nuclear:
+        range: SignalFlt1d
+        description: Nuclear power heating this unit
+        annotations:
+          dd_units: W
+  Wall2dMobile:
+    is_a: InformationContentEntity
+    description: In case of mobile plasma facing components, use the time-dependent description below
+      this node to provide the full outline of the closest PFC surfaces to the plasma. Even in such a
+      case, the 'limiter' structure is still used to provide the outermost limiting surface (can be used
+      e.g. to define the boundary of the mesh of equilibrium reconstruction codes)
+    annotations:
+      dd_type_name: wall_2d_mobile
+      dd_path: wall/description_2d/mobile
+    attributes:
+      type:
+        range: Identifier
+        description: Type of the description
+      unit:
+        range: Wall2dMobileUnit
+        multivalued: true
+        description: Set of mobile units
+        annotations:
+          dd_max_occurs: '5'
+          dd_coordinate1: 1...N
+  Wall2dMobileUnit:
+    is_a: InformationContentEntity
+    description: Set of mobile units
+    annotations:
+      dd_type_name: wall_2d_mobile_unit
+      dd_path: wall/description_2d/mobile/unit
+    attributes:
+      name:
+        range: string
+        description: Name of the mobile unit
+        annotations:
+          dd_type: static
+      outline:
+        range: Rz1dDynamicAosTime
+        multivalued: true
+        description: Irregular outline of the mobile unit, for a set of time slices. Repeat the first
+          point in case of a closed contour
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+      phi_extensions:
+        range: float
+        multivalued: true
+        description: Simplified description of toroidal angle extensions of the unit, by a list of zones
+          defined by their centre and full width (in toroidal angle).  In each of these zones, the unit
+          outline remains the same. Leave this node empty for an axisymmetric unit. The first dimension
+          gives the centre and full width toroidal angle values for the unit. The second dimension represents
+          the toroidal occurrences of the unit countour (i.e. the number of toroidal zones).
+        annotations:
+          dd_type: static
+          dd_units: rad
+          dd_ndim: 2
+          dd_coordinate1: 1...2
+          dd_coordinate2: 1...N
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...2,1...N
+      resistivity:
+        range: float
+        description: Resistivity of the mobile unit
+        annotations:
+          dd_type: static
+          dd_units: ohm.m
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  Rz1dDynamicAosTime:
+    is_a: TimeSlice
+    description: Irregular outline of the mobile unit, for a set of time slices. Repeat the first point
+      in case of a closed contour
+    annotations:
+      dd_type_name: rz1d_dynamic_aos_time
+      dd_path: wall/description_2d/mobile/unit/outline
+      fyo_lift: time_slice
+    attributes:
+      r:
+        range: float
+        multivalued: true
+        description: Major radius
+        annotations:
+          dd_type: dynamic
+          dd_units: m
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      z:
+        range: float
+        multivalued: true
+        description: Height
+        annotations:
+          dd_type: dynamic
+          dd_units: m
+          dd_ndim: 1
+          dd_coordinate1: ../r
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../r
+      time:
+        range: float
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  WallDescriptionGgd:
+    is_a: InformationContentEntity
+    description: Set of 3D wall descriptions, described using the GGD, for each type of possible physics
+      or engineering configurations necessary (gas tight vs wall with ports and holes, coarse vs fine
+      representation, ...).
+    annotations:
+      dd_type_name: wall_description_ggd
+      dd_path: wall/description_ggd
+    attributes:
+      type:
+        range: Identifier
+        description: 'Type of wall: index = 0 for gas tight, 1 for a wall with holes/open ports, 2 for
+          a thin wall description'
+      grid_ggd:
+        range: GenericGridAos3Root
+        multivalued: true
+        description: Wall geometry described using the Generic Grid Description, for various time slices
+          (in case of mobile wall elements). The timebase of this array of structure must be a subset
+          of the timebase on which physical quantities are described (../ggd structure). Grid_subsets
+          are used to describe various  wall components in a modular way.
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+      material:
+        range: WallDescriptionGgdMaterial
+        multivalued: true
+        description: Material of each grid_ggd object, given for each slice of the grid_ggd time base
+          (the material is not supposed to change, but grid_ggd may evolve with time)
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+      component:
+        range: WallDescriptionGgdComponent
+        multivalued: true
+        description: Description of the components represented by various subsets, given for each slice
+          of the grid_ggd time base (the component description is not supposed to change, but grid_ggd
+          may evolve with time)
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+      thickness:
+        range: WallDescriptionGgdThickness
+        multivalued: true
+        description: In the case of a thin wall description, effective thickness of each surface element
+          of grid_ggd, given for each slice of the grid_ggd time base (the thickness is not supposed to
+          change, but grid_ggd may evolve with time)
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+      brdf:
+        range: WallDescriptionGgdBrdf
+        multivalued: true
+        description: Bidirectional Reflectance Distribution Function, given for each slice of the grid_ggd
+          time base (the component description is not supposed to change, but grid_ggd may evolve with
+          time)
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+      ggd:
+        range: WallDescriptionGgdGgd
+        multivalued: true
+        description: Wall physics quantities represented using the general grid description, for various
+          time slices.
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+  WallDescriptionGgdMaterial:
+    is_a: TimeSlice
+    description: Material of each grid_ggd object, given for each slice of the grid_ggd time base (the
+      material is not supposed to change, but grid_ggd may evolve with time)
+    annotations:
+      dd_type_name: wall_description_ggd_material
+      dd_path: wall/description_ggd/material
+      fyo_lift: time_slice
+    attributes:
+      grid_subset:
+        range: GenericGridIdentifier
+        multivalued: true
+        description: Material is described for various wall components (grid subsets), using the identifier
+          convention below
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      time:
+        range: float
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  GenericGridIdentifier:
+    is_a: InformationContentEntity
+    description: Material is described for various wall components (grid subsets), using the identifier
+      convention below
+    annotations:
+      dd_type_name: generic_grid_identifier
+      dd_path: wall/description_ggd/material/grid_subset
+    attributes:
+      grid_index:
+        range: integer
+        description: Index of the grid used to represent this quantity
+        annotations:
+          dd_type: dynamic
+      grid_subset_index:
+        range: integer
+        description: 'Index of the grid subset the data is provided on. Corresponds to the index used
+          in the grid subset definition: grid_subset(:)/identifier/index'
+        annotations:
+          dd_type: dynamic
+      identifiers:
+        range: IdentifierDynamicAos31d
+        description: Identifier values, one value is provided per element in the grid subset. If the size
+          of the child arrays is 1, their value applies to all elements of the subset.
+  IdentifierDynamicAos31d:
+    is_a: InformationContentEntity
+    description: Identifier values, one value is provided per element in the grid subset. If the size
+      of the child arrays is 1, their value applies to all elements of the subset.
+    annotations:
+      dd_type_name: identifier_dynamic_aos3_1d
+      dd_path: wall/description_ggd/material/grid_subset/identifiers
+    attributes:
+      names:
+        range: string
+        multivalued: true
+        description: Short string identifiers
+        annotations:
+          dd_type: dynamic
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      indices:
+        range: integer
+        multivalued: true
+        description: Integer identifiers (enumeration index within a list). Private identifier values
+          must be indicated by a negative index.
+        annotations:
+          dd_type: dynamic
+          dd_ndim: 1
+          dd_coordinate1: ../names
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../names
+      descriptions:
+        range: string
+        multivalued: true
+        description: Verbose description
+        annotations:
+          dd_type: dynamic
+          dd_ndim: 1
+          dd_coordinate1: ../names
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../names
+  WallDescriptionGgdComponent:
+    is_a: TimeSlice
+    description: Description of the components represented by various subsets, given for each slice of
+      the grid_ggd time base (the component description is not supposed to change, but grid_ggd may evolve
+      with time)
+    annotations:
+      dd_type_name: wall_description_ggd_component
+      dd_path: wall/description_ggd/component
+      fyo_lift: time_slice
+    attributes:
+      identifiers:
+        range: string
+        multivalued: true
+        description: 'Identifiers of the components (described in the various grid_subsets). Although
+          the details may be machine-specific, a tree-like syntax must be followed, listing first top
+          level components, then going down to finer element description. The tree levels are separated
+          by a /, using a number of levels relevant to the granularity of the description. Example : ic_antenna/a1/bumpers
+          refers to the bumpers of the a1 IC antenna'
+        annotations:
+          dd_type: dynamic
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      type:
+        range: GenericGridIdentifierSingle
+        multivalued: true
+        description: The component type is given for various grid_subsets, using the identifier convention
+          below
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: ../identifiers
+      time:
+        range: float
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  GenericGridIdentifierSingle:
+    is_a: InformationContentEntity
+    description: The component type is given for various grid_subsets, using the identifier convention
+      below
+    annotations:
+      dd_type_name: generic_grid_identifier_single
+      dd_path: wall/description_ggd/component/type
+    attributes:
+      grid_index:
+        range: integer
+        description: Index of the grid used to represent this quantity
+        annotations:
+          dd_type: dynamic
+      grid_subset_index:
+        range: integer
+        description: 'Index of the grid subset the data is provided on. Corresponds to the index used
+          in the grid subset definition: grid_subset(:)/identifier/index'
+        annotations:
+          dd_type: dynamic
+      identifier:
+        range: Identifier
+        description: Identifier value for the grid subset
+  WallDescriptionGgdThickness:
+    is_a: TimeSlice
+    description: In the case of a thin wall description, effective thickness of each surface element of
+      grid_ggd, given for each slice of the grid_ggd time base (the thickness is not supposed to change,
+      but grid_ggd may evolve with time)
+    annotations:
+      dd_type_name: wall_description_ggd_thickness
+      dd_path: wall/description_ggd/thickness
+      fyo_lift: time_slice
+    attributes:
+      grid_subset:
+        range: GenericGridScalar
+        multivalued: true
+        description: The thickness is given for various wall components (grid subsets)
+        annotations:
+          dd_units: m
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      time:
+        range: float
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  WallDescriptionGgdBrdf:
+    is_a: TimeSlice
+    description: Bidirectional Reflectance Distribution Function, given for each slice of the grid_ggd
+      time base (the component description is not supposed to change, but grid_ggd may evolve with time)
+    annotations:
+      dd_type_name: wall_description_ggd_brdf
+      dd_path: wall/description_ggd/brdf
+      fyo_lift: time_slice
+    attributes:
+      type:
+        range: GenericGridIdentifier
+        multivalued: true
+        description: The BRDF model type is described for various wall components (grid subsets), using
+          the identifier convention below
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      parameters:
+        range: GenericGridVector
+        multivalued: true
+        description: Parameters of the BRDF model for various wall components (grid subsets)
+        annotations:
+          dd_units: mixed
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      time:
+        range: float
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  GenericGridVector:
+    is_a: InformationContentEntity
+    description: Parameters of the BRDF model for various wall components (grid subsets)
+    annotations:
+      dd_type_name: generic_grid_vector
+      dd_path: wall/description_ggd/brdf/parameters
+    attributes:
+      grid_index:
+        range: integer
+        description: Index of the grid used to represent this quantity
+        annotations:
+          dd_type: dynamic
+      grid_subset_index:
+        range: integer
+        description: 'Index of the grid subset the data is provided on. Corresponds to the index used
+          in the grid subset definition: grid_subset(:)/identifier/index'
+        annotations:
+          dd_type: dynamic
+      values:
+        range: float
+        multivalued: true
+        description: 'List of vector components, one list per element in the grid subset. First dimension:
+          element index. Second dimension: vector component index.'
+        annotations:
+          dd_type: dynamic
+          dd_units: as_parent
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: 1...N
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,1...N
+      coefficients:
+        range: float
+        multivalued: true
+        description: 'Interpolation coefficients, to be used for a high precision evaluation of the physical
+          quantity with finite elements, provided per element in the grid subset (first dimension). Second
+          dimension: vector component index. Third dimension: coefficient index'
+        annotations:
+          dd_type: dynamic
+          dd_units: as_parent
+          dd_ndim: 3
+          dd_coordinate1: 1...N
+          dd_coordinate2: 1...N
+          dd_coordinate3: 1...N
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,1...N,1...N
+  WallDescriptionGgdGgd:
+    is_a: TimeSlice
+    description: Wall physics quantities represented using the general grid description, for various time
+      slices.
+    annotations:
+      dd_type_name: wall_description_ggd_ggd
+      dd_path: wall/description_ggd/ggd
+      fyo_lift: time_slice
+    attributes:
+      power_density:
+        range: GenericGridScalar
+        multivalued: true
+        description: Net power density arriving on the wall surface, for various wall components (grid
+          subsets)
+        annotations:
+          dd_units: W.m^-2
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      temperature:
+        range: GenericGridScalar
+        multivalued: true
+        description: Temperature of the wall, for various wall components (grid subsets)
+        annotations:
+          dd_units: K
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      v_biasing:
+        range: GenericGridScalar
+        multivalued: true
+        description: Electric potential applied to the wall element by outside means, for various wall
+          components (grid subsets). Different from the plasma electric potential or the sheath potential
+          drop.
+        annotations:
+          dd_units: V
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      recycling:
+        range: WallDescriptionGgdRecycling
+        description: Fraction of incoming particles that is reflected back to the vacuum chamber
+      particle_fluxes:
+        range: WallDescriptionGgdParticle
+        description: Particle fluxes. The incident and emitted components are distinguished. The net flux
+          received by the wall is equal to incident - emitted
+      energy_fluxes:
+        range: WallDescriptionGgdEnergy
+        description: Energy fluxes. The incident and emitted components are distinguished. The net flux
+          received by the wall is equal to incident - emitted
+      j_total:
+        range: GenericGridVectorComponentsRphiz
+        multivalued: true
+        description: Total current density, given on various grid subsets
+        annotations:
+          dd_units: A.m^-2
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      b_field:
+        range: GenericGridVectorComponentsRphiz
+        multivalued: true
+        description: Magnetic field, given on various grid subsets
+        annotations:
+          dd_units: T
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      em_force_density:
+        range: GenericGridVectorComponentsRphiz
+        multivalued: true
+        description: Electromagnetic force density computed by the cross-product of j_total x b_field
+          and given on various grid subsets
+        annotations:
+          dd_units: N.m^-3
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      e_field:
+        range: GenericGridVectorComponentsRphiz
+        multivalued: true
+        description: Electric field, given on various grid subsets
+        annotations:
+          dd_units: V.m^-1
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      a_field:
+        range: GenericGridVectorComponentsRphiz
+        multivalued: true
+        description: Magnetic vector potential, given on various grid subsets
+        annotations:
+          dd_units: T.m
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      psi:
+        range: GenericGridScalar
+        multivalued: true
+        description: Poloidal flux, given on various grid subsets
+        annotations:
+          dd_units: Wb
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      phi_potential:
+        range: GenericGridScalar
+        multivalued: true
+        description: Electric potential, given on various grid subsets
+        annotations:
+          dd_units: V
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      resistivity:
+        range: GenericGridScalar
+        multivalued: true
+        description: Resistivity, given on various grid subsets
+        annotations:
+          dd_units: ohm.m
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      time:
+        range: float
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  WallDescriptionGgdRecycling:
+    is_a: InformationContentEntity
+    description: Fraction of incoming particles that is reflected back to the vacuum chamber
+    annotations:
+      dd_type_name: wall_description_ggd_recycling
+      dd_path: wall/description_ggd/ggd/recycling
+    attributes:
+      ion:
+        range: WallDescriptionGgdRecyclingIon
+        multivalued: true
+        description: Recycling coefficients for the various ion species, in the sense of isonuclear or
+          isomolecular sequences. Ionization states (and other types of states) must be differentiated
+          at the state level below
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      neutral:
+        range: WallDescriptionGgdRecyclingNeutral
+        multivalued: true
+        description: Recycling coefficients for the various neutral species
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  WallDescriptionGgdRecyclingIon:
+    is_a: InformationContentEntity
+    description: Recycling coefficients for the various ion species, in the sense of isonuclear or isomolecular
+      sequences. Ionization states (and other types of states) must be differentiated at the state level
+      below
+    annotations:
+      dd_type_name: wall_description_ggd_recycling_ion
+      dd_path: wall/description_ggd/ggd/recycling/ion
+    attributes:
+      element:
+        range: PlasmaCompositionNeutralElement
+        multivalued: true
+        description: List of elements forming the atom or molecule
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      z_ion:
+        range: float
+        description: Ion charge (of the dominant ionization state; lumped ions are allowed)
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      name:
+        range: string
+        description: String identifying ion (e.g. H, D, T, He, C, D2, ...)
+        annotations:
+          dd_type: dynamic
+      neutral_index:
+        range: integer
+        description: Index of the corresponding neutral species in the ../../neutral array
+        annotations:
+          dd_type: dynamic
+      coefficient:
+        range: GenericGridScalar
+        multivalued: true
+        description: Recycling coefficient for various wall components (grid subsets)
+        annotations:
+          dd_units: '1'
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      multiple_states_flag:
+        range: integer
+        description: 'Multiple states calculation flag : 0-Only the ''ion'' level is considered and the
+          ''state'' array of structure is empty; 1-Ion states are considered and are described in the
+          ''state'' array of structure'
+        annotations:
+          dd_type: dynamic
+      state:
+        range: WallDescriptionGgdRecyclingIonState
+        multivalued: true
+        description: Fluxes related to the different states of the species
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  WallDescriptionGgdRecyclingIonState:
+    is_a: InformationContentEntity
+    description: Fluxes related to the different states of the species
+    annotations:
+      dd_type_name: wall_description_ggd_recycling_ion_state
+      dd_path: wall/description_ggd/ggd/recycling/ion/state
+    attributes:
+      z_min:
+        range: float
+        description: Minimum Z of the charge state bundle
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      z_max:
+        range: float
+        description: Maximum Z of the charge state bundle
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      name:
+        range: string
+        description: String identifying charge state (e.g. C+, C+2 , C+3, C+4, C+5, C+6, ...)
+        annotations:
+          dd_type: dynamic
+      vibrational_level:
+        range: float
+        description: Vibrational level (can be bundled)
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      vibrational_mode:
+        range: string
+        description: Vibrational mode of this state, e.g. "A_g". Need to define, or adopt a standard nomenclature.
+        annotations:
+          dd_type: dynamic
+      electron_configuration:
+        range: string
+        description: Configuration of atomic orbitals of this state, e.g. 1s2-2s1
+        annotations:
+          dd_type: dynamic
+      coefficient:
+        range: GenericGridScalar
+        multivalued: true
+        description: Recycling coefficient for various wall components (grid subsets)
+        annotations:
+          dd_units: '1'
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  WallDescriptionGgdRecyclingNeutral:
+    is_a: InformationContentEntity
+    description: Recycling coefficients for the various neutral species
+    annotations:
+      dd_type_name: wall_description_ggd_recycling_neutral
+      dd_path: wall/description_ggd/ggd/recycling/neutral
+    attributes:
+      element:
+        range: PlasmaCompositionNeutralElement
+        multivalued: true
+        description: List of elements forming the atom or molecule
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      name:
+        range: string
+        description: String identifying neutral (e.g. H, D, T, He, C, ...)
+        annotations:
+          dd_type: dynamic
+      ion_index:
+        range: integer
+        description: Index of the corresponding ion species in the ../../ion array
+        annotations:
+          dd_type: dynamic
+      coefficient:
+        range: GenericGridScalar
+        multivalued: true
+        description: Recycling coefficient for various wall components (grid subsets)
+        annotations:
+          dd_units: '1'
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      multiple_states_flag:
+        range: integer
+        description: 'Multiple states calculation flag : 0-Only one state is considered; 1-Multiple states
+          are considered and are described in the state structure'
+        annotations:
+          dd_type: dynamic
+      state:
+        range: WallDescriptionGgdRecyclingNeutralState
+        multivalued: true
+        description: Fluxes related to the different states of the species
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  WallDescriptionGgdRecyclingNeutralState:
+    is_a: InformationContentEntity
+    description: Fluxes related to the different states of the species
+    annotations:
+      dd_type_name: wall_description_ggd_recycling_neutral_state
+      dd_path: wall/description_ggd/ggd/recycling/neutral/state
+    attributes:
+      name:
+        range: string
+        description: String identifying state
+        annotations:
+          dd_type: dynamic
+      vibrational_level:
+        range: float
+        description: Vibrational level (can be bundled)
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      vibrational_mode:
+        range: string
+        description: Vibrational mode of this state, e.g. "A_g". Need to define, or adopt a standard nomenclature.
+        annotations:
+          dd_type: dynamic
+      neutral_type:
+        range: Identifier
+        description: 'Neutral type, in terms of energy. ID =1: cold; 2: thermal; 3: fast; 4: NBI'
+      electron_configuration:
+        range: string
+        description: Configuration of atomic orbitals of this state, e.g. 1s2-2s1
+        annotations:
+          dd_type: dynamic
+      coefficient:
+        range: GenericGridScalar
+        multivalued: true
+        description: Recycling coefficient for various wall components (grid subsets)
+        annotations:
+          dd_units: '1'
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  WallDescriptionGgdParticle:
+    is_a: InformationContentEntity
+    description: Particle fluxes. The incident and emitted components are distinguished. The net flux
+      received by the wall is equal to incident - emitted
+    annotations:
+      dd_type_name: wall_description_ggd_particle
+      dd_path: wall/description_ggd/ggd/particle_fluxes
+    attributes:
+      electrons:
+        range: WallDescriptionGgdParticleEl
+        description: Electron fluxes
+      ion:
+        range: WallDescriptionGgdParticleIon
+        multivalued: true
+        description: Fluxes related to the various ion species, in the sense of isonuclear or isomolecular
+          sequences. Ionization states (and other types of states) must be differentiated at the state
+          level below
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      neutral:
+        range: WallDescriptionGgdParticleNeutral
+        multivalued: true
+        description: Neutral species fluxes
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  WallDescriptionGgdParticleEl:
+    is_a: InformationContentEntity
+    description: Electron fluxes
+    annotations:
+      dd_type_name: wall_description_ggd_particle_el
+      dd_path: wall/description_ggd/ggd/particle_fluxes/electrons
+    attributes:
+      incident:
+        range: GenericGridScalar
+        multivalued: true
+        description: Incident fluxes for various wall components (grid subsets)
+        annotations:
+          dd_units: m^-2.s^-1
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      emitted:
+        range: GenericGridScalar
+        multivalued: true
+        description: Emitted fluxes for various wall components (grid subsets)
+        annotations:
+          dd_units: m^-2.s^-1
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  WallDescriptionGgdParticleIon:
+    is_a: InformationContentEntity
+    description: Fluxes related to the various ion species, in the sense of isonuclear or isomolecular
+      sequences. Ionization states (and other types of states) must be differentiated at the state level
+      below
+    annotations:
+      dd_type_name: wall_description_ggd_particle_ion
+      dd_path: wall/description_ggd/ggd/particle_fluxes/ion
+    attributes:
+      element:
+        range: PlasmaCompositionNeutralElement
+        multivalued: true
+        description: List of elements forming the atom or molecule
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      z_ion:
+        range: float
+        description: Ion charge (of the dominant ionization state; lumped ions are allowed)
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      name:
+        range: string
+        description: String identifying ion (e.g. H, D, T, He, C, D2, ...)
+        annotations:
+          dd_type: dynamic
+      neutral_index:
+        range: integer
+        description: Index of the corresponding neutral species in the ../../neutral array
+        annotations:
+          dd_type: dynamic
+      incident:
+        range: GenericGridScalar
+        multivalued: true
+        description: Incident fluxes for various wall components (grid subsets)
+        annotations:
+          dd_units: m^-2.s^-1
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      emitted:
+        range: GenericGridScalar
+        multivalued: true
+        description: Emitted fluxes for various wall components (grid subsets)
+        annotations:
+          dd_units: m^-2.s^-1
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      multiple_states_flag:
+        range: integer
+        description: 'Multiple states calculation flag : 0-Only the ''ion'' level is considered and the
+          ''state'' array of structure is empty; 1-Ion states are considered and are described in the
+          ''state'' array of structure'
+        annotations:
+          dd_type: dynamic
+      state:
+        range: WallDescriptionGgdParticleIonState
+        multivalued: true
+        description: Fluxes related to the different states of the species
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  WallDescriptionGgdParticleIonState:
+    is_a: InformationContentEntity
+    description: Fluxes related to the different states of the species
+    annotations:
+      dd_type_name: wall_description_ggd_particle_ion_state
+      dd_path: wall/description_ggd/ggd/particle_fluxes/ion/state
+    attributes:
+      z_min:
+        range: float
+        description: Minimum Z of the charge state bundle
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      z_max:
+        range: float
+        description: Maximum Z of the charge state bundle
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      name:
+        range: string
+        description: String identifying charge state (e.g. C+, C+2 , C+3, C+4, C+5, C+6, ...)
+        annotations:
+          dd_type: dynamic
+      vibrational_level:
+        range: float
+        description: Vibrational level (can be bundled)
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      vibrational_mode:
+        range: string
+        description: Vibrational mode of this state, e.g. "A_g". Need to define, or adopt a standard nomenclature.
+        annotations:
+          dd_type: dynamic
+      electron_configuration:
+        range: string
+        description: Configuration of atomic orbitals of this state, e.g. 1s2-2s1
+        annotations:
+          dd_type: dynamic
+      incident:
+        range: GenericGridScalar
+        multivalued: true
+        description: Incident fluxes for various wall components (grid subsets)
+        annotations:
+          dd_units: m^-2.s^-1
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      emitted:
+        range: GenericGridScalar
+        multivalued: true
+        description: Emitted fluxes for various wall components (grid subsets)
+        annotations:
+          dd_units: m^-2.s^-1
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  WallDescriptionGgdParticleNeutral:
+    is_a: InformationContentEntity
+    description: Neutral species fluxes
+    annotations:
+      dd_type_name: wall_description_ggd_particle_neutral
+      dd_path: wall/description_ggd/ggd/particle_fluxes/neutral
+    attributes:
+      element:
+        range: PlasmaCompositionNeutralElement
+        multivalued: true
+        description: List of elements forming the atom or molecule
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      name:
+        range: string
+        description: String identifying neutral (e.g. H, D, T, He, C, ...)
+        annotations:
+          dd_type: dynamic
+      ion_index:
+        range: integer
+        description: Index of the corresponding ion species in the ../../ion array
+        annotations:
+          dd_type: dynamic
+      incident:
+        range: GenericGridScalar
+        multivalued: true
+        description: Incident fluxes for various wall components (grid subsets)
+        annotations:
+          dd_units: m^-2.s^-1
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      emitted:
+        range: GenericGridScalar
+        multivalued: true
+        description: Emitted fluxes for various wall components (grid subsets)
+        annotations:
+          dd_units: m^-2.s^-1
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      multiple_states_flag:
+        range: integer
+        description: 'Multiple states calculation flag : 0-Only one state is considered; 1-Multiple states
+          are considered and are described in the state structure'
+        annotations:
+          dd_type: dynamic
+      state:
+        range: WallDescriptionGgdParticleNeutralState
+        multivalued: true
+        description: Fluxes related to the different states of the species
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  WallDescriptionGgdParticleNeutralState:
+    is_a: InformationContentEntity
+    description: Fluxes related to the different states of the species
+    annotations:
+      dd_type_name: wall_description_ggd_particle_neutral_state
+      dd_path: wall/description_ggd/ggd/particle_fluxes/neutral/state
+    attributes:
+      name:
+        range: string
+        description: String identifying state
+        annotations:
+          dd_type: dynamic
+      vibrational_level:
+        range: float
+        description: Vibrational level (can be bundled)
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      vibrational_mode:
+        range: string
+        description: Vibrational mode of this state, e.g. "A_g". Need to define, or adopt a standard nomenclature.
+        annotations:
+          dd_type: dynamic
+      neutral_type:
+        range: Identifier
+        description: 'Neutral type, in terms of energy. ID =1: cold; 2: thermal; 3: fast; 4: NBI'
+      electron_configuration:
+        range: string
+        description: Configuration of atomic orbitals of this state, e.g. 1s2-2s1
+        annotations:
+          dd_type: dynamic
+      incident:
+        range: GenericGridScalar
+        multivalued: true
+        description: Incident fluxes for various wall components (grid subsets)
+        annotations:
+          dd_units: m^-2.s^-1
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      emitted:
+        range: GenericGridScalar
+        multivalued: true
+        description: Emitted fluxes for various wall components (grid subsets)
+        annotations:
+          dd_units: m^-2.s^-1
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  WallDescriptionGgdEnergy:
+    is_a: InformationContentEntity
+    description: Energy fluxes. The incident and emitted components are distinguished. The net flux received
+      by the wall is equal to incident - emitted
+    annotations:
+      dd_type_name: wall_description_ggd_energy
+      dd_path: wall/description_ggd/ggd/energy_fluxes
+    attributes:
+      radiation:
+        range: WallDescriptionGgdEnergySimple
+        description: Total radiation, not split by process
+      current:
+        range: WallDescriptionGgdEnergySimple
+        description: Current energy fluxes
+      recombination:
+        range: WallDescriptionGgdRecombination
+        description: Wall recombination
+      kinetic:
+        range: WallDescriptionGgdKinetic
+        description: Energy fluxes due to the kinetic energy of particles
+  WallDescriptionGgdEnergySimple:
+    is_a: InformationContentEntity
+    description: Total radiation, not split by process
+    annotations:
+      dd_type_name: wall_description_ggd_energy_simple
+      dd_path: wall/description_ggd/ggd/energy_fluxes/radiation
+    attributes:
+      incident:
+        range: GenericGridScalar
+        multivalued: true
+        description: Incident fluxes for various wall components (grid subsets)
+        annotations:
+          dd_units: W.m^-2
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      emitted:
+        range: GenericGridScalar
+        multivalued: true
+        description: Emitted fluxes for various wall components (grid subsets)
+        annotations:
+          dd_units: W.m^-2
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  WallDescriptionGgdRecombination:
+    is_a: InformationContentEntity
+    description: Wall recombination
+    annotations:
+      dd_type_name: wall_description_ggd_recombination
+      dd_path: wall/description_ggd/ggd/energy_fluxes/recombination
+    attributes:
+      ion:
+        range: WallDescriptionGgdEnergyIon
+        multivalued: true
+        description: Fluxes related to the various ion species, in the sense of isonuclear or isomolecular
+          sequences. Ionization states (and other types of states) must be differentiated at the state
+          level below
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      neutral:
+        range: WallDescriptionGgdParticleNeutral
+        multivalued: true
+        description: Neutral species fluxes
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  WallDescriptionGgdEnergyIon:
+    is_a: InformationContentEntity
+    description: Fluxes related to the various ion species, in the sense of isonuclear or isomolecular
+      sequences. Ionization states (and other types of states) must be differentiated at the state level
+      below
+    annotations:
+      dd_type_name: wall_description_ggd_energy_ion
+      dd_path: wall/description_ggd/ggd/energy_fluxes/recombination/ion
+    attributes:
+      element:
+        range: PlasmaCompositionNeutralElement
+        multivalued: true
+        description: List of elements forming the atom or molecule
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      z_ion:
+        range: float
+        description: Ion charge (of the dominant ionization state; lumped ions are allowed)
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      name:
+        range: string
+        description: String identifying ion (e.g. H, D, T, He, C, D2, ...)
+        annotations:
+          dd_type: dynamic
+      neutral_index:
+        range: integer
+        description: Index of the corresponding neutral species in the ../../neutral array
+        annotations:
+          dd_type: dynamic
+      incident:
+        range: GenericGridScalar
+        multivalued: true
+        description: Incident fluxes for various wall components (grid subsets)
+        annotations:
+          dd_units: W.m^-2
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      emitted:
+        range: GenericGridScalar
+        multivalued: true
+        description: Emitted fluxes for various wall components (grid subsets)
+        annotations:
+          dd_units: W.m^-2
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      multiple_states_flag:
+        range: integer
+        description: 'Multiple states calculation flag : 0-Only the ''ion'' level is considered and the
+          ''state'' array of structure is empty; 1-Ion states are considered and are described in the
+          ''state'' array of structure'
+        annotations:
+          dd_type: dynamic
+      state:
+        range: WallDescriptionGgdEnergyIonState
+        multivalued: true
+        description: Fluxes related to the different states of the species
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  WallDescriptionGgdEnergyIonState:
+    is_a: InformationContentEntity
+    description: Fluxes related to the different states of the species
+    annotations:
+      dd_type_name: wall_description_ggd_energy_ion_state
+      dd_path: wall/description_ggd/ggd/energy_fluxes/recombination/ion/state
+    attributes:
+      z_min:
+        range: float
+        description: Minimum Z of the charge state bundle
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      z_max:
+        range: float
+        description: Maximum Z of the charge state bundle
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      name:
+        range: string
+        description: String identifying charge state (e.g. C+, C+2 , C+3, C+4, C+5, C+6, ...)
+        annotations:
+          dd_type: dynamic
+      vibrational_level:
+        range: float
+        description: Vibrational level (can be bundled)
+        annotations:
+          dd_type: dynamic
+          dd_units: e
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      vibrational_mode:
+        range: string
+        description: Vibrational mode of this state, e.g. "A_g". Need to define, or adopt a standard nomenclature.
+        annotations:
+          dd_type: dynamic
+      electron_configuration:
+        range: string
+        description: Configuration of atomic orbitals of this state, e.g. 1s2-2s1
+        annotations:
+          dd_type: dynamic
+      incident:
+        range: GenericGridScalar
+        multivalued: true
+        description: Incident fluxes for various wall components (grid subsets)
+        annotations:
+          dd_units: W.m^-2
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      emitted:
+        range: GenericGridScalar
+        multivalued: true
+        description: Emitted fluxes for various wall components (grid subsets)
+        annotations:
+          dd_units: W.m^-2
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  WallDescriptionGgdKinetic:
+    is_a: InformationContentEntity
+    description: Energy fluxes due to the kinetic energy of particles
+    annotations:
+      dd_type_name: wall_description_ggd_kinetic
+      dd_path: wall/description_ggd/ggd/energy_fluxes/kinetic
+    attributes:
+      electrons:
+        range: WallDescriptionGgdEnergySimple
+        description: Electron fluxes. Fluxes are given at the wall, after the sheath.
+      ion:
+        range: WallDescriptionGgdEnergyIon
+        multivalued: true
+        description: Fluxes related to the various ion species, in the sense of isonuclear or isomolecular
+          sequences. Ionization states (and other types of states) must be differentiated at the state
+          level below. Fluxes are given at the wall, after the sheath.
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      neutral:
+        range: WallDescriptionGgdParticleNeutral
+        multivalued: true
+        description: Neutral species fluxes
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+  GenericGridVectorComponentsRphiz:
+    is_a: InformationContentEntity
+    description: Total current density, given on various grid subsets
+    annotations:
+      dd_type_name: generic_grid_vector_components_rphiz
+      dd_path: wall/description_ggd/ggd/j_total
+    attributes:
+      grid_index:
+        range: integer
+        description: Index of the grid used to represent this quantity
+        annotations:
+          dd_type: dynamic
+      grid_subset_index:
+        range: integer
+        description: 'Index of the grid subset the data is provided on. Corresponds to the index used
+          in the grid subset definition: grid_subset(:)/identifier/index'
+        annotations:
+          dd_type: dynamic
+      r:
+        range: float
+        multivalued: true
+        description: Component along the major radius axis, one scalar value is provided per element in
+          the grid subset.
+        annotations:
+          dd_type: dynamic
+          dd_units: as_parent
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      r_coefficients:
+        range: float
+        multivalued: true
+        description: Interpolation coefficients for the component along the major radius axis, to be used
+          for a high precision evaluation of the physical quantity with finite elements, provided per
+          element in the grid subset (first dimension).
+        annotations:
+          dd_type: dynamic
+          dd_units: as_parent
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: 1...N
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,1...N
+      phi:
+        range: float
+        multivalued: true
+        description: Toroidal component, one scalar value is provided per element in the grid subset.
+        annotations:
+          dd_type: dynamic
+          dd_units: as_parent
+          dd_ndim: 1
+          dd_coordinate1: ../r
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../r
+      phi_coefficients:
+        range: float
+        multivalued: true
+        description: Interpolation coefficients for the toroidal component, to be used for a high precision
+          evaluation of the physical quantity with finite elements, provided per element in the grid subset
+          (first dimension).
+        annotations:
+          dd_type: dynamic
+          dd_units: as_parent
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: 1...N
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,1...N
+      z:
+        range: float
+        multivalued: true
+        description: Component along the height axis, one scalar value is provided per element in the
+          grid subset.
+        annotations:
+          dd_type: dynamic
+          dd_units: as_parent
+          dd_ndim: 1
+          dd_coordinate1: ../r
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../r
+      z_coefficients:
+        range: float
+        multivalued: true
+        description: Interpolation coefficients for the component along the height axis, to be used for
+          a high precision evaluation of the physical quantity with finite elements, provided per element
+          in the grid subset (first dimension).
+        annotations:
+          dd_type: dynamic
+          dd_units: as_parent
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: 1...N
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,1...N

@@ -1,0 +1,272 @@
+# SPDX-License-Identifier: CC-BY-ND-4.0
+# fyo-scenario — the hand-curated application-scenario base ontology (durable, NOT generated).
+#
+# Grounds the FIVE application-task scenarios of FYTOK-CONOPS-00 (§conops-fytok-scenarios-app,
+# S-7..S-11) in fyo/spo/BFO terms. This module holds what the five tasks SHARE
+# (FYTOK-CONOPS-00 §conops-fytok-scope-tasks: "五类任务共享 fyo 本体建模的物理实体与
+# 平衡—输运正演内核，区别仅在各自施加的方法与外层算子"):
+#
+#   - ApplicationTask        — the abstract task process (spo ComputationalProcess);
+#   - ScenarioSpecification  — the directive ICE a task run realizes (spo PlanSpecification);
+#   - ForwardOperator F      — the ONE shared forward operator (FYTOK-REPORT-107 unified
+#                              forward–inference: fixed forward spine, exchangeable engines);
+#   - InferenceEngine        — the exchangeable inference layer stacked on F;
+#   - ScenarioLoop / solver invocations — the enabling-core execution occurrents (S-2..S-4);
+#   - ConvergenceCriterion   — convergence as an explicit, configurable modeling decision;
+#   - EngineeringPortRun     — the "via-port" engineering coupling (FYTOK-ADR-126 contract).
+#
+# The five concrete task classes live in the sibling per-scenario modules (this directory),
+# each `imports: [spo, fyo-core, fyo-scenario]`. IO slots range to the fyo-core `IDS` root;
+# the SPECIFIC lifted IDS module intended for a given input/output is named in the attribute's
+# `fyo_ids:` annotation (resolved against ../ids-manifest.yaml) — scenario modules
+# do not import the 82 per-IDS schemas (mirrors spo's comment-range precedent).
+# T-Box only; maturity labels are carried as informative annotations, never as axioms.
+id: https://fusion-yun.github.io/fyo/v0.draft/scenario
+name: fyo-scenario
+title: Fyo Scenario — Application-Task Scenario Base (hand-curated)
+description: >-
+  Hand-curated base ontology for the five FyTok application-task scenarios (FYTOK-CONOPS-00
+  S-7..S-11): the shared ApplicationTask process family, its ScenarioSpecification plan layer,
+  the single shared ForwardOperator with exchangeable InferenceEngines (FYTOK-REPORT-107), the
+  enabling-core ScenarioLoop / solver invocations, and the ADR-126 engineering port coupling —
+  all bound to spo's BFO upper via fyo-core.
+license: CC-BY-ND-4.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  fyo: https://fusion-yun.github.io/fyo/v0.draft/
+  spo: https://fusion-yun.github.io/spo/v0.draft/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+  obi: http://purl.obolibrary.org/obo/OBI_
+default_prefix: fyo
+default_range: string
+imports:
+- linkml:types
+- spo
+- fyo-core
+annotations:
+  fyo_module: scenario
+  fyo_version: 0.7.0
+  conops_ref: "FYTOK-CONOPS-00 §conops-fytok-scenarios-app (S-7..S-11) + §conops-fytok-scope-tasks"
+  source_prose: "FYTOK-CONOPS-00 v0.6; FYTOK-REPORT-107 (unified forward–inference); FYTOK-ADR-119 D3/D4 + FYTOK-ADR-126 (engineering ports)"
+
+enums:
+
+  PortExecutionMode:
+    description: >-
+      Execution mode of an engineering port run (FYTOK-ADR-126): live external-code run, stub,
+      or archive read-back — archive is a FIRST-CLASS mode (an archived result can serve as
+      the numerical arm; one real engineering run costs far more than one archive read).
+    permissible_values:
+      live:
+        description: The external engineering code is actually executed.
+      stub:
+        description: A stand-in produces schema-valid placeholder output (no external code).
+      archive:
+        description: Previously archived external-code output is read back (first-class mode).
+
+slots:
+
+  realizes_scenario:
+    slot_uri: bfo:0000055
+    description: >-
+      The ScenarioSpecification this task run realizes (OBI planned-process pattern narrowed
+      to application tasks): the run is the occurrent, the scenario declaration is the
+      directive ICE it executes.
+    range: ScenarioSpecification
+  uses_forward_operator:
+    description: >-
+      The shared forward operator F this task stacks its method on. All five application tasks
+      reuse the SAME equilibrium–transport–source forward kernel (FYTOK-REPORT-107: "正向脊柱
+      不动、推断引擎可换"); they differ only in the outer operators applied around it.
+    range: ForwardOperator
+  uses_inference_engine:
+    description: >-
+      The exchangeable inference engine stacked on the fixed forward spine (least-squares
+      reconstruction / MAP / Bayesian posterior / UQ propagation are engine choices, not
+      forward-model changes).
+    range: InferenceEngine
+  converges_by:
+    description: >-
+      The explicit convergence criterion of this task's scenario loop — a configurable
+      modeling decision (e.g. psi-residual RMS threshold + iteration cap), never an implicit
+      solver internal (enabling-core goal G-3).
+    range: ConvergenceCriterion
+  consumes_ids:
+    is_a: has_input
+    description: >-
+      An IDS occurrence consumed by this task (refines spo has_input to the lifted-DD
+      information layer). The intended DD module is named per-attribute via `fyo_ids:`.
+    range: IDS
+    multivalued: true
+  produces_ids:
+    is_a: has_output
+    description: >-
+      An IDS occurrence produced by this task (refines spo has_output to the lifted-DD
+      information layer); its data modality (simulated / reconstructed) is carried by the IDS
+      ProvenanceMixin, not by the schema.
+    range: IDS
+    multivalued: true
+  free_variables:
+    description: >-
+      Informative — WHICH quantities this task treats as free (the lifecycle-table "自由量"
+      column, FYTOK-CONOPS-00 §conops-fytok-lifecycle): device static parameters, actuator
+      waveforms, plasma configuration θ, … The tasks share one kernel; what varies is what is
+      free this time.
+    multivalued: true
+  port_runs:
+    description: >-
+      Engineering-port runs this task delegates single-direction engineering quantities to
+      (the "经端口" tier of the in/port/out boundary, FYTOK-ADR-119 D3).
+    range: EngineeringPortRun
+    multivalued: true
+    inlined_as_list: true
+
+classes:
+
+  # -- The task family (occurrent side) -------------------------------------------- #
+  ApplicationTask:
+    abstract: true
+    is_a: ComputationalProcess
+    description: >-
+      An end-to-end FyTok application task run — the abstract parent of the five CONOPS
+      application-task scenarios (S-7 physics modeling, S-8 experiment analysis, S-9 control
+      simulation, S-10 discharge operation design, S-11 device parameter optimization). A
+      planned computational process performed on (or for) a Machine, realizing a
+      ScenarioSpecification, consuming and producing IDS occurrences, and stacking its
+      task-specific outer operators on the ONE shared ForwardOperator. The five subtypes are
+      distinguished by their method / outer operator and by what is free — never by owning a
+      private forward kernel.
+    slots:
+      - performed_on          # fyo-core: the Machine this task is about / performed for
+      - realizes_scenario
+      - uses_forward_operator
+      - converges_by
+      - consumes_ids
+      - produces_ids
+      - free_variables
+    annotations:
+      conops_ref: "FYTOK-CONOPS-00 §conops-fytok-scope-tasks (tbl-conops-fytok-app-tasks)"
+
+  # -- The plan layer (directive ICE side) ------------------------------------------ #
+  ScenarioSpecification:
+    is_a: PlanSpecification
+    description: >-
+      A directive information content entity declaring an application-task run: which solvers
+      (by plugin name), which convergence criterion and iteration cap, which data sources —
+      the "scenario" as authored, before any run realizes it. The scenario loop's declared
+      configuration (enabling-core G-3: convergence criteria and iteration caps are explicit,
+      configurable modeling decisions).
+    attributes:
+      solver_selection:
+        multivalued: true
+        description: Solver plugin names this scenario binds (FyModule prefix keys), e.g. fyeq / fytrans / freegs.
+      iteration_cap:
+        range: integer
+        description: Upper bound on scenario-loop iterations (explicit modeling decision).
+
+  # -- The shared forward spine and its exchangeable engines ------------------------- #
+  ForwardOperator:
+    is_a: Code
+    description: >-
+      The shared forward operator F — the equilibrium–transport–source forward kernel plus
+      diagnostic-response composition mapping a plasma configuration θ to predicted state and
+      synthetic signals F(θ). ONE operator shared by all five tasks (FYTOK-REPORT-107):
+      synthetic diagnostics and equilibrium/profile inversion are unified as optimization /
+      probabilistic inference over θ with loss ℒ(θ)=‖F(θ)−d_obs‖²_Σ; control-simulation state
+      estimation and discharge-design trajectory optimization reuse the same F. A Code (GDC
+      program), realized by ComputationalProcess runs.
+
+  InferenceEngine:
+    is_a: Code
+    description: >-
+      An exchangeable inference engine stacked on the fixed forward spine — least-squares
+      reconstruction, MAP, Bayesian posterior sampling, or UQ propagation
+      (forward / parameterization+prior / inference-engine three-layer decoupling,
+      FYTOK-REPORT-107). Swapping engines never changes F.
+
+  ConvergenceCriterion:
+    is_a: InformationContentEntity
+    description: >-
+      An explicit physical-convergence criterion of a scenario loop (e.g. psi-residual RMS
+      below threshold), together with its threshold value — a declared modeling decision, part
+      of the ScenarioSpecification, never an implicit solver internal.
+    attributes:
+      metric:
+        description: The residual / metric name (e.g. psi_residual_rms).
+      threshold:
+        range: float
+        description: Convergence threshold on the metric.
+
+  # -- Enabling-core execution occurrents (S-2..S-4, shared by all tasks) ------------ #
+  SolverInvocation:
+    abstract: true
+    is_a: ComputationalProcess
+    description: >-
+      One invocation of a pluggable solver inside a scenario loop — the solver is bound by
+      plugin name (FyModule), calls the SpModel numerical substrate, and writes its result
+      back to the corresponding IDS occurrence (enabling-core G-2: pluggable, never
+      special-cased in the framework).
+    slots:
+      - consumes_ids
+      - produces_ids
+
+  EquilibriumSolve:
+    is_a: SolverInvocation
+    description: >-
+      A Grad–Shafranov equilibrium solve (fixed or free boundary; built-in fyeq or external
+      plugins) — writes back the equilibrium IDS (enabling-core scenario S-2). Axisymmetric
+      by construction (configuration applicability boundary).
+    annotations:
+      conops_ref: "FYTOK-CONOPS-00 S-2"
+      fyo_ids: equilibrium
+
+  TransportSolve:
+    is_a: SolverInvocation
+    description: >-
+      A 1.5D core-transport advance (flux-surface-averaged boundary-value problem; default
+      fytrans) — given equilibrium and core profiles, advances transport and writes back the
+      core-profiles IDS (enabling-core scenario S-3).
+    annotations:
+      conops_ref: "FYTOK-CONOPS-00 S-3"
+      fyo_ids: core_profiles
+
+  ScenarioLoop:
+    is_a: ComputationalProcess
+    description: >-
+      The scenario execution loop — orchestrates alternating solver invocations (BFO has_part:
+      EquilibriumSolve / TransportSolve per cycle) to PHYSICAL convergence under an explicit
+      ConvergenceCriterion (e.g. the 1.5D core equilibrium–transport loop with psi-residual
+      RMS, enabling-core scenario S-4). Orchestrates via solver ports; never inlines solver
+      numerics (design stance #4).
+    slots:
+      - has_part
+      - converges_by
+    annotations:
+      conops_ref: "FYTOK-CONOPS-00 S-4; goal G-3"
+
+  # -- The "via-port" engineering coupling (FYTOK-ADR-126) -------------------------- #
+  EngineeringPortRun:
+    is_a: ComputationalProcess
+    description: >-
+      One engineering-port invocation — the "经端口" tier of the in/port/out engineering
+      boundary (FYTOK-ADR-119 D3: single-direction-coupled machine engineering — system codes,
+      whole-machine CAD, neutronics, structural FEM — is reached through ports, never
+      implemented in-repo). Contract per FYTOK-ADR-126: THREE segments (prepare inputs → run →
+      collect outputs) sharing no mutable state, with prepare/collect runnable and regressible
+      when the external code is absent; the bidirectional parameter mapping (name · unit ·
+      direction · provenance) is DATA, not code; port dependencies are extras-isolated; port
+      products land in existing IMAS DD carriers (produces_ids), never in parallel structures.
+      First landed port = neutronics; the contract generalizes only after that single-point
+      validation.
+    slots:
+      - consumes_ids
+      - produces_ids
+    attributes:
+      port_name:
+        description: The engineering port bound (e.g. neutronics; later tritium / heat-and-net-electric / system-code).
+      execution_mode:
+        range: PortExecutionMode
+        description: live / stub / archive — archive read-back is first-class (FYTOK-ADR-126, ADR-121).
+    annotations:
+      adr_ref: "FYTOK-ADR-119 D3 + FYTOK-ADR-126"
