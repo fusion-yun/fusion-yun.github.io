@@ -2,7 +2,7 @@
 # spo — aggregator schema. Imports the full hand-written Spo common ontology (axis-1). Generated
 # per-IDS Spo schemas import this single name (`spo`) to bring all common classes into scope.
 # FYTOK-REPORT-05 §rpt05-cs-common.
-id: https://fusion-yun.github.io/spo/v0.5.g74ec1be1/spo
+id: https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/spo
 name: spo
 title: Spo Common Ontology (aggregator)
 description: >-
@@ -13,7 +13,7 @@ license: Apache-2.0
 prefixes:
   linkml: https://w3id.org/linkml/
   sp: https://w3id.org/spdata/v1/
-  spo: https://fusion-yun.github.io/spo/v0.5.g74ec1be1/
+  spo: https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/
 default_prefix: spo
 default_range: string
 imports:

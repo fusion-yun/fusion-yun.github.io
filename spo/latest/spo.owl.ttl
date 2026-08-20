@@ -8,7 +8,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix spo: <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/> .
+@prefix spo: <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 spo:ComputationRecord a owl:Class ;
@@ -383,72 +383,72 @@ spo:TimeSeries a owl:Class ;
     skos:inScheme spo:time ;
     spo:layout "soa" .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#area> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#area> a owl:Class ;
     rdfs:label "area" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Enclosed area" .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#dim1> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#dim1> a owl:Class ;
     rdfs:label "dim1" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Grid first dimension (grid_type-defined)" .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#dim2> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#dim2> a owl:Class ;
     rdfs:label "dim2" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Grid second dimension (grid_type-defined)" .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#phi> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#phi> a owl:Class ;
     rdfs:label "phi" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Toroidal angle / toroidal flux" .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#psi> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#psi> a owl:Class ;
     rdfs:label "psi" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Poloidal flux" .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#psi_norm> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#psi_norm> a owl:Class ;
     rdfs:label "psi_norm" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Normalized poloidal flux" .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#r> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#r> a owl:Class ;
     rdfs:label "r" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Major radius R" .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#rho_pol_norm> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#rho_pol_norm> a owl:Class ;
     rdfs:label "rho_pol_norm" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Normalized poloidal flux radius" .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#rho_tor> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#rho_tor> a owl:Class ;
     rdfs:label "rho_tor" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Toroidal flux radius" .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#rho_tor_norm> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#rho_tor_norm> a owl:Class ;
     rdfs:label "rho_tor_norm" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Normalized toroidal flux radius" .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#theta> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#theta> a owl:Class ;
     rdfs:label "theta" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Poloidal angle — the flux-coordinate poloidal axis, oriented so (grad rho_tor, grad theta, grad phi) is right-handed (equilibrium coordinate_system / profiles_2d)" .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#time> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#time> a owl:Class ;
     rdfs:label "time" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Time axis (TemporalRegion)" .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#volume> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#volume> a owl:Class ;
     rdfs:label "volume" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Enclosed volume" .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#z> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#z> a owl:Class ;
     rdfs:label "z" ;
     rdfs:subClassOf spo:ContinuousCoordinate ;
     skos:definition "Vertical coordinate Z" .
@@ -459,22 +459,22 @@ spo:ControlledVocabulary a owl:Class ;
     skos:definition "A controlled vocabulary (the determinable). Its permissible values are the determinates (DD *_identifier.xml entries)." ;
     skos:inScheme spo:vocab .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/DataModality#measured> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/DataModality#measured> a owl:Class ;
     rdfs:label "measured" ;
     rdfs:subClassOf spo:DataModality ;
     skos:definition "Acquired by a real measurement process during a specific discharge; read-only, NOT reproducible, per-shot distinct." .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/DataModality#reconstructed> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/DataModality#reconstructed> a owl:Class ;
     rdfs:label "reconstructed" ;
     rdfs:subClassOf spo:DataModality ;
     skos:definition "Computed from measured inputs (e.g. EFIT equilibrium over real magnetics) — measured-derived, reproducible given the inputs." .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/DataModality#simulated> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/DataModality#simulated> a owl:Class ;
     rdfs:label "simulated" ;
     rdfs:subClassOf spo:DataModality ;
     skos:definition "Computed from a model independent of any real discharge; reproducible from (code, inputs, version)." .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/DataModality#static_device> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/DataModality#static_device> a owl:Class ;
     rdfs:label "static_device" ;
     rdfs:subClassOf spo:DataModality ;
     skos:definition "A static, invariant fact about the physical device (e.g. probe position); engineering-determined, constant." .
@@ -671,17 +671,17 @@ spo:TimeSlice a owl:Class ;
     skos:definition "One AoS element — the complete state description of a system at one TimeInstant (the foliated 3D view of the 4D referent at fixed t; DD `time_slice[]` element, e.g. one equilibrium reconstruction). Identity note: a TimeSlice is a VIEW indexed by (referent, instant), not an independent individual — the individual is the 4D referent." ;
     skos:inScheme spo:time .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/TimebaseSource#embedded> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/TimebaseSource#embedded> a owl:Class ;
     rdfs:label "embedded" ;
     rdfs:subClassOf spo:TimebaseSource ;
     skos:definition "Per-signal embedded timebase (signal_*/time)" .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/TimebaseSource#heterogeneous> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/TimebaseSource#heterogeneous> a owl:Class ;
     rdfs:label "heterogeneous" ;
     rdfs:subClassOf spo:TimebaseSource ;
     skos:definition "Per-node timebase (homogeneous_time = 0)" .
 
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/TimebaseSource#homogeneous> a owl:Class ;
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/TimebaseSource#homogeneous> a owl:Class ;
     rdfs:label "homogeneous" ;
     rdfs:subClassOf spo:TimebaseSource ;
     skos:definition "Shared IDS-level timebase (ids_properties/homogeneous_time = 1)" .
@@ -1505,21 +1505,21 @@ spo:SpatialRegion a owl:Class ;
 
 spo:TimebaseSource a owl:Class ;
     rdfs:label "TimebaseSource" ;
-    owl:unionOf ( <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/TimebaseSource#homogeneous> <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/TimebaseSource#embedded> <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/TimebaseSource#heterogeneous> ) ;
+    owl:unionOf ( <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/TimebaseSource#homogeneous> <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/TimebaseSource#embedded> <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/TimebaseSource#heterogeneous> ) ;
     skos:inScheme spo:signal ;
-    linkml:permissible_values <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/TimebaseSource#embedded>,
-        <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/TimebaseSource#heterogeneous>,
-        <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/TimebaseSource#homogeneous> .
+    linkml:permissible_values <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/TimebaseSource#embedded>,
+        <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/TimebaseSource#heterogeneous>,
+        <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/TimebaseSource#homogeneous> .
 
 spo:DataModality a owl:Class ;
     rdfs:label "DataModality" ;
-    owl:unionOf ( <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/DataModality#static_device> <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/DataModality#measured> <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/DataModality#reconstructed> <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/DataModality#simulated> ) ;
+    owl:unionOf ( <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/DataModality#static_device> <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/DataModality#measured> <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/DataModality#reconstructed> <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/DataModality#simulated> ) ;
     skos:definition "The provenance modality of a datum (FYTOK-REPORT-05 §rpt05-modality). Orthogonal to the domain category; derived from the generating process, not from DD `type` (which only gives static/dynamic)." ;
     skos:inScheme spo:provenance ;
-    linkml:permissible_values <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/DataModality#measured>,
-        <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/DataModality#reconstructed>,
-        <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/DataModality#simulated>,
-        <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/DataModality#static_device> .
+    linkml:permissible_values <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/DataModality#measured>,
+        <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/DataModality#reconstructed>,
+        <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/DataModality#simulated>,
+        <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/DataModality#static_device> .
 
 spo:DirectiveInformationEntity a owl:Class ;
     rdfs:label "DirectiveInformationEntity" ;
@@ -1614,23 +1614,23 @@ spo:name a owl:DatatypeProperty .
 
 spo:ContinuousCoordinate a owl:Class ;
     rdfs:label "ContinuousCoordinate" ;
-    owl:unionOf ( <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#time> <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#psi> <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#psi_norm> <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#rho_tor> <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#rho_tor_norm> <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#rho_pol_norm> <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#phi> <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#theta> <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#volume> <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#area> <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#r> <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#z> <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#dim1> <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#dim2> ) ;
+    owl:unionOf ( <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#time> <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#psi> <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#psi_norm> <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#rho_tor> <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#rho_tor_norm> <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#rho_pol_norm> <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#phi> <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#theta> <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#volume> <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#area> <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#r> <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#z> <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#dim1> <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#dim2> ) ;
     skos:definition "Continuous physical coordinate axes recognized as Domains (curated registry; downstream import pipelines align to it)." ;
     skos:inScheme spo:domain ;
-    linkml:permissible_values <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#area>,
-        <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#dim1>,
-        <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#dim2>,
-        <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#phi>,
-        <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#psi>,
-        <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#psi_norm>,
-        <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#r>,
-        <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#rho_pol_norm>,
-        <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#rho_tor>,
-        <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#rho_tor_norm>,
-        <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#theta>,
-        <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#time>,
-        <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#volume>,
-        <https://fusion-yun.github.io/spo/v0.5.g74ec1be1/ContinuousCoordinate#z> .
+    linkml:permissible_values <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#area>,
+        <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#dim1>,
+        <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#dim2>,
+        <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#phi>,
+        <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#psi>,
+        <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#psi_norm>,
+        <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#r>,
+        <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#rho_pol_norm>,
+        <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#rho_tor>,
+        <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#rho_tor_norm>,
+        <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#theta>,
+        <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#time>,
+        <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#volume>,
+        <https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/ContinuousCoordinate#z> .
 
 spo:InformationContentEntity a owl:Class ;
     rdfs:label "InformationContentEntity" ;
@@ -1678,10 +1678,10 @@ xsd:string a rdfs:Datatype .
 
 # slot_uri anchor mappings — deterministic post-process by gen_targets.py
 # (relation-level TLO/standard-ontology mapping; 21838-1 Annex D.5.2)
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/has_part> <http://www.w3.org/2004/02/skos/core#exactMatch> <http://purl.obolibrary.org/obo/BFO_0000178> .
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/has_participant> <http://www.w3.org/2004/02/skos/core#exactMatch> <http://purl.obolibrary.org/obo/BFO_0000057> .
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/has_quantity_kind> <http://www.w3.org/2004/02/skos/core#exactMatch> <http://qudt.org/schema/qudt/hasQuantityKind> .
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/has_unit> <http://www.w3.org/2004/02/skos/core#exactMatch> <http://qudt.org/schema/qudt/hasUnit> .
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/inheres_in> <http://www.w3.org/2004/02/skos/core#exactMatch> <http://purl.obolibrary.org/obo/RO_0000052> .
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/is_about> <http://www.w3.org/2004/02/skos/core#exactMatch> <http://purl.obolibrary.org/obo/IAO_0000136> .
-<https://fusion-yun.github.io/spo/v0.5.g74ec1be1/occupies> <http://www.w3.org/2004/02/skos/core#exactMatch> <http://purl.obolibrary.org/obo/BFO_0000210> .
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/has_part> <http://www.w3.org/2004/02/skos/core#exactMatch> <http://purl.obolibrary.org/obo/BFO_0000178> .
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/has_participant> <http://www.w3.org/2004/02/skos/core#exactMatch> <http://purl.obolibrary.org/obo/BFO_0000057> .
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/has_quantity_kind> <http://www.w3.org/2004/02/skos/core#exactMatch> <http://qudt.org/schema/qudt/hasQuantityKind> .
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/has_unit> <http://www.w3.org/2004/02/skos/core#exactMatch> <http://qudt.org/schema/qudt/hasUnit> .
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/inheres_in> <http://www.w3.org/2004/02/skos/core#exactMatch> <http://purl.obolibrary.org/obo/RO_0000052> .
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/is_about> <http://www.w3.org/2004/02/skos/core#exactMatch> <http://purl.obolibrary.org/obo/IAO_0000136> .
+<https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/occupies> <http://www.w3.org/2004/02/skos/core#exactMatch> <http://purl.obolibrary.org/obo/BFO_0000210> .

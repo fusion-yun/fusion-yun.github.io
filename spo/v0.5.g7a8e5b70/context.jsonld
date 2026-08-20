@@ -27,8 +27,8 @@
       },
       "skos": "http://www.w3.org/2004/02/skos/core#",
       "sp": "https://w3id.org/spdata/v1/",
-      "spo": "https://fusion-yun.github.io/spo/v0.5.g74ec1be1/",
-      "@vocab": "https://fusion-yun.github.io/spo/v0.5.g74ec1be1/",
+      "spo": "https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/",
+      "@vocab": "https://fusion-yun.github.io/spo/v0.5.g7a8e5b70/",
       "about_occurrent": {
          "@type": "@id",
          "@id": "about_occurrent"
