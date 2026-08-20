@@ -10,7 +10,7 @@
 # neutral; the spo-class -> Python-carrier map is a LANGUAGE BINDING and lives with the
 # Python adapter (../src/sp/model/ontology/carrier-map.python.yaml), NOT in this
 # neutral core.
-id: https://fusion-yun.github.io/spo/v0.5.g14d23bf3/spo
+id: https://fusion-yun.github.io/spo/v0.5.g74ec1be1/spo
 name: spo
 version: 0.5.1
 license: Apache-2.0
@@ -28,39 +28,39 @@ aggregator: spo
 modules:
   - name: spo-core
     file: spo-core.linkml.yaml
-    id: https://fusion-yun.github.io/spo/v0.5.g14d23bf3/core
+    id: https://fusion-yun.github.io/spo/v0.5.g74ec1be1/core
   - name: spo-types
     file: spo-types.linkml.yaml
-    id: https://fusion-yun.github.io/spo/v0.5.g14d23bf3/types
+    id: https://fusion-yun.github.io/spo/v0.5.g74ec1be1/types
   - name: spo-quantity
     file: spo-quantity.linkml.yaml
-    id: https://fusion-yun.github.io/spo/v0.5.g14d23bf3/quantity
+    id: https://fusion-yun.github.io/spo/v0.5.g74ec1be1/quantity
   - name: spo-domain
     file: spo-domain.linkml.yaml
-    id: https://fusion-yun.github.io/spo/v0.5.g14d23bf3/domain
+    id: https://fusion-yun.github.io/spo/v0.5.g74ec1be1/domain
   - name: spo-geometry
     file: spo-geometry.linkml.yaml
-    id: https://fusion-yun.github.io/spo/v0.5.g14d23bf3/geometry
+    id: https://fusion-yun.github.io/spo/v0.5.g74ec1be1/geometry
   - name: spo-signal
     file: spo-signal.linkml.yaml
-    id: https://fusion-yun.github.io/spo/v0.5.g14d23bf3/signal
+    id: https://fusion-yun.github.io/spo/v0.5.g74ec1be1/signal
   - name: spo-time
     file: spo-time.linkml.yaml
-    id: https://fusion-yun.github.io/spo/v0.5.g14d23bf3/time
+    id: https://fusion-yun.github.io/spo/v0.5.g74ec1be1/time
   - name: spo-vocab
     file: spo-vocab.linkml.yaml
-    id: https://fusion-yun.github.io/spo/v0.5.g14d23bf3/vocab
+    id: https://fusion-yun.github.io/spo/v0.5.g74ec1be1/vocab
   - name: spo-provenance
     file: spo-provenance.linkml.yaml
-    id: https://fusion-yun.github.io/spo/v0.5.g14d23bf3/provenance
+    id: https://fusion-yun.github.io/spo/v0.5.g74ec1be1/provenance
   - name: spo
     file: spo.linkml.yaml
-    id: https://fusion-yun.github.io/spo/v0.5.g14d23bf3/spo
+    id: https://fusion-yun.github.io/spo/v0.5.g74ec1be1/spo
 
 # Shared prefix map (kept in sync with the schema headers; the neutral source of PREFIXES).
 prefixes:
   linkml: https://w3id.org/linkml/
-  spo: https://fusion-yun.github.io/spo/v0.5.g14d23bf3/
+  spo: https://fusion-yun.github.io/spo/v0.5.g74ec1be1/
   sp: https://w3id.org/spdata/v1/
   bfo: http://purl.obolibrary.org/obo/BFO_
   iao: http://purl.obolibrary.org/obo/IAO_
