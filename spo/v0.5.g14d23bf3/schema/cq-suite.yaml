@@ -1,0 +1,204 @@
+# cq-suite.yaml — spo's own competency-question registry (the UTILITY GATE of the standard's
+# double-gate methodology). Evaluated by scripts/check_competency.py (shared tool, cwd-rooted).
+# Every CQ must stay green; loosening a check is a G-4 change, and is never how a
+# violation gets fixed.
+# Check kinds: class / class_uri_is / is_a (transitive) / disjoint_children /
+#              class_slot / slot_range / slot_uri_is / slot_uri_absent / enum_value
+#
+# COVERAGE BINDING (standard §4.4.6, the stance-to-utility-gate binding): every §4.4.6
+# stance whose value is "承担" (borne) MUST be covered by at least one CQ via that CQ's
+# `covers:` list. The
+# binding is machine-enforced by check_competency.py — a new borne stance without a CQ
+# fails the utility gate. `covers` values are the standard clause numbers, bare.
+version: 0.3.0
+
+# The §4.4.6 stances currently declared "承担" in the standard. Changing this list means
+# changing a coverage stance, which is a G-4 change.
+coverage_bearing:
+- '4.4.6.2'    # 空间与时间 (Space and Time)
+- '4.4.6.9'    # 质与其他属性 (Qualities and Other Attributes)
+- '4.4.6.10'   # 量与数学实体 (Quantities and Mathematical Entities)
+- '4.4.6.11'   # 过程与事件 (Processes and Events)
+- '4.4.6.14'   # 信息与指称 (Information and Reference)
+
+suite:
+
+- id: CQ-STR-1
+  question: 世界被划分为哪些互斥的顶层范畴？（Continuant ⊥ Occurrent，IC ⊥ SDC ⊥ GDC）
+  checks:
+  - {kind: class, name: Entity}
+  - {kind: class_uri_is, class: Entity, uri: "bfo:0000001"}
+  - {kind: disjoint_children, class: Entity}
+  - {kind: disjoint_children, class: Continuant}
+
+- id: CQ-STR-2
+  question: 四层位（物质 / 质 / 发生体 / 信息）各由哪个类承载？
+  covers: ['4.4.6.9']
+  checks:
+  - {kind: is_a, class: MaterialEntity, ancestor: IndependentContinuant}
+  - {kind: is_a, class: Quality, ancestor: SpecificallyDependentContinuant}
+  - {kind: is_a, class: Process, ancestor: Occurrent}
+  - {kind: is_a, class: InformationContentEntity, ancestor: GenericallyDependentContinuant}
+
+- id: CQ-STR-3
+  question: 时间与时空区域居哪个范畴？（BFO 2020 发生体侧——A-1 回归锚）
+  covers: ['4.4.6.2']
+  checks:
+  - {kind: is_a, class: TemporalRegion, ancestor: Occurrent}
+  - {kind: is_a, class: SpacetimeRegion, ancestor: Occurrent}
+  - {kind: is_a, class: SpatialRegion, ancestor: ImmaterialEntity}
+  - {kind: class_uri_is, class: TemporalRegion, uri: "bfo:0000008"}
+  - {kind: class_uri_is, class: SpatialRegion, uri: "bfo:0000006"}
+
+- id: CQ-REL-1
+  question: 数据如何指称世界？（现实 / 描述之桥）
+  covers: ['4.4.6.14']
+  checks:
+  - {kind: class_slot, class: InformationContentEntity, slot: is_about}
+  - {kind: slot_uri_is, slot: is_about, uri: "iao:0000136"}
+  - {kind: slot_range, slot: is_about, range: Entity}
+
+- id: CQ-REL-2
+  question: 质依附于什么？
+  covers: ['4.4.6.9']
+  checks:
+  - {kind: class_slot, class: Quality, slot: inheres_in}
+  - {kind: slot_uri_is, slot: inheres_in, uri: "ro:0000052"}
+  - {kind: slot_range, slot: inheres_in, range: MaterialEntity}
+
+- id: CQ-REL-3
+  question: 物质实体在空间中如何定位？部件链如何表达？
+  covers: ['4.4.6.11']
+  checks:
+  - {kind: slot_uri_is, slot: occupies, uri: "bfo:0000210"}
+  - {kind: slot_range, slot: occupies, range: SpatialRegion}
+  - {kind: slot_uri_is, slot: has_part, uri: "bfo:0000178"}
+  - {kind: slot_range, slot: has_part, range: Continuant}
+
+- id: CQ-REL-4
+  question: realizes 是自有捷径关系而非 BFO 锚？（A-2/A-5 回归锚）
+  checks:
+  - {kind: slot_uri_absent, slot: realizes}
+  - {kind: slot_range, slot: realizes, range: DirectiveInformationEntity}
+  - {kind: class_slot, class: PlannedProcess, slot: realizes}
+
+- id: CQ-TIME-1
+  question: 时间语义的三态（瞬时 / 区间 / 时间轴）各由什么承载？
+  covers: ['4.4.6.2']
+  checks:
+  - {kind: is_a, class: TimeInstant, ancestor: TemporalRegion}
+  - {kind: is_a, class: TimeInterval, ancestor: TemporalRegion}
+  - {kind: is_a, class: TimeAxis, ancestor: InformationContentEntity}
+  - {kind: slot_range, slot: discretizes_time, range: TimeInterval}
+
+- id: CQ-TIME-2
+  question: AoS / SoA 是同一所指的两种布局？（对偶）
+  checks:
+  - {kind: is_a, class: TimeSliceSeries, ancestor: TemporalAggregate}
+  - {kind: is_a, class: TimeSeries, ancestor: TemporalAggregate}
+  - {kind: slot_range, slot: dual_view_of, range: TemporalAggregate}
+  - {kind: slot_range, slot: about_occurrent, range: Occurrent}
+
+- id: CQ-QTY-1
+  question: 量的三分（可定量类 / 世界中的质 / 信息载体）各居何处？
+  covers: ['4.4.6.9', '4.4.6.10']
+  checks:
+  - {kind: is_a, class: QuantityKind, ancestor: InformationContentEntity}
+  - {kind: is_a, class: Quality, ancestor: Continuant}
+  - {kind: is_a, class: QuantityValue, ancestor: InformationContentEntity}
+  - {kind: slot_range, slot: of_quality, range: Quality}
+  - {kind: slot_range, slot: has_quantity_kind, range: QuantityKind}
+
+- id: CQ-QTY-2
+  question: 连续量（场 / 信号）能声明量类与机读单位？（P2 补全回归锚）
+  covers: ['4.4.6.10']
+  checks:
+  - {kind: class_slot, class: ContinuousQuantity, slot: has_quantity_kind}
+  - {kind: class_slot, class: ContinuousQuantity, slot: has_unit}
+  - {kind: slot_range, slot: has_unit, range: Unit}
+  - {kind: slot_uri_is, slot: has_unit, uri: "qudt:hasUnit"}
+
+- id: CQ-QTY-3
+  question: 同一质的多重数学表示如何互指而不择一？
+  covers: ['4.4.6.10']
+  checks:
+  - {kind: slot_range, slot: representation_of, range: Quality}
+  - {kind: slot_range, slot: equivalent_representation, range: ContinuousQuantity}
+
+- id: CQ-QTY-4
+  question: 定义某量类的数学公式如何机读声明？（srepr 规范形，M-1 机读规范形 / M-3 回归锚）
+  covers: ['4.4.6.10']
+  checks:
+  - {kind: class, name: MathExpression}
+  - {kind: is_a, class: MathExpression, ancestor: InformationContentEntity}
+  - {kind: class_slot, class: QuantityKind, slot: defining_formulation}
+  - {kind: slot_range, slot: defining_formulation, range: MathExpression}
+
+- id: CQ-PROV-1
+  question: 代码与运行如何区分又如何相连？（SI-7 回归锚）
+  checks:
+  - {kind: is_a, class: Code, ancestor: DirectiveInformationEntity}
+  - {kind: is_a, class: ComputationalProcess, ancestor: PlannedProcess}
+  - {kind: class_slot, class: ComputationRecord, slot: executed_code}
+  - {kind: slot_range, slot: generated_by_process, range: Process}
+  - {kind: slot_uri_absent, slot: produced_by}
+
+- id: CQ-PROV-2
+  question: 不可重复的实验过程如何被数据系统持有？（过程 / 记录之别）
+  covers: ['4.4.6.11']
+  checks:
+  - {kind: is_a, class: ProcessRecord, ancestor: InformationContentEntity}
+  - {kind: class_slot, class: ProcessRecord, slot: is_record_of}
+  - {kind: slot_range, slot: is_record_of, range: Process}
+  - {kind: is_a, class: MeasurementProcess, ancestor: Process}
+
+- id: CQ-PROC-1
+  question: 过程的参与者（装置 / 仪器 / 对象）如何结构化声明？（P2 回归锚）
+  covers: ['4.4.6.11']
+  checks:
+  - {kind: class_slot, class: Process, slot: has_participant}
+  - {kind: slot_uri_is, slot: has_participant, uri: "bfo:0000057"}
+  - {kind: slot_range, slot: has_participant, range: Continuant}
+
+- id: CQ-DIR-1
+  question: 指令性内容（计划 / 设计 / 程序）与描述性内容如何区分？
+  covers: ['4.4.6.14']
+  checks:
+  - {kind: is_a, class: PlanSpecification, ancestor: DirectiveInformationEntity}
+  - {kind: is_a, class: DesignSpecification, ancestor: DirectiveInformationEntity}
+  - {kind: is_a, class: Library, ancestor: DirectiveInformationEntity}
+  - {kind: class_uri_is, class: DirectiveInformationEntity, uri: "iao:0000033"}
+
+- id: CQ-4D-1
+  question: 4D 扩展（虫 / 时空网格）如何保守地桥接 3D 核？
+  covers: ['4.4.6.2']
+  checks:
+  - {kind: is_a, class: SpacetimeWorm, ancestor: Occurrent}
+  - {kind: slot_range, slot: occupies_spacetime, range: SpacetimeRegion}
+  - {kind: is_a, class: SpacetimeMesh, ancestor: Mesh}
+  - {kind: slot_range, slot: discretizes_spacetime, range: SpacetimeRegion}
+
+- id: CQ-GEO-1
+  question: 几何是关于空间区域的信息而非区域本身？
+  covers: ['4.4.6.2']
+  checks:
+  - {kind: is_a, class: Geometry, ancestor: InformationContentEntity}
+  - {kind: slot_range, slot: describes_region, range: SpatialRegion}
+  - {kind: is_a, class: Mesh, ancestor: Geometry}
+
+- id: CQ-VOC-1
+  question: 受控词表值与词表本身（determinate / determinable）如何分层？
+  covers: ['4.4.6.14']
+  checks:
+  - {kind: is_a, class: Identifier, ancestor: InformationContentEntity}
+  - {kind: class_slot, class: Identifier, slot: draws_from}
+  - {kind: slot_range, slot: draws_from, range: ControlledVocabulary}
+
+- id: CQ-MOD-1
+  question: 数据模态正交于 T-Box 且由生产过程为真值承载者？（SI-5）
+  checks:
+  - {kind: enum_value, enum: DataModality, value: measured}
+  - {kind: enum_value, enum: DataModality, value: reconstructed}
+  - {kind: enum_value, enum: DataModality, value: simulated}
+  - {kind: enum_value, enum: DataModality, value: static_device}
+  - {kind: slot_range, slot: generated_by_process, range: Process}

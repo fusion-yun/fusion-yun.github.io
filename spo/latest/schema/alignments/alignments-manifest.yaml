@@ -1,0 +1,77 @@
+# alignments-manifest.yaml — neutral metadata head for the alignment registry.
+#
+# Governance: the "map, never import" discipline of the SpO Domain-Ontology Standard
+# (§4.4.3 (d)). These files are NOT LinkML modules and are never imported by any schema —
+# importing a counterpart's terms into spo's signature would violate the
+# domain-neutrality discipline (SP-ONT-SPEC-01 §4.4.7.1). They are a
+# hand-curated, machine-checked side-band artifact.
+version: 0.1.0
+governance: SpO Domain-Ontology Standard §4.4.3 (d)
+
+# Curation criteria applied to every row (step 1 of the four-step anchor method R-5 —
+# "set the mapping criteria" — applied to mapping rows rather than to anchors).
+criteria:
+  - id: MC-1
+    rule: >-
+      A row is admitted only where spo and the counterpart substantively overlap — both
+      terms denote the same portion of reality. Nominal overlap (same or similar label)
+      is not sufficient.
+  - id: MC-2
+    rule: >-
+      Where spo and the counterpart each anchor to the SAME BFO 2020 term, NO row is
+      written: interoperability is already carried by the shared anchor, and a mapping
+      row would be redundant (suite non-redundancy).
+  - id: MC-3
+    rule: >-
+      skos:exactMatch is reserved for semantic identity. Separately minted terms with
+      differing definitions take skos:closeMatch; a narrower spo term under a broader
+      counterpart takes skos:narrowMatch; merely adjacent terms take skos:relatedMatch.
+  - id: MC-4
+    rule: >-
+      Every row pins the exact version of both sides. An unpinned reference is void —
+      the CCO suite's own membership changed between 2021 and 2024.
+  - id: MC-5
+    rule: >-
+      A gap (spo has no term) is NOT expressible as a mapping — there is no subject to
+      map from. Gaps are handled as downstream referrals in SP-ONT-SPEC-01 §4.4.3.
+
+# Predicates admitted by C7. Extending this set widens what the gate accepts and is a G-4
+# change (record it in the standard and the changelog, same commit).
+predicates:
+  - skos:exactMatch
+  - skos:closeMatch
+  - skos:narrowMatch
+  - skos:broadMatch
+  - skos:relatedMatch
+
+# Counterpart artifacts, pinned.
+counterparts:
+  - name: CCO
+    title: Common Core Ontologies
+    version: v2.2
+    released: '2026-08-14'
+    license: BSD-3-Clause
+    repository: https://github.com/CommonCoreOntology/CommonCoreOntologies
+    namespace: https://www.commoncoreontologies.org/
+    mapping_file: spo-to-cco.sssom.tsv
+    note: >-
+      OWL 2 only; modules import one another (Information Entity imports Time and
+      Geospatial; Agent imports Information Entity), which is one reason spo maps rather
+      than imports (SpO Domain-Ontology Standard §4.4.3 (d)).
+
+# Counterparts assessed and deliberately NOT mapped (recording the negative decision is
+# part of the ruling — see SP-ONT-REPORT-01 §7.6).
+not_mapped:
+  - name: CCO Facility Ontology / Currency Unit Ontology and the CCO application ontologies
+    reason: domain content; mapping would import domain names into spo's documentation face
+  - name: CCO Geospatial Ontology
+    reason: >-
+      nominal overlap with spo-geometry only — CCO's scope is near-Earth geographic space,
+      spo's is computational geometry and meshes (SP-ONT-REPORT-01 O-5)
+  - name: IOF Core
+    reason: >-
+      a peer relative mid-level ontology, not an upstream; its manufacturing vocabulary is
+      domain content spo does not consume. Its Release_202401 QUDT guideline is adopted as
+      a pattern (M-4), which requires no mapping row.
+  - name: EMMO
+    reason: extends a different top-level ontology; comparison only (SP-ONT-REPORT-01 §3.2)
