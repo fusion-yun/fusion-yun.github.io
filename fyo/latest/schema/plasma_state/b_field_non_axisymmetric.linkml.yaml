@@ -1,0 +1,282 @@
+id: https://fusion-yun.github.io/fyo/v0.9.g5b9d6bbb/b_field_non_axisymmetric
+name: fyo-b_field_non_axisymmetric
+title: fyo IDS `b_field_non_axisymmetric` (lifted, DD 4.1.1)
+description: 'Semantic lift of IMAS DD IDS `b_field_non_axisymmetric` onto SpO/BFO (FYTOK-ADR-102): structures
+  grounded as ICEs, time-slice AoS elements as spo:TimeSlice, leaves annotated with their spo carrier
+  classes (Signal / Field / Function / QuantityValue / TimeAxis). Layout is preserved in dd_* annotations
+  (reverse map ω).'
+license: Apache-2.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  fyo: https://fusion-yun.github.io/fyo/v0.9.g5b9d6bbb/
+  spo: https://fusion-yun.github.io/spo/latest/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+default_prefix: fyo
+default_range: string
+imports:
+- linkml:types
+- spo
+- fyo-core
+- fyo-common
+annotations:
+  generated_by: dd2fyo 0.1.0
+  dd_version: 4.1.1
+  dd_source: IMAS DD schemas/b_field_non_axisymmetric/dd_b_field_non_axisymmetric.xsd (import ancestry)
+  fyo_category: plasma_state
+  fyo_root_class: BFieldNonAxisymmetric
+  provenance: Imported from IMAS DD 4.1.1 via dd2fyo; fyo evolves independently — hand
+    edits are legitimate, dd_* annotations record DD ancestry.
+classes:
+  BFieldNonAxisymmetric:
+    is_a: Dataset
+    description: Vacuum 3d error magnetic field (the full 3d magnetic field with the axisymmetric components
+      subtracted)
+    annotations:
+      dd_path: b_field_non_axisymmetric
+      fyo_category: plasma_state
+    attributes:
+      ids_properties:
+        range: IdsProperties
+        description: Interface Data Structure properties. This element identifies the node above as an
+          IDS
+      configuration:
+        range: string
+        description: In case of a constant (single time slice) b_field description, name of the corresponding
+          scenario/configuration
+        annotations:
+          dd_type: static
+      control_surface_names:
+        range: string
+        multivalued: true
+        description: List of control surface names, refers to the ../time_slice/control_surface index
+        annotations:
+          dd_type: constant
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      time_slice:
+        range: BFieldNaTimeSlice
+        multivalued: true
+        description: Set of time slices
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+      code:
+        range: IdsCode
+        description: Generic decription of the code-specific parameters for the code that has produced
+          this IDS
+      time:
+        range: float
+        multivalued: true
+        description: Generic time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  BFieldNaTimeSlice:
+    is_a: TimeSlice
+    description: Set of time slices
+    annotations:
+      dd_type_name: b_field_na_time_slice
+      dd_path: b_field_non_axisymmetric/time_slice
+      fyo_lift: time_slice
+    attributes:
+      field_map:
+        range: BFieldNaFieldMap
+        description: Description of the error field map
+      control_surface:
+        range: BFieldNaSurface
+        multivalued: true
+        description: Magnetic field components and Fourier decomposition of the normal components of the
+          magnetic field for a set of given control surfaces
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: ../../control_surface_names
+      time:
+        range: float
+        description: Time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  BFieldNaFieldMap:
+    is_a: InformationContentEntity
+    description: Description of the error field map
+    annotations:
+      dd_type_name: b_field_na_field_map
+      dd_path: b_field_non_axisymmetric/time_slice/field_map
+    attributes:
+      grid:
+        range: Rphiz1dDynamicAos3
+        description: 3D grid
+      b_field_r:
+        range: float
+        multivalued: true
+        description: R component of the vacuum error magnetic field
+        annotations:
+          dd_type: dynamic
+          dd_units: T
+          dd_ndim: 3
+          dd_coordinate1: ../grid/r
+          dd_coordinate2: ../grid/phi
+          dd_coordinate3: ../grid/z
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../grid/r,../grid/phi,../grid/z
+      b_field_phi:
+        range: float
+        multivalued: true
+        description: Toroidal component of the vacuum error magnetic field
+        annotations:
+          dd_type: dynamic
+          dd_units: T
+          dd_ndim: 3
+          dd_coordinate1: ../grid/r
+          dd_coordinate2: ../grid/phi
+          dd_coordinate3: ../grid/z
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../grid/r,../grid/phi,../grid/z
+      b_field_z:
+        range: float
+        multivalued: true
+        description: Z component of the vacuum error magnetic field
+        annotations:
+          dd_type: dynamic
+          dd_units: T
+          dd_ndim: 3
+          dd_coordinate1: ../grid/r
+          dd_coordinate2: ../grid/phi
+          dd_coordinate3: ../grid/z
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../grid/r,../grid/phi,../grid/z
+      ripple_amplitude:
+        range: float
+        multivalued: true
+        description: Value of (b_field_max-b_field_min)/(b_field_max+b_field_min), where b_field_max resp.
+          b_field_min) is the maximum (resp. minimum) of the magnetic field amplitude over a 2pi rotation
+          in toroidal angle phi at a given R, Z position.
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: ../grid/r
+          dd_coordinate2: ../grid/z
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../grid/r,../grid/z
+  BFieldNaSurface:
+    is_a: InformationContentEntity
+    description: Magnetic field components and Fourier decomposition of the normal components of the magnetic
+      field for a set of given control surfaces
+    annotations:
+      dd_type_name: b_field_na_surface
+      dd_path: b_field_non_axisymmetric/time_slice/control_surface
+    attributes:
+      outline:
+        range: Rz1dDynamicAos
+        description: Set of points defining the surface in a poloidal plane. The surface then extends
+          in the toroidal direction in an axisymmetric way
+      normal_vector:
+        range: Rz1dDynamicAos
+        description: Components of the normal vector to the surface, given on each point of the surface
+      phi:
+        range: float
+        multivalued: true
+        description: Toroidal angle array, on which the Fourier decomposition is carried out
+        annotations:
+          dd_type: dynamic
+          dd_units: rad
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      n_phi:
+        range: integer
+        multivalued: true
+        description: Toroidal mode number
+        annotations:
+          dd_type: dynamic
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      b_field_r:
+        range: float
+        multivalued: true
+        description: R component of the vacuum error magnetic field on the various surface points
+        annotations:
+          dd_type: dynamic
+          dd_units: T
+          dd_ndim: 2
+          dd_coordinate1: ../outline/r
+          dd_coordinate2: ../phi
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../outline/r,../phi
+      b_field_phi:
+        range: float
+        multivalued: true
+        description: Toroidal component of the vacuum error magnetic field on the various surface points
+        annotations:
+          dd_type: dynamic
+          dd_units: T
+          dd_ndim: 2
+          dd_coordinate1: ../outline/r
+          dd_coordinate2: ../phi
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../outline/r,../phi
+      b_field_z:
+        range: float
+        multivalued: true
+        description: Z component of the vacuum error magnetic field on the various surface points
+        annotations:
+          dd_type: dynamic
+          dd_units: T
+          dd_ndim: 2
+          dd_coordinate1: ../outline/r
+          dd_coordinate2: ../phi
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../outline/r,../phi
+      b_field_normal:
+        range: float
+        multivalued: true
+        description: Normal component of the vacuum error magnetic field on the various surface points
+        annotations:
+          dd_type: dynamic
+          dd_units: T
+          dd_ndim: 2
+          dd_coordinate1: ../outline/r
+          dd_coordinate2: ../phi
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../outline/r,../phi
+      b_field_normal_fourier:
+        range: complex
+        multivalued: true
+        description: Fourier coefficients of the normal component of the vacuum error magnetic field on
+          the various surface points
+        annotations:
+          dd_type: dynamic
+          dd_units: T
+          dd_ndim: 2
+          dd_coordinate1: ../outline/r
+          dd_coordinate2: ../n_phi
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../outline/r,../n_phi

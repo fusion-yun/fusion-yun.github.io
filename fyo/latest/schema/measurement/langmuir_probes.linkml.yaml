@@ -1,0 +1,670 @@
+id: https://fusion-yun.github.io/fyo/v0.9.g5b9d6bbb/langmuir_probes
+name: fyo-langmuir_probes
+title: fyo IDS `langmuir_probes` (lifted, DD 4.1.1)
+description: 'Semantic lift of IMAS DD IDS `langmuir_probes` onto SpO/BFO (FYTOK-ADR-102): structures
+  grounded as ICEs, time-slice AoS elements as spo:TimeSlice, leaves annotated with their spo carrier
+  classes (Signal / Field / Function / QuantityValue / TimeAxis). Layout is preserved in dd_* annotations
+  (reverse map ω).'
+license: Apache-2.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  fyo: https://fusion-yun.github.io/fyo/v0.9.g5b9d6bbb/
+  spo: https://fusion-yun.github.io/spo/latest/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+default_prefix: fyo
+default_range: string
+imports:
+- linkml:types
+- spo
+- fyo-core
+- fyo-common
+annotations:
+  generated_by: dd2fyo 0.1.0
+  dd_version: 4.1.1
+  dd_source: IMAS DD schemas/langmuir_probes/dd_langmuir_probes.xsd (import ancestry)
+  fyo_category: measurement
+  fyo_root_class: LangmuirProbes
+  provenance: Imported from IMAS DD 4.1.1 via dd2fyo; fyo evolves independently — hand
+    edits are legitimate, dd_* annotations record DD ancestry.
+classes:
+  LangmuirProbes:
+    is_a: Dataset
+    description: Langmuir probes
+    annotations:
+      dd_path: langmuir_probes
+      fyo_category: measurement
+    attributes:
+      ids_properties:
+        range: IdsProperties
+        description: Interface Data Structure properties. This element identifies the node above as an
+          IDS
+      midplane:
+        range: Identifier
+        description: Choice of midplane definition for the mapping of measurements on an equilibrium (use
+          the lowest index number if more than one value is relevant). Indicate the IMAS URI of the used
+          equilibrium IDS in the ids_properties/provenance structure.
+      embedded:
+        range: LangmuirProbesEmbedded
+        multivalued: true
+        description: Set of embedded (in a plasma facing component) probes
+        annotations:
+          dd_max_occurs: '100'
+          dd_coordinate1: 1...N
+      reciprocating:
+        range: LangmuirProbesReciprocating
+        multivalued: true
+        description: Set of reciprocating probes
+        annotations:
+          dd_max_occurs: '100'
+          dd_coordinate1: 1...N
+      latency:
+        range: float
+        description: Upper bound of the delay between physical information received by the detector and
+          data available on the real-time (RT) network.
+        annotations:
+          dd_type: static
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      code:
+        range: IdsCode
+        description: Generic decription of the code-specific parameters for the code that has produced
+          this IDS
+      time:
+        range: float
+        multivalued: true
+        description: Generic time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  LangmuirProbesEmbedded:
+    is_a: InformationContentEntity
+    description: Set of embedded (in a plasma facing component) probes
+    annotations:
+      dd_type_name: langmuir_probes_embedded
+      dd_path: langmuir_probes/embedded
+    attributes:
+      name:
+        range: string
+        description: Short string identifier (unique for a given device)
+        annotations:
+          dd_type: static
+      description:
+        range: string
+        description: Description, e.g. “channel viewing the upper divertor”
+        annotations:
+          dd_type: static
+      position:
+        range: Rphiz0dStatic
+        description: Position of the measurements
+      surface_area:
+        range: float
+        description: Area of the probe surface exposed to the plasma (use when assuming constant effective
+          collection area)
+        annotations:
+          dd_type: static
+          dd_units: m^2
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      surface_area_effective:
+        range: PhysicalQuantityFlt1dTime1
+        description: Effective collection area of the probe surface, varying with time due to e.g. changes
+          in the magnetic field line incidence angle
+        annotations:
+          dd_units: m^2
+      v_floating:
+        range: PhysicalQuantityFlt1dTime1
+        description: Floating potential
+        annotations:
+          dd_units: V
+      v_floating_sigma:
+        range: PhysicalQuantityFlt1dTime1
+        description: Standard deviation of the floating potential, corresponding to the fluctuations of
+          the quantity over time
+        annotations:
+          dd_units: V
+      v_plasma:
+        range: PhysicalQuantityFlt1dTime1
+        description: Plasma potential
+        annotations:
+          dd_units: V
+      t_e:
+        range: PhysicalQuantityFlt1dTime1
+        description: Electron temperature
+        annotations:
+          dd_units: eV
+      n_e:
+        range: PhysicalQuantityFlt1dTime1
+        description: Electron density
+        annotations:
+          dd_units: m^-3
+      t_i:
+        range: PhysicalQuantityFlt1dTime1
+        description: Ion temperature
+        annotations:
+          dd_units: eV
+      j_i_parallel:
+        range: PhysicalQuantityFlt1dTime1
+        description: Ion parallel current density at the probe position
+        annotations:
+          dd_units: A.m^-2
+      j_i_parallel_sigma:
+        range: PhysicalQuantityFlt1dTime1
+        description: Standard deviation of ion parallel current density at the probe position
+        annotations:
+          dd_units: A.m^-2
+      ion_saturation_current:
+        range: PhysicalQuantityFlt1dTime1
+        description: Ion saturation current measured by the probe
+        annotations:
+          dd_units: A
+      j_i_saturation:
+        range: PhysicalQuantityFlt1dTime1
+        description: Ion saturation current density
+        annotations:
+          dd_units: A.m^-2
+      j_i_saturation_skew:
+        range: PhysicalQuantityFlt1dTime1
+        description: Skew of the ion saturation current density
+        annotations:
+          dd_units: '1'
+      j_i_saturation_kurtosis:
+        range: PhysicalQuantityFlt1dTime1
+        description: Pearson kurtosis of the ion saturation current density
+        annotations:
+          dd_units: '1'
+      j_i_saturation_sigma:
+        range: PhysicalQuantityFlt1dTime1
+        description: Standard deviation of the ion saturation current density, corresponding to the fluctuations
+          of the quantity over time
+        annotations:
+          dd_units: A.m^-2
+      heat_flux_parallel:
+        range: PhysicalQuantityFlt1dTime1
+        description: Parallel heat flux at the probe position
+        annotations:
+          dd_units: W.m^-2
+      fluence:
+        range: PhysicalQuantityFlt1dTime1
+        description: Positive charge fluence normal to an ideal axisymmetric surface of the divertor (assuming
+          no shaping), estimated at the probe location.
+        annotations:
+          dd_units: m^-2
+      b_field_angle:
+        range: PhysicalQuantityFlt1dTime1
+        description: Incident angle of the magnetic field with respect to PFC surface
+        annotations:
+          dd_units: rad
+      distance_separatrix_midplane:
+        range: PhysicalQuantityFlt1dTime1
+        description: Distance between the measurement position and the separatrix, mapped along flux surfaces
+          to the outboard midplane, in the major radius direction. Positive value means the measurement
+          is outside of the separatrix.
+        annotations:
+          dd_units: m
+      multi_temperature_fits:
+        range: LangmuirProbesMultiTemperature
+        multivalued: true
+        description: Set of temperatures describing the electron and ion distribution functions in case
+          of multi-temperature fits
+        annotations:
+          dd_max_occurs: '2'
+          dd_coordinate1: 1...N
+      time:
+        range: float
+        multivalued: true
+        description: Timebase for the dynamic nodes of this probe located at this level of the IDS structure
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  LangmuirProbesMultiTemperature:
+    is_a: InformationContentEntity
+    description: Set of temperatures describing the electron and ion distribution functions in case of
+      multi-temperature fits
+    annotations:
+      dd_type_name: langmuir_probes_multi_temperature
+      dd_path: langmuir_probes/embedded/multi_temperature_fits
+    attributes:
+      t_e:
+        range: PhysicalQuantityFlt1dTime1
+        description: Electron temperature
+        annotations:
+          dd_units: eV
+      t_i:
+        range: PhysicalQuantityFlt1dTime1
+        description: Ion temperature
+        annotations:
+          dd_units: eV
+      time:
+        range: float
+        multivalued: true
+        description: Timebase for the dynamic nodes of this probe located at this level of the IDS structure
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  LangmuirProbesReciprocating:
+    is_a: InformationContentEntity
+    description: Set of reciprocating probes
+    annotations:
+      dd_type_name: langmuir_probes_reciprocating
+      dd_path: langmuir_probes/reciprocating
+    attributes:
+      name:
+        range: string
+        description: Short string identifier (unique for a given device)
+        annotations:
+          dd_type: static
+      description:
+        range: string
+        description: Description, e.g. “channel viewing the upper divertor”
+        annotations:
+          dd_type: static
+      surface_area:
+        range: float
+        multivalued: true
+        description: Area of the surface exposed to the plasma of each collector (constant assuming negligible
+          dependence on e.g. the magnetic field line angle)
+        annotations:
+          dd_type: static
+          dd_units: m^2
+          dd_ndim: 1
+          dd_coordinate1: ../plunge(itime)/collector
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../plunge(itime)/collector
+      plunge:
+        range: LangmuirProbesPlunge
+        multivalued: true
+        description: Set of plunges of this probe during the pulse, each plunge being recorded as a time
+          slice from the Access Layer point of view. The time child node corresponds to the time of maximum
+          penetration of the probe during a given plunge. The dynamics of physical quantities within the
+          plunge are described via the time_within_plunge vector.
+        annotations:
+          dd_type: dynamic
+          dd_max_occurs: unbounded
+          dd_coordinate1: time
+          fyo_layout: aos
+  LangmuirProbesPlunge:
+    is_a: TimeSlice
+    description: Set of plunges of this probe during the pulse, each plunge being recorded as a time slice
+      from the Access Layer point of view. The time child node corresponds to the time of maximum penetration
+      of the probe during a given plunge. The dynamics of physical quantities within the plunge are described
+      via the time_within_plunge vector.
+    annotations:
+      dd_type_name: langmuir_probes_plunge
+      dd_path: langmuir_probes/reciprocating/plunge
+      fyo_lift: time_slice
+    attributes:
+      position_average:
+        range: LangmuirProbesPositionReciprocating
+        description: Average position of the measurements derived from multiple collectors
+      collector:
+        range: LangmuirProbesPlungeCollector
+        multivalued: true
+        description: Set of probe collectors including measurements specific to each collector. The number
+          of collectors (size of this array of structure) is assumed to remain constant for all plunges
+        annotations:
+          dd_max_occurs: unbounded
+          dd_coordinate1: 1...N
+      v_plasma:
+        range: LangmuirProbesPlungePhysicalQuantity
+        description: Plasma potential
+        annotations:
+          dd_units: V
+      t_e_average:
+        range: LangmuirProbesPlungePhysicalQuantity
+        description: Electron temperature (upstream to downstream average)
+        annotations:
+          dd_units: eV
+      t_i_average:
+        range: LangmuirProbesPlungePhysicalQuantity
+        description: Ion temperature (upstream to downstream average)
+        annotations:
+          dd_units: eV
+      n_e:
+        range: LangmuirProbesPlungePhysicalQuantity
+        description: Electron density
+        annotations:
+          dd_units: m^-3
+      b_field_angle:
+        range: LangmuirProbesPlungePhysicalQuantity
+        description: Incident angle of the magnetic field with respect to PFC surface
+        annotations:
+          dd_units: rad
+      distance_separatrix_midplane:
+        range: LangmuirProbesPlungePhysicalQuantity
+        description: Distance between the measurement position and the separatrix, mapped along flux surfaces
+          to the outboard midplane, in the major radius direction. Positive value means the measurement
+          is outside of the separatrix.
+        annotations:
+          dd_units: m
+      distance_x_point_z:
+        range: LangmuirProbesPlungePhysicalQuantity
+        description: Distance in the z direction of the measurement position to the closest X-point (Zmeasurement-Zx_point)
+        annotations:
+          dd_units: m
+      mach_number_parallel:
+        range: LangmuirProbesPlungePhysicalQuantity
+        description: Parallel Mach number
+        annotations:
+          dd_units: '1'
+      time_within_plunge:
+        range: float
+        multivalued: true
+        description: Time vector for describing the dynamics within the plunge
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      time:
+        range: float
+        description: Time of maximum penetration of the probe during a given plunge
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  LangmuirProbesPositionReciprocating:
+    is_a: InformationContentEntity
+    description: Average position of the measurements derived from multiple collectors
+    annotations:
+      dd_type_name: langmuir_probes_position_reciprocating
+      dd_path: langmuir_probes/reciprocating/plunge/position_average
+    attributes:
+      r:
+        range: float
+        multivalued: true
+        description: Major radius
+        annotations:
+          dd_type: dynamic
+          dd_units: m
+          dd_ndim: 1
+          dd_coordinate1: ../../time_within_plunge
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../time_within_plunge
+      z:
+        range: float
+        multivalued: true
+        description: Height
+        annotations:
+          dd_type: dynamic
+          dd_units: m
+          dd_ndim: 1
+          dd_coordinate1: ../../time_within_plunge
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../time_within_plunge
+      phi:
+        range: float
+        multivalued: true
+        description: Toroidal angle
+        annotations:
+          dd_type: dynamic
+          dd_units: rad
+          dd_ndim: 1
+          dd_coordinate1: ../../time_within_plunge
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../time_within_plunge
+      validity_timed:
+        range: integer
+        multivalued: true
+        description: 'Indicator of the validity of the position data for each time slice. 0: valid from
+          automated processing, 1: valid and certified by the diagnostic RO; - 1 means problem identified
+          in the data processing (request verification by the diagnostic RO), -2: invalid data, should
+          not be used (values lower than -2 have a code-specific meaning detailing the origin of their
+          invalidity)'
+        annotations:
+          dd_type: dynamic
+          dd_ndim: 1
+          dd_coordinate1: ../../time_within_plunge
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../time_within_plunge
+      validity:
+        range: integer
+        description: 'Indicator of the validity of the position data for the whole plunge. 0: valid from
+          automated processing, 1: valid and certified by the diagnostic RO; - 1 means problem identified
+          in the data processing (request verification by the diagnostic RO), -2: invalid data, should
+          not be used (values lower than -2 have a code-specific meaning detailing the origin of their
+          invalidity)'
+        annotations:
+          dd_type: dynamic
+  LangmuirProbesPlungeCollector:
+    is_a: InformationContentEntity
+    description: Set of probe collectors including measurements specific to each collector. The number
+      of collectors (size of this array of structure) is assumed to remain constant for all plunges
+    annotations:
+      dd_type_name: langmuir_probes_plunge_collector
+      dd_path: langmuir_probes/reciprocating/plunge/collector
+    attributes:
+      position:
+        range: LangmuirProbesPositionReciprocating2
+        description: Position of the collector
+      v_floating:
+        range: LangmuirProbesPlungePhysicalQuantity2
+        description: Floating potential
+        annotations:
+          dd_units: V
+      v_floating_sigma:
+        range: LangmuirProbesPlungePhysicalQuantity2
+        description: Standard deviation of the floating potential, corresponding to the fluctuations of
+          the quantity over time
+        annotations:
+          dd_units: V
+      t_e:
+        range: LangmuirProbesPlungePhysicalQuantity2
+        description: Electron temperature
+        annotations:
+          dd_units: eV
+      t_i:
+        range: LangmuirProbesPlungePhysicalQuantity2
+        description: Ion temperature
+        annotations:
+          dd_units: eV
+      j_i_parallel:
+        range: LangmuirProbesPlungePhysicalQuantity2
+        description: Ion parallel current density at the probe position
+        annotations:
+          dd_units: A.m^-2
+      ion_saturation_current:
+        range: LangmuirProbesPlungePhysicalQuantity2
+        description: Ion saturation current measured by the probe
+        annotations:
+          dd_units: A
+      j_i_saturation:
+        range: LangmuirProbesPlungePhysicalQuantity2
+        description: Ion saturation current density
+        annotations:
+          dd_units: A.m^-2
+      j_i_skew:
+        range: LangmuirProbesPlungePhysicalQuantity2
+        description: Skew of the ion saturation current density
+        annotations:
+          dd_units: '1'
+      j_i_kurtosis:
+        range: LangmuirProbesPlungePhysicalQuantity2
+        description: Pearson kurtosis of the ion saturation current density
+        annotations:
+          dd_units: '1'
+      j_i_sigma:
+        range: LangmuirProbesPlungePhysicalQuantity2
+        description: Standard deviation of the ion saturation current density, corresponding to the fluctuations
+          of the quantity over time
+        annotations:
+          dd_units: A.m^-2
+      heat_flux_parallel:
+        range: LangmuirProbesPlungePhysicalQuantity2
+        description: Parallel heat flux at the probe position
+        annotations:
+          dd_units: W.m^-2
+  LangmuirProbesPositionReciprocating2:
+    is_a: InformationContentEntity
+    description: Position of the collector
+    annotations:
+      dd_type_name: langmuir_probes_position_reciprocating_2
+      dd_path: langmuir_probes/reciprocating/plunge/collector/position
+    attributes:
+      r:
+        range: float
+        multivalued: true
+        description: Major radius
+        annotations:
+          dd_type: dynamic
+          dd_units: m
+          dd_ndim: 1
+          dd_coordinate1: ../../../time_within_plunge
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../time_within_plunge
+      z:
+        range: float
+        multivalued: true
+        description: Height
+        annotations:
+          dd_type: dynamic
+          dd_units: m
+          dd_ndim: 1
+          dd_coordinate1: ../../../time_within_plunge
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../time_within_plunge
+      phi:
+        range: float
+        multivalued: true
+        description: Toroidal angle
+        annotations:
+          dd_type: dynamic
+          dd_units: rad
+          dd_ndim: 1
+          dd_coordinate1: ../../../time_within_plunge
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../time_within_plunge
+      validity_timed:
+        range: integer
+        multivalued: true
+        description: 'Indicator of the validity of the position data for each time slice. 0: valid from
+          automated processing, 1: valid and certified by the diagnostic RO; - 1 means problem identified
+          in the data processing (request verification by the diagnostic RO), -2: invalid data, should
+          not be used (values lower than -2 have a code-specific meaning detailing the origin of their
+          invalidity)'
+        annotations:
+          dd_type: dynamic
+          dd_ndim: 1
+          dd_coordinate1: ../../../time_within_plunge
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../time_within_plunge
+      validity:
+        range: integer
+        description: 'Indicator of the validity of the position data for the whole plunge. 0: valid from
+          automated processing, 1: valid and certified by the diagnostic RO; - 1 means problem identified
+          in the data processing (request verification by the diagnostic RO), -2: invalid data, should
+          not be used (values lower than -2 have a code-specific meaning detailing the origin of their
+          invalidity)'
+        annotations:
+          dd_type: dynamic
+  LangmuirProbesPlungePhysicalQuantity2:
+    is_a: InformationContentEntity
+    description: Floating potential
+    annotations:
+      dd_type_name: langmuir_probes_plunge_physical_quantity_2
+      dd_path: langmuir_probes/reciprocating/plunge/collector/v_floating
+    attributes:
+      data:
+        range: float
+        multivalued: true
+        description: Data
+        annotations:
+          dd_type: dynamic
+          dd_units: as_parent
+          dd_ndim: 1
+          dd_coordinate1: ../../../time_within_plunge
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../time_within_plunge
+      validity_timed:
+        range: integer
+        multivalued: true
+        description: 'Indicator of the validity of the data for each time slice. 0: valid from automated
+          processing, 1: valid and certified by the diagnostic RO; - 1 means problem identified in the
+          data processing (request verification by the diagnostic RO), -2: invalid data, should not be
+          used (values lower than -2 have a code-specific meaning detailing the origin of their invalidity)'
+        annotations:
+          dd_type: dynamic
+          dd_ndim: 1
+          dd_coordinate1: ../../../time_within_plunge
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../../time_within_plunge
+      validity:
+        range: integer
+        description: 'Indicator of the validity of the data for the whole plunge. 0: valid from automated
+          processing, 1: valid and certified by the diagnostic RO; - 1 means problem identified in the
+          data processing (request verification by the diagnostic RO), -2: invalid data, should not be
+          used (values lower than -2 have a code-specific meaning detailing the origin of their invalidity)'
+        annotations:
+          dd_type: dynamic
+  LangmuirProbesPlungePhysicalQuantity:
+    is_a: InformationContentEntity
+    description: Plasma potential
+    annotations:
+      dd_type_name: langmuir_probes_plunge_physical_quantity
+      dd_path: langmuir_probes/reciprocating/plunge/v_plasma
+    attributes:
+      data:
+        range: float
+        multivalued: true
+        description: Data
+        annotations:
+          dd_type: dynamic
+          dd_units: as_parent
+          dd_ndim: 1
+          dd_coordinate1: ../../time_within_plunge
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../time_within_plunge
+      validity_timed:
+        range: integer
+        multivalued: true
+        description: 'Indicator of the validity of the data for each time slice. 0: valid from automated
+          processing, 1: valid and certified by the diagnostic RO; - 1 means problem identified in the
+          data processing (request verification by the diagnostic RO), -2: invalid data, should not be
+          used (values lower than -2 have a code-specific meaning detailing the origin of their invalidity)'
+        annotations:
+          dd_type: dynamic
+          dd_ndim: 1
+          dd_coordinate1: ../../time_within_plunge
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../../time_within_plunge
+      validity:
+        range: integer
+        description: 'Indicator of the validity of the data for the whole plunge. 0: valid from automated
+          processing, 1: valid and certified by the diagnostic RO; - 1 means problem identified in the
+          data processing (request verification by the diagnostic RO), -2: invalid data, should not be
+          used (values lower than -2 have a code-specific meaning detailing the origin of their invalidity)'
+        annotations:
+          dd_type: dynamic

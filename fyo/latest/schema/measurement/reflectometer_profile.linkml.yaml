@@ -1,0 +1,292 @@
+id: https://fusion-yun.github.io/fyo/v0.9.g5b9d6bbb/reflectometer_profile
+name: fyo-reflectometer_profile
+title: fyo IDS `reflectometer_profile` (lifted, DD 4.1.1)
+description: 'Semantic lift of IMAS DD IDS `reflectometer_profile` onto SpO/BFO (FYTOK-ADR-102): structures
+  grounded as ICEs, time-slice AoS elements as spo:TimeSlice, leaves annotated with their spo carrier
+  classes (Signal / Field / Function / QuantityValue / TimeAxis). Layout is preserved in dd_* annotations
+  (reverse map ω).'
+license: Apache-2.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  fyo: https://fusion-yun.github.io/fyo/v0.9.g5b9d6bbb/
+  spo: https://fusion-yun.github.io/spo/latest/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+default_prefix: fyo
+default_range: string
+imports:
+- linkml:types
+- spo
+- fyo-core
+- fyo-common
+annotations:
+  generated_by: dd2fyo 0.1.0
+  dd_version: 4.1.1
+  dd_source: IMAS DD schemas/reflectometer_profile/dd_reflectometer_profile.xsd (import ancestry)
+  fyo_category: measurement
+  fyo_root_class: ReflectometerProfile
+  provenance: Imported from IMAS DD 4.1.1 via dd2fyo; fyo evolves independently — hand
+    edits are legitimate, dd_* annotations record DD ancestry.
+classes:
+  ReflectometerProfile:
+    is_a: Dataset
+    description: Profile reflectometer diagnostic. Multiple reflectometers are considered as independent
+      diagnostics to be handled with different occurrence numbers
+    annotations:
+      dd_path: reflectometer_profile
+      fyo_category: measurement
+    attributes:
+      ids_properties:
+        range: IdsProperties
+        description: Interface Data Structure properties. This element identifies the node above as an
+          IDS
+      type:
+        range: string
+        description: Type of reflectometer (frequency_swept, radar, ...)
+        annotations:
+          dd_type: static
+      channel:
+        range: ReflectometerChannel
+        multivalued: true
+        description: Set of channels, e.g. different reception antennas or frequency bandwidths of the
+          reflectometer
+        annotations:
+          dd_max_occurs: '5'
+          dd_coordinate1: 1...N
+      position:
+        range: ReflectometerProfilePosition2d
+        description: Position associated to the density reconstruction from multiple channels
+      n_e:
+        range: SignalFlt2d
+        description: Electron density reconstructed from multiple channels
+        annotations:
+          dd_units: m^-3
+          dd_coordinate1: 1...N
+          dd_coordinate2: time
+      psi_normalization:
+        range: PsiNormalization
+        description: Quantities to use to normalize psi, as a function of time
+      latency:
+        range: float
+        description: Upper bound of the delay between physical information received by the detector and
+          data available on the real-time (RT) network.
+        annotations:
+          dd_type: static
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      code:
+        range: IdsCode
+        description: Generic decription of the code-specific parameters for the code that has produced
+          this IDS
+      time:
+        range: float
+        multivalued: true
+        description: Generic time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  ReflectometerChannel:
+    is_a: InformationContentEntity
+    description: Set of channels, e.g. different reception antennas or frequency bandwidths of the reflectometer
+    annotations:
+      dd_type_name: reflectometer_channel
+      dd_path: reflectometer_profile/channel
+    attributes:
+      name:
+        range: string
+        description: Short string identifier (unique for a given device)
+        annotations:
+          dd_type: static
+      description:
+        range: string
+        description: Description, e.g. “channel viewing the upper divertor”
+        annotations:
+          dd_type: static
+      mode:
+        range: string
+        description: Detection mode "X" or "O"
+        annotations:
+          dd_type: static
+      line_of_sight_emission:
+        range: LineOfSight2points
+        description: Description of the line of sight of the emission antenna. The first point corresponds
+          to the centre of the antenna mouth. The second point correspond to the interception of the line
+          of sight with the reflection surface on the inner wall.
+      line_of_sight_detection:
+        range: LineOfSight2points
+        description: Description of the line of sight of the detection antenna, to be filled only if its
+          position is distinct from the emission antenna. The first point corresponds to the centre of
+          the antenna mouth. The second point correspond to the interception of the line of sight with
+          the reflection surface on the inner wall.
+      antenna_emission:
+        range: DetectorAperture
+        description: Geometry of the emission antenna
+      antenna_detection:
+        range: DetectorAperture
+        description: Geometry of the detection antenna, to be filled only if it is distinct from the emission
+          antenna.
+      sweep_time:
+        range: float
+        description: Duration of a sweep
+        annotations:
+          dd_type: static
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      frequencies:
+        range: float
+        multivalued: true
+        description: Array of frequencies scanned during a sweep
+        annotations:
+          dd_type: static
+          dd_units: Hz
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      phase:
+        range: SignalFlt2d
+        description: Measured phase of the probing wave for each frequency and time slice (corresponding
+          to the begin time of a sweep), relative to the phase at launch
+        annotations:
+          dd_units: rad
+          dd_coordinate1: ../frequencies
+          dd_coordinate2: time
+      amplitude:
+        range: SignalFlt2d
+        description: Measured amplitude of the detected probing wave for each frequency and time slice
+          (corresponding to the begin time of a sweep)
+        annotations:
+          dd_units: V
+          dd_coordinate1: ../frequencies
+          dd_coordinate2: time
+      position:
+        range: ReflectometerProfilePosition2d
+        description: Position of the density measurements
+      n_e:
+        range: SignalFlt2d
+        description: Electron density
+        annotations:
+          dd_units: m^-3
+          dd_coordinate1: 1...N
+          dd_coordinate2: time
+      cut_off_frequency:
+        range: float
+        multivalued: true
+        description: Cut-off frequency as a function of measurement position and time
+        annotations:
+          dd_type: dynamic
+          dd_units: Hz
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../n_e/time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../n_e/time
+  ReflectometerProfilePosition2d:
+    is_a: InformationContentEntity
+    description: Position of the density measurements
+    annotations:
+      dd_type_name: reflectometer_profile_position_2d
+      dd_path: reflectometer_profile/channel/position
+    attributes:
+      r:
+        range: float
+        multivalued: true
+        description: Major radius
+        annotations:
+          dd_type: dynamic
+          dd_units: m
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../../n_e/time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../../n_e/time
+      phi:
+        range: float
+        multivalued: true
+        description: Toroidal angle (oriented counter-clockwise when viewing from above)
+        annotations:
+          dd_type: dynamic
+          dd_units: rad
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../../n_e/time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../../n_e/time
+      z:
+        range: float
+        multivalued: true
+        description: Height
+        annotations:
+          dd_type: dynamic
+          dd_units: m
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../../n_e/time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../../n_e/time
+      psi:
+        range: float
+        multivalued: true
+        description: Poloidal flux
+        annotations:
+          dd_type: dynamic
+          dd_units: Wb
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../../n_e/time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../../n_e/time
+      rho_tor_norm:
+        range: float
+        multivalued: true
+        description: Normalized toroidal flux coordinate
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../../n_e/time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../../n_e/time
+      rho_pol_norm:
+        range: float
+        multivalued: true
+        description: Normalized poloidal flux coordinate = sqrt((psi(rho)-psi(magnetic_axis)) / (psi(LCFS)-psi(magnetic_axis)))
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../../n_e/time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../../n_e/time
+      theta:
+        range: float
+        multivalued: true
+        description: Poloidal angle (oriented clockwise when viewing the poloidal cross section on the
+          right hand side of the tokamak axis of symmetry, with the origin placed on the plasma magnetic
+          axis)
+        annotations:
+          dd_type: dynamic
+          dd_units: rad
+          dd_ndim: 2
+          dd_coordinate1: 1...N
+          dd_coordinate2: ../../n_e/time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: 1...N,../../n_e/time

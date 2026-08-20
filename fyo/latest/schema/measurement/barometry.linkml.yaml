@@ -1,0 +1,105 @@
+id: https://fusion-yun.github.io/fyo/v0.9.g5b9d6bbb/barometry
+name: fyo-barometry
+title: fyo IDS `barometry` (lifted, DD 4.1.1)
+description: 'Semantic lift of IMAS DD IDS `barometry` onto SpO/BFO (FYTOK-ADR-102): structures grounded
+  as ICEs, time-slice AoS elements as spo:TimeSlice, leaves annotated with their spo carrier classes (Signal
+  / Field / Function / QuantityValue / TimeAxis). Layout is preserved in dd_* annotations (reverse map
+  ω).'
+license: Apache-2.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  fyo: https://fusion-yun.github.io/fyo/v0.9.g5b9d6bbb/
+  spo: https://fusion-yun.github.io/spo/latest/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+default_prefix: fyo
+default_range: string
+imports:
+- linkml:types
+- spo
+- fyo-core
+- fyo-common
+annotations:
+  generated_by: dd2fyo 0.1.0
+  dd_version: 4.1.1
+  dd_source: IMAS DD schemas/barometry/dd_barometry.xsd (import ancestry)
+  fyo_category: measurement
+  fyo_root_class: Barometry
+  provenance: Imported from IMAS DD 4.1.1 via dd2fyo; fyo evolves independently — hand
+    edits are legitimate, dd_* annotations record DD ancestry.
+classes:
+  Barometry:
+    is_a: Dataset
+    description: Pressure measurements in the vacuum vessel. NB will need to change the type of the pressure
+      node to signal_1d when moving to the new LL.
+    annotations:
+      dd_path: barometry
+      fyo_category: measurement
+    attributes:
+      ids_properties:
+        range: IdsProperties
+        description: Interface Data Structure properties. This element identifies the node above as an
+          IDS
+      gauge:
+        range: BarometryGauge
+        multivalued: true
+        description: Set of gauges
+        annotations:
+          dd_max_occurs: '20'
+          dd_coordinate1: 1...N
+      latency:
+        range: float
+        description: Upper bound of the delay between physical information received by the detector and
+          data available on the real-time (RT) network.
+        annotations:
+          dd_type: static
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      code:
+        range: IdsCode
+        description: Generic decription of the code-specific parameters for the code that has produced
+          this IDS
+      time:
+        range: float
+        multivalued: true
+        description: Generic time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  BarometryGauge:
+    is_a: InformationContentEntity
+    description: Set of gauges
+    annotations:
+      dd_type_name: barometry_gauge
+      dd_path: barometry/gauge
+    attributes:
+      name:
+        range: string
+        description: Name of the gauge
+        annotations:
+          dd_type: static
+      type:
+        range: Identifier
+        description: 'Type of the gauge (index = 1: Penning; index = 2: Baratron)'
+      position:
+        range: Rphiz0dStatic
+        description: Position of the measurements
+      pressure:
+        range: SignalFlt1d
+        description: Pressure
+        annotations:
+          dd_units: Pa
+      calibration_coefficient:
+        range: float
+        description: Coefficient used for converting raw signal into absolute pressure
+        annotations:
+          dd_type: static
+          dd_units: Pa
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity

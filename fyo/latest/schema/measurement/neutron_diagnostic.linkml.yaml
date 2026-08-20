@@ -1,0 +1,801 @@
+id: https://fusion-yun.github.io/fyo/v0.9.g5b9d6bbb/neutron_diagnostic
+name: fyo-neutron_diagnostic
+title: fyo IDS `neutron_diagnostic` (lifted, DD 4.1.1)
+description: 'Semantic lift of IMAS DD IDS `neutron_diagnostic` onto SpO/BFO (FYTOK-ADR-102): structures
+  grounded as ICEs, time-slice AoS elements as spo:TimeSlice, leaves annotated with their spo carrier
+  classes (Signal / Field / Function / QuantityValue / TimeAxis). Layout is preserved in dd_* annotations
+  (reverse map ω).'
+license: Apache-2.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  fyo: https://fusion-yun.github.io/fyo/v0.9.g5b9d6bbb/
+  spo: https://fusion-yun.github.io/spo/latest/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+default_prefix: fyo
+default_range: string
+imports:
+- linkml:types
+- spo
+- fyo-core
+- fyo-common
+annotations:
+  generated_by: dd2fyo 0.1.0
+  dd_version: 4.1.1
+  dd_source: IMAS DD schemas/neutron_diagnostic/dd_neutron_diagnostic.xsd (import ancestry)
+  fyo_category: measurement
+  fyo_root_class: NeutronDiagnostic
+  provenance: Imported from IMAS DD 4.1.1 via dd2fyo; fyo evolves independently — hand
+    edits are legitimate, dd_* annotations record DD ancestry.
+classes:
+  NeutronDiagnostic:
+    is_a: Dataset
+    description: Neutron diagnostic
+    annotations:
+      dd_path: neutron_diagnostic
+      fyo_category: measurement
+    attributes:
+      ids_properties:
+        range: IdsProperties
+        description: Interface Data Structure properties. This element identifies the node above as an
+          IDS
+      detector:
+        range: NeutronDiagnosticDetectors
+        multivalued: true
+        description: Set of neutron detection systems
+        annotations:
+          dd_max_occurs: '60'
+          dd_coordinate1: 1...N
+      reconstructed_emissivity:
+        range: NeutronDiagnosticEmissivity
+        description: Reconstructed emissivity parameters and data
+      neutron_flux_total:
+        range: float
+        multivalued: true
+        description: Total Neutron Flux reconstructed from the detectors signals
+        annotations:
+          dd_type: dynamic
+          dd_units: s^-1
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      fusion_power:
+        range: float
+        multivalued: true
+        description: Fusion power reconstructed from the detectors signals
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      latency:
+        range: float
+        description: Upper bound of the delay between physical information received by the detector and
+          data available on the real-time (RT) network.
+        annotations:
+          dd_type: static
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      code:
+        range: IdsCode
+        description: Generic decription of the code-specific parameters for the code that has produced
+          this IDS
+      time:
+        range: float
+        multivalued: true
+        description: Generic time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  NeutronDiagnosticDetectors:
+    is_a: InformationContentEntity
+    description: Set of neutron detection systems
+    annotations:
+      dd_type_name: neutron_diagnostic_detectors
+      dd_path: neutron_diagnostic/detector
+    attributes:
+      name:
+        range: string
+        description: Name of the detector
+        annotations:
+          dd_type: static
+      line_of_sight_index:
+        range: integer
+        description: Number of the line of sight where the detector is mounted
+        annotations:
+          dd_type: static
+      geometry:
+        range: DetectorAperture
+        description: Detector geometry
+      material:
+        range: Identifier
+        description: Name of detector's converter for resent particle
+      nuclei_n:
+        range: integer
+        description: Number of target nuclei in the dectector
+        annotations:
+          dd_type: static
+      temperature:
+        range: float
+        multivalued: true
+        description: Temperature of the detector
+        annotations:
+          dd_type: dynamic
+          dd_units: K
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      aperture:
+        range: DetectorAperture
+        multivalued: true
+        description: Description of a set of collimating apertures
+        annotations:
+          dd_max_occurs: '2'
+          dd_coordinate1: 1...N
+      mode:
+        range: NeutronDiagnosticDetectorMode
+        multivalued: true
+        description: Set of Measuring Modes simultaneously used by the detector
+        annotations:
+          dd_type: static
+          dd_max_occurs: '5'
+          dd_coordinate1: 1...N
+      energy_band:
+        range: DetectorEnergyBand
+        multivalued: true
+        description: Set of energy bands in which neutrons are counted by the detector
+        annotations:
+          dd_max_occurs: '1000'
+          dd_coordinate1: 1...N
+      exposure_time:
+        range: float
+        description: Exposure time
+        annotations:
+          dd_type: constant
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      adc:
+        range: NeutronDiagnosticAdc
+        description: Description of analogic-digital converter
+      supply_high_voltage:
+        range: NeutronDiagnosticSupply
+        description: Description of high voltage power supply
+      supply_low_voltage:
+        range: NeutronDiagnosticSupply
+        description: Description of low voltage power supply
+      test_generator:
+        range: NeutronDiagnosticTestGenerator
+        description: Test generator characteristics
+      b_field_sensor:
+        range: NeutronDiagnosticTestGenerator
+        description: Magnetic field sensor
+      temperature_sensor:
+        range: NeutronDiagnosticTestGenerator
+        description: Temperature sensor
+      field_of_view:
+        range: NeutronDiagnosticFieldOfView
+        description: Field of view associated to this detector. The field of view is described by a voxelized
+          plasma volume. Each voxel, with indexes i_R, i_Z, and i_phi, has an associated solid angle scalar
+          and a detector direction vector.
+      green_functions:
+        range: NeutronDiagnosticGreen
+        description: Green function coefficients used to represent the detector response based on its
+          field of view
+  NeutronDiagnosticDetectorMode:
+    is_a: InformationContentEntity
+    description: Set of Measuring Modes simultaneously used by the detector
+    annotations:
+      dd_type_name: neutron_diagnostic_detector_mode
+      dd_path: neutron_diagnostic/detector/mode
+    attributes:
+      identifier:
+        range: Identifier
+        description: Identifier of the measuring mode
+      counting:
+        range: SignalFlt1d
+        description: Detected counts per second as a function of time
+        annotations:
+          dd_units: s^-1
+      count_limit_max:
+        range: float
+        description: Maximum count limit under which the detector response is linear
+        annotations:
+          dd_type: static
+          dd_units: s^-1
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      count_limit_min:
+        range: float
+        description: Minimum count limit above which the detector response is linear
+        annotations:
+          dd_type: static
+          dd_units: s^-1
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      brightness:
+        range: float
+        multivalued: true
+        description: Line-integrated emissivity along the line of sight, deduced from the measured count-rate
+          of this detector (relevant only when mode/identifier/index = 1)
+        annotations:
+          dd_type: dynamic
+          dd_units: m^-2.s^-1
+          dd_ndim: 1
+          dd_coordinate1: ../counting/time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      neutron_flux:
+        range: float
+        multivalued: true
+        description: Neutron flux impinging on the detector, deduced from the measured count-rate (relevant
+          only when mode/identifier/index = 1)
+        annotations:
+          dd_type: dynamic
+          dd_units: m^-2.s^-1
+          dd_ndim: 1
+          dd_coordinate1: ../counting/time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      spectrum:
+        range: SignalFlt2d
+        description: Detected counts per second per energy channel as a function of time (in case of spectroscopic
+          measurement mode)
+        annotations:
+          dd_units: s^-1
+          dd_coordinate1: ../../energy_band
+  NeutronDiagnosticAdc:
+    is_a: InformationContentEntity
+    description: Description of analogic-digital converter
+    annotations:
+      dd_type_name: neutron_diagnostic_adc
+      dd_path: neutron_diagnostic/detector/adc
+    attributes:
+      power_switch:
+        range: integer
+        description: Power switch (1=on, 0=off)
+        annotations:
+          dd_type: static
+      discriminator_level_lower:
+        range: integer
+        description: Lower level discriminator of ADC
+        annotations:
+          dd_type: static
+      discriminator_level_upper:
+        range: integer
+        description: Upper level discriminator of ADC
+        annotations:
+          dd_type: static
+      sampling_rate:
+        range: integer
+        description: Number of samples recorded per second
+        annotations:
+          dd_type: static
+      bias:
+        range: float
+        description: ADC signal bias
+        annotations:
+          dd_type: static
+          dd_units: V
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      input_range:
+        range: float
+        description: ADC input range
+        annotations:
+          dd_type: static
+          dd_units: V
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      impedance:
+        range: float
+        description: ADC impedance
+        annotations:
+          dd_type: static
+          dd_units: ohm
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+  NeutronDiagnosticSupply:
+    is_a: InformationContentEntity
+    description: Description of high voltage power supply
+    annotations:
+      dd_type_name: neutron_diagnostic_supply
+      dd_path: neutron_diagnostic/detector/supply_high_voltage
+    attributes:
+      power_switch:
+        range: integer
+        description: Power switch (1=on, 0=off)
+        annotations:
+          dd_type: static
+      voltage_set:
+        range: SignalFlt1d
+        description: Voltage set
+        annotations:
+          dd_units: V
+      voltage_out:
+        range: SignalFlt1d
+        description: Voltage at the supply output
+        annotations:
+          dd_units: V
+  NeutronDiagnosticTestGenerator:
+    is_a: InformationContentEntity
+    description: Test generator characteristics
+    annotations:
+      dd_type_name: neutron_diagnostic_test_generator
+      dd_path: neutron_diagnostic/detector/test_generator
+    attributes:
+      power_switch:
+        range: integer
+        description: Power switch (1=on, 0=off)
+        annotations:
+          dd_type: static
+      shape:
+        range: Identifier
+        description: 'Signal shape. Index : 1 – rectangular, 2 – gaussian'
+      rise_time:
+        range: float
+        description: Peak rise time
+        annotations:
+          dd_type: constant
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      fall_time:
+        range: float
+        description: Peak fall time
+        annotations:
+          dd_type: constant
+          dd_units: s
+          spo_class: spo:QuantityValue
+          fyo_lift: quantity
+      frequency:
+        range: SignalFlt1d
+        description: Generated signal frequency
+        annotations:
+          dd_units: Hz
+      amplitude:
+        range: SignalFlt1d
+        description: Generated signal amplitude
+        annotations:
+          dd_units: V
+  NeutronDiagnosticFieldOfView:
+    is_a: InformationContentEntity
+    description: Field of view associated to this detector. The field of view is described by a voxelized
+      plasma volume. Each voxel, with indexes i_R, i_Z, and i_phi, has an associated solid angle scalar
+      and a detector direction vector.
+    annotations:
+      dd_type_name: neutron_diagnostic_field_of_view
+      dd_path: neutron_diagnostic/detector/field_of_view
+    attributes:
+      solid_angle:
+        range: float
+        multivalued: true
+        description: Average solid angle that the detector covers within the voxel
+        annotations:
+          dd_type: static
+          dd_units: sr
+          dd_ndim: 3
+          dd_coordinate1: ../emission_grid/r
+          dd_coordinate2: ../emission_grid/z
+          dd_coordinate3: ../emission_grid/phi
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../emission_grid/r,../emission_grid/z,../emission_grid/phi
+      emission_grid:
+        range: Rphiz1dGrid
+        description: Grid defining the neutron emission cells in the plasma
+      direction_to_detector:
+        range: Xyz3dStatic
+        description: Vector that points from the centre of the voxel to the centre of the detector, described
+          in the (X,Y,Z) coordinate system, where X is the major radius axis for phi = 0, Y is the major
+          radius axis for phi = pi/2, and Z is the height axis.
+  Rphiz1dGrid:
+    is_a: Mesh
+    description: Grid defining the neutron emission cells in the plasma
+    annotations:
+      dd_type_name: rphiz1d_grid
+      dd_path: neutron_diagnostic/detector/field_of_view/emission_grid
+      fyo_lift: grid
+    attributes:
+      r:
+        range: float
+        multivalued: true
+        description: Major radius
+        annotations:
+          dd_type: constant
+          dd_units: m
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      phi:
+        range: float
+        multivalued: true
+        description: Toroidal angle (oriented counter-clockwise when viewing from above)
+        annotations:
+          dd_type: constant
+          dd_units: rad
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      z:
+        range: float
+        multivalued: true
+        description: Height
+        annotations:
+          dd_type: constant
+          dd_units: m
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+  Xyz3dStatic:
+    is_a: InformationContentEntity
+    description: Vector that points from the centre of the voxel to the centre of the detector, described
+      in the (X,Y,Z) coordinate system, where X is the major radius axis for phi = 0, Y is the major radius
+      axis for phi = pi/2, and Z is the height axis.
+    annotations:
+      dd_type_name: xyz3d_static
+      dd_path: neutron_diagnostic/detector/field_of_view/direction_to_detector
+    attributes:
+      x:
+        range: float
+        multivalued: true
+        description: Components along X axis for each voxel
+        annotations:
+          dd_type: static
+          dd_units: m
+          dd_ndim: 3
+          dd_coordinate1: ../../emission_grid/r
+          dd_coordinate2: ../../emission_grid/z
+          dd_coordinate3: ../../emission_grid/phi
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../emission_grid/r,../../emission_grid/z,../../emission_grid/phi
+      y:
+        range: float
+        multivalued: true
+        description: Component along Y axis  for each voxel
+        annotations:
+          dd_type: static
+          dd_units: m
+          dd_ndim: 3
+          dd_coordinate1: ../../emission_grid/r
+          dd_coordinate2: ../../emission_grid/z
+          dd_coordinate3: ../../emission_grid/phi
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../emission_grid/r,../../emission_grid/z,../../emission_grid/phi
+      z:
+        range: float
+        multivalued: true
+        description: Component along Z axis  for each voxel
+        annotations:
+          dd_type: static
+          dd_units: m
+          dd_ndim: 3
+          dd_coordinate1: ../../emission_grid/r
+          dd_coordinate2: ../../emission_grid/z
+          dd_coordinate3: ../../emission_grid/phi
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../emission_grid/r,../../emission_grid/z,../../emission_grid/phi
+  NeutronDiagnosticGreen:
+    is_a: InformationContentEntity
+    description: Green function coefficients used to represent the detector response based on its field
+      of view
+    annotations:
+      dd_type_name: neutron_diagnostic_green
+      dd_path: neutron_diagnostic/detector/green_functions
+    attributes:
+      source_neutron_energies:
+        range: float
+        multivalued: true
+        description: Array of source neutron energy bins
+        annotations:
+          dd_type: static
+          dd_units: eV
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      event_in_detector_neutron_flux:
+        range: NeutronDiagnosticEvent
+        description: 5th dimension for the neutron_flux Green function representing values of events measured
+          in the detector. The type of events monitored depends on the detector and can be defined by
+          the user. It can be energy of neutrons, or electrical signal, or time of flight ... (defined
+          by type below)
+      neutron_flux_integrated_flags:
+        range: integer
+        multivalued: true
+        description: Array of flags telling, for each coordinate of the neutron_flux, whether the neutron_flux
+          has been integrated over this coordinate (1) or not (0). If it has been integrated over a coordinate,
+          the size related to this coordinate must be equal to 1
+        annotations:
+          dd_type: static
+          dd_ndim: 1
+          dd_coordinate1: 1...5
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...5
+      neutron_flux:
+        range: float
+        multivalued: true
+        description: Grouped neutron flux in the detector from one neutron energy bin emitted by the current
+          plasma voxel towards the detector
+        annotations:
+          dd_type: static
+          dd_units: m^-2
+          dd_ndim: 5
+          dd_coordinate1: ../../field_of_view/emission_grid/r
+          dd_coordinate2: ../../field_of_view/emission_grid/z
+          dd_coordinate3: ../../field_of_view/emission_grid/phi
+          dd_coordinate4: ../source_neutron_energies
+          dd_coordinate5: ../event_in_detector_neutron_flux/values
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../field_of_view/emission_grid/r,../../field_of_view/emission_grid/z,../../field_of_view/emission_grid/phi,../source_neutron_energies,../event_in_detector_neutron_flux/values
+      event_in_detector_response_function:
+        range: NeutronDiagnosticEvent
+        description: 5th dimension for the response_function Green function representing values of events
+          measured in the detector. The type of events monitored depends on the detector and can be defined
+          by the user. It can be energy of neutrons, or electrical signal, or time of flight ... (defined
+          by type below)
+      response_function_integrated_flags:
+        range: integer
+        multivalued: true
+        description: Array of flags telling, for each coordinate of the response_function, whether the
+          response_function has been integrated over this coordinate (1) or not (0). If it has been integrated
+          over a coordinate, the size related to this coordinate must be equal to 1
+        annotations:
+          dd_type: static
+          dd_ndim: 1
+          dd_coordinate1: 1...5
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...5
+      response_function:
+        range: float
+        multivalued: true
+        description: Number of events occurring in the detector from one neutron energy bin emitted by
+          the current plasma voxel towards the detector
+        annotations:
+          dd_type: static
+          dd_units: '1'
+          dd_ndim: 5
+          dd_coordinate1: ../../field_of_view/emission_grid/r
+          dd_coordinate2: ../../field_of_view/emission_grid/z
+          dd_coordinate3: ../../field_of_view/emission_grid/phi
+          dd_coordinate4: ../source_neutron_energies
+          dd_coordinate5: ../event_in_detector_response_function/values
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../field_of_view/emission_grid/r,../../field_of_view/emission_grid/z,../../field_of_view/emission_grid/phi,../source_neutron_energies,../event_in_detector_response_function/values
+  NeutronDiagnosticEvent:
+    is_a: InformationContentEntity
+    description: 5th dimension for the neutron_flux Green function representing values of events measured
+      in the detector. The type of events monitored depends on the detector and can be defined by the
+      user. It can be energy of neutrons, or electrical signal, or time of flight ... (defined by type
+      below)
+    annotations:
+      dd_type_name: neutron_diagnostic_event
+      dd_path: neutron_diagnostic/detector/green_functions/event_in_detector_neutron_flux
+    attributes:
+      type:
+        range: Identifier
+        description: Type of the event
+      values:
+        range: float
+        multivalued: true
+        description: Array of values for the event
+        annotations:
+          dd_type: static
+          dd_units: mixed
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+  NeutronDiagnosticEmissivity:
+    is_a: InformationContentEntity
+    description: Reconstructed emissivity parameters and data
+    annotations:
+      dd_type_name: neutron_diagnostic_emissivity
+      dd_path: neutron_diagnostic/reconstructed_emissivity
+    attributes:
+      algorithm_type:
+        range: Identifier
+        description: Algorithm used to reconstruct the emissivity profile
+      rho_tor_norm:
+        range: float
+        multivalued: true
+        description: Normalized toroidal flux coordinate. The normalizing value for rho_tor_norm, is the
+          toroidal flux coordinate at the equilibrium boundary (LCFS or 99.x % of the LCFS in case of
+          a fixed boundary equilibium calculation, see time_slice/boundary in the equilibrium IDS)
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: 1...N
+      psi_norm:
+        range: float
+        multivalued: true
+        description: Normalized poloidal flux coordinate for the reconstructed profiles, the flux being
+          normalized to run from 0 at the magnetic axis to 1 at the separatrix
+        annotations:
+          dd_type: constant
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../rho_tor_norm
+          spo_class: spo:Function
+          fyo_lift: field
+          fyo_domain: ../rho_tor_norm
+      emissivity_dd:
+        range: float
+        multivalued: true
+        description: Emissivity profile due to DD reactions
+        annotations:
+          dd_type: dynamic
+          dd_units: m^-3.s^-1
+          dd_ndim: 2
+          dd_coordinate1: ../rho_tor_norm
+          dd_coordinate2: /time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../rho_tor_norm,/time
+      emissivity_dt:
+        range: float
+        multivalued: true
+        description: Emissivity profile due to DT reactions
+        annotations:
+          dd_type: dynamic
+          dd_units: m^-3.s^-1
+          dd_ndim: 2
+          dd_coordinate1: ../rho_tor_norm
+          dd_coordinate2: /time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../rho_tor_norm,/time
+      emissivity_dd_accuracy:
+        range: float
+        multivalued: true
+        description: 'Accuracy profile of reconstructed DD emissivity with respect to true DD emissivity.
+          The accuracy is obtained by comparing the reconstructed emissivity profile and the emissivity
+          profile input to the synthetic diagnostic calculation: relative error = (reconstructed-input)/input'
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: ../rho_tor_norm
+          dd_coordinate2: /time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../rho_tor_norm,/time
+      emissivity_dt_accuracy:
+        range: float
+        multivalued: true
+        description: 'Accuracy profile of reconstructed DT emissivity with respect to true DT emissivity.
+          The accuracy is obtained by comparing the reconstructed emissivity profile and the emissivity
+          profile input to the synthetic diagnostic calculation: relative error = (reconstructed-input)/input'
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: ../rho_tor_norm
+          dd_coordinate2: /time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../rho_tor_norm,/time
+      fusion_power_dd:
+        range: float
+        multivalued: true
+        description: Fusion power profile due to DD reactions
+        annotations:
+          dd_type: dynamic
+          dd_units: W.m^-3
+          dd_ndim: 2
+          dd_coordinate1: ../rho_tor_norm
+          dd_coordinate2: /time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../rho_tor_norm,/time
+      fusion_power_dt:
+        range: float
+        multivalued: true
+        description: Fusion power profile due to DT reactions
+        annotations:
+          dd_type: dynamic
+          dd_units: W.m^-3
+          dd_ndim: 2
+          dd_coordinate1: ../rho_tor_norm
+          dd_coordinate2: /time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../rho_tor_norm,/time
+      fusion_power_dd_accuracy:
+        range: float
+        multivalued: true
+        description: 'Accuracy profile of reconstructed DD fusion power with respect to true DD fusion
+          power. The accuracy is obtained by comparing the reconstructed profile and the profile input
+          to the synthetic diagnostic calculation: relative error = (reconstruted-input)/input'
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: ../rho_tor_norm
+          dd_coordinate2: /time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../rho_tor_norm,/time
+      fusion_power_dt_accuracy:
+        range: float
+        multivalued: true
+        description: 'Accuracy profile of reconstructed DT fusion power with respect to true DT fusion
+          power. The accuracy is obtained by comparing the reconstructed profile and the profile input
+          to the synthetic diagnostic calculation: relative error = (reconstructed-input)/input'
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: ../rho_tor_norm
+          dd_coordinate2: /time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../rho_tor_norm,/time
+      t_i:
+        range: float
+        multivalued: true
+        description: Temperature profile of D and T ions (assumed to be equal)
+        annotations:
+          dd_type: dynamic
+          dd_units: eV
+          dd_ndim: 2
+          dd_coordinate1: ../rho_tor_norm
+          dd_coordinate2: /time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../rho_tor_norm,/time
+      fuel_ratio:
+        range: float
+        multivalued: true
+        description: Radio of densities nT/nD
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 2
+          dd_coordinate1: ../rho_tor_norm
+          dd_coordinate2: /time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../rho_tor_norm,/time
+      detectors_used:
+        range: integer
+        multivalued: true
+        description: 1 if the detector is used for the emissivity reconstruction; 0 if the detector is
+          not used
+        annotations:
+          dd_type: dynamic
+          dd_ndim: 2
+          dd_coordinate1: ../../detector
+          dd_coordinate2: /time
+          spo_class: spo:Field
+          fyo_lift: field
+          fyo_domain: ../../detector,/time

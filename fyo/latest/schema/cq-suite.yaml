@@ -1,0 +1,232 @@
+# cq-suite.yaml — competency-question acceptance registry for fyo (FYO-STD-05).
+#
+# Neutral, language-independent registry: each entry is one competency question (CQ)
+# the ontology MUST be able to answer at the T-Box level, operationalized as a list
+# of machine checks over the merged schema closure (fyo + upstream spo). Evaluated by
+# scripts/check_competency.py (stdlib + PyYAML); a CQ passes iff ALL its checks pass.
+#
+# Check kinds (evaluator contract, FYO-STD-05 §machine):
+#   class_exists / class_absent {class}
+#   subclass_of / not_subclass_of {class, ancestor}     # is_a + mixins closure
+#   attr_exists {class, attribute} · attr_range {class, attribute, range}
+#   required_attr {class, attribute}                    # attribute or slot_usage required
+#   class_slot {class, slot} · has_mixin {class, mixin}
+#   slot_range {slot, range} · slot_uri_is {slot, uri} · class_uri_is {class, uri}
+#   module_category {module, category}                  # ids-manifest path prefix
+#   annotation_is {class, attribute?, key, value}
+#   annotation_includes {class, attribute, key, value}  # comma-list membership
+#   children_disjoint {class}
+version: 0.1.0
+suite:
+
+  # ---- device ---------------------------------------------------------------------
+  - id: CQ-DEV-1
+    category: device
+    question: 一台装置由哪些一级材料子系统组成？（部件链以 BFO 2020 parthood 锚定）
+    checks:
+      - {kind: class_slot, class: Machine, slot: has_subsystem}
+      - {kind: slot_range, slot: has_subsystem, range: MachineSubsystem}
+      - {kind: slot_uri_is, slot: has_subsystem, uri: "bfo:0000178"}
+  - id: CQ-DEV-2
+    category: device
+    question: PF 线圈系统由哪些原子线圈构成？
+    checks:
+      - {kind: subclass_of, class: PoloidalFieldCoilSystem, ancestor: CoilSystem}
+      - {kind: class_slot, class: CoilSystem, slot: has_coil}
+      - {kind: slot_range, slot: has_coil, range: Coil}
+  - id: CQ-DEV-3
+    category: device
+    question: 托卡马克是什么？（装置谱系接地物质连续体）
+    checks:
+      - {kind: subclass_of, class: Tokamak, ancestor: Machine}
+      - {kind: subclass_of, class: Machine, ancestor: MaterialEntity}
+      - {kind: class_uri_is, class: Machine, uri: "bfo:0000030"}
+  - id: CQ-DEV-4
+    category: device
+    question: 装置的"描述"与装置"本身"如何区分？（as-built 描述 ≠ 机器）
+    checks:
+      - {kind: subclass_of, class: MachineDescription, ancestor: InformationContentEntity}
+      - {kind: class_slot, class: MachineDescription, slot: describes_machine}
+      - {kind: slot_range, slot: describes_machine, range: Machine}
+      - {kind: not_subclass_of, class: Machine, ancestor: InformationContentEntity}
+  - id: CQ-DEV-5
+    category: device
+    question: 第一壁 / 真空室描述属装置范畴？
+    checks:
+      - {kind: module_category, module: wall, category: device}
+      - {kind: module_category, module: pf_active, category: device}
+  - id: CQ-DEV-6
+    category: device
+    question: 诊断装置产生什么？（诊断→信息工件的产出关系）
+    checks:
+      - {kind: subclass_of, class: Diagnostic, ancestor: MaterialEntity}
+      - {kind: slot_range, slot: produces, range: InformationContentEntity}
+
+  # ---- plasma_state ---------------------------------------------------------------
+  - id: CQ-PLA-1
+    category: plasma_state
+    question: 一个平衡数据集是何种实体？（Dataset 谱系接地 ICE）
+    checks:
+      - {kind: subclass_of, class: Equilibrium, ancestor: Dataset}
+      - {kind: subclass_of, class: Dataset, ancestor: InformationContentEntity}
+  - id: CQ-PLA-2
+    category: plasma_state
+    question: 极向磁通 ψ 在二维极向平面上的载体是什么？（场量提升）
+    checks:
+      - {kind: annotation_is, class: EquilibriumProfiles2d, attribute: psi, key: spo_class, value: "spo:Field"}
+      - {kind: annotation_is, class: EquilibriumProfiles2d, attribute: psi, key: dd_units, value: "Wb"}
+  - id: CQ-PLA-3
+    category: plasma_state
+    question: 芯部剖面与平衡模块属等离子体态范畴？
+    checks:
+      - {kind: module_category, module: core_profiles, category: plasma_state}
+      - {kind: module_category, module: equilibrium, category: plasma_state}
+  - id: CQ-PLA-4
+    category: plasma_state
+    question: 每个 Dataset 都必然关于某物？（C-1 的存在性公理）
+    checks:
+      - {kind: required_attr, class: Dataset, attribute: is_about}
+      - {kind: slot_uri_is, slot: is_about, uri: "iao:0000136"}
+  - id: CQ-PLA-5
+    category: plasma_state
+    question: 等离子体是何层位？（fiat object part，非 bona-fide 客体）
+    checks:
+      - {kind: subclass_of, class: Plasma, ancestor: MaterialEntity}
+      - {kind: class_uri_is, class: Plasma, uri: "bfo:0000024"}
+  - id: CQ-PLA-6
+    category: plasma_state
+    question: 时序平衡的时间切片如何接地？
+    checks:
+      - {kind: class_exists, class: TimeSlice}
+      - {kind: subclass_of, class: EquilibriumTimeSlice, ancestor: TimeSlice}
+  - id: CQ-PLA-7
+    category: plasma_state
+    question: 数据模态（测量/重构/仿真）在哪里？（T-Box 模态盲，AI-4）
+    checks:
+      - {kind: class_absent, class: MeasuredDataset}
+      - {kind: class_absent, class: SimulatedDataset}
+      - {kind: enum_exists, enum: DataModality}
+      - {kind: has_mixin, class: Dataset, mixin: ProvenanceMixin}
+
+  # ---- measurement ----------------------------------------------------------------
+  - id: CQ-MEA-1
+    category: measurement
+    question: 干涉仪 / 汤姆逊 / 磁测模块属测量范畴？（FYO-ADR-04 D3 裁决表）
+    checks:
+      - {kind: module_category, module: interferometer, category: measurement}
+      - {kind: module_category, module: thomson_scattering, category: measurement}
+      - {kind: module_category, module: magnetics, category: measurement}
+  - id: CQ-MEA-2
+    category: measurement
+    question: 测量过程是何种实体？（现实发生体，非信息）
+    checks:
+      - {kind: subclass_of, class: MeasurementProcess, ancestor: Process}
+      - {kind: subclass_of, class: Process, ancestor: Occurrent}
+      - {kind: not_subclass_of, class: MeasurementProcess, ancestor: InformationContentEntity}
+  - id: CQ-MEA-3
+    category: measurement
+    question: 干涉仪通道的线积分密度读数以什么承载？（读数=过程侧面）
+    checks:
+      - {kind: attr_range, class: InterferometerChannel, attribute: n_e_line, range: SignalFlt1dValidity}
+      - {kind: subclass_of, class: SignalFlt1dValidity, ancestor: Signal}
+  - id: CQ-MEA-4
+    category: measurement
+    question: 重构（以测量为输入的计算）产物落哪个范畴？（基域检验）
+    checks:
+      - {kind: module_category, module: equilibrium, category: plasma_state}
+      - {kind: subclass_of, class: ComputationalProcess, ancestor: Process}
+
+  # ---- process --------------------------------------------------------------------
+  - id: CQ-PRO-1
+    category: process
+    question: 脉冲计划 / 控制器 / 工作流属指令性范畴？
+    checks:
+      - {kind: module_category, module: pulse_schedule, category: process}
+      - {kind: module_category, module: controllers, category: process}
+      - {kind: module_category, module: workflow, category: process}
+  - id: CQ-PRO-2
+    category: process
+    question: 一次放电是什么？（计划过程，实现脉冲计划）
+    checks:
+      - {kind: subclass_of, class: Discharge, ancestor: PlannedProcess}
+      - {kind: class_slot, class: PlannedProcess, slot: realizes}
+      - {kind: slot_uri_is, slot: realizes, uri: "bfo:0000055"}
+  - id: CQ-PRO-3
+    category: process
+    question: 代码与运行如何不混同？（指令性 ICE vs 发生体，AI-8）
+    checks:
+      - {kind: subclass_of, class: Code, ancestor: InformationContentEntity}
+      - {kind: subclass_of, class: ComputationalProcess, ancestor: Occurrent}
+      - {kind: not_subclass_of, class: Code, ancestor: Occurrent}
+  - id: CQ-PRO-4
+    category: process
+    question: 数据集能追溯到其生产记录？（溯源链）
+    checks:
+      - {kind: class_exists, class: ComputationRecord}
+      - {kind: slot_uri_is, slot: produced_by, uri: "prov:wasGeneratedBy"}
+
+  # ---- reference ------------------------------------------------------------------
+  - id: CQ-REF-1
+    category: reference
+    question: 原子分子核数据 / FAIR 元数据属无基域参考范畴？
+    checks:
+      - {kind: module_category, module: amns_data, category: reference}
+      - {kind: module_category, module: dataset_fair, category: reference}
+
+  # ---- scenario -------------------------------------------------------------------
+  - id: CQ-SCE-1
+    category: scenario
+    question: 物理建模场景消费哪些专题数据集作初值？
+    checks:
+      - {kind: annotation_includes, class: PhysicsModelingTask, attribute: initial_profiles, key: fyo_ids, value: core_profiles}
+      - {kind: attr_range, class: PhysicsModelingTask, attribute: initial_profiles, range: Dataset}
+  - id: CQ-SCE-2
+    category: scenario
+    question: 应用场景任务是何种实体？（计算过程谱系）
+    checks:
+      - {kind: subclass_of, class: ApplicationTask, ancestor: ComputationalProcess}
+      - {kind: subclass_of, class: PhysicsModelingTask, ancestor: ApplicationTask}
+  - id: CQ-SCE-3
+    category: scenario
+    question: 场景任务实现什么规范？（场景规格=计划性 ICE）
+    checks:
+      - {kind: subclass_of, class: ScenarioSpecification, ancestor: PlanSpecification}
+      - {kind: slot_uri_is, slot: realizes_scenario, uri: "bfo:0000055"}
+  - id: CQ-SCE-4
+    category: scenario
+    question: 预测性建模输出预测的平衡与剖面？
+    checks:
+      - {kind: annotation_includes, class: PhysicsModelingTask, attribute: predicted_equilibrium, key: fyo_ids, value: equilibrium}
+      - {kind: annotation_includes, class: PhysicsModelingTask, attribute: predicted_profiles, key: fyo_ids, value: core_profiles}
+
+  # ---- cross-cutting conformance --------------------------------------------------
+  - id: CQ-X-1
+    category: cross
+    question: 层位互斥有公理承载？（C-1 结构落地）
+    checks:
+      - {kind: children_disjoint, class: Entity}
+      - {kind: children_disjoint, class: Continuant}
+  - id: CQ-X-2
+    category: cross
+    question: 单位与量类机读可解析？（QUDT 锚，FYO-STD-04）
+    checks:
+      - {kind: slot_uri_is, slot: has_unit, uri: "qudt:hasUnit"}
+      - {kind: slot_uri_is, slot: has_quantity_kind, uri: "qudt:hasQuantityKind"}
+      - {kind: class_exists, class: QuantityKind}
+  - id: CQ-X-3
+    category: cross
+    question: 空间占据以 BFO 2020 关系锚定？（两条时空关系的物理侧）
+    checks:
+      - {kind: slot_uri_is, slot: occupies, uri: "bfo:0000210"}
+  - id: CQ-X-4
+    category: cross
+    question: 4D 时空虫与其占据关系存在？（4D 扩展地层）
+    checks:
+      - {kind: class_exists, class: SpacetimeWorm}
+      - {kind: slot_range, slot: occupies_spacetime, range: SpacetimeRegion}
+  - id: CQ-X-5
+    category: cross
+    question: 通用坐标卡层被物理主题私有化了吗？（C-9：应无主题专属网格根）
+    checks:
+      - {kind: class_exists, class: CoordinateSystem}
+      - {kind: subclass_of, class: FluxCoordinateSystem, ancestor: CoordinateSystem}

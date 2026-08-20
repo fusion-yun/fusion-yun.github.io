@@ -1,0 +1,409 @@
+id: https://fusion-yun.github.io/fyo/v0.9.g5b9d6bbb/balance_of_plant
+name: fyo-balance_of_plant
+title: fyo IDS `balance_of_plant` (lifted, DD 4.1.1)
+description: 'Semantic lift of IMAS DD IDS `balance_of_plant` onto SpO/BFO (FYTOK-ADR-102): structures
+  grounded as ICEs, time-slice AoS elements as spo:TimeSlice, leaves annotated with their spo carrier
+  classes (Signal / Field / Function / QuantityValue / TimeAxis). Layout is preserved in dd_* annotations
+  (reverse map ω).'
+license: Apache-2.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  fyo: https://fusion-yun.github.io/fyo/v0.9.g5b9d6bbb/
+  spo: https://fusion-yun.github.io/spo/latest/
+  bfo: http://purl.obolibrary.org/obo/BFO_
+  iao: http://purl.obolibrary.org/obo/IAO_
+default_prefix: fyo
+default_range: string
+imports:
+- linkml:types
+- spo
+- fyo-core
+- fyo-common
+annotations:
+  generated_by: dd2fyo 0.1.0
+  dd_version: 4.1.1
+  dd_source: IMAS DD schemas/balance_of_plant/dd_balance_of_plant.xsd (import ancestry)
+  fyo_category: device
+  fyo_root_class: BalanceOfPlant
+  provenance: Imported from IMAS DD 4.1.1 via dd2fyo; fyo evolves independently — hand
+    edits are legitimate, dd_* annotations record DD ancestry.
+classes:
+  BalanceOfPlant:
+    is_a: Dataset
+    description: Electrical and thermal power balance of the plant
+    annotations:
+      dd_path: balance_of_plant
+      fyo_category: device
+    attributes:
+      ids_properties:
+        range: IdsProperties
+        description: Interface Data Structure properties. This element identifies the node above as an
+          IDS
+      gain_plant:
+        range: float
+        multivalued: true
+        description: Electricity gain of the plant (ratio of net electric / plant electricity during operation)
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_electricity_net:
+        range: float
+        multivalued: true
+        description: Net electric power
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      thermal_efficiency_cycle:
+        range: float
+        multivalued: true
+        description: The fractional thermal effiency of the power cycle. Calculated as 1 - Q_out/Q_in
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      thermal_efficiency_plant:
+        range: float
+        multivalued: true
+        description: The fractional thermal effiency of the entire BOP thermal plant, inlcudes all of
+          the individual cycles. Calculated as 1 - Q_out/Q_in
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: ../time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_electric_plant_operation:
+        range: BopPowerElectric
+        description: Electric plant operation
+      power_plant:
+        range: BopPowerPlant
+        description: Energy conversion
+      code:
+        range: IdsCode
+        description: Generic decription of the code-specific parameters for the code that has produced
+          this IDS
+      time:
+        range: float
+        multivalued: true
+        description: Generic time
+        annotations:
+          dd_type: dynamic
+          dd_units: s
+          dd_ndim: 1
+          dd_coordinate1: 1...N
+          spo_class: spo:TimeAxis
+          fyo_lift: time_axis
+          fyo_domain: 1...N
+  BopPowerElectric:
+    is_a: InformationContentEntity
+    description: Electric plant operation
+    annotations:
+      dd_type_name: bop_power_electric
+      dd_path: balance_of_plant/power_electric_plant_operation
+    attributes:
+      power_total:
+        range: float
+        multivalued: true
+        description: Total electrical power used to operate the plant
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      system:
+        range: BopPowerElectricSystem
+        multivalued: true
+        description: Set of systems involved in the electric plant operation
+        annotations:
+          dd_max_occurs: '10'
+          dd_coordinate1: 1...N
+  BopPowerElectricSystem:
+    is_a: InformationContentEntity
+    description: Set of systems involved in the electric plant operation
+    annotations:
+      dd_type_name: bop_power_electric_system
+      dd_path: balance_of_plant/power_electric_plant_operation/system
+    attributes:
+      name:
+        range: string
+        description: Short string identifier (unique for a given device)
+        annotations:
+          dd_type: static
+      description:
+        range: string
+        description: Description, e.g. “divertor Helium cooling loop”
+        annotations:
+          dd_type: static
+      power:
+        range: float
+        multivalued: true
+        description: Electrical power used to operate the system
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      subsystem:
+        range: BopPowerElectricSystemSubsystem
+        multivalued: true
+        description: Set of subsystems
+        annotations:
+          dd_max_occurs: '10'
+          dd_coordinate1: 1...N
+  BopPowerElectricSystemSubsystem:
+    is_a: InformationContentEntity
+    description: Set of subsystems
+    annotations:
+      dd_type_name: bop_power_electric_system_subsystem
+      dd_path: balance_of_plant/power_electric_plant_operation/system/subsystem
+    attributes:
+      name:
+        range: string
+        description: Short string identifier (unique for a given device)
+        annotations:
+          dd_type: static
+      description:
+        range: string
+        description: Description, e.g. “compressor”
+        annotations:
+          dd_type: static
+      power:
+        range: float
+        multivalued: true
+        description: Electrical power used to operate the subsystem
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+  BopPowerPlant:
+    is_a: InformationContentEntity
+    description: Energy conversion
+    annotations:
+      dd_type_name: bop_power_plant
+      dd_path: balance_of_plant/power_plant
+    attributes:
+      generator_conversion_efficiency:
+        range: float
+        multivalued: true
+        description: Conversion efficiency of thermal to electric power of the steam cycle
+        annotations:
+          dd_type: dynamic
+          dd_units: '1'
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      heat_load_breeder:
+        range: float
+        multivalued: true
+        description: Heat flow towards the breeder
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      heat_load_divertor:
+        range: float
+        multivalued: true
+        description: Heat flow towards the divertor
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      heat_load_wall:
+        range: float
+        multivalued: true
+        description: Heat flow towards the wall
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_cycle_type:
+        range: Identifier
+        description: Type of the primary power cycle
+      power_electric_generated:
+        range: float
+        multivalued: true
+        description: Net electric power produced by thermal plant, equal to power produced by turbines
+          LESS power consumed by pumps and compressors
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      total_heat_rejected:
+        range: float
+        multivalued: true
+        description: Total heat flow being rejected from the thermal plant
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      total_heat_supplied:
+        range: float
+        multivalued: true
+        description: Total heat flow being supplied to the thermal plant (fusion thermal power)
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      system:
+        range: BopPowerPlantSystem
+        multivalued: true
+        description: Set of subsystems or circuits of the power conversion system, connected by their
+          edges, e.g. divertor cooling loop
+        annotations:
+          dd_max_occurs: '10'
+          dd_coordinate1: 1...N
+  BopPowerPlantSystem:
+    is_a: InformationContentEntity
+    description: Set of subsystems or circuits of the power conversion system, connected by their edges,
+      e.g. divertor cooling loop
+    annotations:
+      dd_type_name: bop_power_plant_system
+      dd_path: balance_of_plant/power_plant/system
+    attributes:
+      name:
+        range: string
+        description: Short string identifier (unique for a given device)
+        annotations:
+          dd_type: static
+      description:
+        range: string
+        description: Description, e.g. “divertor Helium cooling loop”
+        annotations:
+          dd_type: static
+      component:
+        range: BopPowerPlantSystemComponent
+        multivalued: true
+        description: Set of components of the power conversion system
+        annotations:
+          dd_max_occurs: '10'
+          dd_coordinate1: 1...N
+  BopPowerPlantSystemComponent:
+    is_a: InformationContentEntity
+    description: Set of components of the power conversion system
+    annotations:
+      dd_type_name: bop_power_plant_system_component
+      dd_path: balance_of_plant/power_plant/system/component
+    attributes:
+      name:
+        range: string
+        description: Short string identifier (unique for a given device)
+        annotations:
+          dd_type: static
+      description:
+        range: string
+        description: Description, e.g. “compressor”
+        annotations:
+          dd_type: static
+      port:
+        range: BopPowerPlantSystemComponentPort
+        multivalued: true
+        description: Set of ports (input or output) of the component
+        annotations:
+          dd_max_occurs: '4'
+          dd_coordinate1: 1...N
+  BopPowerPlantSystemComponentPort:
+    is_a: InformationContentEntity
+    description: Set of ports (input or output) of the component
+    annotations:
+      dd_type_name: bop_power_plant_system_component_port
+      dd_path: balance_of_plant/power_plant/system/component/port
+    attributes:
+      description:
+        range: string
+        description: 'Description, e.g. “input #1”'
+        annotations:
+          dd_type: static
+      mass_flow:
+        range: float
+        multivalued: true
+        description: Mass flow rate of the fluid
+        annotations:
+          dd_type: dynamic
+          dd_units: kg.s^-1
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_mechanical:
+        range: float
+        multivalued: true
+        description: Shaft power associated with the component, (+) = into the system, (-) = out of the
+          system
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      pressure:
+        range: float
+        multivalued: true
+        description: Fluid pressure
+        annotations:
+          dd_type: dynamic
+          dd_units: Pa
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      temperature:
+        range: float
+        multivalued: true
+        description: Fluid temperature
+        annotations:
+          dd_type: dynamic
+          dd_units: K
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
+      power_thermal:
+        range: float
+        multivalued: true
+        description: Heat transfer rate of the component, (+) = into the system, (-) = out of the system
+        annotations:
+          dd_type: dynamic
+          dd_units: W
+          dd_ndim: 1
+          dd_coordinate1: /time
+          spo_class: spo:Signal
+          fyo_lift: signal
