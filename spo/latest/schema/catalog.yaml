@@ -24,13 +24,13 @@ by_name:
   spo-provenance: spo-provenance.linkml.yaml
 
 by_iri:
-  https://fusion-yun.github.io/spo/v0.5.g03cc95f6/spo: spo.linkml.yaml
-  https://fusion-yun.github.io/spo/v0.5.g03cc95f6/core: spo-core.linkml.yaml
-  https://fusion-yun.github.io/spo/v0.5.g03cc95f6/types: spo-types.linkml.yaml
-  https://fusion-yun.github.io/spo/v0.5.g03cc95f6/domain: spo-domain.linkml.yaml
-  https://fusion-yun.github.io/spo/v0.5.g03cc95f6/geometry: spo-geometry.linkml.yaml
-  https://fusion-yun.github.io/spo/v0.5.g03cc95f6/signal: spo-signal.linkml.yaml
-  https://fusion-yun.github.io/spo/v0.5.g03cc95f6/time: spo-time.linkml.yaml
-  https://fusion-yun.github.io/spo/v0.5.g03cc95f6/quantity: spo-quantity.linkml.yaml
-  https://fusion-yun.github.io/spo/v0.5.g03cc95f6/vocab: spo-vocab.linkml.yaml
-  https://fusion-yun.github.io/spo/v0.5.g03cc95f6/provenance: spo-provenance.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.5.g94a1bf89/spo: spo.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.5.g94a1bf89/core: spo-core.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.5.g94a1bf89/types: spo-types.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.5.g94a1bf89/domain: spo-domain.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.5.g94a1bf89/geometry: spo-geometry.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.5.g94a1bf89/signal: spo-signal.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.5.g94a1bf89/time: spo-time.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.5.g94a1bf89/quantity: spo-quantity.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.5.g94a1bf89/vocab: spo-vocab.linkml.yaml
+  https://fusion-yun.github.io/spo/v0.5.g94a1bf89/provenance: spo-provenance.linkml.yaml

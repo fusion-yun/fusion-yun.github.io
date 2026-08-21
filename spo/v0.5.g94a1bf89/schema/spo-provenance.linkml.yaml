@@ -2,7 +2,7 @@
 # spo-provenance — orthogonal provenance mixin (L7 / C-12). DD ids_properties / code / library lift
 # to PROV-O / IAO, orthogonal to the domain ontology (a mixin, not in the physical class hierarchy).
 # Provenance time ≠ physical time. FYTOK-REPORT-05 §rpt05-provenance.
-id: https://fusion-yun.github.io/spo/v0.5.g03cc95f6/provenance
+id: https://fusion-yun.github.io/spo/v0.5.g94a1bf89/provenance
 name: spo-provenance
 title: Spo Provenance — PROV-O / IAO Orthogonal Mixin
 description: ids_properties / code / library as provenance information artifacts, mixed into domain classes.
@@ -10,7 +10,7 @@ license: Apache-2.0
 prefixes:
   linkml: https://w3id.org/linkml/
   sp: https://w3id.org/spdata/v1/
-  spo: https://fusion-yun.github.io/spo/v0.5.g03cc95f6/
+  spo: https://fusion-yun.github.io/spo/v0.5.g94a1bf89/
   iao: http://purl.obolibrary.org/obo/IAO_
   prov: http://www.w3.org/ns/prov#
 default_prefix: spo

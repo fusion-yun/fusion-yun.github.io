@@ -7,7 +7,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix ro: <http://purl.obolibrary.org/obo/RO_> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
-@prefix spo: <https://fusion-yun.github.io/spo/v0.5.g03cc95f6/> .
+@prefix spo: <https://fusion-yun.github.io/spo/v0.5.g94a1bf89/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 bfo:0000004 a sh:NodeShape ;

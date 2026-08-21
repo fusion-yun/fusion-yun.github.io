@@ -4,7 +4,7 @@
 # builtins; `complex` is added; rank-≥1 arrays are externalized (`data_handle`) and carried
 # by annotation, not inlined as a list — bulk numeric payload is not ontology content.
 # FYTOK-REPORT-05 §rpt05-cs-common.
-id: https://fusion-yun.github.io/spo/v0.5.g03cc95f6/types
+id: https://fusion-yun.github.io/spo/v0.5.g94a1bf89/types
 name: spo-types
 title: Spo Types — Primitive & Dimensional Type Vocabulary
 description: Scalar primitives + complex + array-externalization convention shared by all Spo schemas.
@@ -12,7 +12,7 @@ license: Apache-2.0
 prefixes:
   linkml: https://w3id.org/linkml/
   sp: https://w3id.org/spdata/v1/
-  spo: https://fusion-yun.github.io/spo/v0.5.g03cc95f6/
+  spo: https://fusion-yun.github.io/spo/v0.5.g94a1bf89/
   xsd: http://www.w3.org/2001/XMLSchema#
 default_prefix: spo
 default_range: string
