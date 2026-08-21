@@ -10,7 +10,7 @@
 # Units/dimensions authority stays external (UCUM strings, QUDT IRIs; SpData `sp:phys` is the
 # ecosystem registry) — this module gives them T-Box landing classes, not a re-implemented
 # unit system. T-Box only; no runtime dependency.
-id: https://fusion-yun.github.io/spo/v0.5.g94a1bf89/quantity
+id: https://fusion-yun.github.io/spo/v0.5.g2a344902/quantity
 name: spo-quantity
 title: Spo Quantity — Quantity Kinds, Units, Scalar Values
 description: >-
@@ -22,7 +22,7 @@ license: Apache-2.0
 prefixes:
   linkml: https://w3id.org/linkml/
   sp: https://w3id.org/spdata/v1/
-  spo: https://fusion-yun.github.io/spo/v0.5.g94a1bf89/
+  spo: https://fusion-yun.github.io/spo/v0.5.g2a344902/
   qudt: http://qudt.org/schema/qudt/
   iao: http://purl.obolibrary.org/obo/IAO_
 default_prefix: spo

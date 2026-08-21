@@ -2,7 +2,7 @@
 # spo-vocab — controlled vocabularies (C-8) + plan specifications (experiment范畴, C-10).
 # DD identifier triples (name / index / description + *_identifier.xml) lift to: the vocabulary
 # itself = T-Box enum/class; a specific value = A-Box. FYTOK-REPORT-05 §rpt05-cat-attribute / §rpt05-cat-experiment.
-id: https://fusion-yun.github.io/spo/v0.5.g94a1bf89/vocab
+id: https://fusion-yun.github.io/spo/v0.5.g2a344902/vocab
 name: spo-vocab
 title: Spo Vocabulary — Identifiers, Controlled Vocabularies, Plan Specifications
 description: >-
@@ -12,7 +12,7 @@ license: Apache-2.0
 prefixes:
   linkml: https://w3id.org/linkml/
   sp: https://w3id.org/spdata/v1/
-  spo: https://fusion-yun.github.io/spo/v0.5.g94a1bf89/
+  spo: https://fusion-yun.github.io/spo/v0.5.g2a344902/
   iao: http://purl.obolibrary.org/obo/IAO_
 default_prefix: spo
 default_range: string
