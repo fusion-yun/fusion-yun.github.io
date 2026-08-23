@@ -14,6 +14,6 @@ plugins:
 
 # Repository documentation is for maintainers, not site visitors.
 # NOTE: LICENSE must stay published — /LICENSE is linked from the site and from
-# the per-tree notices under /spo/, /fyo/ and /fylite/.
+# the per-tree notice under /fylite/.
 exclude:
   - README.md

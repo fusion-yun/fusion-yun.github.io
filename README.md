@@ -9,12 +9,15 @@ fusion-yun.github.io
 
 本仓即站点本身：GitHub Pages 组织站点，Jekyll 构建，推送 `main` 由
 [`.github/workflows/jekyll-gh-pages.yml`](.github/workflows/jekyll-gh-pages.yml) 部署。
-站点承担三件事：
+站点承担两件事：
 
 1. **FuYun 的入口与导览** —— 首页 [`index.md`](index.md)：构成、状态与对外公开面。
-2. **本体命名空间的权威主机** —— `/spo/` 与 `/fyo/` 是 SpO / FyO 声明的前缀 IRI 的真解析位置
-   （平台裁决 `SP-ADR-103` D-1 / D-2）。
-3. **fylite 在线演示的托管** —— `/fylite/`，WebAssembly 内核在浏览器内计算。
+2. **fylite 在线演示的托管** —— `/fylite/`，WebAssembly 内核在浏览器内计算。
+
+> **`/spo/` 与 `/fyo/` 已于 2026-08-23 撤下**（上游材料权利未清，待复核）。两棵树连同
+> 站点许可通告的 Part B 一并移除；前缀 IRI `https://fusion-yun.github.io/spo/…` 与
+> `…/fyo/…` 目前不解析。`SP-ADR-103` D-1 / D-2（本站为本体命名空间权威主机）因此暂时
+> 失效，复核结论出来前不要恢复发布。spo / fyo 仓的 `core.hooksPath` 自动发布钩子已停用。
 
 ## 目录
 
@@ -24,37 +27,17 @@ fusion-yun.github.io
 | `_config.yml` | 站点标识：标题、描述、语言、主题（`jekyll-theme-primer`）| 本仓 |
 | `_includes/head-custom.html` | 主题头部注入：favicon 指向 `figures/fuyun_mark.svg` | 本仓 |
 | `figures/` | 站点图形：`fuyun_logo.svg` 横幅标识、`fuyun_mark.svg` 方形标记（favicon / 头像）、`fuyun_architecture_legacy.png` 早期架构图（存档，页面已不再引用）| 本仓 |
-| `LICENSE` | 站点分路径许可通告（Part A/B/C）| 本仓 |
+| `LICENSE` | 站点分路径许可通告（Part A/C；Part B 已撤）| 本仓 |
 | `fylite/` | fylite 在线演示（`index.html` 说明与出处、`discharge.html` 放电设计、`reconstruction.html` 动理学平衡重构、`assets/`）| 私有仓 `fusion-yun/fylite` 的 `app/` |
-| `spo/v0.draft/` | SpO 命名空间：`context.jsonld` · `spo.owl.ttl` · `spo.shacl.ttl` · `index.html` · `schema/` LinkML 源镜像 | SpModel 仓（SpO 语义属主）|
-| `fyo/v0.draft/` | FyO 命名空间：`context.jsonld` · `fyo.owl.ttl` · `fyo.shacl.ttl` · `index.html` · `schema/` + `imas/v4/` 提升层 | FyTok 仓（FyO 属主）|
 
 ## 同步来的目录不要手工编辑
 
-`fylite/`、`spo/`、`fyo/` 三棵树都是**发布产物**，在本仓的修改会在下次发布时被覆盖。
-改内容请改各自真源仓，再重新发布：
+`fylite/` 是**发布产物**，在本仓的修改会在下次发布时被覆盖。改内容请改真源仓，再重新发布：
 
 - **`fylite/`** —— 由私有仓 `fusion-yun/fylite` 的 `.github/workflows/publish-app.yml`
   同步（手动触发，写权限 deploy key）。演示页只分发**二进制**：
   `assets/fylite_rs.wasm` 是 Rust 内核的 WebAssembly 构建，**不含源码**；
   `assets/*.js` 只做数据编排、绘图与 ABI 调用，求解全部在二进制内。
-- **`spo/` `fyo/`** —— 源码分别居 SpModel 与 FyTok（`SP-ADR-103` D-3：发布不构成再归属），
-  当前以手工发布运行。
-
-### 发布这两棵本体树时的硬约束
-
-- **文件禁止以 `---` 起始.** 站点以 Jekyll 构建（首页需要渲染，不能用全局 `.nojekyll` 关闭），
-  `---` 开头会被当作 front matter 解析并使制品内容失真。LinkML / Turtle / JSON-LD 制品发布前
-  **必须**断言此条（`SP-ADR-103` D-2）。
-- **URL 逐字节稳定.** `/spo/v0.draft/` 与 `/fyo/v0.draft/` 已是对外铸造的命名空间；
-  路径改名等同于作废外部引用。若将来把某个本体拆为独立仓（`fusion-yun/spo` / `fusion-yun/fyo`
-  的项目站点服务同一 URL），**必须**在同一批次内删除本仓同名目录，使同一时刻只有一个来源
-  服务该路径（`SP-ADR-103` D-4）。
-- **发布面边界.** IMAS DD 的机械镜像层不进入 FyO 命名空间；`/fyo/v0.draft/imas/v4/` 下发布的
-  是接地于 SpO/BFO 的**语义提升层**（`SP-ADR-103` D-6）。
-- **静态托管行为**（GitHub Pages 实测）：`.ttl` → `text/turtle; charset=utf-8`，
-  `.jsonld` → `application/ld+json`，无尾斜杠的目录请求 301 至带尾斜杠形式，
-  响应带 `access-control-allow-origin: *` —— 满足 JSON-LD 远程 `@context` 的媒体类型要求。
 
 ## 本地预览
 
@@ -63,7 +46,7 @@ gem install bundler jekyll     # 或使用 github-pages gem 以对齐线上版�
 jekyll serve                   # http://127.0.0.1:4000/
 ```
 
-`fylite/`、`spo/`、`fyo/` 无 front matter，Jekyll 原样拷贝，不经 Liquid 处理。
+`fylite/` 无 front matter，Jekyll 原样拷贝，不经 Liquid 处理。
 
 ## 标识
 
@@ -85,8 +68,8 @@ jekyll serve                   # http://127.0.0.1:4000/
 
 ## 许可
 
-站点材料分三部分，按服务路径判定，完整文本见 [`LICENSE`](LICENSE)（各树内另有一份随制品
-携带的同款通告）：站点自身与本体制品为 **CC BY-ND 4.0**；`/fylite/` 下的二进制制品适用
+站点材料分两部分，按服务路径判定，完整文本见 [`LICENSE`](LICENSE)（`/fylite/` 树内另有一份
+随制品携带的同款通告）：站点自身为 **CC BY-ND 4.0**；`/fylite/` 下的二进制制品适用
 **二进制再分发许可**（可免费逐字节再分发，源码不公开）。
 
 Copyright © 2024–2026 YU Zhi（于治），ASIPP。

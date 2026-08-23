@@ -1,7 +1,7 @@
 ---
 layout: default
 title: FuYun —— 聚变集成建模与知识计算
-description: FuYun：本体命名空间 spo / fyo、FyLite 在线演示、许可。
+description: FuYun：FyLite 在线演示与许可。
 ---
 
 <p align="center"><img src="./figures/fuyun_logo.svg" alt="FuYun" width="520"></p>
@@ -19,7 +19,7 @@ description: FuYun：本体命名空间 spo / fyo、FyLite 在线演示、许可
 - **算完能说清怎么来的.** 输入数据、代码版本与判定依据随结果一起留档，便于复算、
   横向对比，以及成文时交代清楚。
 
-本站发布 FuYun 对外可直接引用的公开部分：在线演示、数据语义的命名空间定义，以及公开文档。
+本站发布 FuYun 对外可直接引用的公开部分：在线演示与公开文档。
 
 ---
 
@@ -33,46 +33,17 @@ description: FuYun：本体命名空间 spo / fyo、FyLite 在线演示、许可
 - [**动理学平衡重构**](./fylite/reconstruction.html) —— 由极向磁通环/磁探针测量加压强约束
   反演 p′/FF′ 剖面；可跑 EAST 真实放电数据，也可跑真值已知的合成算例。
 
-单次求解约一到两秒。页面支持 GEQDSK（g 文件）与 fyo 语义 JSON 会话的导入导出。
-
----
-
-## 本体命名空间
-
-这两份是机器可读的词表，规定数据里每个字段"是什么"——装置、线圈、诊断、平衡量、时间轴各自
-如何标注，使不同来源的数据可以对齐、可以校验。用不上语义工具的读者可跳过本节，不影响使用演示。
-
-词表以语言中立的 LinkML 编写，编译为 **OWL / SHACL / JSON-LD** 发布，任何 RDF 工具可直接
-消费，无需 Python 或 LinkML。两个命名空间以本站为权威主机，前缀 IRI **含尾斜杠**，
-CURIE 以字符串拼接展开。
-
-两个命名空间仍为**非稳定开发版**：术语可在无弃用期的情况下变更。源内 IRI 版本段恒为 **`latest`**（随最新构建解析）；发布目录按版本命名（`vX.Y.gHASH` 开发版 / `vX.Y.Z` 正式版），各版本目录内的 IRI 在部署时改写为实际版本；
-首个正式发布将另铸 `v1` 段。
-
-| 本体 | 范围 | 命名空间 | 制品 |
-| :--- | :--- | :--- | :--- |
-| **SpO** | 上层本体：BFO-3D 核 + 4D 时空扩展、量—域—场—信号、时间 AoS/SoA 对偶、几何、受控词表、溯源 | `spo: https://fusion-yun.github.io/spo/latest/` | [浏览（latest）](./spo/latest/)——`latest/` 为最新构建的稳定镜像；版本目录按源仓 `VERSION` 派生命名（`vX.Y.gHASH` 开发版 / `vX.Y.Z` 正式版） |
-| **FyO** | 聚变域本体：装置层手工核心（Machine / Coil / Plasma / Diagnostic 等）+ IMAS DD 4.1.1 的语义提升层（82 IDS），接地于 SpO/BFO | `fyo: https://fusion-yun.github.io/fyo/latest/` | [浏览（latest）](./fyo/latest/)——`latest/` 为最新构建的稳定镜像；版本目录按源仓 `VERSION` 派生命名（`vX.Y.gHASH` 开发版 / `vX.Y.Z` 正式版） |
-
-FyO `imports: [spo]`。引用方式（远程 `@context`）：
-
-```json
-{ "@context": "https://fusion-yun.github.io/fyo/latest/context.jsonld" }
-```
-
-以 `imports:` / `@context` / `owl:imports` / `@type` 引用本体**不构成**演绎作品，
-不受 NoDerivatives 条款限制。
+单次求解约一到两秒。页面支持 GEQDSK（g 文件）与 JSON 会话文件的导入导出。
 
 ---
 
 ## 许可
 
-本站三类材料分别适用不同条款，以文件服务路径判定（完整文本见 [LICENSE](./LICENSE)）：
+本站两类材料分别适用不同条款，以文件服务路径判定（完整文本见 [LICENSE](./LICENSE)）：
 
 | 路径 | 材料 | 条款 |
 | :--- | :--- | :--- |
 | 站点其余部分 | 页面、散文、图形、样式 | [CC BY-ND 4.0](./LICENSE) |
-| `/spo/` `/fyo/` | 本体制品（LinkML 源、清单、编译 OWL / SHACL / JSON-LD）| [CC BY-ND 4.0](./spo/LICENSE) |
 | `/fylite/` | FyLite 二进制制品与装载脚本 | [二进制再分发许可](./fylite/LICENSE) |
 
 ---
@@ -89,14 +60,9 @@ transport and source models are separate blocks, so one can be swapped for a com
 without touching the rest; and inputs, code versions and acceptance criteria are recorded
 alongside every result.
 
-Two parts are published here. [**FyLite**](./fylite/) exercises and demonstrates the basic
+One part is published here. [**FyLite**](./fylite/) exercises and demonstrates the basic
 capability set of fusion analysis, modelling and design applications — tokamak equilibrium
-design and reconstruction, computed entirely in the browser with nothing to install. The
-**spo** and **fyo** vocabularies state what each field in the data *is*; they are written in
-LinkML and published as OWL, SHACL and JSON-LD, resolvable straight from their prefix IRIs
-([spo](./spo/), the upper vocabulary; [fyo](./fyo/), the fusion-domain one,
-covering the apparatus and a semantic lift of IMAS DD 4.1.1). Both are **development namespaces, not
-stable namespaces**.
+design and reconstruction, computed entirely in the browser with nothing to install.
 
 Source repositories are not public; see [LICENSE](./LICENSE) for the per-path terms.
 
