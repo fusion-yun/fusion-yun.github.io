@@ -1,1 +1,24 @@
 <link rel="icon" type="image/svg+xml" href="{{ '/figures/fuyun_mark.svg' | relative_url }}">
+<style>
+  /* 插图：主题（primer）本身不排 figure，这里给出统一的图框与图注体例。 */
+  .markdown-body figure { margin: 30px 0; text-align: center; }
+  .markdown-body figure img {
+    max-width: 100%;
+    background: #fff;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    padding: 6px;
+    box-sizing: border-box;
+  }
+  /* 整页实截很长，按宽度收窄，点击看原图。 */
+  .markdown-body figure.shot img { max-width: 540px; }
+  .markdown-body figure figcaption {
+    margin: 12px auto 0;
+    max-width: 46em;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: #57606a;
+    text-align: left;
+  }
+  .markdown-body figure figcaption em { color: #6e7781; }
+</style>

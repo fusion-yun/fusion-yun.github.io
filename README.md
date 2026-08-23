@@ -25,10 +25,34 @@ fusion-yun.github.io
 | :--- | :--- | :--- |
 | `index.md` | 首页（Jekyll 渲染）| 本仓 |
 | `_config.yml` | 站点标识：标题、描述、语言、主题（`jekyll-theme-primer`）| 本仓 |
-| `_includes/head-custom.html` | 主题头部注入：favicon 指向 `figures/fuyun_mark.svg` | 本仓 |
-| `figures/` | 站点图形：`fuyun_logo.svg` 横幅标识、`fuyun_mark.svg` 方形标记（favicon / 头像）、`fuyun_architecture_legacy.png` 早期架构图（存档，页面已不再引用）| 本仓 |
+| `_includes/head-custom.html` | 主题头部注入：favicon 指向 `figures/fuyun_mark.svg`；首页插图（`figure` / `figcaption`）的图框与图注体例 | 本仓 |
+| `figures/` | 站点图形与首页插图，见下表 | 本仓 + fydoc |
 | `LICENSE` | 站点分路径许可通告（Part A/C；Part B 已撤）| 本仓 |
 | `fylite/` | fylite 在线演示（`index.html` 说明与出处、`discharge.html` 放电设计、`reconstruction.html` 动理学平衡重构、`assets/`）| 私有仓 `fusion-yun/fylite` 的 `app/` |
+
+## 首页插图
+
+首页六张插图**照搬 NFEC2026 张贴报告**（fydoc `publication/03-nfec2026-poster-fytok/`，
+文档号 FYD-PAPER-03），本仓存的是发布副本，**真源在 fydoc**；改图去改那边，再重新拷过来。
+
+| 文件 | 内容 | 真源 |
+| :--- | :--- | :--- |
+| `fig_fyo_dd.svg` | 图 1　IMAS DD v4 ↔ fyo 对照 | 海报 `make_figs.py ddfyo` |
+| `fig_architecture.svg` | 图 2　fyo 语义契约与两级实现 | 海报 `make_figs.py fig1` |
+| `fig_east_recon.png` | 图 3　EAST #137985 动理学平衡重构（实算）| 海报 `figures/g137985_recon.png` |
+| `fig_iter_time_dep.png` | 图 4　ITER 15 MA 时序演化 t = 205 s（实算）| 海报 `figures/iter_time_dep_t205.png` |
+| `fig_roadmap.svg` | 图 5　能力演进闭环 | 海报 `make_figs.py roadmap` |
+| `fig_fylite_modeling.png` | 图 6　fylite 建模页「含时演化」栏实截 | 海报 `figures/fig_app_15d.png`（整页实截裁切）|
+
+- **SVG 三张原样拷贝**：matplotlib 缺省 `svg.fonttype='path'`，文字已转轮廓，浏览器端不依赖
+  字体是否安装，缩放不失真。
+- **PNG 三张为网页派生件**：按页面宽度缩放（1500–1800 px 宽）后 `-dither None -colors 200`
+  转调色板 PNG，三张合计 3.0 MB → 0.73 MB；正文里都套 `<a>` 指向同一文件，点击看原图。
+  重做时别改文件名，`index.md` 按名引用。
+- **口径**：图 3 出自 Fortran 移植验证线，**该线代码不对外分发、对外的是结果与记录答案**，
+  首页照此措辞，不写产出方仓名、不列它调用了哪些库；图 3 的数字是给定约束集下的后验、
+  非装置真值，图 4 是代码间一致性检验、非实验验证——这几句删不得。
+- **`fuyun_architecture_legacy.png`** 是早期架构图，页面已不再引用（图 2 取代之），留作存档。
 
 ## 同步来的目录不要手工编辑
 
