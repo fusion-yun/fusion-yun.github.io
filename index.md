@@ -103,43 +103,7 @@ EAST 算例检验约束驱动的平衡—动理学自洽重构及不确定度量
 无需连接计算服务即可完成参数设置、求解和可视化，**输入与结果保留在本机**。各场景按计算依赖
 组织为连续功能栏，用于复现实验分析与情景建模流程。单次求解约一到两秒。
 
-[**FyLite 在线演示**](./fylite/) —— 当前已发布两页，均打开即用：
-
-- [**放电设计**](./fylite/discharge.html) —— 给定目标截面形状与等离子体参数，反解所需的
-  极向场线圈电流，再正算一遍自由边界 Grad–Shafranov 平衡，校验真正得到的位形。
-- [**动理学平衡重构**](./fylite/reconstruction.html) —— 由极向磁通环/磁探针测量加压强约束
-  反演 p′/FF′ 剖面；可跑 EAST 真实放电数据，也可跑真值已知的合成算例。
-
-页面支持 GEQDSK（g 文件）与 JSON 会话文件的导入导出。
-
-<figure class="shot">
-  <a href="./figures/fig_fylite_modeling.png"><img src="./figures/fig_fylite_modeling.png" alt="fylite 浏览器端物理建模页「含时演化」栏：控件、极向截面、剖面对照、时间轨迹与收敛读数"></a>
-  <figcaption><strong>图 6</strong>　轻量端建模页「含时演化」栏的实截，算例是 <strong>ITER
-  15 MA 感应燃烧点的复现对标</strong>：参考平衡（<code>g900003.00230</code>）与 ASTRA 剖面表
-  一并导入，在那张 ψ 上追出逐面度规，以参考剖面为初值与规定密度、参考加热 49 MW、
-  χ<sub>0</sub> = 0.6 m²/s 推 50 步 × 10 ms = 0.5 s：P<sub>α</sub> = 103.8 MW（参考 102.8）、
-  <strong>Q = 10.6</strong>（ITER 设计值 10）、W<sub>th</sub> = 407 MJ（参考 383）、
-  T<sub>e</sub> 剖面相对差 6.4 % / 2.7 %（峰值 / 均方根）。<br>
-  <em>该页面尚未上线，随下一次演示同步发布；站内现有的是上列两页。</em></figcaption>
-</figure>
-
----
-
-## 许可
-
-本站两类材料分别适用不同条款，以文件服务路径判定（完整文本见 [LICENSE](./LICENSE)）：
-
-| 路径 | 材料 | 条款 |
-| :--- | :--- | :--- |
-| 站点其余部分 | 页面、散文、图形、样式 | [CC BY-ND 4.0](./LICENSE) |
-| `/fylite/` | FyLite 二进制制品与装载脚本 | [二进制再分发许可](./fylite/LICENSE) |
-
-**FyTok · FyLite · FyO** 采用 Apache-2.0 授权，源码仓库暂未公开。
-
-**参照实现**　General Atomics（GACODE，Apache-2.0）　·　ProjectTorreyPines（Apache-2.0）
-　·　CEA / IRFM（METIS，CeCILL-C）
-
-**对比数据**　EAST 团队（ASIPP）　·　ITER 组织（IMAS 数据字典与情景）
+[**FyLite 在线演示**](./fylite/) 
 
 ---
 
