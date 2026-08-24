@@ -1,0 +1,226 @@
+/* The landing page and the four scenario pages.
+ *
+ * `.doc` is the prose at the top of a scenario page — its lead and the
+ * boundary it has to state.  The parts below it keep style.css's full-width
+ * layout, so the width limit belongs to `.doc` and not to `main`. */
+
+/* ★THE DOCUMENT FACE.  Everything below is scoped to `.doc`, and that scope is
+   the point: `index` / `features` / `credits` and the intro band of a scenario
+   page are READ, so they get document typography; the control strips, readout
+   tables and figure captions of a scenario page are an INSTRUMENT, and their
+   13 px at 1.5 is right for what they are.  Do not lift these rules out of
+   `.doc`.
+
+   ★MEASURE.  The prose used to run 840 px = 106 Latin characters or 56 Han
+   characters per line.  Both are long; the Han count is the binding one,
+   because this site's primary language is Chinese and a full-width character
+   is about 1.9x the average Latin one — no single pixel width optimises both.
+   Sized on Chinese at 40-45 characters (the usual publishing range, and what
+   W3C's Requirements for Chinese Text Layout describes), the column is ~44em;
+   Latin then lands at 76-85, which is inside Butterick's 45-90.
+
+   ★THE CONTAINER STAYS WIDE AND ONLY THE TEXT NARROWS — this is Distill's
+   arrangement.  A table of four prose columns capped at 44em would wrap every
+   cell to two words. */
+main.doc { max-width: 1080px; }
+.doc {
+  font-size: 16px;
+  /* ★1.75, not 1.6: Chinese body text is set with more leading than Latin
+     because the characters are dense and have no ascender/descender rhythm to
+     open the line up.  1.7-2.0 is the usual range; the repo's own MyST docs
+     site sits at 1.75. */
+  line-height: 1.75;
+  line-break: strict;   /* no punctuation stranded at the start of a line */
+}
+/* ★ONE column edge for every text element, so the rag is straight down both
+   sides.  `44em` on each element would be 44 of ITS OWN characters — the 19 px
+   lead would then run 132 px wider than the 16 px body beneath it.  `rem` is
+   the root size (16 px), so `--measure` is one fixed column: 44 body
+   characters, and everything lines up with it. */
+.doc { --measure: 44rem; }
+.doc > p, .doc > ul, .doc > ol, .doc > h2, .doc > h3,
+.doc > .scope, .doc > pre.licence { max-width: var(--measure); }
+/* ★headings balance, paragraphs avoid a one-word last line.  Both degrade to
+   nothing where unsupported. */
+.doc > p, .doc li { text-wrap: pretty; }
+.doc h2, .doc h3 { text-wrap: balance; }
+
+/* --- the scenario intro --------------------------------------------------
+ *
+ * ★The lead and the boundary are ONE band, not a paragraph plus a boxed
+ * afterthought: a scenario page is required to state what it may not be taken
+ * for (D-2), and a statement set apart from the claim it qualifies is one a
+ * reader can skip without noticing.  It spans the page's own column so it
+ * lines up with the toolbar and the bars below it. */
+.doc.intro-host { max-width: none; }
+.intro {
+  border: 1px solid var(--line); border-left: 3px solid var(--warn);
+  border-radius: 8px; background: var(--panel);
+  padding: 14px 18px; margin: 0 0 14px;
+}
+/* ★The BAND spans the column so it lines up with the toolbar; the TEXT does
+   not — a 200-character line is aligned and unreadable at the same time. */
+/* ★`em`, NOT `ch`.  `ch` is the advance width of the character `0`, which says
+   nothing about a Han character — `96ch` measured out to 58 Han characters per
+   line, well past the 40-45 this is trying to express.  `44em` is 44 full-width
+   characters, which is what was meant. */
+/* ★`.doc .lead` sits further down this file and would otherwise win on equal
+   specificity, dragging the scenario intro to 19 px; the intro is a band above
+   an instrument, not a document standfirst, so it says so with `.doc` in front
+   of it. */
+.doc .intro .lead { font-size: 16px; margin: 0; max-width: 44rem; line-height: 1.75; }
+.doc .intro .bound {
+  margin: 10px 0 0; padding-top: 10px; font-size: 14px; line-height: 1.75;
+  border-top: 1px dashed var(--line); color: var(--muted); max-width: 46rem;
+}
+.doc .intro .bound strong { color: var(--fg); }
+
+.tool-foot { margin-top: 22px; }
+
+/* ★A SCALE, not ten nudges.  The document face used to carry ten sizes between
+   12 and 17 px — 12.5, 13.5, 14.5, 15.5 among them — spanning a factor of 1.42
+   in total, so `h2` was 1.07x the body and `h3` was SMALLER than it: the page
+   had no visible hierarchy and the spacing was carrying all of it.
+   The scale is 16 x 1.2^n = 13 / 16 / 19 / 23.  ★One member is off it, on
+   purpose: tables take 14.  13 px Chinese in a four-column table is too small
+   to read comfortably and 16 px bursts the columns. */
+/* ★The entrance's wordmark.  The header carries the SQUARE mark (`Fy` + the
+   release stage); this is the full wordmark, once, on the one page a reader
+   arrives at — so the site says its whole name somewhere instead of only its
+   monogram.  The file paints its own white plate (the `Lite` half is navy and
+   would vanish on a dark header), so it is left unstyled apart from the
+   rounding that matches the plate's own `rx`. */
+/* ★The release stage, said once where a first-time reader lands.  It is a
+   STATUS, so it is not part of the wordmark and not in the header: it is a
+   line of prose, on its own rule, in the muted colour the footer's copyright
+   uses — visible without shouting over the page's actual subject. */
+.doc .alpha {
+  margin: 0 0 20px; padding: 10px 14px; font-size: 14px; line-height: 1.7;
+  color: var(--muted); border-left: 3px solid var(--accent);
+  background: var(--panel);
+}
+.doc .alpha strong { color: var(--fg); }
+
+.doc .hero { margin: 4px 0 18px; }
+.doc .hero img { display: block; width: 240px; height: auto; border-radius: 12px; }
+
+.doc .lead { font-size: 19px; line-height: 1.65; }
+.doc h2 { font-size: 23px; margin-top: 40px; margin-bottom: 10px; line-height: 1.35; }
+.doc h3 { font-size: 19px; margin: 26px 0 6px; line-height: 1.4; }
+.doc li { margin: 6px 0; }
+
+.cards {
+  display: grid; gap: 16px; margin: 20px 0 8px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+@media (max-width: 760px) { .cards { grid-template-columns: 1fr; } }
+.card { display: block; text-decoration: none; color: inherit; }
+.card:hover { border-color: var(--accent); }
+.card h3 { margin: 0 0 6px; font-size: 19px; color: var(--accent); }
+.card p { margin: 0; font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+/* The boundary a page is REQUIRED to state (D-2), called out rather than
+   run in with the lead: it is the sentence a reader who takes a number away
+   from this page most needs to have read. */
+.scope {
+  padding: 12px 16px; margin: 14px 0 0; font-size: 16px; line-height: 1.75;
+  border-left: 3px solid var(--warn);
+  background: color-mix(in srgb, var(--warn) 8%, transparent);
+}
+
+/* ★the small print of the document face is 13, not the instrument's 12.5 —
+   and inline code inside 16 px prose is 14, not the instrument's 12. */
+.doc .note { margin: 10px 0; font-size: 13px; }
+.doc code { font-size: 14px; }
+
+/* the nav marks the scenario the current page is */
+header.top nav a.on { font-weight: 700; text-decoration: underline; }
+
+/* --- the mark, in every page's header ------------------------------------
+ *
+ * ★A link, not a decoration: it is the way back to the entrance from a
+ * scenario page, which is what a reader tries first.  The intrinsic size is
+ * declared on the <img> so the header does not reflow when the SVG lands. */
+/* ★THE MARK ALONE, AND IT IS THE WAY HOME.  `fylite_logo.svg` is 240x100 and
+   carries a 7 px strapline; in a 30 px header strip that line was a smear and
+   most of the remaining pixels were the white plate it needs in order not to
+   vanish on a dark header.  What sits at the far left of every header now is
+   `fy_mark.svg` — the `Fy` of the same wordmark, on nothing — and no word
+   beside it: a mark in a header IS the link to the entrance, and setting the
+   product's name next to it put that name twice in one strip on the very page
+   whose heading already said it. */
+.brand { display: flex; align-items: center; line-height: 0; }
+.brand img { height: 32px; width: 32px; display: block; }
+body[data-page="index"] .brand img { height: 40px; width: 40px; }
+@media (max-width: 560px) { .brand img { height: 26px; width: 26px; } }
+
+/* the same mark opens the footer band, so the page is signed at both ends */
+footer .mark { display: flex; align-items: center; padding: 0; line-height: 0; }
+footer .mark img { width: 24px; height: 24px; display: block; border-radius: 6px; }
+footer .mark:hover { background: none; }
+
+/* --- the credits page ----------------------------------------------------- */
+
+/* the licence header, quoted rather than paraphrased */
+pre.licence {
+  font-size: 13px; line-height: 1.6; padding: 12px 14px; overflow-x: auto;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--panel);
+  white-space: pre; margin: 14px 0;
+}
+/* a wide table must scroll inside itself; the page must not scroll sideways */
+.table-scroll { overflow-x: auto; margin: 14px 0; }
+.table-scroll table { min-width: 620px; }
+/* ★THE DOCUMENT TABLES ARE PROSE TABLES, and `style.css` sets `text-align:
+   right` on every cell because ITS tables are readouts of numbers, where that
+   is correct.  Here it meant the capability table's three columns of Chinese
+   prose were set flush right, ragged left — every line began at a different
+   place and the eye had to hunt for it.  Text left, numbers right.
+
+   ★The rest is the `booktabs`形制 every journal uses: no vertical rules, a
+   heavier rule under the head, a light rule between rows, nothing else. */
+.doc td, .doc th { font-size: 14px; vertical-align: top; line-height: 1.65;
+                   padding: 8px 10px; text-align: left; }
+.doc td.num, .doc th.num { text-align: right; font-variant-numeric: tabular-nums; }
+/* a row header is a short label — let it set the first column's width rather
+   than wrap 「是什么」 onto two lines to keep that column narrow */
+.doc tbody th { white-space: nowrap; font-weight: 600; }
+.doc thead th { border-bottom: 2px solid var(--grid); }
+.doc tbody td, .doc tbody th { border-bottom: 1px solid var(--line); }
+.doc tbody tr:last-child td, .doc tbody tr:last-child th { border-bottom: none; }
+.doc table { border-top: 1px solid var(--line); }
+/* numbers line up in a column wherever they appear on a document page */
+.doc table { font-variant-numeric: tabular-nums; }
+
+/* the footer says who owns this and under what licence — on every page, not
+   only on the one page about it */
+/* ★the copyright sits in the MIDDLE of the band: the two auto margins put
+   it between the links and the code, and it stays centred as either side
+   changes width from page to page. */
+footer .copy { color: var(--muted); margin: 0 auto; max-width: 46em;
+               text-align: center; }
+@media (max-width: 620px) { footer .copy { margin-right: 0; width: 100%; } }
+
+/* ★the version chip.  Deliberately quiet — it is provenance, not navigation:
+   a reader wants it when they are asking「我看的是哪一版」and never otherwise.
+   Tabular figures so the three numbers keep their columns as they change
+   width, and `white-space: nowrap` because「内核 0.0.1 · ABI 105 · 前端
+   0.0.1-alpha」broken across two lines reads as two facts. */
+footer .ver { color: var(--muted); font-size: 13px; white-space: nowrap;
+              font-variant-numeric: tabular-nums; }
+@media (max-width: 620px) { footer .ver { width: 100%; text-align: center; } }
+
+/* the page's own QR, so a reader at a poster or a screen can carry the page
+   away on a phone.  ★It points at the PUBLISHED url, which is why it is
+   generated at build time and not from `location`: a printed code cannot ask
+   where it was served from. */
+/* ★last in the band: copyright, then the other pages, then the code a
+   phone is pointed at — the QR is the one item a reader reaches for with
+   a device rather than a cursor, so it sits at the end and apart. */
+footer .qr { display: flex; align-items: center; line-height: 0; padding: 0;
+             margin-left: 6px; }
+footer .qr img {
+  width: 88px; height: 88px; border-radius: 6px; background: #fff;
+  padding: 5px; image-rendering: pixelated; border: 1px solid var(--line);
+}
+footer .qr:hover img { border-color: var(--accent); }
+@media (max-width: 620px) { footer .qr img { width: 72px; height: 72px; } }

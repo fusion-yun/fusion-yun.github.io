@@ -4,7 +4,10 @@
   --bg: #f4f5f7;
   --panel: #ffffff;
   --fg: #1c2128;
-  --muted: #6b7480;
+  /* ★#6b7480 gave 4.34:1 on --bg — under WCAG AA (4.5) for normal text, and
+     muted IS normal text here: table headers, notes, card subtitles.  4 % darker
+     is 4.67 on --bg and 5.10 on --panel, and is not visibly a different grey. */
+  --muted: #666f7a;
   --grid: #d8dce2;
   --line: #e3e6ea;
   --accent: #1668c8;
@@ -13,8 +16,18 @@
   --coil: #8a53c4;
   --wall: #5a6270;
   --flux: #9aa6b8;
-  --warn: #b4600a;
+  --warn: #a75909;   /* was #b4600a: 4.17 on --bg, also under AA */
 }
+
+/* ★THE SWITCH IS BACK (2026-08-22, by decision).  It had been removed that
+   same day with a real argument behind it: the figures on these pages are
+   screenshotted into papers and projected in lit rooms, and a plot whose
+   background follows the reader's operating system is a plot whose exported
+   image is not reproducible.  That argument is answered by the CHOICE rather
+   than by removing it — the toggle has three states and an explicit one wins,
+   so anyone exporting a figure picks ☀ Light and gets the same picture every
+   time.  What must not come back is a page that is dark only because the
+   operating system is, with no way to say otherwise. */
 
 /* Dark palette.  Applied both by the system preference (when the user has
    not chosen) and by an explicit data-theme, so the toggle wins in both
@@ -53,6 +66,12 @@
   --warn: #e0a458;
 }
 
+/* ★NO 650 AND NO 550 ANYWHERE.  Source Han Sans / Noto Sans CJK ship
+   250/300/350/400/500/700/900 and Microsoft YaHei ships only 400 and 700, so a
+   CJK run asked for 650 is either snapped or SYNTHESISED — the browser strokes
+   the glyph wider, which at 13-16 px turns dense characters to mud.  The three
+   weights used are 400, 500 and 700. */
+
 * { box-sizing: border-box; }
 
 body {
@@ -65,18 +84,37 @@ body {
 
 a { color: var(--accent); }
 
+/* --- the page head -------------------------------------------------------
+ *
+ * ★Three things in one line, in the order a reader needs them: the MARK (also
+ * the way home), the TITLE of this page, and the way to every other page.  The
+ * subtitle hangs under the title rather than beside it — set beside it, the two
+ * ran together into one line of text in which neither read as the heading. */
 header.top {
   display: flex;
-  align-items: baseline;
-  gap: 14px;
+  align-items: center;
+  gap: 16px;
   flex-wrap: wrap;
-  padding: 14px 20px;
+  padding: 12px 24px;
   border-bottom: 1px solid var(--line);
   background: var(--panel);
 }
-header.top h1 { font-size: 18px; margin: 0; font-weight: 650; }
-header.top .sub { color: var(--muted); font-size: 13px; }
-header.top nav { margin-left: auto; display: flex; gap: 16px; font-size: 14px; }
+header.top .titles { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+header.top h1 {
+  font-size: 17px; margin: 0; font-weight: 700; letter-spacing: .01em;
+  line-height: 1.25;
+}
+header.top .sub { color: var(--muted); font-size: 12.5px; line-height: 1.3; }
+header.top nav {
+  margin-left: auto; display: flex; gap: 4px; font-size: 13.5px;
+  align-items: center; flex-wrap: wrap;
+}
+/* the links are targets, so they get a target's padding */
+header.top nav a {
+  padding: 5px 10px; border-radius: 6px; text-decoration: none;
+  color: var(--muted); white-space: nowrap;
+}
+header.top nav a:hover { color: var(--accent); background: var(--bg); }
 
 main { padding: 18px 20px 40px; max-width: 1500px; margin: 0 auto; }
 
@@ -96,8 +134,12 @@ main { padding: 18px 20px 40px; max-width: 1500px; margin: 0 auto; }
 }
 .panel + .panel { margin-top: 14px; }
 .panel h2 {
-  font-size: 13px; text-transform: uppercase; letter-spacing: .06em;
-  color: var(--muted); margin: 0 0 10px; font-weight: 650;
+  /* ★NOT `text-transform: uppercase`.  It does nothing at all to a Chinese
+     heading, so the same panel title had two different shapes in the two
+     languages; and all-caps is slower to scan in the one language it does
+     affect.  The tracking stays — that is what makes it read as a label. */
+  font-size: 13px; letter-spacing: .06em;
+  color: var(--muted); margin: 0 0 10px; font-weight: 600;
 }
 .panel h3 { font-size: 14px; margin: 14px 0 6px; font-weight: 600; }
 
@@ -127,20 +169,48 @@ main { padding: 18px 20px 40px; max-width: 1500px; margin: 0 auto; }
 .check input { accent-color: var(--accent); }
 
 button {
-  font: inherit; font-size: 14px; font-weight: 550;
+  font: inherit; font-size: 14px; font-weight: 500;
   padding: 8px 14px; border-radius: 6px; cursor: pointer;
   border: 1px solid var(--accent); background: var(--accent); color: #fff;
 }
 button.ghost { background: transparent; color: var(--accent); }
 button:disabled { opacity: .5; cursor: progress; }
-.buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
 
-.tabs { display: flex; gap: 6px; margin-bottom: 10px; }
-.tabs button {
-  flex: 1; background: transparent; color: var(--muted);
-  border: 1px solid var(--grid); font-weight: 500; padding: 6px 8px;
+/* The run control: a play triangle that becomes a stop square while a solve
+   is in flight.  Square rather than pill-shaped so it reads as one action
+   rather than as a labelled command, and sized to the toolbar's other
+   buttons so the row keeps its baseline. */
+button.icon-btn {
+  padding: 0; width: 38px; height: 38px;
+  display: inline-flex; align-items: center; justify-content: center;
 }
-.tabs button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+button.icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
+/* ★A DIFFERENT COLOUR, not just a different glyph: the two states of this
+   button do opposite things, and a reader who has looked away needs to know
+   which one is under the pointer before pressing it. */
+button.icon-btn.stop {
+  background: var(--lcfs); border-color: var(--lcfs);
+}
+button.icon-btn.stop:disabled { opacity: 1; cursor: pointer; }
+.buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;
+           position: relative; }
+
+/* The export menu: shown only while it is being answered.  Absolute inside
+   `.buttons` so it drops under the button that opened it without pushing the
+   toolbar's rows apart. */
+.io-menu {
+  position: absolute; top: 100%; right: 0; z-index: 20; margin-top: 4px;
+  display: flex; flex-direction: column; min-width: 180px;
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: 6px; padding: 4px; box-shadow: 0 6px 20px rgba(0,0,0,.18);
+}
+.io-menu[hidden] { display: none; }
+.io-menu-item {
+  background: transparent; color: var(--fg); border: 0; text-align: left;
+  padding: 7px 10px; border-radius: 4px; font-weight: 500;
+}
+.io-menu-item:hover, .io-menu-item:focus { background: var(--grid); }
+
 
 /* figures */
 figure { margin: 0; }
@@ -151,6 +221,14 @@ figure canvas {
 figure figcaption { font-size: 12px; color: var(--muted); margin-top: 6px; }
 canvas.tall { height: 560px; }
 canvas.short { height: 210px; }
+/* the stored-slice picker: a strip, not a figure — it is a CONTROL (T-A21) */
+canvas.strip {
+  width: 100%; display: block; height: 54px; cursor: pointer;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
+}
+/* ★an author `display` beats the UA rule for `[hidden]`, so the strip has to
+   say so itself — otherwise it is on screen, blank, before the first read */
+canvas.strip[hidden] { display: none; }
 
 /* tables */
 table { border-collapse: collapse; width: 100%; font-size: 13px; }
@@ -160,6 +238,11 @@ thead th { color: var(--muted); font-weight: 600; }
 td.num { font-variant-numeric: tabular-nums; }
 td.good { color: var(--alt); }
 td.bad { color: var(--lcfs); }
+/* ★the same two colours reached from a SPAN, so a criterion's mark can sit
+   inside a cell that also carries other text — the design and 0-D bars mark
+   the reading, not the whole cell */
+span.good { color: var(--alt); }
+span.bad { color: var(--lcfs); }
 
 .status {
   font-size: 13px; color: var(--muted); margin-top: 10px;
@@ -186,18 +269,58 @@ td.bad { color: var(--lcfs); }
 }
 .bar > div { height: 100%; background: var(--accent); width: 0; transition: width .2s; }
 
+/* --- the page foot -------------------------------------------------------
+ *
+ * ★A band, not a line of leftovers: the page's own QR at the left (big enough
+ * to be read by a phone held up to a screen or a poster), the copyright and
+ * licence in the middle, and the site's other pages at the right. */
 footer {
-  border-top: 1px solid var(--line); margin-top: 30px; padding: 16px 20px;
-  color: var(--muted); font-size: 12.5px;
+  border-top: 1px solid var(--line); margin-top: 36px; padding: 18px 24px 22px;
+  color: var(--muted); font-size: 12.5px; line-height: 1.6;
+  background: var(--panel);
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+}
+footer a {
+  color: var(--muted); text-decoration: none; padding: 4px 8px;
+  border-radius: 6px; white-space: nowrap;
+}
+footer a:hover { color: var(--accent); background: var(--bg); }
+footer a.qr:hover { background: none; }
+/* ★the page's code goes to the FAR RIGHT: it is the one footer item nobody
+   reads in sequence — they photograph it — so it should not sit in front of
+   the copyright line.  `order` rather than markup, so all five pages move
+   together and the DOM keeps its reading order. */
+footer a.qr { order: 99; margin-left: auto; }
+@media (max-width: 620px) {
+  header.top { padding: 10px 16px; }
+  footer { padding: 16px; gap: 12px; }
 }
 
-/* theme toggle ------------------------------------------------------------ */
-.theme-toggle {
-  border: 1px solid var(--grid); background: transparent; color: var(--muted);
-  border-radius: 6px; padding: 4px 9px; font-size: 13px; line-height: 1.3;
-  cursor: pointer; font-weight: 500;
+/* the two switches in the header ------------------------------------------
+ *
+ * ★SQUARE, AND WORDLESS.  They used to be text buttons (`☀ 浅色`, `English`),
+ * which made the header's right end change width with the language and put two
+ * characters on the theme button whose glyphs not every platform ships.  Both
+ * are icons now — an inline SVG for the theme, a flag for the language — so
+ * they are the same size in both languages and in all three theme states.
+ * What each one means lives in `title` and `aria-label`, which stay translated:
+ * an icon with no accessible name is a button that screen readers announce as
+ * "button". */
+.iconbtn {
+  width: 30px; height: 30px; padding: 0; flex: none;
+  display: grid; place-items: center;
+  border: 1px solid var(--grid); border-radius: 6px;
+  background: transparent; color: var(--muted); cursor: pointer;
 }
-.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.iconbtn:hover { border-color: var(--accent); color: var(--accent); }
+.iconbtn svg { width: 16px; height: 16px; display: block; }
+/* the flag is the one mark here that is NOT `currentColor` — it is a flag —
+   so it gets a hairline instead, or a white flag would dissolve into a light
+   header and a dark one alike */
+.iconbtn .flag {
+  width: 21px; height: 14px; display: block; border-radius: 2px;
+  border: 1px solid var(--line);
+}
 header.top nav { align-items: center; }
 
 /* legend rendered outside the plot ---------------------------------------- */
@@ -225,9 +348,30 @@ header.top nav { align-items: center; }
 .panel.toolbar .ctl { flex: 1 1 170px; min-width: 150px; margin: 0; }
 .panel.toolbar .row { flex: 0 0 auto; display: flex; gap: 10px; margin: 0; }
 .panel.toolbar .row .ctl { flex: 0 0 96px; min-width: 96px; }
-.panel.toolbar .buttons { flex: 0 0 auto; margin: 0; }
-.panel.toolbar .status { flex: 1 1 240px; margin: 0; align-self: center; }
+/* the verbs of the PAGE sit together, at the right of the first line */
+.panel.toolbar .buttons { display: flex; gap: 8px; flex: 0 0 auto;
+                          margin: 0 0 0 auto; }
+/* ★The band reads top to bottom: what you are working on (the machine) and
+   what you can do with it (the file verbs) on ONE line, then what happened
+   (the status), then how far along it is (the progress bar).  The status used
+   to sit on the first line and squeeze the two apart, which is why the verbs
+   fell to a line of their own and looked unrelated to the toolbar. */
+.panel.toolbar .status { flex: 1 1 100%; margin: 0; align-self: center; }
 .panel.toolbar .bar { flex: 1 1 100%; order: 99; margin-top: 0; }
+/* The device control is a list and ONE verb — forget this machine.  ★It sits
+   on the row WITH the select rather than in the toolbar's button group: it
+   acts on the thing beside it.  ★★And it is ONE LINE: label, list, verb.  It
+   used to wrap (the label taking a row of its own, the buttons falling under
+   the list), which made one control look like two. */
+.panel.toolbar .dev-ctl {
+  display: flex; align-items: center; gap: 6px; flex: 1 1 300px;
+}
+.panel.toolbar .dev-ctl label { flex: 0 0 auto; margin: 0; white-space: nowrap; }
+.panel.toolbar .dev-ctl select { flex: 1 1 auto; min-width: 0; }
+.panel.toolbar .dev-btn {
+  flex: 0 0 auto; padding: 4px 9px; line-height: 1.1; font-size: 1.05em;
+}
+.panel.toolbar .dev-btn[disabled] { opacity: 0.4; cursor: not-allowed; }
 @media (max-width: 700px) { .panel.toolbar .ctl { flex-basis: 100%; } }
 
 .status.warn { color: var(--warn); }
@@ -242,3 +386,248 @@ header.top nav { align-items: center; }
   background: var(--bg); color: var(--fg);
   border: 1px solid var(--grid); border-radius: 6px; align-self: center;
 }
+
+/* A channel sitting on its limit.  It is the ANSWER to "what is blocking
+   this design", not an error, so it is marked, not reddened. */
+.coil-table tr.bind td { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.coil-table input.lim { width: 5.5em; text-align: right; font: inherit;
+  padding: 1px 4px; border: 1px solid var(--line); border-radius: 3px;
+  background: var(--panel); color: var(--fg); }
+.coil-table th { font-weight: 600; color: var(--muted); font-size: 12px;
+  text-align: left; padding-bottom: 3px; }
+.coil-table th.num { text-align: right; }
+
+/* --- 功能栏 FUNCTION BARS --------------------------------------------------
+ *
+ * A scenario is a stack of bars; a bar is a strip (fold, switch, title, state)
+ * over a two-column body (controls | figures).  The columns are inside the bar
+ * rather than around it, because a bar folds as ONE thing: a fold that left a
+ * column of sliders behind would be a fold of half a function. */
+
+.layout { display: block; }          /* the stack; the columns are per bar */
+
+.funcbar { border: 1px solid var(--line); border-radius: 10px; margin: 0 0 16px; }
+.funcbar + .funcbar { margin-top: 16px; }
+
+.funcbar-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--fg) 4%, transparent);
+  border-radius: 10px 10px 0 0;
+}
+.funcbar.folded .funcbar-head { border-bottom: none; border-radius: 10px; }
+.funcbar-title { font-size: 15px; margin: 0; font-weight: 700; }
+.funcbar-state {
+  margin-left: auto; font-size: 12.5px; color: var(--muted); text-align: right;
+  max-width: 52ch; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.funcbar-state strong { font-weight: 600; }
+.funcbar-state.err { color: var(--err); }
+.funcbar-state.warn { color: var(--warn); }
+.funcbar-need {
+  font-size: 12px; padding: 1px 7px; border-radius: 10px; white-space: nowrap;
+  background: color-mix(in srgb, var(--warn) 16%, transparent); color: var(--warn);
+}
+
+/* The bar's own run key, at the right end of its strip.  Smaller than the
+   toolbar's was (38px would set the strip's height), and `margin-left` is not
+   `auto` here: `.funcbar-state` already claims the gap, so the key sits just
+   after the state text rather than pushing it left. */
+button.icon-btn.funcbar-run { width: 30px; height: 30px; flex: none; }
+button.icon-btn.funcbar-run svg { width: 15px; height: 15px; }
+/* ★A disabled key must read as "not yet", not as "broken": the bar's own
+   「待 …」 badge says what it is waiting for, so this only needs to be quiet. */
+button.icon-btn.funcbar-run:disabled { opacity: .38; }
+/* a bar's own action buttons, adopted into its strip: smaller than the
+   toolbar's ghosts, so the strip keeps the height its title sets */
+.funcbar-action { padding: 4px 10px; font-size: 12.5px; flex: none; }
+
+/* the fold control, on the bar and on every panel: one triangle, rotated */
+.funcbar-fold, .panel-fold {
+  background: none; border: none; padding: 2px; cursor: pointer;
+  color: var(--muted); display: flex; align-items: center;
+}
+.funcbar-fold svg, .panel-fold svg {
+  width: 14px; height: 14px; fill: none; stroke: currentColor;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform .12s;
+}
+.funcbar.folded .funcbar-fold svg,
+.panel.folded .panel-fold svg { transform: rotate(-90deg); }
+.funcbar-fold:hover, .panel-fold:hover { color: var(--accent); }
+
+/* a folded bar keeps its strip and loses its body: it is not gone, it is out
+   of the way */
+.funcbar.folded .funcbar-body { display: none; }
+
+.funcbar-body {
+  display: grid; grid-template-columns: 320px minmax(0, 1fr);
+  gap: 18px; align-items: start; padding: 14px;
+}
+@media (max-width: 980px) { .funcbar-body { grid-template-columns: 1fr; } }
+.funcbar-body > div > .panel:first-child { margin-top: 0; }
+
+/* --- a panel folds too ---------------------------------------------------- */
+
+.panel h2.foldable, .panel .panel-title.foldable {
+  display: flex; align-items: center; gap: 6px; cursor: default;
+}
+.panel h2.foldable .panel-fold, .panel .panel-title.foldable .panel-fold {
+  margin-left: auto;
+}
+.panel .panel-title {
+  font-size: 13px; font-weight: 600; color: var(--muted); margin: 0 0 8px;
+}
+/* ★A panel can BE a grid (`.grid2`, `.grid3`): its children are the cells, so
+   an injected heading takes the first cell and shifts every figure one place
+   — which is exactly how a caption ended up sitting where a figure belonged.
+   The heading spans the row instead. */
+.panel.grid2 > .panel-title, .panel.grid3 > .panel-title,
+.panel.grid2 > h2, .panel.grid3 > h2 { grid-column: 1 / -1; }
+.panel.folded > *:not(h2):not(.panel-title) { display: none; }
+.panel.folded { padding-bottom: 8px; }
+.panel.folded h2, .panel.folded .panel-title { margin-bottom: 0; }
+
+/* the page-level panel that is not part of any bar: the shared controls */
+.page-shared { margin: 0 0 16px; }
+
+/* ★the one line that answers "can I trust this fit" — the four judgements it
+   collects live in four different panels, and a reader who has to assemble
+   them by hand is a reader who will not */
+.note.verdict { border-left: 3px solid var(--accent); padding-left: 10px;
+  margin-top: 10px; }
+
+/* the pinned run's column, when there is one */
+.pin-col { color: var(--accent); }
+
+/* ===== 反演页本批（T-A10 / T-A11 / T-A13）——一整块 ===================== */
+
+/* ★T-A10: 装置 #炮号 @时刻，钉在每张图右上角。做成一段文字而不是画进画布：
+   文字会被翻译、能选中、缩放不糊，读者连图带出处一起复制走。★放在 figure 上而
+   不是 figcaption 里：图注归它自己的写者所有（带 data-i18n 的由语言扫描整段重写，
+   带 id 的由各自的注记函数重写），塞进去的东西会被下一个写者抹掉。
+   等宽是为了让一列图的角标对齐成一条线，而不是随字宽跳动。 */
+.figstamp-row { text-align: right; line-height: 1; margin-bottom: 4px; }
+.figstamp { display: inline-block; padding: 0 4px;
+  border: 1px solid var(--grid, #ddd); border-radius: 3px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px; letter-spacing: .01em; color: var(--muted);
+  white-space: nowrap; vertical-align: baseline; }
+.figstamp:empty { display: none; }
+
+/* ★T-A11: 控件分「必设 / 进阶」两层。进阶那半截是 <details>，收起时只剩一行
+   标题——元件仍在文档里、id 不变，闸子照常 getElementById（见 tests/README.md
+   「折叠不影响可及性」）。 */
+.adv { margin-top: 10px; border-top: 1px dashed var(--grid, #ddd);
+  padding-top: 8px; }
+.adv > summary { cursor: pointer; font-size: 12px; color: var(--muted);
+  list-style: none; user-select: none; }
+.adv > summary::-webkit-details-marker { display: none; }
+.adv > summary::before { content: '▸ '; }
+.adv[open] > summary::before { content: '▾ '; }
+.adv > summary:hover { color: var(--fg); }
+.adv[open] > summary { margin-bottom: 6px; }
+
+/* ★T-A13: 页面状态行前面的栏名。三条栏共用一条页面状态行，谁最后说话谁在上面；
+   不写名字，读者就无从知道这句话是哪一栏说的。 */
+.status .who { color: var(--muted); font-weight: 500; margin-right: 4px; }
+
+/* ==========================================================================
+   THE TERMINAL MARKER on a bar's strip (T-D12).
+   ==========================================================================
+   Three bars used to end in three sentences — 「…的平衡已解」, 「★未达目标…」,
+   「轨迹已设计…」 — and nothing in any of them was a STATE.  The marker is the
+   first thing on the strip and always one of four words; the sentence follows
+   it.  Colour comes from the strip's existing `err`/`warn` classes, so the
+   marker is a shape, not a second colour system: a small caps chip that a
+   reader picks out of three strips without reading any of them. */
+.funcbar-state .state-mark {
+  display: inline-block; font-weight: 700; font-size: 11px;
+  letter-spacing: .04em; padding: 1px 6px; border-radius: 9px;
+  vertical-align: 1px;
+  background: color-mix(in srgb, currentColor 14%, transparent);
+}
+/* 未运行 is the one state that is not a result, and it recedes */
+.funcbar-state[data-state="idle"] .state-mark { opacity: .6; }
+.funcbar-state[data-state="busy"] .state-mark { opacity: .8; }
+
+/* The page-level controls, laid out as a band rather than a column (T-D3).
+   I_p was one control and fitted anywhere; with the target geometry beside it
+   there are six, and stacked they push the first 功能栏 a screen down the
+   page — which is the opposite of what a shared panel is for. */
+.shared-grid {
+  display: grid; gap: 4px 20px;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+.shared-grid .ctl { margin: 0; }
+
+/* The operating-domain block's geometry column and its warning strip (T-D1).
+   The criteria are all linear in the volume or in a², so the geometry they
+   stand on is part of the reading, not a footnote — but it is a tag, not a
+   number, so it recedes to the size of one. */
+td.geo { font-size: 11.5px; color: var(--muted); white-space: nowrap; }
+.geo-banner {
+  margin: 0 0 10px; padding: 8px 11px; border-radius: 8px; font-size: 12.5px;
+  line-height: 1.5; color: var(--warn);
+  border-left: 3px solid var(--warn);
+  background: color-mix(in srgb, var(--warn) 10%, transparent);
+}
+.geo-banner strong { font-weight: 700; }
+
+/* Two notes that carry a verdict rather than a caveat (T-D2, T-D4): the
+   q95 comparison when the page's several q95 disagree, and the pulse bar's
+   line saying whose 位形 its trajectory was designed for.  `.note.verdict`
+   already draws the rule down the left; these give it the colour of what it
+   is saying. */
+.note.verdict.warn { border-left-color: var(--warn); color: var(--warn); }
+.note.verdict.bad { border-left-color: var(--lcfs); color: var(--lcfs); }
+.note.verdict strong { font-weight: 700; }
+
+/* Unrun result panels and long explanations (T-D11).
+   The bar strip says how many panels are folded away, so a collapsed bar
+   reads as "not run yet" rather than as a page missing half of itself. */
+.funcbar-results {
+  font-size: 12px; padding: 1px 7px; border-radius: 10px; white-space: nowrap;
+  background: color-mix(in srgb, var(--fg) 8%, transparent); color: var(--muted);
+}
+/* A long note is clamped, not removed: the text is still in the document, so
+   anything reading it reads all of it. */
+.note.clamped {
+  max-height: 3.9em; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent);
+  mask-image: linear-gradient(to bottom, #000 60%, transparent);
+}
+button.note-more {
+  display: block; margin: 2px 0 8px; padding: 0; border: none;
+  background: none; cursor: pointer; font: inherit; font-size: 12.5px;
+  font-weight: 600; color: var(--accent);
+}
+button.note-more:hover { text-decoration: underline; }
+
+/* ===== 放电设计页 · 脉冲栏的多时刻目标位形（T-D13）=======================
+   ONE contiguous block: two other sessions are appending to this file.
+
+   Seven number fields per instant, in a control column 286 px wide.  A table
+   of them scrolls sideways and the first thing to leave the panel is the key
+   that deletes the row, so the instant is the heading and the six shape
+   fields sit under it, three to a line.  These are the instrument face, not
+   the document face: they are inputs, and an input a three-decimal number
+   does not fit into is a control that lies about its own precision. */
+.kflist { margin: 4px 0 8px; }
+.kfitem {
+  margin: 0 0 6px; padding: 5px 6px; border-radius: 6px;
+  background: color-mix(in srgb, var(--fg) 4%, transparent);
+}
+.kfhead {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 8px; margin-bottom: 4px;
+}
+.kffields { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 6px; }
+.kflist label { display: block; font-size: 12px; color: var(--muted); }
+.kflist label span { display: block; line-height: 1.3; }
+.kflist input[type="number"] {
+  width: 100%; padding: 2px 4px; font-size: 12px;
+}
+.kfhead label { flex: 0 0 5.6em; }
+button.kfdel { padding: 2px 8px; font-size: 12px; line-height: 1.5; }
+/* ===== 结束：脉冲栏的多时刻目标位形 ==================================== */

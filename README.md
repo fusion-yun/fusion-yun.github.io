@@ -28,7 +28,7 @@ fusion-yun.github.io
 | `_includes/head-custom.html` | 主题头部注入：favicon 指向 `figures/fuyun_mark.svg`；首页插图（`figure` / `figcaption`）的图框与图注体例 | 本仓 |
 | `figures/` | 站点图形与首页插图，见下表 | 本仓 + fydoc |
 | `LICENSE` | 站点分路径许可通告（Part A/C；Part B 已撤）| 本仓 |
-| `fylite/` | fylite 在线演示（`index.html` 说明与出处、`discharge.html` 放电设计、`reconstruction.html` 动理学平衡重构、`assets/`）| 私有仓 `fusion-yun/fylite` 的 `app/` |
+| `fylite/` | fylite 在线演示：**十页**——首页 / 功能 / 版权各中英两份 + 三条场景页（`scenario/design·model·analysis.html`）+ 工具页 `mdsplus.html`；另有 `assets/`、`cases/`、`devices/`、`LICENSE` | 私有仓 `fusion-yun/fylite` 的 `app/` |
 
 ## 首页插图
 
@@ -60,8 +60,17 @@ fusion-yun.github.io
 
 - **`fylite/`** —— 由私有仓 `fusion-yun/fylite` 的 `.github/workflows/publish-app.yml`
   同步（手动触发，写权限 deploy key）。演示页只分发**二进制**：
-  `assets/fylite_rs.wasm` 是 Rust 内核的 WebAssembly 构建，**不含源码**；
-  `assets/*.js` 只做数据编排、绘图与 ABI 调用，求解全部在二进制内。
+  `assets/fylite_rs.wasm` / `fylite_tglf.wasm` / `fylite_dke.wasm` 是 Rust 内核的
+  WebAssembly 构建，**不含源码**；`assets/*.js` 只做数据编排、绘图与 ABI 调用，求解全部
+  在二进制内。
+- ★**上游 `app/` 的两个子目录不发布**：`app/tests/`（40 个闸子脚本，内含对照数字与私有仓
+  路径）与 `app/server/`（网关与 mdsip 客户端源码）。站点只承载**演示本身**——这与站点
+  `LICENSE` Part C 说的「编译二进制制品与随其分发的装载脚本」是同一条界。★因此工具页
+  `mdsplus.html` 在站点上**取不到数**（它要一个能开套接字的网关进程），页面自己会说这
+  句话；那不是故障。
+- ★`fylite/LICENSE`（Part C 的就地重述）**只存在于本仓**，上游 `app/` 里没有这个文件；
+  同步时要**保留**它。工作流现在的写法是 `rm -rf site/fylite && cp -r src/app site/fylite`，
+  会把它删掉——发布前先修工作流，或像本次一样同步后放回。
 
 ## 本地预览
 

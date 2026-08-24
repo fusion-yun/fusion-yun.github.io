@@ -1,0 +1,96 @@
+// Chinese catalogue for the credits page only — copyright, provenance,
+// acknowledgements, references.  Kept separate so the demo pages do not
+// download a page of prose they never show.
+//
+// ★The authority is the repository's own LICENSE / NOTICE / ACKNOWLEDGEMENTS;
+// this page is their reader-facing summary and links back to all four.  A
+// claim here that the NOTICE does not make is a bug, not a wording choice.
+
+self.FyI18n.register('zh', {
+  'cr.desc': 'fylite 的版权、许可（Apache-2.0）、白盒移植的上游出处、对拍数据来源、致谢与参考文献。',
+  'cr.title': '版权与致谢 · fylite',
+  'cr.h1': '版权与致谢',
+  'cr.sub': '许可 · 出处 · 致谢 · 参考文献',
+  'cr.lead': '本页陈述三事：本项目的<strong>版权与许可</strong>、各物理模块的<strong>出处</strong>，以及应予致谢的工作。逐文件的授权声明以仓库中的 <code>NOTICE</code> 为准，本页为其可读摘要；本页作出的任何陈述，均应能在 <code>NOTICE</code> 与 <code>ACKNOWLEDGEMENTS.md</code> 中找到依据。',
+
+  'cr.license.h2': '版权与许可',
+  'cr.license.p': 'fylite 由中国科学院等离子体物理研究所（ASIPP）开发，按 <strong>Apache License 2.0</strong> 发布。允许自由使用、修改与再分发（含商业用途），条件为保留版权声明与 <code>NOTICE</code>，并对所作修改予以说明。',
+  'cr.license.files': '★本页面（<code>app/</code> 下的浏览器演示）与它加载的 <code>.wasm</code> 计算内核同属该许可：内核由本仓 Rust 源码编译，制品的 sha256 与出处记录在仓库文档里，可逐位核对。',
+
+
+  'cr.parent.h2': '上级项目：FyTok',
+  'cr.parent.p': 'fylite 是 <a href="https://github.com/fusion-yun/fytok">FyTok</a> 的<strong>轻量版</strong>——FyTok 是<strong>上级项目</strong>（同为 <strong>Apache-2.0</strong>，中国科学院等离子体物理研究所）：Python 写的完整托卡马克集成建模框架，插件机制、工作流调度、异构执行与可追溯，面向超算 / 云计算。两者同为本体层 <strong>fyo 语义契约</strong>的实现，fylite 取轻型一端：关键求解器以 Rust 重写、经 WebAssembly 在浏览器内免安装运行，并<strong>充当 FyTok 的最小功能验证</strong>——两级实现独立编码、答对同一份契约，因此实现间对拍是<strong>交叉检验</strong>而不是自证。芯部输运的通道声明语法直接取自 FyTok 的 <code>fytrans</code>（见下表），逐位对拍也以它为基准。',
+
+  'cr.port.h2': '移植与出处',
+  'cr.port.lead': '下列模块系上游代码的<strong>白盒移植</strong>，而非依文献所作的独立实现。此项区分属许可义务，故在此正文陈述，而不置于脚注。',
+  'cr.port.col.up': '上游',
+  'cr.port.col.who': '作者 / 机构',
+  'cr.port.col.lic': '许可',
+  'cr.port.col.what': 'fylite 取用了什么',
+  'cr.port.who.gacode': 'General Atomics 与 GACODE 贡献者',
+  'cr.port.who.fytok': '中国科学院等离子体物理研究所（fylite 的上级项目）',
+  'cr.port.lic.vianeo': '随 NEO',
+  'cr.port.geo': '磁面局域几何（Miller 系形状与度规）',
+  'cr.port.neo': '新经典解析模型与漂移动理学求解',
+  'cr.port.tglf': '回旋朗道流体模型、FLR 拟合表、俘获闭包表',
+  'cr.port.tgyro': 'NEO / TGLF 输入映射、源项与辐射、体积分、input.gacode 读写',
+  'cr.port.nclass': '随 NEO 携带的新经典系数',
+  'cr.port.metis': '快中性束模型：弦衰减、Janev 停止截面、Stix 临界能量与束驱电流',
+  'cr.port.fytrans': '通道声明语法（保持逐字一致，使声明可在上级项目与本项目之间往返）；1.5D 输运核以它为逐位对拍基准',
+  'cr.port.changes': '<strong>修改说明</strong>（Apache-2.0 §4b）：移植是翻译不是复制——模块状态改为显式参数，LAPACK / UMFPACK 换成本仓自写的稠密与稀疏例程，上游 <code>STOP</code> 的地方改返回错误码，且可重入。若干处<strong>有意偏离</strong>上游行为（多在上游悄悄覆盖自己的输入之处），每一处都在源码里就地写明。',
+  'cr.port.rev': 'GACODE 两个修订版并存且是有意为之：GEO / NEO / TGYRO 取自 <code>5efddfdf1</code>，TGLF 取自 <code>6357db306</code>，与移植时对照的两份库一致。UMFPACK <strong>未</strong>移植——本仓的稀疏 LU 从零写起。',
+
+  'cr.data.h2': '数据与对拍来源',
+  'cr.data.li1': '<strong>GACODE 回归算例与录得输出</strong>（GA 标准算例、TGYRO treg01、libgeo/libneo/libtglf 录音）——移植的金标夹具（General Atomics，Apache-2.0）。',
+  'cr.data.li2': '<strong>EAST 实验数据与运行态 EFIT 工作流</strong>——ASIPP EAST 团队；诊断逐道几何经 fydata 到达 fylite。这些数据<strong>不随演示发布</strong>。',
+  'cr.data.li3': '<strong>ITER 装置描述与 IMAS 数据字典</strong>——ITER 组织，经 fyo / fydata 到达 fylite；演示内置的 ITER 位形即出自此。',
+  'cr.data.li4': '<strong>跨程序基准</strong>：0D 对 METIS（CEA/IRFM）、ITER 情景对 FUSE、电磁与垂直稳定性对 TokSys（General Atomics）——这些程序均未在此再分发。',
+
+  'cr.thanks.h2': '致谢',
+  'cr.thanks.lead': '本项目建立在他人公开的物理、代码与数据之上。谨此逐项致谢：',
+  'cr.thanks.gacode': '<strong>General Atomics 与 GACODE 贡献者</strong>（J. Candy、E. Belli、G. M. Staebler 等）——新经典、湍流与磁面几何三条实现线的上游；<strong>W. A. Houlberg</strong>（NCLASS，随 NEO 携带）。',
+  'cr.thanks.metis': '<strong>CEA/IRFM 与 METIS 作者</strong>（J. F. Artaud 等）——快中性束模型与 0D 口径的出处，也是 0D 对拍的基准。',
+  'cr.thanks.toksys': '<strong>TokSys 的作者</strong>（General Atomics）——电磁与垂直稳定性的跨程序锚点。',
+  'cr.thanks.east': '<strong>ASIPP EAST 团队</strong>——放电数据、运行态 EFIT 工作流与逐道诊断几何。',
+  'cr.thanks.kefit': '<strong>李国强、任启龙、钱金平、L. L. Lao 等</strong>——将 EFIT 移植至 EAST 并建立动理学重构（KEFIT），本仓重构线的上游参照基线。',
+  'cr.thanks.sxr': '<strong>孙有文</strong>——HT-7 软 X 射线层析工作（相机几何参数化与弦-格林/加权伪逆方法骨架）。',
+  'cr.thanks.corpus': '<strong>兰婷</strong>——整理 EAST 实验数据语料，逐道诊断几何经 fydata 到达本项目。',
+  'cr.thanks.pcs': '<strong>黄耀与 EAST PCS 组</strong>——等离子体控制系统接口说明（磁探针几何与平衡↔PCS 变量的交叉核对）。',
+  'cr.thanks.pc': '<strong>私人通讯</strong>：夏天阳（边界与集成）、胡也民（平衡）、肖小涛（输运）。',
+  'cr.thanks.iter': '<strong>ITER 组织</strong>——IMAS 数据字典与 ITER 装置描述，经 fyo / fydata 到达本项目；演示内置的 ITER 位形即出自此。',
+  'cr.thanks.papers': '<strong>下节参考文献的作者</strong>——本项目所用的每一条公式均注明出处，无一为此处首创。',
+  'cr.thanks.p3': '★若你发现这里用到了某项工作而没有被列出，请开一个 issue——那是疏漏，不是选择。',
+
+  'cr.built.h2': '这些代码是怎么写出来的',
+  'cr.built.p': 'fylite 的物理模块依据上列公开文献与开源代码构建，<strong>并有 AI 辅助</strong>（Anthropic Claude）。正确性不由作者身份主张，而由对上游实现的<strong>金标夹具</strong>逐模块确立：比对录得答案，并写明容差及其误差来源。此外，fylite 亦向 AI 宿主暴露自身接口（MCP / JSON-RPC）——此为产品功能，与构建方式属两事。',
+
+  'cr.refs.h2': '参考文献',
+  'cr.refs.lead': '本站所用方法均为公开方法。★本节原置于首页，现收于此——出处与致谢属同一事，不宜分置两处维护。',
+  'cr.refs.eq': '平衡与重构',
+  'cr.refs.gs': '平衡本身是 Grad–Shafranov 方程（Grad 与 Rubin 1958；Shafranov 1966）。',
+  'cr.refs.lao': '由磁测量拟合 p′/FF′ 多项式、并在等离子体电流等式约束下与平衡交替求解，是 Lao 等人给出的重构框架：',
+  'cr.refs.jardin': '自由边界求解与垂直位置的稳定处理：',
+  'cr.refs.hockney': '规则网格上的快速直接解法：',
+  'cr.refs.wesson': '安全因子、形状量等平衡量的定义，以及托卡马克物理的通用背景：',
+  'cr.refs.tr': '输运与湍流',
+  'cr.refs.sauter': '新经典电导率与自举电流的解析式：',
+  'cr.refs.redl': '自举电流的重新标定（与上一条<strong>分开保留</strong>，两条读数相差数个百分点）：',
+  'cr.refs.ch': '解析新经典变体与俘获份额：',
+  'cr.refs.staebler': '回旋朗道流体准线性输运模型（TGLF）：',
+  'cr.refs.belli': '漂移动理学方程的直接求解（NEO）：',
+  'cr.refs.zerod': '0-D 集成建模、源项与原子数据',
+  'cr.refs.ipb': '能量约束标度律：',
+  'cr.refs.bosch': 'D-T 反应率：',
+  'cr.refs.martin': 'L–H 阈值功率：',
+  'cr.refs.artaud': '0-D 集成建模的对标程序，也是快中性束模型的出处：',
+  'cr.refs.putterich': '杂质辐射冷却曲线：',
+  'cr.refs.janev': '中性束停止与电荷交换截面：',
+
+  'cr.full.h2': '完整文本',
+  'cr.full.p': '本页为摘要。具约束力的、逐文件的声明见仓库：',
+  'cr.full.license': 'Apache License 2.0 全文',
+  'cr.full.notice': '逐文件的移植出处、修改说明，以及「不含什么」',
+  'cr.full.ack': '可读的致谢全表：上游代码、转写的公式、数据与夹具、刻意未取的东西',
+  'cr.full.contrib': '维护者与版权归属',
+  'cr.full.issue': '仓库：<a href="https://github.com/fusion-yun/fylite">github.com/fusion-yun/fylite</a>',
+});

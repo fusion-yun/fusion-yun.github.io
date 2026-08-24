@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="mds.title">fylite</title>
+<link rel="icon" href="assets/fy_mark.svg">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  /* --- the page's own two columns ---
+     ★`.layout` is `display: block` site-wide: on a scenario page the columns
+     belong to each 功能栏, not to the page, because a bar folds as one thing.
+     This page has no bars — nothing here computes, so there is nothing to fold
+     or to wait for — so it declares the grid itself rather than borrowing
+     `.funcbar-body` and the fold machinery that comes with it.
+     ★THE PLOTS ARE THE PAGE.  Everything that names a signal — the gateway,
+     the shot, the tree browser, the picked list — is apparatus, and apparatus
+     goes in one narrow column on the left; the whole of the rest is the time
+     traces.  The left column is wider than a scenario's 320 px because a tree
+     path and a node name are long strings that must not wrap mid-token. */
+  #tool-mdsplus .layout {display: grid; grid-template-columns: 400px minmax(0,1fr);
+    gap: 18px; align-items: start;}
+  @media (max-width: 1080px) { #tool-mdsplus .layout {grid-template-columns: 1fr;} }
+
+  /* --- the tree browser ---
+     A level of an EAST tree is not a handful of nodes: `\TOP.T1` on #137985
+     holds 2 812 members.  So the list scrolls inside its own panel — a page
+     that grows to 2 812 rows pushes every figure below the fold and makes the
+     filter box, the one control that helps, the hardest thing to get back to. */
+  #mds-list {max-height: 360px; overflow: auto; border: 1px solid var(--grid); border-radius: 4px;}
+  #mds-list table {font-size: 13px; width: 100%;}
+  #mds-list th {position: sticky; top: 0; background: var(--bg); z-index: 1; text-align: left;}
+  #mds-list td.name {text-align: left; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;}
+  #mds-list td.bytes {text-align: right; font-variant-numeric: tabular-nums;}
+  /* ★a node that stored NOTHING is dimmed, not hidden.  On #137985 only 21 of
+     79 magnetic probes carry data, and a browser that hid the other 58 would
+     be answering "this device has 21 probes" — which is false and unfalsifiable
+     from the page. */
+  #mds-list tr.empty td {opacity: .45;}
+  #mds-list tr.pick {cursor: pointer;}
+  #mds-list tr.pick:hover td {background: var(--panel-hover, rgba(128,128,128,.12));}
+  #mds-list tr.on td {background: var(--panel-hover, rgba(128,128,128,.18)); font-weight: 600;}
+  #mds-crumb {font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px;
+    word-break: break-all;}
+  #mds-picked li {display: flex; align-items: center; gap: 8px; justify-content: space-between;}
+  #mds-picked code {font-size: 12px; word-break: break-all;}
+  #mds-picked {list-style: none; padding: 0; margin: 0;}
+  .mds-swatch {width: 10px; height: 10px; border-radius: 2px; flex: none;}
+
+  /* --- the zero-order chips ---
+     One button per quantity, each carrying its own tree: these signals do not
+     live in one tree and the chip says which, so nothing here depends on what
+     the browser on the left happens to have open. */
+  #mds-zero {display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 4px;}
+  #mds-zero button {padding: 4px 9px; font-size: 12.5px; border-radius: 12px;}
+  #mds-zero button .src {opacity: .6; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px; margin-left: 5px;}
+  #mds-zero button.on {outline: 2px solid var(--accent); outline-offset: 1px;}
+
+  /* --- the figures: a GRID, not a stack ---
+     ★A shot is read across its quantities AT ONCE — the current against the
+     loop voltage against the density — and a stack makes that a scroll: the
+     reader compares a curve on screen with one they remember.  So the figures
+     lay out in columns, `--mds-cols` wide, and the six zero-order quantities
+     land as 2x3 (what UDAClient's panel grid gets right and the one thing
+     worth taking from it).
+     ★The number of columns is the READER's, not the layout's: a wide screen
+     showing one signal wants one wide figure, and six wants three rows of two.
+     `auto` picks; the select overrides.  A narrow screen falls back to one
+     column whatever is selected — two 300 px figures are two unreadable ones.
+     ★And the height follows the columns.  A 210 px strip x 6 stacked is
+     1 260 px of scroll; the same six at 2 columns fit a laptop screen only if
+     each is shorter, and a flat top is still a flat top at 170 px. */
+  #mds-figs {display: grid; gap: 2px 18px;
+    grid-template-columns: repeat(var(--mds-cols, 1), minmax(0, 1fr));}
+  @media (max-width: 900px) { #mds-figs {grid-template-columns: 1fr;} }
+  #mds-figs figure {margin: 0 0 16px; position: relative; min-width: 0;}
+  #mds-figs canvas {width: 100%; height: var(--mds-fig-h, 210px);
+    cursor: crosshair; display: block;}
+  #mds-figs figure.dead canvas {display: none;}
+  /* the drag: a live rectangle over the canvas, not a canvas redraw — the plot
+     module owns the pixels and a second painter over them would fight it */
+  .mds-sel {position: absolute; top: 0; background: color-mix(in srgb, var(--accent) 18%, transparent);
+    border-left: 1px solid var(--accent); border-right: 1px solid var(--accent);
+    pointer-events: none;}
+  .mds-cmd {font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px;
+    white-space: pre-wrap; word-break: break-all; background: var(--panel-hover, rgba(128,128,128,.1));
+    padding: 8px 10px; border-radius: 4px; margin: 6px 0;}
+  /* --- the diagnostic catalogue (assets/mds-catalog.js) --- */
+  #mds-cat-list {max-height: 420px; overflow: auto;}
+  .mds-cat-diag + .mds-cat-diag {border-top: 1px solid var(--grid); padding-top: 6px; margin-top: 6px;}
+  .mds-cat-head {background: none; border: 0; color: inherit; font: inherit; font-weight: 600;
+    cursor: pointer; padding: 2px 0; text-align: left; width: 100%;}
+  .mds-cat-head .tw {color: var(--muted);}
+  .mds-cat-head .n {color: var(--muted); font-weight: 400; font-size: 12px;}
+  .mds-cat-meta, .mds-cat-desc, .mds-cat-pattern {margin: 2px 0 4px;}
+  table.mds-cat-sig {width: 100%; font-size: 12px;}
+  table.mds-cat-sig td {vertical-align: top; padding: 1px 3px;}
+  table.mds-cat-sig td.pick {width: 3.4em;}
+  table.mds-cat-sig td.name {text-align: left;}
+  /* ★the node must not wrap mid-token — a broken path cannot be checked
+     against what the reader typed in the box below */
+  table.mds-cat-sig td.name .node {font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    white-space: nowrap;}
+  table.mds-cat-sig td.name .sub {display: block; color: var(--muted); font-size: 11px;}
+  table.mds-cat-sig td.tree, table.mds-cat-sig td.unit {color: var(--muted);
+    white-space: nowrap; text-align: right;}
+  table.mds-cat-sig tr.off td {opacity: .5;}
+  table.mds-cat-sig button.ghost {padding: 0 6px; font-size: 11px;}
+
+  /* --- the status line ---
+     One row per field: name, value, and WHERE IT CAME FROM.  The provenance is
+     not a tooltip — a number whose origin is only visible on hover is a number
+     most readers will never check. */
+  #mds-status {display: grid; gap: 2px 0;}
+  /* ★`minmax(0, 1fr)` and `overflow-wrap`, both required: a full node path
+     (`\EFIT_EAST::TOP.RESULTS.GEQDSK:BCENTR`) is ONE token, so a plain `1fr`
+     track refuses to shrink below it and the row overflows the 400 px column —
+     which put the row's own button underneath the figure column, where it
+     could be seen and not clicked. */
+  .mds-st {display: grid; grid-template-columns: 7.5em 8.5em minmax(0, 1fr) auto; gap: 8px;
+    align-items: baseline; font-size: 12.5px; padding: 2px 0;}
+  .mds-st .w, .mds-st .w code {overflow-wrap: anywhere; word-break: break-word;}
+  .mds-st + .mds-st {border-top: 1px solid var(--grid);}
+  .mds-st .k {font-weight: 600;}
+  .mds-st .v {font-variant-numeric: tabular-nums; text-align: right;}
+  .mds-st .w {color: var(--muted); font-size: 11.5px;}
+  /* a field this repository has not verified: blank on purpose, and the blank
+     is not styled as an error — nothing is wrong, it is simply not known */
+  .mds-st.unknown .v {border-bottom: 1px dashed var(--muted); min-height: 1em;}
+  .mds-st.missing .v {color: var(--muted);}
+  .mds-st button.ghost {padding: 0 6px; font-size: 11px;}
+
+  /* --- the pinned shots --- */
+  #mds-pins {display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0;}
+  #mds-pins button {padding: 3px 8px; font-size: 12px; border-radius: 12px;}
+  #mds-pins .x {opacity: .55; margin-left: 3px;}
+
+  /* --- the hover readout ---
+     Over the figure, top-right, and it never takes the pointer: a readout that
+     could be hovered would flicker as the mouse chased it. */
+  .mds-read {position: absolute; top: 3px; right: 6px; pointer-events: none;
+    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    border: 1px solid var(--grid); border-radius: 3px; padding: 1px 6px;
+    font-size: 11.5px; font-variant-numeric: tabular-nums; max-width: 92%;}
+  .mds-read .u {color: var(--muted);}
+  /* the per-figure PNG button: bottom-left, quiet until the figure is hovered */
+  .mds-png {position: absolute; left: 4px; bottom: 2px; padding: 0 6px;
+    font-size: 11px; opacity: 0; transition: opacity .12s;}
+  #mds-figs figure:hover .mds-png, .mds-png:focus {opacity: 1;}
+
+  .mds-row {display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap;}
+  .mds-row > * {min-width: 0;}
+  .mds-row .ctl {margin: 0;}
+  /* `.note.warn` is not in the shared sheet — only `.status.warn` is — and the
+     gateway-down line is the one message on this page that has to read as a
+     warning rather than as prose. */
+  .note.warn {color: var(--warn);}
+
+  /* --- printing ---
+     ★What is worth printing is the FIGURES AND WHAT THEY SAY, and nothing that
+     could be pressed.  The apparatus column is controls, so it goes; the tree
+     browser goes with it; the figures come down to one column because a
+     printed page is narrow; and the captions stay, because a printed curve
+     with no caption is the one thing this page refuses to produce — it would
+     no longer say that these are every Nth sample.
+     ★No `Print` button: the browser has one, and a page that adds its own is
+     a page that thinks it knows the reader's printer. */
+  @media print {
+    #tool-mdsplus .layout {display: block;}
+    #tool-mdsplus .layout > div:first-child, header.top nav, footer, .intro-host,
+    #mds-figs .mds-png, #mds-figs .mds-read, .mds-row {display: none !important;}
+    #mds-figs {grid-template-columns: 1fr !important; gap: 0;}
+    #mds-figs figure {break-inside: avoid; page-break-inside: avoid; margin-bottom: 10px;}
+    #mds-figs canvas {height: 150px !important;}
+    .panel {border: 0; box-shadow: none; padding: 0;}
+    body {background: #fff;}
+  }
+</style>
+<script src="assets/i18n.js"></script>
+<script src="assets/lang-zh.js"></script>
+<script src="assets/lang-en.js"></script>
+<script src="assets/lang-site-zh.js"></script>
+<script src="assets/lang-site-en.js"></script>
+<script src="assets/lang-mds-zh.js"></script>
+<script src="assets/lang-mds-en.js"></script>
+<script src="assets/theme.js"></script>
+<!-- GENERATED by rust/build.sh: kernel / front-end release + ABI -->
+<script src="assets/version.js"></script>
+<script src="assets/site.js"></script>
+</head>
+<body data-page="mdsplus">
+
+<header class="top">
+  <a class="brand" href="index.html"><img src="assets/fy_mark.svg" alt="" width="32" height="32"></a>
+  <div class="titles">
+  <h1 data-i18n="mds.h1">&nbsp;</h1>
+  <span class="sub" data-i18n="mds.sub"></span>
+  </div>
+  <nav>
+    <button id="theme-toggle" class="iconbtn" type="button"></button>
+  </nav>
+</header>
+
+<main>
+
+<div class="doc intro-host">
+  <div class="intro">
+    <p class="lead" data-i18n="mds.lead"></p>
+    <p class="bound" data-i18n="mds.bound"></p>
+  </div>
+</div>
+
+<section class="tool" id="tool-mdsplus">
+<div class="layout">
+
+<!-- the apparatus column: what names a signal -->
+<div>
+
+  <div class="panel">
+    <h2 data-i18n="mds.server">数据网关</h2>
+    <p class="note" data-i18n="mds.server.what"></p>
+    <p class="note" id="mds-gw"></p>
+    <div class="mds-row">
+      <div class="ctl" style="flex:1 1 190px"><label for="mds-server" data-i18n="mds.server.addr">mdsip 服务器</label>
+        <!-- the EAST site server, so the box carries the address this page is
+             for before any gateway has answered; a live gateway overwrites it
+             with the target it is actually pointed at. -->
+        <input type="text" id="mds-server" list="mds-servers" value="202.127.204.12:8000"
+          data-i18n-ph="mds.server.ph"></div>
+      <button id="mds-server-use" class="ghost" data-i18n="mds.server.use">切过去</button>
+    </div>
+    <datalist id="mds-servers"></datalist>
+    <p class="note" id="mds-server-note"></p>
+    <div id="mds-gw-help" hidden>
+      <p class="note" data-i18n="mds.gw.howto"></p>
+      <p class="mds-cmd">node app/server/gateway.mjs --server 127.0.0.1:8000</p>
+      <p class="note" data-i18n="mds.gw.tunnel"></p>
+      <p class="mds-cmd">ssh -O forward -L 8000:202.127.204.12:8000 shenma</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2 data-i18n="mds.pick.shot">树与炮号</h2>
+    <div class="mds-row">
+      <div class="ctl"><label for="mds-tree" data-i18n="mds.tree">树</label>
+        <select id="mds-tree"></select></div>
+      <div class="ctl"><label for="mds-shot" data-i18n="mds.shot">炮号</label>
+        <input type="text" id="mds-shot" inputmode="numeric" value="137985" size="10"></div>
+      <button id="mds-open" class="ghost" data-i18n="mds.open">打开</button>
+    </div>
+    <!-- ★炮号导航：一格一格走，最新那一炮问服务器。
+         `最新` 是这一行里唯一要问服务器的按钮——炮号是站点的计数器，页面推不出来。 -->
+    <div class="mds-row">
+      <button id="mds-prev" class="ghost" data-i18n="mds.shot.prev">上一炮</button>
+      <button id="mds-next" class="ghost" data-i18n="mds.shot.next">下一炮</button>
+      <button id="mds-latest" class="ghost" data-i18n="mds.shot.latest">最新</button>
+    </div>
+    <p class="note" data-i18n="mds.shot.what"></p>
+    <p class="note" id="mds-shot-note"></p>
+    <p class="note" id="mds-open-note"></p>
+    <!-- ★叠加：钉住的是**已经取回的**那一炮，钉住这个动作本身一次请求也不发。 -->
+    <div class="mds-row">
+      <button id="mds-pin" class="ghost" data-i18n="mds.pin">叠加这一炮</button>
+      <button id="mds-unpin" class="ghost" data-i18n="mds.unpin">只留当前</button>
+    </div>
+    <div id="mds-pins"></div>
+    <p class="note" id="mds-pin-note"></p>
+  </div>
+
+  <!-- ★状态行：三个字段有值并各自说出出处，两个字段本仓未查实、留空并说明。
+       它不是「五个数」，是「五个数各自从哪来」。 -->
+  <div class="panel">
+    <h2 data-i18n="mds.status">状态行</h2>
+    <p class="note" data-i18n="mds.status.what"></p>
+    <div id="mds-status"></div>
+  </div>
+
+  <div class="panel">
+    <h2 data-i18n="mds.zero">关键零级量</h2>
+    <p class="note" data-i18n="mds.zero.what"></p>
+    <div id="mds-zero"></div>
+    <p class="note" id="mds-zero-note"></p>
+  </div>
+
+  <div class="panel">
+    <h2 data-i18n="mds.browse">节点浏览</h2>
+    <p class="note" data-i18n="mds.browse.what"></p>
+    <div class="mds-row">
+      <button id="mds-up" class="ghost" data-i18n="mds.up">上一层</button>
+      <div class="ctl" style="flex:1 1 140px"><label for="mds-filter" data-i18n="mds.filter">过滤</label>
+        <input type="text" id="mds-filter" data-i18n-ph="mds.filter.ph"></div>
+    </div>
+    <p class="note" id="mds-crumb"></p>
+    <div id="mds-list"></div>
+    <p class="note" id="mds-list-note"></p>
+  </div>
+
+  <!-- ★the diagnostic catalogue mounts itself here, or leaves this empty.
+       Markup for a panel whose script may not be loaded renders as an empty
+       box, and the page would look broken in the one configuration where it
+       is merely reduced.  See assets/mds-catalog.js. -->
+  <div id="mds-catalog-host"></div>
+
+  <div class="panel">
+    <h2 data-i18n="mds.direct">直接给节点路径</h2>
+    <p class="note" data-i18n="mds.direct.what"></p>
+    <div class="mds-row">
+      <div class="ctl" style="flex:1 1 160px"><input type="text" id="mds-node" data-i18n-ph="mds.direct.ph"></div>
+      <button id="mds-add" class="ghost" data-i18n="mds.add">加入</button>
+    </div>
+    <p class="note" id="mds-node-note"></p>
+  </div>
+
+  <div class="panel">
+    <h2 data-i18n="mds.picked">已选信号</h2>
+    <ul id="mds-picked"></ul>
+    <p class="note" id="mds-picked-note"></p>
+    <div class="buttons">
+      <button id="mds-clear" class="ghost" data-i18n="mds.clear">全部去掉</button>
+    </div>
+  </div>
+
+  <!-- ★工作区：只存控件，不存样点（页首那条边界声明的直接后果）。 -->
+  <div class="panel">
+    <h2 data-i18n="mds.ws">工作区</h2>
+    <p class="note" data-i18n="mds.ws.what"></p>
+    <div class="mds-row">
+      <button id="mds-ws-save" class="ghost" data-i18n="mds.ws.save">存工作区</button>
+      <button id="mds-ws-load" class="ghost" data-i18n="mds.ws.load">读工作区</button>
+      <input type="file" id="mds-ws-file" accept="application/json,.json" hidden>
+    </div>
+    <p class="note" id="mds-ws-note"></p>
+  </div>
+
+</div>
+
+<!-- the figure column: the page itself -->
+<div>
+  <div class="panel">
+    <h2 data-i18n="mds.figs">信号时序</h2>
+    <div class="mds-row">
+      <button id="mds-fetch" data-i18n="mds.fetch">取回</button>
+      <div class="ctl"><label for="mds-rate" data-i18n="mds.rate">采样</label>
+        <select id="mds-rate"></select></div>
+      <div class="ctl"><label for="mds-cols" data-i18n="mds.cols">列数</label>
+        <select id="mds-cols"></select></div>
+      <button id="mds-win-all" class="ghost" data-i18n="mds.win.all">整炮</button>
+      <button id="mds-export" class="ghost" data-i18n="mds.export">导出 JSON</button>
+    </div>
+    <p class="note" id="mds-win-note"></p>
+    <p class="note" id="mds-fetch-note"></p>
+    <div id="mds-figs"></div>
+    <p class="note" id="mds-figs-note"></p>
+    <!-- ★the long form of what the stride is goes UNDER the figures.  Above
+         them it is three paragraphs of prose between the toolbar and the first
+         curve, on the one page whose whole point is the curve; the two lines
+         that change — the window and the fetch status — stay at the top. -->
+    <p class="note" data-i18n="mds.rate.what"></p>
+  </div>
+  <div class="panel">
+    <h2 data-i18n="mds.table">读数</h2>
+    <table>
+      <thead><tr>
+        <th data-i18n="mds.col.shot">炮号</th>
+        <th data-i18n="mds.col.tree">树</th>
+        <th data-i18n="mds.col.node">节点</th>
+        <th data-i18n="mds.col.units">单位</th>
+        <th data-i18n="mds.col.n">样点数</th>
+        <th data-i18n="mds.col.stride">步长</th>
+        <th data-i18n="mds.col.min">最小</th>
+        <th data-i18n="mds.col.max">最大</th>
+        <th data-i18n="mds.col.span">时间跨度</th>
+      </tr></thead>
+      <tbody id="mds-scalars"></tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+</section>
+
+</main>
+
+<footer></footer>
+
+<script src="assets/plot.js"></script>
+<script src="assets/mdsplus.js"></script>
+<script src="assets/mds-catalog.js"></script>
+</body>
+</html>

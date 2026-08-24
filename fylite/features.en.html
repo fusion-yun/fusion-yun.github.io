@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Physics capability and boundary · fylite</title>
+<link rel="icon" href="assets/fy_mark.svg">
+<meta name="description" content="What physics fylite computes today, what it explicitly does not, what each claim rests on, and what comes next.">
+<link rel="alternate" hreflang="zh" href="https://fusion-yun.github.io/fylite/features.html">
+<link rel="alternate" hreflang="en" href="https://fusion-yun.github.io/fylite/features.en.html">
+<script>try{localStorage.setItem('fylite-lang','en')}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/site.css">
+<!-- ★ONE script, ~2 KB.  This page used to pull the i18n runtime and eight
+     catalogue files — 156 KB, of which 116 KB was tool prose it never shows —
+     in order to fill in text that is now simply in the markup.  `theme.js` is
+     what is left, and since the switches went wordless it no longer needs the
+     catalogues either. -->
+<script src="assets/theme.js"></script>
+</head>
+<body data-page="features">
+
+<header class="top">
+  <a class="brand" href="index.en.html"><img src="assets/fy_mark.svg" alt="" width="32" height="32"></a>
+  <div class="titles">
+  <h1>Physics capability and boundary</h1>
+  <span class="sub">What it computes · what it does not · what each claim rests on</span>
+  </div>
+  <nav>
+    <a href="scenario/design.html">Discharge design</a>
+    <a href="scenario/model.html">Physics modelling</a>
+    <a href="scenario/analysis.html">Experiment analysis</a>
+    <button id="theme-toggle" class="iconbtn" type="button"></button>
+  </nav>
+</header>
+
+<main class="doc">
+
+<p class="lead">This page answers three questions: <strong>which physics can be computed today</strong>, <strong>what is explicitly out of scope</strong>, and <strong>on what grounds each result is believed to be right</strong>. Interfaces and call signatures are an implementation matter and are not covered here; the measured, quantitative limits of applicability are in the repository's fidelity reference.</p>
+
+<div class="scope">★<strong>One rule runs through all of it: physics that can be judged against an external answer is what gets listed.</strong> An implementation with no criterion is, in use, indistinguishable from a guess. ★★<strong>Refuse rather than fabricate</strong>: when a request falls outside a model's range this project returns an error rather than a number that looks like an answer — which is why the “gaps” section below is not a residue of unfinished work. It <strong>is</strong> the boundary of the capability.</div>
+
+<h2>1. Physics capability</h2>
+
+<p>The “evidence” column states <strong>on what grounds this implementation is believed to be right</strong> — a more consequential question than whether tests exist.</p>
+
+<div class="table-scroll">
+<table>
+  <thead><tr>
+    <th>Domain</th>
+    <th>Capability</th>
+    <th>Model / provenance</th>
+    <th>Evidence</th>
+  </tr></thead>
+  <tbody>
+    <tr><th>0-D discharge</th>
+        <td>Safety factor, confinement scalings, fusion power and gain, bootstrap fraction, loop voltage and flux consumption</td>
+        <td>A prescribed profile family (1−ρ²)<sup>peaking</sup>, <strong>no pedestal</strong></td>
+        <td>Published table values (four reactivity points) and cross-layer identities. ★<strong>No comparison against an external code over a full discharge yet</strong>: this tier rests on internal consistency alone today</td></tr>
+    <tr><th>Electromagnetics</th>
+        <td>Coil and vessel mutual inductances, grid response, turn-space scaling and channel folding; voltage-driven circuit time advance</td>
+        <td>Analytic mutuals of parallelogram conductor elements (EFIT element convention); implicit Euler with an SPD factorisation</td>
+        <td>The two hosts agree <strong>bit for bit</strong> (the criterion is equality, not closeness); device descriptors round-trip against the decks they were converted from</td></tr>
+    <tr><th>Equilibrium</th>
+        <td>Grad–Shafranov forward solve — fixed and free boundary, X-point search, limiter flux; flux-surface geometry, surface averages, q, volumes and shape moments</td>
+        <td>Five-point differences with a fast direct solve of the separable elliptic operator</td>
+        <td><strong>Clean-room implementation</strong> from the public literature; the surface geometry and the local-geometry port check each other</td></tr>
+    <tr><th>Equilibrium reconstruction</th>
+        <td>Linear least squares for the p′(ψ̄) / FF′(ψ̄) coefficients with an outer Picard loop; optional kinetic constraints from a pressure profile; sampled posterior; a <strong>channel basis</strong> — one fit eats one set of channel values, and the I<sub>p</sub> equality constraint switches with it; ★<strong>a solver that returns has not necessarily solved</strong> — the equality constraint must actually hold (|I_fit − I_constrained|/I_constrained ≤ 0.5) and what was solved must be a plasma rather than a filament (a ≥ 0.1 × the vessel half-width), or the run reports as failed</td>
+        <td>The structure of Lao 1985</td>
+        <td>Clean-room; compared term by term with a delivered kinetic reconstruction — constrained quantities and the global inductance land, q95 and the vertical position do not, and each difference is attributed. The basis is asserted to be one source: on EAST #137985 @4 s the two I<sub>p</sub> values differ by 1.90 % (delivered 393.46 kA vs Rogowski pcrl01 400.94 kA), and switching moves li(3) 2.677930 → 2.377973. A degenerate solution, measured: the twin at Ip 700 kA used to report success with a = 0.036 m, q95 = 0.012, a fitted current of 215 MA and chi-squared 4.0e10 — it now reports as failed</td></tr>
+    <tr><th>Machine data intake</th>
+        <td>A read-only mdsip client and the deck it assembles: EAST #137985 carries 35 flux loops (delivered values and raw total flux, two sets), 79 raw magnetic probes, 11 POINT chords and <strong>nine real time slices (1–7 s)</strong>, each with its own coil currents, Rogowski I<sub>p</sub> and per-channel weights</td>
+        <td>It moves bytes; it does not compute — this is not a physics layer</td>
+        <td>Pulled from the site by tools/mds-shot-to-fyo.py, channel for channel <strong>identical</strong> to the existing HDF5 dump; the nine instants are checked one by one against the deck document by the gate</td></tr>
+    <tr><th>Operating domain and the flux account</th>
+        <td>Greenwald density and fraction, cylindrical safety factor, β<sub>t</sub>/β<sub>p</sub>/β<sub>N</sub> and the Troyon reference ratio; inductive and resistive flux, flux consumed, and the flat top a declared swing buys</td>
+        <td>The closed forms of their own papers (Greenwald 1988, Troyon 1984, Ejima 1982); the poloidal perimeter is this layer's one elliptical convention</td>
+        <td>Published table values: ITER's baseline n<sub>GW</sub> and β<sub>N</sub> are quoted as one set; β<sub>N</sub>'s defining expression and L<sub>p</sub> (<strong>the same one</strong> the loop voltage uses) are pinned as identities. ★<strong>a criterion is not a limit</strong></td></tr>
+    <tr><th>Configuration criteria and the start</th>
+        <td>Strike points, smallest wall clearance, the X-point set; a linear solve for the coil currents a target boundary needs (box-constrained if asked) for a shape anneal to begin from; feed-forward pulse: a current trajectory to per-channel voltages and induced passive currents</td>
+        <td>The boundary surface intersected with the wall polyline (to segments, not vertices); the free-boundary inverse for a fixed filament cloud; the analytic inverse of this repository's own circuit integrator</td>
+        <td>Closed-form cases (a circle in a square box); the start improves the boundary's flux spread by an order of magnitude over doing nothing; the designed voltages must <strong>reproduce the trajectory exactly</strong> through the integrator. ★<strong>a start is not an equilibrium</strong>: force balance is nowhere in it</td></tr>
+    <tr><th>Stability and control</th>
+        <td>n = 0 rigid vertical stability (growth rate, ideal-wall field index), the vertical control loop, breakdown field-null design</td>
+        <td>Reduced effective mass and coupling vectors; least squares with hard current constraints</td>
+        <td>Analytic limits and bit-for-bit cross-host agreement. ★<strong>No comparison against an independent external code</strong></td></tr>
+    <tr><th>Local geometry and neoclassical</th>
+        <td>Miller local geometry, physical profiles → normalised solver inputs, the analytic neoclassical family, and a drift-kinetic solve</td>
+        <td>White-box translation of GACODE geo / NEO (Apache-2.0)</td>
+        <td>The analytic family matches upstream <strong>bit for bit</strong>; the drift-kinetic path matches upstream <strong>end to end at 1e-8</strong></td></tr>
+    <tr><th>Turbulent transport</th>
+        <td>Quasilinear gyro-Landau-fluid: closure fit tables, dispersion assembly, non-Hermitian complex eigensolve, particle / electron-energy / ion-energy fluxes; toroidal and parallel stress</td>
+        <td>White-box translation of TGLF (Apache-2.0)</td>
+        <td>Against upstream recorded answers; the electromagnetic branch checked case by case over several β<sub>e</sub>. ★The parallel half of the stress is still ~7.5 % off and <strong>that band is deliberately not written into a criterion</strong></td></tr>
+    <tr><th>Core transport (1.5-D)</th>
+        <td>Conservative finite volume: electron / ion temperature with exchange, density, poloidal flux and current diffusion, toroidal momentum; steady state and backward Euler, sawtooth mixing, flux matching</td>
+        <td>The discretisation exists <strong>once</strong> in this project; Pereverzev–Corrigan numerical diffusion; the sawtooth is a trigger plus content-conserving mixing</td>
+        <td>Against TGYRO's own evolution table at 1e-6; the moving-grid and static-grid paths agree <strong>bit for bit</strong></td></tr>
+    <tr><th>Heating and current drive</th>
+        <td>Neutral beams (stopping, slowing-down, shielding, driven current, fast-ion pressure), lower hybrid, ohmic, radiation, ion cyclotron and electron cyclotron</td>
+        <td>A RABBIT-class fast model; cross-sections and slowing-down transcribed from METIS and the literature it cites; a 12-term fit of the ADAS cooling rates</td>
+        <td><strong>Checked case by case against the METIS certification suite</strong> (resonant layer ≤1.2 %, P<sub>el</sub> 0.955–1.079, W<sub>fast</sub> 0.948–1.015); eight closed-form identities hold the electron-cyclotron geometry and widths</td></tr>
+    <tr><th>Fusion and fast ions</th>
+        <td>D-T reactivity, alpha heating power density and its electron / ion split, steady-state fast-alpha density, pressure and stored energy, helium-ash particle source</td>
+        <td>Bosch–Hale 1992; the Wesson split of Stix slowing-down; birth-and-slow-down in place</td>
+        <td>ASTRA ITER 15 MA burning case: power density <strong>within 3 % point by point</strong>, volume integral <strong>0.3 %</strong>, fast-helium density and fast-alpha β each <strong>2 %</strong></td></tr>
+  </tbody>
+</table>
+</div>
+
+<p class="note">★Nothing is extrapolated outside its domain: the D-T reactivity <strong>returns zero</strong> below 0.2 keV and above 100 keV, and the radiation fit clamps to its endpoints outside its temperature range — the first thing to suspect when a cold edge looks over-radiating.</p>
+
+<h2>2. Scope of applicability (the models' own assumptions)</h2>
+
+<p>These are not gaps. They are <strong>what has to be known to use these capabilities</strong>:</p>
+
+<ol>
+  <li><strong>Core transport runs on a prescribed geometry</strong>: V′, g₁ and g₃ are supplied by the caller. Equilibrium–transport self-consistency is an outer-loop assembly and the inner solve is a steady state, so moving-grid terms must come from whoever advances time.</li>
+  <li><strong>The boundary is a single Dirichlet point</strong>: no pedestal model, no SOL; the 0-D profile family is pedestal-free as well.</li>
+  <li><strong>The radiation fit has a temperature domain</strong>: below the pedestal foot (&lt;50 eV) it clamps rather than extrapolates.</li>
+  <li><strong>Fast ions slow down in place</strong>: beams and alphas alike are assumed to slow down where they are born — no orbit width, no radial transport. The assumption is checked against an external case in the burning steady-state core, and not in ramps or transients.</li>
+  <li><strong>Impurities are prescribed</strong>: dilution and radiation are provided; there is no impurity transport equation and no charge-state evolution.</li>
+  <li><strong>Only n = 0 MHD</strong>: the vertical displacement is a rigid model, and the sawtooth is a trigger plus mixing rather than a stability theory.</li>
+</ol>
+
+<h2>3. What is explicitly out of scope</h2>
+
+<h3>Refusing gaps: the call returns an error, not a number</h3>
+
+<p>In the following situations this project <strong>refuses to answer</strong>. The reason is always the same: a silent wrong number costs more than an explicit error.</p>
+
+<ul>
+  <li><strong>A reactor scenario with no alpha channel supplied</strong>: the power accounting refuses — a total that silently omits the dominant term is worse than no total.</li>
+  <li><strong>Ion cyclotron on a rippled machine</strong>: upstream subtracts the ripple loss using the previous step's heating power, a feedback quantity this function does not have; ignoring it makes the electron channel <strong>systematically 33 % high</strong>.</li>
+  <li><strong>Electron cyclotron beyond cutoff, or with the resonant layer outside the machine</strong>: answering “a small absorption” would let a beam that never entered the plasma heat it. The same 140 GHz gyrotron puts its layer inside the vessel at 2.2 T and <strong>outside the wall</strong> at 1.8 T — a field scan reaches that point by construction.</li>
+  <li><strong>Turbulence with an electromagnetic switch combination upstream treats differently</strong>: upstream runs anyway and returns an electrostatic answer; reproducing that would silently drop the physics the caller asked for.</li>
+</ul>
+
+<h3>Physics that is simply absent</h3>
+
+<div class="table-scroll">
+<table>
+  <thead><tr>
+    <th>Gap</th>
+    <th>State</th>
+    <th>Note</th>
+  </tr></thead>
+  <tbody>
+    <tr><td>Fuelling (pellets, gas puff, beam particle source)</td><td>None</td><td>The particle source is <strong>always the caller's</strong>; a fuelling model written here would have no external answer to be checked against</td></tr>
+    <tr><td>Pedestal / SOL</td><td>None</td><td>The boundary is a single Dirichlet point; the prescribed profiles are pedestal-free</td></tr>
+    <tr><td>Impurity transport</td><td>Prescribed</td><td>Dilution and radiation exist; a transport equation and charge-state evolution do not</td></tr>
+    <tr><td>n &gt; 0 MHD stability</td><td>None</td><td>Only the n = 0 rigid vertical displacement; the sawtooth is explicitly neither Kadomtsev nor Porcelli</td></tr>
+    <tr><td>Radial transport of fast alphas</td><td>Steady-state closure only</td><td>Born and slowed down in place, with no orbit width and no loss channel — ramps, sawtooth crashes and ELMs are outside it</td></tr>
+    <tr><td>⟨j·B⟩ ↔ ⟨j_φ⟩ per-surface conversion</td><td>absent</td><td>The analytic bootstrap family returns |⟨j·B⟩|/B₀ while the equilibrium reconstruction gives ⟨j_φ⟩ — <strong>different quantities</strong>, with no kernel entry converting one into the other, so the bootstrap and the fitted current can be neither plotted together nor closed into a self-consistency loop</td></tr>
+    <tr><td>Neoclassical conductivity σ_neo</td><td>Spitzer formula tier only</td><td>The trapped-particle correction is stated to be "a separate model" and that model does not exist; without it the <strong>shape</strong> of the ohmic current cannot be given, and "bootstrap + ohmic = fitted current" cannot be closed</td></tr>
+    <tr><td>Measured points for the profile-fit bar (Thomson scattering)</td><td>Not usable on this shot; not wired in</td><td>What is missing is <strong>data</strong>, not plumbing: after the gate this repository already ships (T_e ∈ [50, 8000] eV, n_e ∈ [1e18, 2e21] m⁻³) the peak is still about 3e5 Pa against the delivered reconstruction's 8.9e3 Pa at the same instant — <strong>a factor of 34</strong> — with n_e ≈ 2e20 and T_e ≈ 7 keV surviving together. The data is stored and labelled as such and feeds no fit; the criterion for wiring it in is another shot whose gated peak is within a factor of 2 of the delivered pres</td></tr>
+    <tr><td>Per-slice reconstruction on the raw channels</td><td>Four of the nine do not converge</td><td>What is missing is <strong>kernel capability</strong>: (i) the solver takes the coil currents as exactly known, while the raw Rogowski channels disagree by 2–9 % (EFIT itself fits the coil currents alongside); (ii) pcrl01 is not the plasma current (1.90 % at flat top). The page reports the failures as failures rather than substituting a plausible number</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>4. The four tiers of evidence</h2>
+
+<p>Confidence comes in four tiers, <strong>strongest first</strong>. Which tier a capability rests on is stated for each row of the table above:</p>
+
+<ol>
+  <li><strong>Recorded answers from the upstream implementation</strong> — neoclassical (analytic family bit for bit, drift-kinetic at 1e-8), turbulence, local geometry and mapping, dense linear algebra. This tier answers “<em>is the translation faithful?</em>”</li>
+  <li><strong>Published cases from independent external codes</strong> — frozen and human-readable: the ASTRA ITER 15 MA burning case (alpha heating and fast alphas) and 17 wave-heating cases from the METIS certification suite. This tier answers “<em>is the answer right?</em>”</li>
+  <li><strong>Table values and analytic limits from the literature</strong> — the four published D-T reactivity points, the textbook limits of each analytic closure.</li>
+  <li><strong>Internal consistency</strong> — cross-layer identities, bit-for-bit agreement between hosts, conservation laws. This tier answers only “<em>did two things drift apart?</em>” and <strong>says nothing about correctness</strong>.</li>
+</ol>
+
+<div class="scope">★<strong>Agreeing with an external code is not the same as the external code being right</strong>: it is one model among several. ★★The capabilities that rest on tier four alone are marked as such in the table (0-D discharge time histories, n = 0 vertical stability, the electromagnetic circuit) — they are not untested; there is <strong>no external answer to compare them with</strong>, and saying so matters more than finding a better-sounding phrase.</div>
+
+<h2>5. What comes next</h2>
+
+<p>The order follows <strong>the strength of the available criterion</strong>, not difficulty and not a schedule: what has an external answer goes first, and what does not gets <strong>its criterion built first</strong>.</p>
+
+<div class="table-scroll">
+<table>
+  <thead><tr>
+    <th>Item</th>
+    <th>State</th>
+    <th>Criterion</th>
+  </tr></thead>
+  <tbody>
+    <tr><td>Host wiring for ion cyclotron (C exports, assembly layer, wasm)</td><td>Kernel landed and checked; the wiring is not built</td><td>Available: cross-host bit-for-bit comparison, plus the kernel's own seven criteria</td></tr>
+    <tr><td>Host wiring for electron cyclotron</td><td>The whole kernel path landed and checked; the wiring is not built</td><td>Cross-host, bit for bit</td></tr>
+    <tr><td>Helium-ash profile</td><td>Only the ash particle source exists</td><td>Available: the thermal-helium column of the same ASTRA case; a helium diffusivity on the density channel is still needed</td></tr>
+    <tr><td>Turbulent toroidal-stress drive (momentum channel)</td><td>Refuses; the prerequisite (width search) has landed</td><td>Strong: 11 recorded answers carry momentum flux. ★Until two located discrepancies are settled, a stress weight could be written but not judged</td></tr>
+    <tr><td>Pedestal model</td><td>None</td><td><strong>Criterion missing</strong> — an EPED-class model or experimental profiles would be needed as a reference</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p class="note">★Every item must land as a <strong>package</strong>: the model, the external criterion, and the corresponding revision of the capability and fidelity documents. An item with a model but no criterion does not count as finished in this project.</p>
+
+<h2>Sources and finer detail</h2>
+
+<p>This page is a summary; the authoritative wording and the quantitative limits are in the repository:</p>
+
+<ul>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/main/FEATURE.md">FEATURE.md</a>
+      — <span>the authoritative statement of capability and gaps (this page is drawn from it)</span></li>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/main/docs/reference/fidelity.md">docs/reference/fidelity.md</a>
+      — <span>the measured, <strong>quantitative</strong> limits — whether a capability may be used quantitatively is decided there</span></li>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/main/docs/reference/api.md">docs/reference/api.md</a>
+      — <span>interfaces and call signatures</span></li>
+  <li><a href="credits.en.html">Copyright and credits</a>
+      — <span>upstream provenance, licences and acknowledgements</span></li>
+</ul>
+
+</main>
+
+<footer>
+  <a class="mark" href="index.en.html" tabindex="-1" aria-hidden="true"><img src="assets/fy_mark.svg" alt="" width="24" height="24"></a>
+  <a href="index.en.html">fylite home</a>
+  <a href="credits.en.html">Copyright and credits</a>
+  <a class="iconbtn" href="features.html" hreflang="zh" title="Switch to 中文" aria-label="Switch to 中文"><img class="flag" src="assets/flag-en.svg" alt="" width="24" height="16"></a>
+  <span class="copy">© 2026 Institute of Plasma Physics, Chinese Academy of Sciences (ASIPP) and the fylite contributors · Apache-2.0 · alpha release</span>
+  <span class="ver" title="kernel 0.0.1 · ABI 111 · app 0.0.1-alpha">kernel 0.0.1 · ABI 111 · front end 0.0.1-alpha</span>
+  <a class="qr" href="https://fusion-yun.github.io/fylite/features.en.html" title="https://fusion-yun.github.io/fylite/features.en.html"><img src="assets/qr-features-en.svg" alt="QR" width="37" height="37"></a>
+</footer>
+
+</body>
+</html>

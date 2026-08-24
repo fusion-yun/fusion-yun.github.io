@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>物理功能与边界 · fylite</title>
+<link rel="icon" href="assets/fy_mark.svg">
+<meta name="description" content="fylite 现在能算什么物理、明确算不了什么、每一项凭什么被认为是对的，以及接下来补什么。">
+<link rel="alternate" hreflang="zh" href="https://fusion-yun.github.io/fylite/features.html">
+<link rel="alternate" hreflang="en" href="https://fusion-yun.github.io/fylite/features.en.html">
+<script>try{localStorage.setItem('fylite-lang','zh')}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/site.css">
+<!-- ★ONE script, ~2 KB.  This page used to pull the i18n runtime and eight
+     catalogue files — 156 KB, of which 116 KB was tool prose it never shows —
+     in order to fill in text that is now simply in the markup.  `theme.js` is
+     what is left, and since the switches went wordless it no longer needs the
+     catalogues either. -->
+<script src="assets/theme.js"></script>
+</head>
+<body data-page="features">
+
+<header class="top">
+  <a class="brand" href="index.html"><img src="assets/fy_mark.svg" alt="" width="32" height="32"></a>
+  <div class="titles">
+  <h1>物理功能与边界</h1>
+  <span class="sub">能算什么 · 算不了什么 · 凭什么信</span>
+  </div>
+  <nav>
+    <a href="scenario/design.html">放电设计</a>
+    <a href="scenario/model.html">物理建模</a>
+    <a href="scenario/analysis.html">实验分析</a>
+    <button id="theme-toggle" class="iconbtn" type="button"></button>
+  </nav>
+</header>
+
+<main class="doc">
+
+<p class="lead">本页回答三个问题：<strong>现在能算什么物理</strong>、<strong>明确算不了什么</strong>、以及每一项<strong>凭什么被认为是对的</strong>。接口与调用方式属于实现问题，不在此列；逐条实测的定量适用边界见仓库的保真度文档。</p>
+
+<div class="scope">★<strong>贯穿全篇的一条规矩：能被外部答案判定的物理，才写进来。</strong>一份没有判据的实现，与一个猜出来的数在使用上没有区别。★★<strong>宁可拒绝，不给假数</strong>：请求落在模型范围之外时，本项目返回错误，而不是一个看着像答案的数——因此下文的「缺口」一节不是待办的残余，它<strong>就是能力边界本身</strong>。</div>
+
+<h2>一、物理功能</h2>
+
+<p>「验证依据」一列说的是<strong>这份实现凭什么被认为是对的</strong>——这比「有没有测试」更要紧。</p>
+
+<div class="table-scroll">
+<table>
+  <thead><tr>
+    <th>领域</th>
+    <th>能力</th>
+    <th>模型 / 出处</th>
+    <th>验证依据</th>
+  </tr></thead>
+  <tbody>
+    <tr><th>零维放电</th>
+        <td>安全因子、能量约束定标、聚变功率与增益、自举份额、环电压与磁通消耗</td>
+        <td>一族规定剖面 (1−ρ²)<sup>peaking</sup>，<strong>无台基</strong></td>
+        <td>公开表值（反应率四点）＋跨层恒等式。★<strong>对外码整段放电时序的对拍尚未落地</strong>，这一档今天只有内部一致性</td></tr>
+    <tr><th>电磁位形</th>
+        <td>线圈与真空室互感矩阵、网格响应、匝空间缩放与通道折算；电压驱动的回路时间推进</td>
+        <td>平行四边形导体元的解析互感（EFIT 元件约定）；隐式欧拉 + 对称正定分解</td>
+        <td>两个宿主<strong>逐位相同</strong>（判据用相等，不用近似）；装置描述与其原始牌往返核对</td></tr>
+    <tr><th>平衡</th>
+        <td>Grad–Shafranov 正解：固定边界与自由边界、X 点搜索、限制器磁通；磁面几何、面平均、q、体积与形状矩</td>
+        <td>五点差分 + 可分离椭圆算子的快速直接法</td>
+        <td><strong>净室实现</strong>，只依公开表述；磁面几何与局域几何一路互为对照</td></tr>
+    <tr><th>平衡重建</th>
+        <td>p′(ψ̄) / FF′(ψ̄) 多项式系数的线性最小二乘 + 外层 Picard；可加压强剖面等动理学约束；后验系综；<strong>通道基准</strong>——一次拟合只吃一套通道值，I<sub>p</sub> 等式约束随基准一起换；★<strong>求解器返回不等于解出来了</strong>——等式约束须确实成立（|I_fit − I_约束|/I_约束 ≤ 0.5）、解出的须是等离子体而不是一团（a ≥ 0.1 × 真空室半宽），不成立按失败报出</td>
+        <td>Lao 1985 的结构</td>
+        <td>净室实现；与交付的动理学重构逐项对照——约束量与整体电感落，q95 与垂直位置不落，差距逐条归因。基准同源由闸子断言：EAST #137985 @4 s 两个 I<sub>p</sub> 差 1.90 %（交付 393.46 kA vs Rogowski pcrl01 400.94 kA），换档后 li(3) 2.677930 → 2.377973。退化解实测：孪生 Ip 700 kA 曾报「重构完成」而 a = 0.036 m、q95 = 0.012、拟合电流 215 MA、χ² = 4.0e10——现按失败报出</td></tr>
+    <tr><th>装置数据接入</th>
+        <td>只读 mdsip 客户端 + 卷宗装配：EAST #137985 带 35 道磁通环（交付值与原始总磁通两套）、79 道原始磁探针、11 条 POINT 弦、<strong>九个真实时片（1–7 s）</strong>，每片自带线圈电流、Rogowski I<sub>p</sub> 与逐道权重</td>
+        <td>搬字节，不算数——这不是物理层</td>
+        <td>由 tools/mds-shot-to-fyo.py 自站点拉回，与既有 HDF5 dump 逐通道<strong>差零</strong>；九个时刻由闸子对着卷宗文件逐个核过</td></tr>
+    <tr><th>运行域与磁通账</th>
+        <td>格林沃尔德密度与分数、柱形安全因子、β<sub>t</sub>/β<sub>p</sub>/β<sub>N</sub> 与 Troyon 参考比；电感与电阻磁通、已消耗磁通、给定摆幅下可维持的平顶时长</td>
+        <td>各自原文的闭式（Greenwald 1988、Troyon 1984、Ejima 1982）；极向周长取本层统一的椭圆约定</td>
+        <td>公开表值：ITER 基线的 n<sub>GW</sub> 与 β<sub>N</sub> 同为一组公开数；β<sub>N</sub> 的定义式与 L<sub>p</sub>（与环电压那条<strong>是同一个</strong>）作为恒等式钉住。★<strong>判据不是极限</strong></td></tr>
+    <tr><th>位形判据与起始设计</th>
+        <td>打击点、最小壁间隙、X 点集；按目标边界线性反解一组线圈电流（可加箱约束）供形状退火起步；前馈脉冲：电流轨迹 → 各通道电压与被动感应电流</td>
+        <td>边界磁面与壁折线求交（到线段而非顶点）；固定丝云的自由边界逆问题；与本仓电路积分器同一套隐式欧拉的解析求逆</td>
+        <td>闭式算例（圆与方盒）；起始设计相对「什么都不做」的等磁通改善一个量级；前馈电压交回积分器必须<strong>逐位重现</strong>原轨迹。★<strong>起始不是平衡</strong>：里面没有力平衡</td></tr>
+    <tr><th>稳定性与控制</th>
+        <td>n = 0 刚性垂直稳定性（增长率、理想失稳场指数）、垂直控制回路闭环、场零（击穿）设计</td>
+        <td>消去后的等效质量与耦合向量；带电流硬约束的最小二乘</td>
+        <td>解析极限 ＋ 跨宿主逐位一致。★<strong>无外部独立代码的对照</strong></td></tr>
+    <tr><th>局域几何与新经典</th>
+        <td>Miller 面局域几何、物理剖面→归一化求解器输入的映射、解析新经典族、漂移动理方程求解</td>
+        <td>GACODE geo / NEO 的白盒移植（Apache-2.0）</td>
+        <td>解析族<strong>对上游逐位</strong>；漂移动理端到端<strong>对上游 1e-8</strong></td></tr>
+    <tr><th>湍流输运</th>
+        <td>准线性回旋朗道流体：闭包拟合表、色散矩阵、非厄米复特征解、粒子/电子能/离子能通量；环向与平行应力</td>
+        <td>TGLF 的白盒移植（Apache-2.0）</td>
+        <td>对上游记录答案；电磁分支在多个 β<sub>e</sub> 上逐例核过；★应力的平行分量尚差约 7.5 %，<strong>未把该带宽写成判据</strong></td></tr>
+    <tr><th>芯部输运（1.5-D）</th>
+        <td>守恒形有限体积：电子/离子温度（含交换）、密度、磁通与电流扩散、环向动量；稳态与后向欧拉、锯齿混合、通量匹配</td>
+        <td>离散化在本项目中<strong>只有一份</strong>；Pereverzev–Corrigan 数值扩散；锯齿是触发＋内容守恒混合</td>
+        <td>对 TGYRO 自身的演化表 1e-6；动网格与静网格路径<strong>逐位相同</strong></td></tr>
+    <tr><th>加热与电流驱动</th>
+        <td>中性束（阻止、慢化、屏蔽、束驱电流、快离子压强）、低杂波、欧姆、辐射、离子回旋与电子回旋</td>
+        <td>RABBIT 档快模型一类；截面与慢化转写自 METIS 与其引用文献；ADAS 冷却率 12 项拟合</td>
+        <td><strong>对 METIS 认证套件逐例核过</strong>（共振层 ≤1.2 %、P<sub>el</sub> 0.955–1.079、W<sub>fast</sub> 0.948–1.015）；电子回旋几何与宽度有八条闭式恒等式</td></tr>
+    <tr><th>聚变与快离子</th>
+        <td>D-T 反应率、α 加热功率密度与电子/离子分配、稳态快 α 的密度与压强与储能、氦灰粒子源</td>
+        <td>Bosch–Hale 1992；Stix 慢化的 Wesson 份额；出生即就地慢化</td>
+        <td>ASTRA ITER 15 MA 燃烧算例：功率密度<strong>逐点 3 %</strong>、体积分 <strong>0.3 %</strong>、快氦密度与快 α β 各 <strong>2 %</strong></td></tr>
+  </tbody>
+</table>
+</div>
+
+<p class="note">★域外一律不外推：D-T 反应率在 0.2 keV 以下或 100 keV 以上<strong>返回零</strong>，辐射拟合在温度域外取端值——冷边缘看着偏辐射时，先想到这一条。</p>
+
+<h2>二、适用范围（模型自己的假设）</h2>
+
+<p>以下不是缺口，是<strong>用这些功能时必须知道的前提</strong>：</p>
+
+<ol>
+  <li><strong>芯部输运跑在规定几何上</strong>：V′、g₁、g₃ 由调用方给。平衡—输运的自洽是外层轮次装配，且轮内取稳态解，动网格项须由做时间推进的调用方提供。</li>
+  <li><strong>边界是一个 Dirichlet 点</strong>：没有台基模型、没有 SOL；零维那族规定剖面同样无台基。</li>
+  <li><strong>辐射拟合有温度域</strong>：台基脚以下（&lt;50 eV）取端值而非外推。</li>
+  <li><strong>快离子就地慢化</strong>：中性束与 α 都假设「在哪里出生就在哪里慢化」，无轨道宽度、无径向输运。该假设在燃烧稳态芯部经外部算例核过，在斜坡段与瞬变过程没有。</li>
+  <li><strong>杂质是规定的</strong>：给稀释、给辐射，没有杂质输运方程、没有电离态演化。</li>
+  <li><strong>只有 n = 0 的 MHD</strong>：垂直位移是刚性模型；锯齿是触发＋混合，不是稳定性理论。</li>
+</ol>
+
+<h2>三、明确算不了什么</h2>
+
+<h3>拒绝式缺口：调用会拿到错误，不会拿到数</h3>
+
+<p>下列情形本项目<strong>拒绝作答</strong>。每一条的理由都相同：一个静默的错数比一个明确的错误更贵。</p>
+
+<ul>
+  <li><strong>反应堆场景缺 α 通道</strong>：功率记账拒绝作答——一份静默缺了主导项的总量，比没有答案更糟。</li>
+  <li><strong>纹波机器上的离子回旋</strong>：上游扣纹波损失用的是上一步的热功率，本函数没有那个反馈量；不算它会让电子道<strong>系统性高 33 %</strong>。</li>
+  <li><strong>电子回旋：波在截止之外，或共振层不在这台机器里</strong>：答「一个很小的吸收」等于让一束根本没进等离子体的波去加热它；同一台 140 GHz 回旋管在 2.2 T 时层在机内、1.8 T 时在<strong>壁外</strong>，磁场扫描必然走到这一步。</li>
+  <li><strong>湍流的电磁开关组合与上游行为不一致时</strong>：上游会照跑并返回静电答案，复现它等于静默丢掉调用方要的物理。</li>
+</ul>
+
+<h3>物理上没有的东西</h3>
+
+<div class="table-scroll">
+<table>
+  <thead><tr>
+    <th>缺口</th>
+    <th>现状</th>
+    <th>说明</th>
+  </tr></thead>
+  <tbody>
+    <tr><td>加料模型（弹丸 / 气吹 / 束粒子源）</td><td>无</td><td>粒子源<strong>永远是调用方的</strong>；写在这里的加料模型没有外部答案可核</td></tr>
+    <tr><td>台基 / SOL</td><td>无</td><td>边界是一个 Dirichlet 点；规定剖面无台基</td></tr>
+    <tr><td>杂质输运</td><td>规定</td><td>有稀释与辐射，没有输运方程、没有电离态演化</td></tr>
+    <tr><td>n &gt; 0 的 MHD 稳定性</td><td>无</td><td>只有 n = 0 刚性垂直位移；锯齿明确不是 Kadomtsev、不是 Porcelli</td></tr>
+    <tr><td>快 α 的径向输运</td><td>只有稳态闭合</td><td>就地出生、就地慢化，无轨道宽度与损失道；斜坡段、锯齿崩塌与 ELM 都在它之外</td></tr>
+    <tr><td>⟨j·B⟩ ↔ ⟨j_φ⟩ 的逐面换算</td><td>无</td><td>解析自举族返回 |⟨j·B⟩|/B₀，平衡重建给出 ⟨j_φ⟩——<strong>两者是不同的量</strong>，内核没有换算入口，于是自举与拟合电流既画不到一张图上，也做不成自洽闭环</td></tr>
+    <tr><td>新经典电导率 σ_neo</td><td>只有 Spitzer 公式档</td><td>捕获粒子修正明写为「另一个模型」而那个模型不存在；缺了它，欧姆电流的<strong>形状</strong>无从给出，「自举 + 欧姆 = 拟合电流」这条闭环关不上</td></tr>
+    <tr><td>剖面拟合栏的实测点（汤姆孙散射）</td><td>这一炮不可用，未接入</td><td>缺的是<strong>数据</strong>不是接线：按仓内自带的门（T_e ∈ [50, 8000] eV、n_e ∈ [1e18, 2e21] m⁻³）装配后峰值仍约 3e5 Pa，而同一时刻交付重构峰值 8.9e3 Pa——<strong>差 34 倍</strong>，存活点里 n_e ≈ 2e20 与 T_e ≈ 7 keV 同时成立。数据已如实入库并标注，未喂给任何拟合；接进来的判据是换一炮后门后峰值与交付 pres 差 < 2 倍</td></tr>
+    <tr><td>原始通道下的逐时片重构</td><td>九片里四片不收敛</td><td>缺的是<strong>内核能力</strong>：①求解器把线圈电流当精确已知，而原始 Rogowski 逐道差 2–9 %（EFIT 自己是把线圈电流一起拟合的）；②pcrl01 不是等离子体电流（平顶差 1.90 %）。页面按失败报出，不拿一个像样的数顶上</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>四、验证依据的四层</h2>
+
+<p>功能的可信度分四层，<strong>越靠上越强</strong>。任何一项功能属于哪一层，上表逐条写明：</p>
+
+<ol>
+  <li><strong>对上游实现的记录答案</strong>——新经典（解析族逐位、漂移动理 1e-8）、湍流、局域几何与映射、稠密线性代数。这一层回答的是「<em>移植忠实吗</em>」。</li>
+  <li><strong>外部独立代码的公开算例</strong>——冻结保留、人可读：ASTRA 的 ITER 15 MA 燃烧算例（α 加热与快 α）、METIS 认证套件的 17 例波加热算例。这一层回答的是「<em>算得对吗</em>」。</li>
+  <li><strong>公开文献的表值与解析极限</strong>——如 D-T 反应率的公开四点、各解析闭包的教科书极限。</li>
+  <li><strong>内部一致性</strong>——跨层恒等式、跨宿主逐位相等、守恒律。这一层只回答「<em>有没有各改各的</em>」，<strong>不回答对错</strong>。</li>
+</ol>
+
+<div class="scope">★<strong>与外部代码一致不等于外部代码对</strong>：它们是众多模型中的一种。★★今天只靠第四层的功能已在上表逐条标出（零维放电时序、n = 0 垂直稳定性、电磁回路）——它们不是没被测，是<strong>没有外部答案可比</strong>，把这件事写明比给它一个更好听的措辞重要。</div>
+
+<h2>五、接下来补什么</h2>
+
+<p>排序依据是<strong>判据强弱</strong>，不是难度，也不是时间表：外部答案齐备的先做，判据不齐的<strong>先补判据</strong>。</p>
+
+<div class="table-scroll">
+<table>
+  <thead><tr>
+    <th>事项</th>
+    <th>现状</th>
+    <th>判据来源</th>
+  </tr></thead>
+  <tbody>
+    <tr><td>离子回旋的宿主接线（C 导出 + 装配层 + wasm）</td><td>内核已落地并核过，接线未做</td><td>已有：跨宿主逐位对照，与内核那七条判据</td></tr>
+    <tr><td>电子回旋的宿主接线</td><td>内核整条已落地并核过，接线未做</td><td>跨宿主逐位</td></tr>
+    <tr><td>氦灰剖面</td><td>只有灰的粒子源</td><td>已有同一 ASTRA 算例的热氦柱；还需密度通道配一个氦扩散率</td></tr>
+    <tr><td>湍流的环向应力驱动（动量通道）</td><td>拒绝作答；前置件（模宽搜索）已落地</td><td>强：录下的 11 条答案带动量通量；★两处已定位的差异结清前，权重即使写出来也无从判</td></tr>
+    <tr><td>台基模型</td><td>无</td><td><strong>判据缺</strong>——需要 EPED 类模型或实验剖面作参照</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p class="note">★每一项落地都要<strong>同时交付</strong>：模型、外部判据，以及功能与保真度文档的定档改写。只有模型、没有判据的一项，按本项目的规矩不算完成。</p>
+
+<h2>出处与更细的口径</h2>
+
+<p>本页是摘要，逐条的口径与定量边界在仓库里：</p>
+
+<ul>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/main/FEATURE.md">FEATURE.md</a>
+      — <span>功能与缺口的权威口径（本页由它摘出）</span></li>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/main/docs/reference/fidelity.md">docs/reference/fidelity.md</a>
+      — <span>逐条实测的<strong>定量</strong>适用边界——一项功能「能不能定量使用」以它为准</span></li>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/main/docs/reference/api.md">docs/reference/api.md</a>
+      — <span>接口与调用方式</span></li>
+  <li><a href="credits.html">版权与致谢</a>
+      — <span>上游出处、许可与致谢</span></li>
+</ul>
+
+</main>
+
+<footer>
+  <a class="mark" href="index.html" tabindex="-1" aria-hidden="true"><img src="assets/fy_mark.svg" alt="" width="24" height="24"></a>
+  <a href="index.html">fylite 首页</a>
+  <a href="credits.html">版权与致谢</a>
+  <a class="iconbtn" href="features.en.html" hreflang="en" title="切换到 English" aria-label="切换到 English"><img class="flag" src="assets/flag-zh.svg" alt="" width="24" height="16"></a>
+  <span class="copy">© 2026 中国科学院等离子体物理研究所（ASIPP）与 fylite 贡献者 · Apache-2.0 · alpha 版</span>
+  <span class="ver" title="kernel 0.0.1 · ABI 111 · app 0.0.1-alpha">内核 0.0.1 · ABI 111 · 前端 0.0.1-alpha</span>
+  <a class="qr" href="https://fusion-yun.github.io/fylite/features.html" title="https://fusion-yun.github.io/fylite/features.html"><img src="assets/qr-features.svg" alt="QR" width="37" height="37"></a>
+</footer>
+
+</body>
+</html>

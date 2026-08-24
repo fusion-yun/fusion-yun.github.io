@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Copyright and credits · fylite</title>
+<link rel="icon" href="assets/fy_mark.svg">
+<meta name="description" content="Copyright, licence (Apache-2.0), the upstream provenance of every white-box port, the sources of the comparison data, acknowledgements and references.">
+<link rel="alternate" hreflang="zh" href="https://fusion-yun.github.io/fylite/credits.html">
+<link rel="alternate" hreflang="en" href="https://fusion-yun.github.io/fylite/credits.en.html">
+<script>try{localStorage.setItem('fylite-lang','en')}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/site.css">
+<!-- ★ONE script, ~2 KB.  This page used to pull the i18n runtime and eight
+     catalogue files — 156 KB, of which 116 KB was tool prose it never shows —
+     in order to fill in text that is now simply in the markup.  `theme.js` is
+     what is left, and since the switches went wordless it no longer needs the
+     catalogues either. -->
+<script src="assets/theme.js"></script>
+</head>
+<body data-page="credits">
+
+<header class="top">
+  <a class="brand" href="index.en.html"><img src="assets/fy_mark.svg" alt="" width="32" height="32"></a>
+  <div class="titles">
+  <h1>Copyright and credits</h1>
+  <span class="sub">Licence · provenance · acknowledgements · references</span>
+  </div>
+  <nav>
+    <a href="scenario/design.html">Discharge design</a>
+    <a href="scenario/model.html">Physics modelling</a>
+    <a href="scenario/analysis.html">Experiment analysis</a>
+    <button id="theme-toggle" class="iconbtn" type="button"></button>
+  </nav>
+</header>
+
+<main class="doc">
+
+<p class="lead">This page states three things: the <strong>copyright and licence</strong> of this project, the <strong>provenance</strong> of each physics module, and the work that is owed acknowledgement. The per-file attribution of record is the repository NOTICE; this page is its readable summary, and every statement made here should be traceable to <code>NOTICE</code> or <code>ACKNOWLEDGEMENTS.md</code>.</p>
+
+<h2>Copyright and licence</h2>
+
+<p>fylite is developed at the Institute of Plasma Physics, Chinese Academy of Sciences (ASIPP) and released under the <strong>Apache License 2.0</strong>. Use, modification and redistribution are permitted, commercial use included, provided the copyright notice and <code>NOTICE</code> are retained and the changes made are stated.</p>
+
+<pre class="licence">fylite
+Copyright 2026 Institute of Plasma Physics, Chinese Academy of Sciences (ASIPP)
+and the fylite contributors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</pre>
+
+<p>★This page — the browser demos under <code>app/</code> — and the <code>.wasm</code> kernels it loads are under the same licence: the kernels are compiled from this repository's Rust sources, and each artifact's sha256 and provenance are recorded in the repository documentation, so they can be checked byte for byte.</p>
+
+<h2>The parent project: FyTok</h2>
+
+<p>fylite is the <strong>lightweight edition</strong> of <a href="https://github.com/fusion-yun/fytok">FyTok</a>, its <strong>parent project</strong> (also <strong>Apache-2.0</strong>, Institute of Plasma Physics, Chinese Academy of Sciences): a full tokamak integrated-modelling framework in Python, with plugins, workflow scheduling, heterogeneous execution and provenance, aimed at HPC and the cloud. Both implement the <strong>fyo semantic contract</strong>; fylite takes the light end — the key solvers rewritten in Rust and run in the browser through WebAssembly with nothing to install — and <strong>doubles as FyTok's minimal functional verification</strong>: the two are coded independently against the same contract, so comparing them is a <strong>cross-check</strong> rather than a code confirming itself. The core-transport channel grammar is taken from FyTok's <code>fytrans</code> (see the table below), which is also the bit-for-bit anchor of the transport step.</p>
+
+<h2>Ports and provenance</h2>
+
+<p>The modules below are <strong>white-box translations</strong> of upstream code, not independent reimplementations from the literature. The distinction is a licence obligation and is therefore stated in the body of this page rather than in a footnote.</p>
+
+<div class="table-scroll">
+<table>
+  <thead><tr>
+    <th>Upstream</th>
+    <th>Authors / institution</th>
+    <th>Licence</th>
+    <th>What fylite took</th>
+  </tr></thead>
+  <tbody>
+    <tr><td>GACODE — GEO</td><td>J. Candy (General Atomics)</td><td>Apache-2.0</td>
+        <td>local flux-surface geometry (Miller-class shape and metric)</td></tr>
+    <tr><td>GACODE — NEO</td><td>E. Belli, J. Candy (General Atomics)</td><td>Apache-2.0</td>
+        <td>analytic neoclassical models and the drift-kinetic solve</td></tr>
+    <tr><td>GACODE — TGLF</td><td>G. M. Staebler et al. (General Atomics)</td><td>Apache-2.0</td>
+        <td>the gyro-Landau-fluid model, FLR fit tables, trapped-closure tables</td></tr>
+    <tr><td>GACODE — TGYRO / expro</td><td>General Atomics and the GACODE contributors</td><td>Apache-2.0</td>
+        <td>NEO / TGLF input maps, sources and radiation, volume integrals, the input.gacode reader</td></tr>
+    <tr><td>NCLASS</td><td>W. A. Houlberg</td><td>via NEO</td>
+        <td>neoclassical coefficients as carried by NEO</td></tr>
+    <tr><td>METIS</td><td>J. F. Artaud et al. (CEA/IRFM)</td><td>CeCILL-C</td>
+        <td>the fast neutral-beam model: chord attenuation, Janev stopping cross-sections, Stix critical energy and beam-driven current</td></tr>
+    <tr><td>FyTok — fytrans</td><td>Institute of Plasma Physics, CAS (fylite's parent project)</td><td>Apache-2.0</td>
+        <td>the channel declaration grammar, kept identical so a declaration round-trips between the parent project and this one; the 1.5-D transport core is anchored bit-for-bit against it</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p><strong>Statement of changes</strong> (Apache-2.0 §4b): the ports are translations, not copies — module state becomes explicit arguments, LAPACK / UMFPACK become in-tree dense and sparse routines, upstream <code>STOP</code> becomes an error code, and the result is re-entrant. Several points <strong>deliberately differ</strong> from upstream behaviour, mostly where the upstream silently overrides its own inputs; each is marked at its use site in the source.</p>
+
+<p>Two GACODE revisions coexist, deliberately: GEO / NEO / TGYRO derive from <code>5efddfdf1</code> and TGLF from <code>6357db306</code>, matching the two libraries the ports were checked against. UMFPACK was <strong>not</strong> translated — the sparse LU here is written from scratch.</p>
+
+<h2>Data, oracles and cross-code anchors</h2>
+
+<ul>
+  <li><strong>GACODE regression decks and recorded outputs</strong> (the GA standard case, TGYRO treg01, libgeo/libneo/libtglf recordings) — the gold fixtures of the ports (General Atomics, Apache-2.0).</li>
+  <li><strong>EAST discharge data and the operational EFIT workflow</strong> — the EAST team at ASIPP; per-channel diagnostic geometry reaches fylite through fydata. None of it ships with the demos.</li>
+  <li><strong>The ITER device description and the IMAS Data Dictionary</strong> — ITER Organization, reaching fylite through fyo and fydata; the ITER configuration built into the demos comes from there.</li>
+  <li><strong>Cross-code anchors</strong>: 0-D against METIS (CEA/IRFM), ITER scenarios against FUSE, electromagnetics and vertical stability against TokSys (General Atomics). None of those codes is redistributed here.</li>
+</ul>
+
+<h2>How this code was built</h2>
+
+<p>The physics modules of fylite were constructed from the public literature and open-source code listed above, <strong>with AI assistance</strong> (Anthropic Claude). Correctness is not claimed from authorship: it is established module by module against <strong>gold fixtures</strong> from the upstream implementations, with the tolerance and its error budget stated. fylite additionally exposes its own interfaces to AI hosts (MCP / JSON-RPC); that is a product feature and a separate matter from how it was written.</p>
+
+<h2>Acknowledgements</h2>
+
+<p>This project rests on physics, code and data that others made public. The debts are acknowledged item by item:</p>
+
+<ul>
+  <li><strong>General Atomics and the GACODE contributors</strong> (J. Candy, E. Belli, G. M. Staebler and colleagues) — upstream of the neoclassical, turbulence and flux-surface-geometry lines; <strong>W. A. Houlberg</strong> (NCLASS, as carried by NEO).</li>
+  <li><strong>CEA/IRFM and the METIS authors</strong> (J. F. Artaud et al.) — source of the fast neutral-beam model and of the 0-D conventions, and the reference for the 0-D comparison.</li>
+  <li><strong>The authors of TokSys</strong> (General Atomics) — cross-code anchor for the electromagnetics and vertical stability.</li>
+  <li><strong>The EAST team at ASIPP</strong> — discharge data, the operational EFIT workflow and per-channel diagnostic geometry.</li>
+  <li><strong>G. Q. Li, Q. L. Ren, J. P. Qian, L. L. Lao et al.</strong> — for porting EFIT to EAST and building its kinetic reconstruction (KEFIT), the upstream reference baseline of the reconstruction line here.</li>
+  <li><strong>Youwen Sun</strong> — the HT-7 soft-X-ray tomography work (camera-geometry parameterisation and the chord-Green / weighted pseudo-inverse method skeleton).</li>
+  <li><strong>Ting Lan</strong> — for curating the EAST experimental data corpus; its per-channel diagnostic geometry reaches this project through fydata.</li>
+  <li><strong>Yao Huang and the EAST PCS group</strong> — the plasma-control-system interface note (magnetic-probe geometry and the equilibrium↔PCS variables).</li>
+  <li><strong>Private communications</strong>: Tianyang Xia (edge and integration), Yemin Hu (equilibrium), Xiaotao Xiao (transport).</li>
+  <li><strong>The ITER Organization</strong> — the IMAS Data Dictionary and the ITER machine description, reaching this project through fyo and fydata; the ITER configuration built into the demos comes from there.</li>
+  <li><strong>The authors of the works listed in the following section</strong> — every formula used here names its source; none originates in this project.</li>
+</ul>
+
+<p>★If you find work of yours used here and not named, please open an issue — the omission is an error, not a choice.</p>
+
+<h2>References</h2>
+
+<p>Every method used on this site is published method. ★This section previously sat on the entrance page and now lives here: provenance and acknowledgement are one subject and should not be maintained in two places.</p>
+
+<h3>Equilibrium and reconstruction</h3>
+
+<ul>
+  <li>The equilibrium itself is the Grad–Shafranov equation (Grad and Rubin 1958; Shafranov 1966).</li>
+  <li><span>Fitting p′/FF′ polynomials to magnetic measurements and alternating with the equilibrium under the plasma-current constraint is the reconstruction framework of Lao et al.:</span><br>
+    L. L. Lao, H. St. John, R. D. Stambaugh, A. G. Kellman, W. Pfeiffer,
+    <em>Reconstruction of current profile parameters and plasma shapes in
+    tokamaks</em>, Nuclear Fusion <strong>25</strong> (1985) 1611.</li>
+  <li><span>Free-boundary solving and the stabilisation of the vertical position:</span><br>
+    S. C. Jardin, <em>Computational Methods in Plasma Physics</em>,
+    CRC Press, 2010.</li>
+  <li><span>The fast direct solve on a regular grid:</span><br>
+    R. W. Hockney, <em>A fast direct solution of Poisson's equation using
+    Fourier analysis</em>, Journal of the ACM <strong>12</strong> (1965) 95.</li>
+  <li><span>Definitions of the safety factor, the shape quantities and the general tokamak background:</span><br>
+    J. Wesson, <em>Tokamaks</em>, 4th ed., Oxford University Press, 2011.</li>
+</ul>
+
+<h3>Transport and turbulence</h3>
+
+<ul>
+  <li><span>Analytic neoclassical conductivity and bootstrap current:</span><br>
+    O. Sauter, C. Angioni, Y. R. Lin-Liu, <em>Neoclassical conductivity and
+    bootstrap current formulas</em>, Physics of Plasmas <strong>6</strong>
+    (1999) 2834.</li>
+  <li><span>The bootstrap recalibration, <strong>kept apart</strong> from the line above — the two readings differ by several per cent:</span><br>
+    A. Redl, C. Angioni, E. Belli, O. Sauter, <em>A new set of analytical
+    formulae for the computation of the bootstrap current</em>, Physics of
+    Plasmas <strong>28</strong> (2021) 022502.</li>
+  <li><span>Analytic neoclassical variants and the trapped fraction:</span><br>
+    C. S. Chang, F. L. Hinton, Physics of Fluids <strong>25</strong> (1982) 1493;
+    Y. R. Lin-Liu, R. L. Miller, Physics of Plasmas <strong>2</strong> (1995) 1666.</li>
+  <li><span>The gyro-Landau-fluid quasilinear transport model (TGLF):</span><br>
+    G. M. Staebler, J. E. Kinsey, R. E. Waltz, <em>A theory-based transport
+    model with comprehensive physics</em>, Physics of Plasmas <strong>14</strong>
+    (2007) 055909.</li>
+  <li><span>Direct solution of the drift-kinetic equation (NEO):</span><br>
+    E. A. Belli, J. Candy, <em>Kinetic calculation of neoclassical transport
+    including self-consistent electron and impurity dynamics</em>, Plasma
+    Physics and Controlled Fusion <strong>50</strong> (2008) 095010.</li>
+</ul>
+
+<h3>0-D modelling, sources and atomic data</h3>
+
+<ul>
+  <li><span>Energy-confinement scalings:</span><br>
+    ITER Physics Basis, Nuclear Fusion <strong>39</strong> (1999) 2175 (IPB98(y,2));
+    P. N. Yushmanov et al., Nuclear Fusion <strong>30</strong> (1990) 1999 (ITER89-P).</li>
+  <li><span>D-T reactivity:</span><br>
+    H.-S. Bosch, G. M. Hale, <em>Improved formulas for fusion cross-sections
+    and thermal reactivities</em>, Nuclear Fusion <strong>32</strong> (1992) 611.</li>
+  <li><span>The L–H threshold power:</span><br>
+    Y. Martin et al., <em>Power requirement for accessing the H-mode</em>,
+    Journal of Physics: Conference Series <strong>123</strong> (2008) 012033.</li>
+  <li><span>The reference code for 0-D integrated modelling, and the source of the fast neutral-beam model:</span><br>
+    J. F. Artaud et al., <em>Metis: a fast integrated tokamak modelling tool</em>,
+    Nuclear Fusion <strong>58</strong> (2018) 105001.</li>
+  <li><span>Impurity radiation cooling curves:</span><br>
+    T. Pütterich et al., Nuclear Fusion <strong>59</strong> (2019) 056013;
+    Open-ADAS, <a href="https://open.adas.ac.uk">open.adas.ac.uk</a>.</li>
+  <li><span>Beam stopping and charge-exchange cross-sections:</span><br>
+    R. K. Janev, C. D. Boley, D. E. Post, <em>Penetration of energetic neutral
+    beams into fusion plasmas</em>, Nuclear Fusion <strong>29</strong> (1989) 2125.</li>
+</ul>
+
+<h2>The full texts</h2>
+
+<p>This page is a summary. The binding, per-file statements are in the repository:</p>
+
+<ul>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/main/LICENSE">LICENSE</a>
+      — <span>the full Apache License 2.0</span></li>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/main/NOTICE">NOTICE</a>
+      — <span>per-file provenance, the statement of changes, and what is not included</span></li>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/main/ACKNOWLEDGEMENTS.md">ACKNOWLEDGEMENTS.md</a>
+      — <span>the readable acknowledgement list: upstream code, transcribed formulae, data and fixtures, and what was deliberately not taken</span></li>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/main/CONTRIBUTORS.md">CONTRIBUTORS.md</a>
+      — <span>maintainers and copyright</span></li>
+</ul>
+
+<p>Repository: <a href="https://github.com/fusion-yun/fylite">github.com/fusion-yun/fylite</a></p>
+
+</main>
+
+<footer>
+  <a class="mark" href="index.en.html" tabindex="-1" aria-hidden="true"><img src="assets/fy_mark.svg" alt="" width="24" height="24"></a>
+  <a href="index.en.html">fylite home</a>
+  <a href="features.en.html">Capability</a>
+  <a class="iconbtn" href="credits.html" hreflang="zh" title="Switch to 中文" aria-label="Switch to 中文"><img class="flag" src="assets/flag-en.svg" alt="" width="24" height="16"></a>
+  <span class="copy">© 2026 Institute of Plasma Physics, Chinese Academy of Sciences (ASIPP) and the fylite contributors · Apache-2.0 · alpha release</span>
+  <span class="ver" title="kernel 0.0.1 · ABI 111 · app 0.0.1-alpha">kernel 0.0.1 · ABI 111 · front end 0.0.1-alpha</span>
+  <a class="qr" href="https://fusion-yun.github.io/fylite/credits.en.html" title="https://fusion-yun.github.io/fylite/credits.en.html"><img src="assets/qr-credits-en.svg" alt="QR" width="37" height="37"></a>
+</footer>
+
+</body>
+</html>

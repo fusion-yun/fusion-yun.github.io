@@ -4,145 +4,126 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>fylite 在线演示</title>
-<meta name="description" content="托卡马克平衡计算的两个交互演示：放电位形设计，以及由磁测量与压强约束反推平衡状态的动理学重构。打开即用，计算全部在浏览器内完成。">
+<link rel="icon" href="assets/fy_mark.svg">
+<meta name="description" content="托卡马克建模的三个交互演示，一个典型场景一页：装置设计、物理建模、实验分析。打开即用，计算全部在浏览器内完成，不依赖服务端。">
+<link rel="alternate" hreflang="zh" href="https://fusion-yun.github.io/fylite/index.html">
+<link rel="alternate" hreflang="en" href="https://fusion-yun.github.io/fylite/index.en.html">
+<script>try{localStorage.setItem('fylite-lang','zh')}catch(e){}</script>
 <link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/site.css">
+<!-- ★ONE script, ~2 KB.  This page used to pull the i18n runtime and eight
+     catalogue files — 156 KB, of which 116 KB was tool prose it never shows —
+     in order to fill in text that is now simply in the markup.  `theme.js` is
+     what is left, and since the switches went wordless it no longer needs the
+     catalogues either. -->
 <script src="assets/theme.js"></script>
-<style>
-  main.doc { max-width: 880px; }
-  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0 8px; }
-  @media (max-width: 760px) { .cards { grid-template-columns: 1fr; } }
-  .card { display: block; text-decoration: none; color: inherit; }
-  .card:hover { border-color: var(--accent); }
-  .card h3 { margin: 0 0 6px; font-size: 17px; color: var(--accent); }
-  .card p { margin: 0; font-size: 13.5px; color: var(--muted); }
-  main.doc h2 { font-size: 16px; margin-top: 34px; }
-  main.doc h3 { font-size: 14.5px; margin: 22px 0 6px; }
-  main.doc li { margin: 5px 0; }
-  main.doc .lead { font-size: 15.5px; }
-</style>
 </head>
-<body>
+<body data-page="index">
 
 <header class="top">
+  <a class="brand" href="index.html"><img src="assets/fy_mark.svg" alt="" width="32" height="32"></a>
+  <div class="titles">
   <h1>fylite 在线演示</h1>
-  <span class="sub">托卡马克平衡计算，打开即用</span>
-  <nav><a href="https://fusion-yun.github.io/">FuYun 首页</a>
-    <button id="theme-toggle" class="theme-toggle" type="button"></button>
+  <span class="sub">托卡马克集成建模，浏览器内即时求解</span>
+  </div>
+  <nav>
+    <a href="scenario/design.html">放电设计</a>
+    <a href="scenario/model.html">物理建模</a>
+    <a href="scenario/analysis.html">实验分析</a>
+    <button id="theme-toggle" class="iconbtn" type="button"></button>
   </nav>
 </header>
 
 <main class="doc">
 
-<p class="lead">两个可交互的托卡马克平衡计算演示：一个从你想要的等离子体截面
-形状出发，反推需要怎样的线圈电流；另一个反过来，从装置外侧的磁测量反推等离子体
-内部的平衡状态。无需安装，拖动滑块即可运行；每次求解约一到两秒。</p>
+<p class="hero"><img src="assets/fylite_logo.svg" alt="fylite — FUYUN TOKAMAK SIMULATOR - LITE" width="240" height="100"></p>
 
+<p class="lead">三个可交互的托卡马克建模场景，按一台装置被完整过一遍的次序排列：<strong>设计</strong>一炮放电、<strong>建模</strong>其剖面演化、由测量<strong>反演</strong>其位形。全部计算在本机浏览器内完成，无需安装、无需服务端；多数控件即拖即得（零维毫秒量级，平衡类一至二秒），仅建模场景的自洽平衡—输运一栏属<strong>离线档</strong>（秒量级），须显式启动。</p>
+
+<p class="alpha"><strong>本站为 alpha 版。</strong>功能与数值口径仍在变动，接口、页面与结果格式都可能在没有迁移路径的情况下改变；每一项能力的验证依据与已知边界见<a href="features.html">物理功能与边界</a>。</p>
+
+<h2>三个场景</h2>
+
+<p>演示按<strong>用途</strong>分成三个场景，顺序就是一台机器被过一遍的顺序：<strong>设计 → 建模 → 反演</strong>。一个场景一页，也是一个界面：一个计算内核、一条工具条；页面由若干<strong>功能栏</strong>组成，<strong>每条栏有自己的计算键与折叠钮</strong>——按哪条算哪条，折叠只收显示。栏与栏之间按声明的依赖排序，上游还没算过时下游会在标题条上说明。</p>
+
+<!-- The scenario cards are written by tools/make-app-pages.mjs out of the one
+     table in assets/site.js that the navigation is built from, so the entrance
+     cannot advertise a scenario that has moved nor drop one by forgetting a
+     card — the same guarantee the injected version had, kept without the page
+     having to run any JavaScript.
+     ★These are the ONLY cards.  A hand-written grid used to sit below them,
+     one card per PART, because a page carried several demos and a card was
+     the only way to reach one of them.  Since the site was cut back to four
+     typical scenarios a page carries one part, so that grid said the same
+     four things twice — and the copy that had to be maintained by hand was
+     the one saying them second. -->
 <div class="cards">
-  <a class="card panel" href="discharge.html">
+  <a class="card panel" href="scenario/design.html">
     <h3>放电设计 →</h3>
-    <p>给定目标截面形状与等离子体参数，反解需要的极向场线圈电流，
-      再正算一遍平衡校验实际得到的位形。</p>
+    <p>要哪个工况、位形解不解得出、电源出不出得起。0D 放电分析定工况（I<sub>p</sub>、环电压、聚变功率与 Q），位形与线圈电流反解并正算校验，脉冲轨迹给出逐通道电流与电压。</p>
   </a>
-  <a class="card panel" href="reconstruction.html">
-    <h3>动理学平衡重构 →</h3>
-    <p>由磁通环测量反推平衡状态，可叠加压强剖面作为额外约束；
-      能跑真实放电数据，也能跑真值已知的合成算例。</p>
+  <a class="card panel" href="scenario/model.html">
+    <h3>物理建模 / 预测 →</h3>
+    <p>一炮的剖面怎么演化：固定几何的 1.5D 芯部输运，以及把压强回灌给自由边界平衡的自洽外环。</p>
+  </a>
+  <a class="card panel" href="scenario/analysis.html">
+    <h3>实验分析 / 反演 →</h3>
+    <p>由磁通环、磁探针、POINT 与 Thomson 反推平衡状态，压强剖面作动理学约束，误差棒由后验采样给出。</p>
   </a>
 </div>
 
-<h2>放电设计能做什么</h2>
+<h2>fylite 与 FyTok：一份契约的两级实现</h2>
 
-<p>你指定想要的等离子体截面——大半径、小半径、拉长比、上下三角度、垂直位置——
-以及等离子体电流和电流剖面的形状。页面反解出维持这个位形所需的十二路极向场线圈
-电流，然后正算一遍平衡，把<strong>真正得到的位形</strong>算给你看。设计与校验是
-两回事，页面把两者并排放在一起。</p>
+<p>fylite 不是一个独立的程序，而是<strong>本体层 fyo 语义契约</strong>的<strong>轻型实现</strong>。同一份契约还有一个重型实现——<a href="https://github.com/fusion-yun/fytok">FyTok</a>，Python 写的完整集成建模框架。契约以 IMAS 数据字典（DD v4）语义为底，物理量按语义路径寻址，因此两边说的是同一套话。</p>
 
-<ul>
-  <li>目标与实现逐项对照：大半径、小半径、拉长比、上下三角度各自差多少</li>
-  <li>线圈电流表可直接改数字，按任意一组电流重新正算</li>
-  <li>迭代收敛曲线，以及设计前后的线圈电流对比</li>
-  <li>可选加 X 点约束，把真空场往偏滤器位形上拉</li>
-</ul>
+<div class="table-scroll">
+<table>
+  <thead><tr>
+    <th></th>
+    <th>fylite（轻型端，就是这里）</th>
+    <th>FyTok（重型端）</th>
+  </tr></thead>
+  <tbody>
+    <tr><th>是什么</th>
+        <td>自足的平衡—输运—湍流内核：Grad-Shafranov 正解与反解、1.5D 芯部输运、新经典（NEO）与回旋朗道流体（TGLF）、0D 集成、磁测量重构</td><td>完整的集成建模与分析框架：插件机制、工作流调度、异构执行、可追溯，兼容新旧代码</td></tr>
+    <tr><th>怎么装</th>
+        <td>无插件机制，物理项<strong>内建</strong>；Rust 内核 + 一层 Python 装配；依赖只有 numpy</td><td>平衡 / 输运 / 源项等按<strong>插件</strong>注册，原生实现、外部程序封装与 NN 代理可无缝互换</td></tr>
+    <tr><th>在哪跑</th>
+        <td>单机，或<strong>直接在浏览器里</strong>——同一份内核编译成 WebAssembly，免安装，数据不出本机</td><td>超算 / 云计算</td></tr>
+    <tr><th>一次多久</th>
+        <td>亚秒级（单次自由边界正解约 0.05 s），拖着滑块就出结果</td><td>十分钟到数小时</td></tr>
+  </tbody>
+</table>
+</div>
 
-<p>默认从一炮真实放电的位形出发。典型的一次运行，八轮迭代把位形误差降低约一个
-数量级，各形状量都落到目标附近。</p>
+<p>★<strong>轻型端同时是重型端的最小功能验证</strong>：两级实现<strong>独立编码</strong>、各自去答同一份契约，因此两边对拍属于<strong>实现间的交叉检验</strong>，而不是自己证自己。模块级则各自对上游参考实现的金标夹具（NEO 端到端 10<sup>−10</sup> 量级、TGLF-NN 51 字段 ≤0.5%），装置级再对 EAST 实炮与 ITER 情景、并与 METIS、FUSE 等程序分级对拍。</p>
 
-<h2>动理学平衡重构能做什么</h2>
+<p>能力演进是个闭环：轻量端先跑通功能 → 重型端给出高精度参考解 → 由它标定降阶与代理模型 → 再回灌轻量端的快速模型。</p>
 
-<p>装置外侧的磁探测只能测到边界外的磁通，等离子体内部的电流与压强分布得靠反推。
-页面用三十五道极向磁通环的读数拟合出压强与极向电流的剖面，进而给出完整的磁面
-位形。</p>
-
-<p>关键的一项开关是<strong>压强约束</strong>：只用磁测量时，内部剖面几乎不受约束，
-不同的剖面能给出几乎一样好的磁场拟合；把独立测得的压强剖面作为额外约束加进去，
-解才被真正定住。这就是「动理学」重构与纯磁重构的分别，页面让你把这个开关来回拨、
-直接看差别。</p>
-
-<h3>两种数据源</h3>
-<ul>
-  <li><strong>真实测量</strong>——一炮真实放电的实测磁通环读数。真值无从知晓，
-    页面给出的就是这次拟合本身的结果；打开压强约束会明显改变中心压强，同时磁测量
-    本身的拟合也变好。</li>
-  <li><strong>合成算例</strong>——先正算一个平衡，再采样、加噪声当作测量。因为
-    真值已知，能直接量出压强约束买到了多少精度：磁通跨度的误差从两成多收到几个
-    百分点，且随约束权重单调改善。</li>
-</ul>
-
-<h3>可调项</h3>
-<ul>
-  <li>磁测量噪声水平与随机种子（合成算例）</li>
-  <li>压强约束的点数、权重、测量噪声</li>
-  <li>拟合剖面的阶数</li>
-</ul>
-
-<p>输出包括：填色的归一磁通截面与等离子体边界；安全因子 q(ψ̄)、压强 p(ψ̄)、
-环向电流密度的磁面平均 ⟨j<sub>φ</sub>⟩(ψ̄)，以及拟合出的 p′ 与 FF′；逐道磁通环的
-测量与模型对比；还有磁轴位置、磁通跨度、形状量、q<sub>0</sub>/q<sub>95</sub>
-与拟合优度等标量。合成算例下每一项旁边都并排给出真值。</p>
-
-<h2>适用范围</h2>
+<h2>适用范围与免责</h2>
 
 <ul>
-  <li>演示用的装置位形取自 EAST，计算区域是固定的一块；不能换成别的装置。</li>
-  <li>重构模型不含真空室涡流等自由度，正解的剖面参数也与既有重构代码的同名参数
-    不是同一个旋钮。与既有结果几个百分点的差别主要来自这些模型简化，而非求解精度。</li>
-  <li>自由边界解得到的位形通常判为限制器边界；X 点约束改变的是磁场结构，
-    不强制把边界改判为偏滤器位形。</li>
-  <li><strong>这是能力演示，不是工程设计工具。</strong>请勿把这里的位形或剖面
-    当作任何装置的设计依据。</li>
+  <li>本发行版仅内置一台装置的位形与固定计算区域（ITER 装置描述，<strong>不含参考放电</strong>）；其余装置为<strong>输入</strong>，经工具条的装置控件导入。</li>
+  <li>重构模型不含真空室涡流等自由度；正解所用剖面参数与既有重构程序的同名参数并非同一量。与既有结果数个百分点的差异主要源于上述模型简化，而非求解精度。</li>
+  <li>自由边界解所得位形通常判定为限制器边界；X 点约束改变的是磁场结构，并不强制将边界改判为偏滤器位形。</li>
+  <li><strong>本站为能力演示，非工程设计工具。</strong>此处给出的位形与剖面不得作为任何装置的设计依据。</li>
+  <li>零维层不含输运求解：分析档剖面为规定剖面，预测档仅闭合零维能量平衡；二者<strong>均非</strong>一维输运预测。</li>
 </ul>
 
-<h2>方法出处</h2>
+<h2>运行方式与数据</h2>
 
-<p>页面所用的都是公开方法，不是这里发明的：</p>
-
-<ul>
-  <li>平衡本身是 Grad–Shafranov 方程（Grad 与 Rubin 1958；Shafranov 1966）。</li>
-  <li>由磁测量拟合 p′/FF′ 多项式、并在等离子体电流等式约束下与平衡交替求解，
-    是 Lao 等人给出的重构框架：<br>
-    L. L. Lao, H. St. John, R. D. Stambaugh, A. G. Kellman, W. Pfeiffer,
-    <em>Reconstruction of current profile parameters and plasma shapes in
-    tokamaks</em>, Nuclear Fusion <strong>25</strong> (1985) 1611.</li>
-  <li>自由边界求解与垂直位置的稳定处理：<br>
-    S. C. Jardin, <em>Computational Methods in Plasma Physics</em>,
-    CRC Press, 2010.</li>
-  <li>规则网格上的快速直接解法：<br>
-    R. W. Hockney, <em>A fast direct solution of Poisson's equation using
-    Fourier analysis</em>, Journal of the ACM <strong>12</strong> (1965) 95.</li>
-  <li>安全因子、形状量等平衡量的定义，以及托卡马克物理的通用背景：<br>
-    J. Wesson, <em>Tokamaks</em>, 4th ed., Oxford University Press, 2011.</li>
-</ul>
-
-<h2>关于运行方式</h2>
-
-<p>所有计算都在你自己的浏览器里完成。页面不向任何服务器发送数据，你调过的参数、
-算出的结果都不会离开本机；关掉页面即消失。因此首次打开需要下载一份计算内核，
-之后的每次求解都是本地进行的。</p>
+<p>全部计算在访问者本机的浏览器内执行。页面不向任何服务器提交数据：所设参数与所得结果均不离开本机，关闭页面即消失。首次访问需下载一份计算内核（WebAssembly），其后每次求解均为本地执行。</p>
 
 </main>
 
 <footer>
-  <a href="https://github.com/fusion-yun">fusion-yun</a>
+  <a class="mark" href="index.html" tabindex="-1" aria-hidden="true"><img src="assets/fy_mark.svg" alt="" width="24" height="24"></a>
+  <a href="features.html">物理功能</a>
+  <a href="credits.html">版权与致谢</a>
+  <a class="iconbtn" href="index.en.html" hreflang="en" title="切换到 English" aria-label="切换到 English"><img class="flag" src="assets/flag-zh.svg" alt="" width="24" height="16"></a>
+  <span class="copy">© 2026 中国科学院等离子体物理研究所（ASIPP）与 fylite 贡献者 · Apache-2.0 · alpha 版</span>
+  <span class="ver" title="kernel 0.0.1 · ABI 111 · app 0.0.1-alpha">内核 0.0.1 · ABI 111 · 前端 0.0.1-alpha</span>
+  <a class="qr" href="https://fusion-yun.github.io/fylite/index.html" title="https://fusion-yun.github.io/fylite/index.html"><img src="assets/qr-index.svg" alt="QR" width="37" height="37"></a>
 </footer>
 
 </body>

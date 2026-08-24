@@ -1,0 +1,694 @@
+{
+ "@context": {
+  "fylite": "urn:fylite:",
+  "imas": "https://imas.iter.org/dd/4#"
+ },
+ "@type": "fylite:DeviceDescription/1",
+ "fylite:device_id": "best",
+ "name": "BEST",
+ "tf": {
+  "r0": 3.6,
+  "b0": 6.15
+ },
+ "pf_active": {
+  "coil": [
+   {
+    "name": "CS1",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 0.84475,
+        "z": 3.5125,
+        "width": 0.2625,
+        "height": 1.361
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 300.0
+     }
+    ]
+   },
+   {
+    "name": "CS2",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 0.84475,
+        "z": 2.1075,
+        "width": 0.2625,
+        "height": 1.361
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 300.0
+     }
+    ]
+   },
+   {
+    "name": "CS3",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 0.84475,
+        "z": 0.7025,
+        "width": 0.2625,
+        "height": 1.361
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 300.0
+     }
+    ]
+   },
+   {
+    "name": "CS4",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 0.84475,
+        "z": -0.7025,
+        "width": 0.2625,
+        "height": 1.361
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 300.0
+     }
+    ]
+   },
+   {
+    "name": "CS5",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 0.84475,
+        "z": -2.1075,
+        "width": 0.2625,
+        "height": 1.361
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 300.0
+     }
+    ]
+   },
+   {
+    "name": "CS6",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 0.84475,
+        "z": -3.5125,
+        "width": 0.2625,
+        "height": 1.361
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 300.0
+     }
+    ]
+   },
+   {
+    "name": "CS7",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 0.5715,
+        "z": 3.4025,
+        "width": 0.212,
+        "height": 1.289
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 150.0
+     }
+    ]
+   },
+   {
+    "name": "CS8",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 0.5715,
+        "z": -3.4025,
+        "width": 0.212,
+        "height": 1.289
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 150.0
+     }
+    ]
+   },
+   {
+    "name": "CS9",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 0.5715,
+        "z": 2.0415,
+        "width": 0.212,
+        "height": 1.289
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 150.0
+     }
+    ]
+   },
+   {
+    "name": "CS10",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 0.5715,
+        "z": 0.6805,
+        "width": 0.212,
+        "height": 1.289
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 150.0
+     }
+    ]
+   },
+   {
+    "name": "CS11",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 0.5715,
+        "z": -0.6805,
+        "width": 0.212,
+        "height": 1.289
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 150.0
+     }
+    ]
+   },
+   {
+    "name": "CS12",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 0.5715,
+        "z": -2.0415,
+        "width": 0.212,
+        "height": 1.289
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 150.0
+     }
+    ]
+   },
+   {
+    "name": "PF1",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 2.0755,
+        "z": 4.5,
+        "width": 0.7926,
+        "height": 0.7926
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 256.0
+     }
+    ]
+   },
+   {
+    "name": "PF2",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 5.36141,
+        "z": 3.79653,
+        "width": 0.4524,
+        "height": 0.5982
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 108.0
+     }
+    ]
+   },
+   {
+    "name": "PF3",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 6.98038,
+        "z": 1.276,
+        "width": 0.4038,
+        "height": 0.5982
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 96.0
+     }
+    ]
+   },
+   {
+    "name": "PF4",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 6.98035,
+        "z": -1.276,
+        "width": 0.4038,
+        "height": 0.5982
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 96.0
+     }
+    ]
+   },
+   {
+    "name": "PF5",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 5.0,
+        "z": -4.48084,
+        "width": 0.6468,
+        "height": 0.987
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 260.0
+     }
+    ]
+   },
+   {
+    "name": "PF6",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 2.801,
+        "z": -5.00074,
+        "width": 0.5982,
+        "height": 1.1814
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 288.0
+     }
+    ]
+   },
+   {
+    "name": "PF7",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 1.644,
+        "z": -4.77731,
+        "width": 0.7248,
+        "height": 1.3254
+       }
+      },
+      "fylite:a1": 0.0,
+      "fylite:a2": 90.0,
+      "turns_with_sign": 312.0
+     }
+    ]
+   }
+  ]
+ },
+ "wall": {
+  "description_2d": [
+   {
+    "limiter": {
+     "unit": [
+      {
+       "name": "blanket",
+       "outline": {
+        "r": [
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45,
+         2.45032,
+         2.529095,
+         2.60787,
+         2.686645,
+         2.76542,
+         2.844195,
+         2.854012,
+         2.978928,
+         3.103845,
+         3.228761,
+         3.353677,
+         3.478594,
+         3.487943,
+         3.5970281,
+         3.7061133,
+         3.8151999,
+         3.924285,
+         4.0333701,
+         4.0434,
+         4.1284803,
+         4.2135598,
+         4.2986402,
+         4.3837197,
+         4.4688,
+         4.5505845,
+         4.6021752,
+         4.6537663,
+         4.7053573,
+         4.7569483,
+         4.8085393,
+         4.8129,
+         4.82032,
+         4.82774,
+         4.83516,
+         4.84258,
+         4.85,
+         4.85,
+         4.81894,
+         4.78788,
+         4.75682,
+         4.72576,
+         4.6947,
+         4.6947,
+         4.614096,
+         4.533492,
+         4.452888,
+         4.372284,
+         4.29168
+        ],
+        "z": [
+         -1.805,
+         -1.645,
+         -1.485,
+         -1.325,
+         -1.165,
+         -1.005,
+         -0.995,
+         -0.835,
+         -0.675,
+         -0.515,
+         -0.355,
+         -0.195,
+         -0.185,
+         -0.025,
+         0.135,
+         0.295,
+         0.455,
+         0.615,
+         0.625,
+         0.785,
+         0.945,
+         1.105,
+         1.265,
+         1.425,
+         1.435,
+         1.595,
+         1.755,
+         1.915,
+         2.075,
+         2.235,
+         2.245,
+         2.300181,
+         2.355363,
+         2.410544,
+         2.465725,
+         2.520906,
+         2.523394,
+         2.504572,
+         2.48575,
+         2.466928,
+         2.448107,
+         2.429285,
+         2.425658,
+         2.350461,
+         2.275264,
+         2.200066,
+         2.124869,
+         2.049672,
+         2.042758,
+         1.942023,
+         1.841289,
+         1.740554,
+         1.63982,
+         1.539085,
+         1.351538,
+         1.233231,
+         1.114923,
+         0.9966153,
+         0.8783076,
+         0.76,
+         0.75,
+         0.6,
+         0.45,
+         0.3,
+         0.15,
+         0.0,
+         0.0,
+         -0.152,
+         -0.304,
+         -0.456,
+         -0.608,
+         -0.76,
+         -0.76,
+         -0.9286,
+         -1.0972,
+         -1.2658,
+         -1.4344,
+         -1.603
+        ]
+       }
+      },
+      {
+       "name": "inner divertor",
+       "outline": {
+        "r": [
+         2.43,
+         2.443327,
+         2.453982,
+         2.480448,
+         2.498589,
+         2.513296,
+         2.518484,
+         2.516166,
+         2.504845,
+         2.496592,
+         2.466974,
+         2.436259,
+         2.402406,
+         2.383316,
+         2.386263,
+         2.396613,
+         2.427187,
+         2.513428,
+         2.56113
+        ],
+        "z": [
+         -1.814,
+         -1.831989,
+         -1.846371,
+         -1.886156,
+         -1.924743,
+         -1.976023,
+         -2.021101,
+         -2.071755,
+         -2.122912,
+         -2.145819,
+         -2.218616,
+         -2.29411,
+         -2.377316,
+         -2.424238,
+         -2.423678,
+         -2.42171,
+         -2.415896,
+         -2.399498,
+         -2.390428
+        ]
+       }
+      },
+      {
+       "name": "dome",
+       "outline": {
+        "r": [
+         2.733479,
+         2.814015,
+         2.869291,
+         2.903692,
+         2.938772,
+         2.969527,
+         3.007288
+        ],
+        "z": [
+         -2.303383,
+         -2.299015,
+         -2.307922,
+         -2.318705,
+         -2.334377,
+         -2.352652,
+         -2.3824
+        ]
+       }
+      },
+      {
+       "name": "outter divertor",
+       "outline": {
+        "r": [
+         3.110223,
+         3.159187,
+         3.215819,
+         3.265353,
+         3.267895,
+         3.271032,
+         3.279742,
+         3.297473,
+         3.337591,
+         3.38975,
+         3.442776,
+         3.4933,
+         3.589345,
+         3.777446,
+         3.825782,
+         3.856671,
+         3.88482,
+         4.058684,
+         4.125,
+         4.105,
+         4.164292,
+         4.201044,
+         4.231465,
+         4.280371
+        ],
+        "z": [
+         -2.512661,
+         -2.543301,
+         -2.57874,
+         -2.609737,
+         -2.553624,
+         -2.484384,
+         -2.412571,
+         -2.347582,
+         -2.261418,
+         -2.189515,
+         -2.137757,
+         -2.100857,
+         -2.03989,
+         -1.92049,
+         -1.892107,
+         -1.882665,
+         -1.88,
+         -1.88,
+         -1.88,
+         -1.86,
+         -1.790691,
+         -1.74773,
+         -1.712168,
+         -1.655
+        ]
+       }
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "magnetics": {},
+ "fylite:grid": {
+  "nr": 65,
+  "nz": 65,
+  "rmin": 2.33,
+  "rmax": 4.9,
+  "zmin": -2.66,
+  "zmax": 2.58
+ },
+ "fylite:provenance": {
+  "generator": "tools/fyo-device-to-app.py",
+  "source": "machine_desc/best/best_device.yaml",
+  "note": "Copied from the fyo device description through the declared field table (rust/fylite/src/fyo.rs, @fyo-table DEVICE).  `fylite:grid.nr/nz` and `fylite:device_id` are the page's, not the machine's."
+ }
+}

@@ -1,0 +1,7581 @@
+{
+ "@context": {
+  "fylite": "urn:fylite:",
+  "imas": "https://imas.iter.org/dd/4#"
+ },
+ "@type": "fylite:DeviceDescription/1",
+ "fylite:device_id": "east",
+ "name": "EAST",
+ "tf": {
+  "r0": 1.75,
+  "b0": 1.8
+ },
+ "pf_active": {
+  "coil": [
+   {
+    "name": "PF1",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 0.62866,
+        "z": 0.25132,
+        "width": 0.15078,
+        "height": 0.4426
+       }
+      },
+      "turns_with_sign": 140
+     }
+    ]
+   },
+   {
+    "name": "PF2",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 0.62866,
+        "z": 0.75396,
+        "width": 0.15078,
+        "height": 0.4426
+       }
+      },
+      "turns_with_sign": 140
+     }
+    ]
+   },
+   {
+    "name": "PF3",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 0.62866,
+        "z": 1.2566,
+        "width": 0.15078,
+        "height": 0.4426
+       }
+      },
+      "turns_with_sign": 140
+     }
+    ]
+   },
+   {
+    "name": "PF7",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 1.0722,
+        "z": 1.7537,
+        "width": 0.23694,
+        "height": 0.08852
+       }
+      },
+      "turns_with_sign": 44
+     }
+    ]
+   },
+   {
+    "name": "PF9",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 1.1368,
+        "z": 1.9409,
+        "width": 0.36618,
+        "height": 0.26556
+       }
+      },
+      "turns_with_sign": 204
+     }
+    ]
+   },
+   {
+    "name": "PF11",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 2.9456,
+        "z": 1.5907,
+        "width": 0.11844,
+        "height": 0.2034
+       }
+      },
+      "turns_with_sign": 60
+     }
+    ]
+   },
+   {
+    "name": "PF13",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 3.2698,
+        "z": 0.90419,
+        "width": 0.07896,
+        "height": 0.16272
+       }
+      },
+      "turns_with_sign": 32
+     }
+    ]
+   },
+   {
+    "name": "PF4",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 0.62866,
+        "z": -0.25132,
+        "width": 0.15078,
+        "height": 0.4426
+       }
+      },
+      "turns_with_sign": 140
+     }
+    ]
+   },
+   {
+    "name": "PF5",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 0.62866,
+        "z": -0.75396,
+        "width": 0.15078,
+        "height": 0.4426
+       }
+      },
+      "turns_with_sign": 140
+     }
+    ]
+   },
+   {
+    "name": "PF6",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 0.62866,
+        "z": -1.2566,
+        "width": 0.15078,
+        "height": 0.4426
+       }
+      },
+      "turns_with_sign": 140
+     }
+    ]
+   },
+   {
+    "name": "PF8",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 1.0722,
+        "z": -1.7537,
+        "width": 0.23694,
+        "height": 0.08852
+       }
+      },
+      "turns_with_sign": 44
+     }
+    ]
+   },
+   {
+    "name": "PF10",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 1.1368,
+        "z": -1.9409,
+        "width": 0.36618,
+        "height": 0.26556
+       }
+      },
+      "turns_with_sign": 204
+     }
+    ]
+   },
+   {
+    "name": "PF12",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 2.9456,
+        "z": -1.5907,
+        "width": 0.11844,
+        "height": 0.2034
+       }
+      },
+      "turns_with_sign": 60
+     }
+    ]
+   },
+   {
+    "name": "PF14",
+    "element": [
+     {
+      "geometry": {
+       "geometry_type": "rectangle",
+       "rectangle": {
+        "r": 3.2698,
+        "z": -0.90419,
+        "width": 0.07896,
+        "height": 0.16272
+       }
+      },
+      "turns_with_sign": 32
+     }
+    ]
+   }
+  ]
+ },
+ "fylite:channel_map": [
+  [
+   [
+    0,
+    1.00024925
+   ]
+  ],
+  [
+   [
+    1,
+    1.000366605
+   ]
+  ],
+  [
+   [
+    2,
+    1.000520289
+   ]
+  ],
+  [
+   [
+    3,
+    0.175190565
+   ],
+   [
+    4,
+    0.825212271
+   ]
+  ],
+  [
+   [
+    5,
+    1.000014236
+   ]
+  ],
+  [
+   [
+    6,
+    0.999990834
+   ]
+  ],
+  [
+   [
+    7,
+    1.000269706
+   ]
+  ],
+  [
+   [
+    8,
+    1.000361892
+   ]
+  ],
+  [
+   [
+    9,
+    1.000500711
+   ]
+  ],
+  [
+   [
+    10,
+    0.175183348
+   ],
+   [
+    11,
+    0.825223279
+   ]
+  ],
+  [
+   [
+    12,
+    1.000013016
+   ]
+  ],
+  [
+   [
+    13,
+    0.999990802
+   ]
+  ]
+ ],
+ "wall": {
+  "description_2d": [
+   {
+    "limiter": {
+     "unit": [
+      {
+       "name": "efit_w_pf",
+       "outline": {
+        "r": [
+         1.35838,
+         1.35838,
+         1.35838,
+         1.36314,
+         1.4371,
+         1.43721,
+         1.44164,
+         1.4297,
+         1.39169,
+         1.39151,
+         1.37929,
+         1.399,
+         1.43623,
+         1.45919,
+         1.47791,
+         1.54494,
+         1.61204,
+         1.63506,
+         1.66054,
+         1.66519,
+         1.6955,
+         1.70668,
+         1.71388,
+         1.714,
+         1.73649,
+         1.76324,
+         1.80199,
+         1.80237,
+         1.93972,
+         1.97063,
+         2.07495,
+         2.1771,
+         2.27925,
+         2.37,
+         2.37,
+         2.37,
+         2.27925,
+         2.1771,
+         2.07495,
+         1.9728,
+         1.97063,
+         1.92059,
+         1.87055,
+         1.82051,
+         1.79281,
+         1.76511,
+         1.75421,
+         1.67782,
+         1.60143,
+         1.48426,
+         1.36709,
+         1.33132,
+         1.37874,
+         1.42615,
+         1.40528,
+         1.3844,
+         1.36353,
+         1.35838,
+         1.35838,
+         1.35838
+        ],
+        "z": [
+         0.0,
+         0.227,
+         0.454,
+         0.455735,
+         0.798332,
+         0.798821,
+         0.838195,
+         0.908908,
+         1.01426,
+         1.01473,
+         1.04859,
+         1.03946,
+         1.0256,
+         1.02095,
+         1.02514,
+         1.05454,
+         1.08394,
+         1.09586,
+         1.114,
+         1.11765,
+         1.14183,
+         1.16211,
+         1.13093,
+         1.13044,
+         1.033,
+         0.969832,
+         0.92567,
+         0.925347,
+         0.809223,
+         0.783389,
+         0.68838,
+         0.58904,
+         0.4897,
+         0.49,
+         0.0,
+         -0.49,
+         -0.4897,
+         -0.58904,
+         -0.68838,
+         -0.78772,
+         -0.783389,
+         -0.832375,
+         -0.881361,
+         -0.930347,
+         -1.05034,
+         -1.17034,
+         -1.13917,
+         -1.03465,
+         -0.930138,
+         -0.95338,
+         -0.976622,
+         -1.01072,
+         -0.879327,
+         -0.747939,
+         -0.65062,
+         -0.5533,
+         -0.455981,
+         -0.454,
+         -0.227,
+         0.0
+        ]
+       }
+      }
+     ]
+    },
+    "vessel": {
+     "unit": [
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.7286,
+           "z": 0.0833,
+           "width": 0.008,
+           "height": 0.1666
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 93.743,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.7069,
+           "z": 0.2485,
+           "width": 0.0082,
+           "height": 0.1638
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 101.191,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.664,
+           "z": 0.4094,
+           "width": 0.0084,
+           "height": 0.1582
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 108.6386,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.6007,
+           "z": 0.5635,
+           "width": 0.0089,
+           "height": 0.1499
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 116.0864,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.5178,
+           "z": 0.708,
+           "width": 0.0096,
+           "height": 0.1391
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 123.5341,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.417,
+           "z": 0.8406,
+           "width": 0.0106,
+           "height": 0.126
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 130.9933,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.2997,
+           "z": 0.9589,
+           "width": 0.125,
+           "height": 0.0107
+          }
+         }
+        }
+       ],
+       "fylite:a1": 138.4682,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.1681,
+           "z": 1.061,
+           "width": 0.1383,
+           "height": 0.0097
+          }
+         }
+        }
+       ],
+       "fylite:a1": 145.9158,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.0244,
+           "z": 1.1452,
+           "width": 0.1492,
+           "height": 0.0089
+          }
+         }
+        }
+       ],
+       "fylite:a1": 153.3635,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.8708,
+           "z": 1.2095,
+           "width": 0.158,
+           "height": 0.0084
+          }
+         }
+        }
+       ],
+       "fylite:a1": 161.2467,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.709,
+           "z": 1.2454,
+           "width": 0.1657,
+           "height": 0.008
+          }
+         }
+        }
+       ],
+       "fylite:a1": 173.7235,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.5435,
+           "z": 1.2439,
+           "width": 0.1653,
+           "height": 0.0081
+          }
+         }
+        }
+       ],
+       "fylite:a1": -172.6638,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.3902,
+           "z": 1.1907,
+           "width": 0.1414,
+           "height": 0.0093
+          }
+         }
+        }
+       ],
+       "fylite:a1": -148.9728,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.2814,
+           "z": 1.075,
+           "width": 0.009,
+           "height": 0.1463
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": -117.49,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.2402,
+           "z": 0.9186,
+           "width": 0.008,
+           "height": 0.1666
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": -92.1899,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.237,
+           "z": 0.7517,
+           "width": 0.008,
+           "height": 0.1671
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.237,
+           "z": 0.5847,
+           "width": 0.008,
+           "height": 0.1671
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.237,
+           "z": 0.4176,
+           "width": 0.008,
+           "height": 0.1671
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.237,
+           "z": 0.2506,
+           "width": 0.008,
+           "height": 0.1671
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.237,
+           "z": 0.0835,
+           "width": 0.008,
+           "height": 0.1671
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.237,
+           "z": -0.0835,
+           "width": 0.008,
+           "height": 0.1671
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.237,
+           "z": -0.2506,
+           "width": 0.008,
+           "height": 0.1671
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.237,
+           "z": -0.4176,
+           "width": 0.008,
+           "height": 0.1671
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.237,
+           "z": -0.5847,
+           "width": 0.008,
+           "height": 0.1671
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.237,
+           "z": -0.7517,
+           "width": 0.008,
+           "height": 0.1671
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.2402,
+           "z": -0.9186,
+           "width": 0.008,
+           "height": 0.1666
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": -87.8101,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.2814,
+           "z": -1.075,
+           "width": 0.009,
+           "height": 0.1463
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": -62.51,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.3902,
+           "z": -1.1907,
+           "width": 0.1414,
+           "height": 0.0093
+          }
+         }
+        }
+       ],
+       "fylite:a1": -31.0272,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.5435,
+           "z": -1.2439,
+           "width": 0.1653,
+           "height": 0.0081
+          }
+         }
+        }
+       ],
+       "fylite:a1": -7.3362,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.709,
+           "z": -1.2454,
+           "width": 0.1657,
+           "height": 0.008
+          }
+         }
+        }
+       ],
+       "fylite:a1": 6.2765,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.8708,
+           "z": -1.2095,
+           "width": 0.158,
+           "height": 0.0084
+          }
+         }
+        }
+       ],
+       "fylite:a1": 18.7533,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.0244,
+           "z": -1.1452,
+           "width": 0.1492,
+           "height": 0.0089
+          }
+         }
+        }
+       ],
+       "fylite:a1": 26.6365,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.1681,
+           "z": -1.061,
+           "width": 0.1383,
+           "height": 0.0097
+          }
+         }
+        }
+       ],
+       "fylite:a1": 34.0842,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.2997,
+           "z": -0.9589,
+           "width": 0.125,
+           "height": 0.0107
+          }
+         }
+        }
+       ],
+       "fylite:a1": 41.5318,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.417,
+           "z": -0.8406,
+           "width": 0.0106,
+           "height": 0.126
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 49.0067,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.5178,
+           "z": -0.708,
+           "width": 0.0096,
+           "height": 0.1391
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 56.4659,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.6007,
+           "z": -0.5635,
+           "width": 0.0089,
+           "height": 0.1499
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 63.9136,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.664,
+           "z": -0.4094,
+           "width": 0.0084,
+           "height": 0.1582
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 71.3614,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.7069,
+           "z": -0.2485,
+           "width": 0.0082,
+           "height": 0.1638
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 78.809,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.7286,
+           "z": -0.0833,
+           "width": 0.008,
+           "height": 0.1666
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 86.257,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "inner_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.844041,
+           "z": 0.089216,
+           "width": 0.008018,
+           "height": 0.178431
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 93.8216,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.820412,
+           "z": 0.266079,
+           "width": 0.008161,
+           "height": 0.175296
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 101.3979,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.773671,
+           "z": 0.438281,
+           "width": 0.00846,
+           "height": 0.169108
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 108.974,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.704583,
+           "z": 0.602795,
+           "width": 0.008946,
+           "height": 0.15992
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 116.5858,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.614319,
+           "z": 0.756712,
+           "width": 0.009672,
+           "height": 0.147914
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 124.1932,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.504511,
+           "z": 0.897355,
+           "width": 0.010726,
+           "height": 0.133371
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 131.7694,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.377112,
+           "z": 1.022288,
+           "width": 0.135678,
+           "height": 0.010544
+          }
+         }
+        }
+       ],
+       "fylite:a1": 139.3499,
+       "fylite:a2": 0.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.234294,
+           "z": 1.129249,
+           "width": 0.149959,
+           "height": 0.00954
+          }
+         }
+        }
+       ],
+       "fylite:a1": 146.9889,
+       "fylite:a2": 0.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.078569,
+           "z": 1.216363,
+           "width": 0.161489,
+           "height": 0.008859
+          }
+         }
+        }
+       ],
+       "fylite:a1": 154.565,
+       "fylite:a2": 0.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.912684,
+           "z": 1.282037,
+           "width": 0.170282,
+           "height": 0.0084
+          }
+         }
+        }
+       ],
+       "fylite:a1": 162.2383,
+       "fylite:a2": 0.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.738852,
+           "z": 1.319668,
+           "width": 0.177381,
+           "height": 0.008054
+          }
+         }
+        }
+       ],
+       "fylite:a1": 173.3389,
+       "fylite:a2": 0.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.563688,
+           "z": 1.316542,
+           "width": 0.172947,
+           "height": 0.008097
+          }
+         }
+        }
+       ],
+       "fylite:a1": -171.1371,
+       "fylite:a2": 0.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.399479,
+           "z": 1.260471,
+           "width": 0.155471,
+           "height": 0.009122
+          }
+         }
+        }
+       ],
+       "fylite:a1": -151.284,
+       "fylite:a2": 0.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.272153,
+           "z": 1.14442,
+           "width": 0.009652,
+           "height": 0.146928
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": -124.0208,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.210781,
+           "z": 0.982879,
+           "width": 0.008071,
+           "height": 0.176153
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": -97.6185,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.199,
+           "z": 0.805322,
+           "width": 0.008,
+           "height": 0.178961
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.199,
+           "z": 0.626362,
+           "width": 0.008,
+           "height": 0.178961
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.199,
+           "z": 0.447401,
+           "width": 0.008,
+           "height": 0.178961
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.199,
+           "z": 0.268441,
+           "width": 0.008,
+           "height": 0.178961
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.199,
+           "z": 0.08948,
+           "width": 0.008,
+           "height": 0.178961
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.199,
+           "z": -0.08948,
+           "width": 0.008,
+           "height": 0.178961
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.199,
+           "z": -0.268441,
+           "width": 0.008,
+           "height": 0.178961
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.199,
+           "z": -0.447401,
+           "width": 0.008,
+           "height": 0.178961
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.199,
+           "z": -0.626362,
+           "width": 0.008,
+           "height": 0.178961
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.199,
+           "z": -0.805322,
+           "width": 0.008,
+           "height": 0.178961
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 90.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.210781,
+           "z": -0.982879,
+           "width": 0.008071,
+           "height": 0.176153
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": -82.3815,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.272153,
+           "z": -1.14442,
+           "width": 0.009652,
+           "height": 0.146928
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": -55.9792,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.399479,
+           "z": -1.260471,
+           "width": 0.155471,
+           "height": 0.009122
+          }
+         }
+        }
+       ],
+       "fylite:a1": -28.716,
+       "fylite:a2": 0.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.563688,
+           "z": -1.316542,
+           "width": 0.172947,
+           "height": 0.008097
+          }
+         }
+        }
+       ],
+       "fylite:a1": -8.8629,
+       "fylite:a2": 0.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.738852,
+           "z": -1.319668,
+           "width": 0.177381,
+           "height": 0.008054
+          }
+         }
+        }
+       ],
+       "fylite:a1": 6.6611,
+       "fylite:a2": 0.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 1.912684,
+           "z": -1.282037,
+           "width": 0.170282,
+           "height": 0.0084
+          }
+         }
+        }
+       ],
+       "fylite:a1": 17.7617,
+       "fylite:a2": 0.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.078569,
+           "z": -1.216363,
+           "width": 0.161489,
+           "height": 0.008859
+          }
+         }
+        }
+       ],
+       "fylite:a1": 25.435,
+       "fylite:a2": 0.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.234294,
+           "z": -1.129249,
+           "width": 0.149959,
+           "height": 0.00954
+          }
+         }
+        }
+       ],
+       "fylite:a1": 33.0112,
+       "fylite:a2": 0.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.377112,
+           "z": -1.022288,
+           "width": 0.135678,
+           "height": 0.010544
+          }
+         }
+        }
+       ],
+       "fylite:a1": 40.6501,
+       "fylite:a2": 0.0,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.504511,
+           "z": -0.897355,
+           "width": 0.010726,
+           "height": 0.133371
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 48.2306,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.614319,
+           "z": -0.756712,
+           "width": 0.009672,
+           "height": 0.147914
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 55.8068,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.704583,
+           "z": -0.602795,
+           "width": 0.008946,
+           "height": 0.15992
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 63.4142,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.773671,
+           "z": -0.438281,
+           "width": 0.00846,
+           "height": 0.169108
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 71.026,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.820412,
+           "z": -0.266079,
+           "width": 0.008161,
+           "height": 0.175296
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 78.6021,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.844041,
+           "z": -0.089216,
+           "width": 0.008018,
+           "height": 0.178431
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 86.1784,
+       "fylite:resistivity_uohm_m": 0.74,
+       "fylite:group": "outer_shell"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.025565,
+           "z": 0.771587,
+           "width": 0.031449,
+           "height": 0.054864
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 135.6096,
+       "fylite:resistivity_uohm_m": 0.017,
+       "fylite:group": "passive_plates"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.081609,
+           "z": 0.716723,
+           "width": 0.031449,
+           "height": 0.054864
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 135.6096,
+       "fylite:resistivity_uohm_m": 0.017,
+       "fylite:group": "passive_plates"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.137653,
+           "z": 0.661859,
+           "width": 0.031449,
+           "height": 0.054864
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 135.6096,
+       "fylite:resistivity_uohm_m": 0.017,
+       "fylite:group": "passive_plates"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.193697,
+           "z": 0.606995,
+           "width": 0.031449,
+           "height": 0.054864
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 135.6096,
+       "fylite:resistivity_uohm_m": 0.017,
+       "fylite:group": "passive_plates"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.249741,
+           "z": 0.552131,
+           "width": 0.031449,
+           "height": 0.054864
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 135.6096,
+       "fylite:resistivity_uohm_m": 0.017,
+       "fylite:group": "passive_plates"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.025565,
+           "z": -0.771587,
+           "width": 0.031449,
+           "height": 0.054864
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 44.3904,
+       "fylite:resistivity_uohm_m": 0.017,
+       "fylite:group": "passive_plates"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.081609,
+           "z": -0.716723,
+           "width": 0.031449,
+           "height": 0.054864
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 44.3904,
+       "fylite:resistivity_uohm_m": 0.017,
+       "fylite:group": "passive_plates"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.137653,
+           "z": -0.661859,
+           "width": 0.031449,
+           "height": 0.054864
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 44.3904,
+       "fylite:resistivity_uohm_m": 0.017,
+       "fylite:group": "passive_plates"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.193697,
+           "z": -0.606995,
+           "width": 0.031449,
+           "height": 0.054864
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 44.3904,
+       "fylite:resistivity_uohm_m": 0.017,
+       "fylite:group": "passive_plates"
+      },
+      {
+       "element": [
+        {
+         "geometry": {
+          "geometry_type": "rectangle",
+          "rectangle": {
+           "r": 2.249741,
+           "z": -0.552131,
+           "width": 0.031449,
+           "height": 0.054864
+          }
+         }
+        }
+       ],
+       "fylite:a1": 0.0,
+       "fylite:a2": 44.3904,
+       "fylite:resistivity_uohm_m": 0.017,
+       "fylite:group": "passive_plates"
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "magnetics": {
+  "flux_loop": [
+   {
+    "name": "FL1B",
+    "position": [
+     {
+      "r": 1.2707,
+      "z": -0.0009
+     }
+    ]
+   },
+   {
+    "name": "FL2B",
+    "position": [
+     {
+      "r": 1.2707,
+      "z": 0.0197
+     }
+    ]
+   },
+   {
+    "name": "FL3B",
+    "position": [
+     {
+      "r": 1.271,
+      "z": 0.1972
+     }
+    ]
+   },
+   {
+    "name": "FL4B",
+    "position": [
+     {
+      "r": 1.2676,
+      "z": 0.3351
+     }
+    ]
+   },
+   {
+    "name": "FL5B",
+    "position": [
+     {
+      "r": 1.2675,
+      "z": 0.3703
+     }
+    ]
+   },
+   {
+    "name": "FL6B",
+    "position": [
+     {
+      "r": 1.2706,
+      "z": 0.4995
+     }
+    ]
+   },
+   {
+    "name": "FL7B",
+    "position": [
+     {
+      "r": 1.2668,
+      "z": 0.6248
+     }
+    ]
+   },
+   {
+    "name": "FL8B",
+    "position": [
+     {
+      "r": 1.2671,
+      "z": 0.7056
+     }
+    ]
+   },
+   {
+    "name": "FL9B",
+    "position": [
+     {
+      "r": 1.2726,
+      "z": 0.8978
+     }
+    ]
+   },
+   {
+    "name": "FL10B",
+    "position": [
+     {
+      "r": 1.2777,
+      "z": 0.9853
+     }
+    ]
+   },
+   {
+    "name": "FL11B",
+    "position": [
+     {
+      "r": 1.3312,
+      "z": 1.1141
+     }
+    ]
+   },
+   {
+    "name": "FL12B",
+    "position": [
+     {
+      "r": 1.4207,
+      "z": 1.143
+     }
+    ]
+   },
+   {
+    "name": "FL13B",
+    "position": [
+     {
+      "r": 2.1303,
+      "z": 0.955
+     }
+    ]
+   },
+   {
+    "name": "FL14B",
+    "position": [
+     {
+      "r": 2.2304,
+      "z": 0.9002
+     }
+    ]
+   },
+   {
+    "name": "FL15B",
+    "position": [
+     {
+      "r": 2.3524,
+      "z": 0.8672
+     }
+    ]
+   },
+   {
+    "name": "FL16B",
+    "position": [
+     {
+      "r": 2.4334,
+      "z": 0.7652
+     }
+    ]
+   },
+   {
+    "name": "FL17B",
+    "position": [
+     {
+      "r": 2.5394,
+      "z": 0.5815
+     }
+    ]
+   },
+   {
+    "name": "FL18B",
+    "position": [
+     {
+      "r": 1.2703,
+      "z": -0.0208
+     }
+    ]
+   },
+   {
+    "name": "FL19B",
+    "position": [
+     {
+      "r": 1.271,
+      "z": -0.1994
+     }
+    ]
+   },
+   {
+    "name": "FL20B",
+    "position": [
+     {
+      "r": 1.2673,
+      "z": -0.3361
+     }
+    ]
+   },
+   {
+    "name": "FL21B",
+    "position": [
+     {
+      "r": 1.2674,
+      "z": -0.3712
+     }
+    ]
+   },
+   {
+    "name": "FL22B",
+    "position": [
+     {
+      "r": 1.2712,
+      "z": -0.5006
+     }
+    ]
+   },
+   {
+    "name": "FL23B",
+    "position": [
+     {
+      "r": 1.267,
+      "z": -0.7054
+     }
+    ]
+   },
+   {
+    "name": "FL24B",
+    "position": [
+     {
+      "r": 1.2669,
+      "z": -0.7801
+     }
+    ]
+   },
+   {
+    "name": "FL25B",
+    "position": [
+     {
+      "r": 1.2705,
+      "z": -0.9896
+     }
+    ]
+   },
+   {
+    "name": "FL26B",
+    "position": [
+     {
+      "r": 1.3006,
+      "z": -1.0795
+     }
+    ]
+   },
+   {
+    "name": "FL27B",
+    "position": [
+     {
+      "r": 1.37,
+      "z": -1.1438
+     }
+    ]
+   },
+   {
+    "name": "FL28B",
+    "position": [
+     {
+      "r": 1.5111,
+      "z": -1.1674
+     }
+    ]
+   },
+   {
+    "name": "FL29B",
+    "position": [
+     {
+      "r": 2.0836,
+      "z": -1.0273
+     }
+    ]
+   },
+   {
+    "name": "FL30B",
+    "position": [
+     {
+      "r": 2.2297,
+      "z": -0.9234
+     }
+    ]
+   },
+   {
+    "name": "FL31B",
+    "position": [
+     {
+      "r": 2.3389,
+      "z": -0.8775
+     }
+    ]
+   },
+   {
+    "name": "FL32B",
+    "position": [
+     {
+      "r": 2.4199,
+      "z": -0.7663
+     }
+    ]
+   },
+   {
+    "name": "FL33B",
+    "position": [
+     {
+      "r": 2.5434,
+      "z": -0.5815
+     }
+    ]
+   },
+   {
+    "name": "FL34B",
+    "position": [
+     {
+      "r": 2.2579,
+      "z": -0.7643
+     }
+    ]
+   },
+   {
+    "name": "FL35B",
+    "position": [
+     {
+      "r": 2.2532,
+      "z": 0.7677
+     }
+    ]
+   }
+  ],
+  "b_field_pol_probe": [
+   {
+    "name": "HBPH1T",
+    "position": [
+     {
+      "r": 1.289,
+      "z": 0.0005
+     }
+    ],
+    "poloidal_angle": 1.5276570236733527,
+    "fylite:angle_deg": 87.5283,
+    "fylite:length": 0.0497,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.002255846
+   },
+   {
+    "name": "HBPH2T",
+    "position": [
+     {
+      "r": 1.289,
+      "z": 0.2495
+     }
+    ],
+    "poloidal_angle": 1.5366908478816754,
+    "fylite:angle_deg": 88.0459,
+    "fylite:length": 0.0497,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.001300205
+   },
+   {
+    "name": "HBPH3T",
+    "position": [
+     {
+      "r": 1.2872,
+      "z": 0.4559
+     }
+    ],
+    "poloidal_angle": 1.5389074160317082,
+    "fylite:angle_deg": 88.1729,
+    "fylite:length": 0.0497,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.001715205
+   },
+   {
+    "name": "nhbp4t",
+    "position": [
+     {
+      "r": 1.2879,
+      "z": 0.7678
+     }
+    ],
+    "poloidal_angle": 1.5235171026876222,
+    "fylite:angle_deg": 87.2911,
+    "fylite:length": 0.0491,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.00054768
+   },
+   {
+    "name": "nhbp5t",
+    "position": [
+     {
+      "r": 1.292,
+      "z": 0.8612
+     }
+    ],
+    "poloidal_angle": 1.53275687574768,
+    "fylite:angle_deg": 87.8205,
+    "fylite:length": 0.0491,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.000623169
+   },
+   {
+    "name": "nhbp6t",
+    "position": [
+     {
+      "r": 1.5707,
+      "z": 1.1644
+     }
+    ],
+    "poloidal_angle": 0.44127508544023036,
+    "fylite:angle_deg": 25.2832,
+    "fylite:length": 0.0491,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.000371067
+   },
+   {
+    "name": "nhbp7t",
+    "position": [
+     {
+      "r": 1.7193,
+      "z": 1.1938
+     }
+    ],
+    "poloidal_angle": -0.13910797737170405,
+    "fylite:angle_deg": -7.9703,
+    "fylite:length": 0.0491,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.000324598
+   },
+   {
+    "name": "nhbp8t",
+    "position": [
+     {
+      "r": 1.8256,
+      "z": 1.1291
+     }
+    ],
+    "poloidal_angle": -1.4714242605033474,
+    "fylite:angle_deg": -84.3064,
+    "fylite:length": 0.0491,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.000683695
+   },
+   {
+    "name": "HBPU1T",
+    "position": [
+     {
+      "r": 2.3116,
+      "z": 0.8402
+     }
+    ],
+    "poloidal_angle": -0.7942644359975796,
+    "fylite:angle_deg": -45.508,
+    "fylite:length": 0.0497,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.001088402
+   },
+   {
+    "name": "HBPU2T",
+    "position": [
+     {
+      "r": 2.4271,
+      "z": 0.7038
+     }
+    ],
+    "poloidal_angle": -0.942128730226539,
+    "fylite:angle_deg": -53.98,
+    "fylite:length": 0.0497,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.000416301
+   },
+   {
+    "name": "HBPU3T",
+    "position": [
+     {
+      "r": 2.5203,
+      "z": 0.5585
+     }
+    ],
+    "poloidal_angle": -1.0646176824607532,
+    "fylite:angle_deg": -60.9981,
+    "fylite:length": 0.0497,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.000423261
+   },
+   {
+    "name": "HBPU5T",
+    "position": [
+     {
+      "r": 2.5905,
+      "z": 0.3948
+     }
+    ],
+    "poloidal_angle": -1.1947110342459064,
+    "fylite:angle_deg": -68.4519,
+    "fylite:length": 0.0497,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.001056412
+   },
+   {
+    "name": "HBPU6T",
+    "position": [
+     {
+      "r": 2.6399,
+      "z": 0.2178
+     }
+    ],
+    "poloidal_angle": -1.2903550772551957,
+    "fylite:angle_deg": -73.9319,
+    "fylite:length": 0.0497,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.002265899
+   },
+   {
+    "name": "HBPU7T",
+    "position": [
+     {
+      "r": 2.6595,
+      "z": 0.0075
+     }
+    ],
+    "poloidal_angle": -1.535903704389026,
+    "fylite:angle_deg": -88.0008,
+    "fylite:length": 0.0497,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.000850276
+   },
+   {
+    "name": "HBPU8T",
+    "position": [
+     {
+      "r": 1.2885,
+      "z": -0.2477
+     }
+    ],
+    "poloidal_angle": 1.5560989091638524,
+    "fylite:angle_deg": 89.1579,
+    "fylite:length": 0.0497,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.000623376
+   },
+   {
+    "name": "HBPU9T",
+    "position": [
+     {
+      "r": 1.2906,
+      "z": -0.4509
+     }
+    ],
+    "poloidal_angle": 1.4961224147483194,
+    "fylite:angle_deg": 85.7215,
+    "fylite:length": 0.0497,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.004515316
+   },
+   {
+    "name": "HBPL1T",
+    "position": [
+     {
+      "r": 1.2905,
+      "z": -0.635
+     }
+    ],
+    "poloidal_angle": 1.5707963267948966,
+    "fylite:angle_deg": 90.0,
+    "fylite:length": 0.0497,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.001324568
+   },
+   {
+    "name": "HBPL2T",
+    "position": [
+     {
+      "r": 1.2905,
+      "z": -0.7992
+     }
+    ],
+    "poloidal_angle": 1.5707963267948966,
+    "fylite:angle_deg": 90.0,
+    "fylite:length": 0.0497,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.001084336
+   },
+   {
+    "name": "HBPL3T",
+    "position": [
+     {
+      "r": 1.3265,
+      "z": -1.0587
+     }
+    ],
+    "poloidal_angle": 2.3045257630163047,
+    "fylite:angle_deg": 132.0396,
+    "fylite:length": 0.0497,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.000731575
+   },
+   {
+    "name": "HBPL4T",
+    "position": [
+     {
+      "r": 1.6192,
+      "z": -1.1948
+     }
+    ],
+    "poloidal_angle": 3.141592653589793,
+    "fylite:angle_deg": 180.0,
+    "fylite:length": 0.0497,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.000750687
+   },
+   {
+    "name": "HBPL5T",
+    "position": [
+     {
+      "r": 1.9185,
+      "z": -1.1263
+     }
+    ],
+    "poloidal_angle": -2.758492882777038,
+    "fylite:angle_deg": -158.05,
+    "fylite:length": 0.0497,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000955665
+   },
+   {
+    "name": "HBPL6T",
+    "position": [
+     {
+      "r": 2.3155,
+      "z": -0.8321
+     }
+    ],
+    "poloidal_angle": -2.342673424477145,
+    "fylite:angle_deg": -134.2253,
+    "fylite:length": 0.0497,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000279253
+   },
+   {
+    "name": "HBPL7T",
+    "position": [
+     {
+      "r": 2.4368,
+      "z": -0.6917
+     }
+    ],
+    "poloidal_angle": -2.1561099447437146,
+    "fylite:angle_deg": -123.536,
+    "fylite:length": 0.0497,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.00082878
+   },
+   {
+    "name": "HBPL8T",
+    "position": [
+     {
+      "r": 2.5245,
+      "z": -0.5459
+     }
+    ],
+    "poloidal_angle": -1.997291964129239,
+    "fylite:angle_deg": -114.4364,
+    "fylite:length": 0.0497,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.000927458
+   },
+   {
+    "name": "DBP25T",
+    "position": [
+     {
+      "r": 2.592,
+      "z": -0.3797
+     }
+    ],
+    "poloidal_angle": -1.8606780622586345,
+    "fylite:angle_deg": -106.609,
+    "fylite:length": 0.0497,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.005453186
+   },
+   {
+    "name": "DBP26T",
+    "position": [
+     {
+      "r": 2.6406,
+      "z": -0.202
+     }
+    ],
+    "poloidal_angle": -1.7038864089057244,
+    "fylite:angle_deg": -97.6255,
+    "fylite:length": 0.0497,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.005540378
+   },
+   {
+    "name": "HBPL11T",
+    "position": [
+     {
+      "r": 1.8554,
+      "z": 1.0328
+     }
+    ],
+    "poloidal_angle": -1.1064287900215293,
+    "fylite:angle_deg": -63.3937,
+    "fylite:length": 0.0491,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.000330041
+   },
+   {
+    "name": "HBPD1T",
+    "position": [
+     {
+      "r": 1.9312,
+      "z": 0.956
+     }
+    ],
+    "poloidal_angle": -0.39554571370872693,
+    "fylite:angle_deg": -22.6631,
+    "fylite:length": 0.0491,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.000234779
+   },
+   {
+    "name": "HBPD2T",
+    "position": [
+     {
+      "r": 1.345,
+      "z": 0.9097
+     }
+    ],
+    "poloidal_angle": 1.8367077103117446,
+    "fylite:angle_deg": 105.2356,
+    "fylite:length": 0.0698,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.000415004
+   },
+   {
+    "name": "HBPD3T",
+    "position": [
+     {
+      "r": 1.5007,
+      "z": 1.1318
+     }
+    ],
+    "poloidal_angle": 0.3592149399992129,
+    "fylite:angle_deg": 20.5815,
+    "fylite:length": 0.0255,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000587016
+   },
+   {
+    "name": "HBPD4T",
+    "position": [
+     {
+      "r": 2.1088,
+      "z": 0.7773
+     }
+    ],
+    "poloidal_angle": -0.774402589109884,
+    "fylite:angle_deg": -44.37,
+    "fylite:length": 0.0497,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000150135
+   },
+   {
+    "name": "HBPD5T",
+    "position": [
+     {
+      "r": 1.4687,
+      "z": -1.0396
+     }
+    ],
+    "poloidal_angle": -2.930589328340687,
+    "fylite:angle_deg": -167.9104,
+    "fylite:length": 0.0497,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.00153655
+   },
+   {
+    "name": "HBPD6T",
+    "position": [
+     {
+      "r": 1.6182,
+      "z": -1.1001
+     }
+    ],
+    "poloidal_angle": 2.1805969141491954,
+    "fylite:angle_deg": 124.939,
+    "fylite:length": 0.0497,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.001098853
+   },
+   {
+    "name": "HBPD7T",
+    "position": [
+     {
+      "r": 1.8883,
+      "z": -1.0371
+     }
+    ],
+    "poloidal_angle": -1.8162995753681748,
+    "fylite:angle_deg": -104.0663,
+    "fylite:length": 0.0497,
+    "fylite:weight": 1.0,
+    "fylite:bit_error": 0.000237228
+   },
+   {
+    "name": "DBP36T",
+    "position": [
+     {
+      "r": 1.995,
+      "z": -0.9991
+     }
+    ],
+    "poloidal_angle": -1.8863518555554712,
+    "fylite:angle_deg": -108.08,
+    "fylite:length": 0.0497,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 1.2167e-05
+   },
+   {
+    "name": "HBPD9T",
+    "position": [
+     {
+      "r": 1.984,
+      "z": -0.8944
+     }
+    ],
+    "poloidal_angle": -2.367190064479909,
+    "fylite:angle_deg": -135.63,
+    "fylite:length": 0.0497,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000752541
+   },
+   {
+    "name": "HBPD10T",
+    "position": [
+     {
+      "r": 2.108,
+      "z": -0.7753
+     }
+    ],
+    "poloidal_angle": -2.367190064479909,
+    "fylite:angle_deg": -135.63,
+    "fylite:length": 0.0497,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 8.7636e-05
+   },
+   {
+    "name": "HBPU4T",
+    "position": [
+     {
+      "r": 1.289,
+      "z": 0.0005
+     }
+    ],
+    "poloidal_angle": 3.098453350468249,
+    "fylite:angle_deg": 177.5283,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.002100307
+   },
+   {
+    "name": "HBPU1N",
+    "position": [
+     {
+      "r": 1.289,
+      "z": 0.2495
+     }
+    ],
+    "poloidal_angle": 3.1074871746765718,
+    "fylite:angle_deg": 178.0459,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.001541546
+   },
+   {
+    "name": "HBPU2N",
+    "position": [
+     {
+      "r": 1.2872,
+      "z": 0.4559
+     }
+    ],
+    "poloidal_angle": 3.1097037428266048,
+    "fylite:angle_deg": 178.1729,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.001915606
+   },
+   {
+    "name": "HBPU5N",
+    "position": [
+     {
+      "r": 1.2879,
+      "z": 0.7678
+     }
+    ],
+    "poloidal_angle": 3.0943134294825185,
+    "fylite:angle_deg": 177.2911,
+    "fylite:length": 0.024,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000507349
+   },
+   {
+    "name": "NDBP5N",
+    "position": [
+     {
+      "r": 1.292,
+      "z": 0.8612
+     }
+    ],
+    "poloidal_angle": 3.1035532025425767,
+    "fylite:angle_deg": 177.8205,
+    "fylite:length": 0.024,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.029981202
+   },
+   {
+    "name": "HBPU7N",
+    "position": [
+     {
+      "r": 1.5707,
+      "z": 1.1644
+     }
+    ],
+    "poloidal_angle": 2.0120714122351266,
+    "fylite:angle_deg": 115.2832,
+    "fylite:length": 0.024,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000547398
+   },
+   {
+    "name": "HBPU8N",
+    "position": [
+     {
+      "r": 1.7193,
+      "z": 1.1938
+     }
+    ],
+    "poloidal_angle": 1.4316883494231927,
+    "fylite:angle_deg": 82.0297,
+    "fylite:length": 0.024,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000410479
+   },
+   {
+    "name": "HBPU9N",
+    "position": [
+     {
+      "r": 1.8256,
+      "z": 1.1291
+     }
+    ],
+    "poloidal_angle": 0.09937206629154915,
+    "fylite:angle_deg": 5.6936,
+    "fylite:length": 0.024,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000270055
+   },
+   {
+    "name": "HBPL1N",
+    "position": [
+     {
+      "r": 2.3116,
+      "z": 0.8402
+     }
+    ],
+    "poloidal_angle": 0.7765318907973171,
+    "fylite:angle_deg": 44.492,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.002049431
+   },
+   {
+    "name": "HBPL2N",
+    "position": [
+     {
+      "r": 2.4271,
+      "z": 0.7038
+     }
+    ],
+    "poloidal_angle": 0.6286675965683575,
+    "fylite:angle_deg": 36.02,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000361895
+   },
+   {
+    "name": "HBPL3N",
+    "position": [
+     {
+      "r": 2.5203,
+      "z": 0.5585
+     }
+    ],
+    "poloidal_angle": 0.5061786443341434,
+    "fylite:angle_deg": 29.0019,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000817895
+   },
+   {
+    "name": "HBPL4N",
+    "position": [
+     {
+      "r": 2.5905,
+      "z": 0.3948
+     }
+    ],
+    "poloidal_angle": 0.37608529254899015,
+    "fylite:angle_deg": 21.5481,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.012655661
+   },
+   {
+    "name": "DBP12N",
+    "position": [
+     {
+      "r": 2.6399,
+      "z": 0.2178
+     }
+    ],
+    "poloidal_angle": 0.2804412495397009,
+    "fylite:angle_deg": 16.0681,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.002169525
+   },
+   {
+    "name": "HBPL6N",
+    "position": [
+     {
+      "r": 2.6595,
+      "z": 0.0075
+     }
+    ],
+    "poloidal_angle": 0.03489262240587064,
+    "fylite:angle_deg": 1.9992,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000866884
+   },
+   {
+    "name": "HBPL7N",
+    "position": [
+     {
+      "r": 1.2885,
+      "z": -0.2477
+     }
+    ],
+    "poloidal_angle": 3.1268952359587487,
+    "fylite:angle_deg": 179.1579,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000856381
+   },
+   {
+    "name": "HBPL8N",
+    "position": [
+     {
+      "r": 1.2906,
+      "z": -0.4509
+     }
+    ],
+    "poloidal_angle": 3.066918741543215,
+    "fylite:angle_deg": 175.7215,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.004839676
+   },
+   {
+    "name": "HBPL9N",
+    "position": [
+     {
+      "r": 1.2905,
+      "z": -0.635
+     }
+    ],
+    "poloidal_angle": 3.141592653589793,
+    "fylite:angle_deg": 180.0,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.001151889
+   },
+   {
+    "name": "HBPL10N",
+    "position": [
+     {
+      "r": 1.2905,
+      "z": -0.7992
+     }
+    ],
+    "poloidal_angle": 3.141592653589793,
+    "fylite:angle_deg": 180.0,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.00117546
+   },
+   {
+    "name": "LBP19N",
+    "position": [
+     {
+      "r": 1.3265,
+      "z": -1.0587
+     }
+    ],
+    "poloidal_angle": 3.8753220898112013,
+    "fylite:angle_deg": 222.0396,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.001457953
+   },
+   {
+    "name": "HBPH1N",
+    "position": [
+     {
+      "r": 1.6192,
+      "z": -1.1948
+     }
+    ],
+    "poloidal_angle": 4.71238898038469,
+    "fylite:angle_deg": 270.0,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000200352
+   },
+   {
+    "name": "HBPH2N",
+    "position": [
+     {
+      "r": 1.9185,
+      "z": -1.1263
+     }
+    ],
+    "poloidal_angle": -1.187696555982141,
+    "fylite:angle_deg": -68.05,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000859577
+   },
+   {
+    "name": "HBPH3N",
+    "position": [
+     {
+      "r": 2.3155,
+      "z": -0.8321
+     }
+    ],
+    "poloidal_angle": -0.7718770976822482,
+    "fylite:angle_deg": -44.2253,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000334053
+   },
+   {
+    "name": "HBPH4N",
+    "position": [
+     {
+      "r": 2.4368,
+      "z": -0.6917
+     }
+    ],
+    "poloidal_angle": -0.5853136179488183,
+    "fylite:angle_deg": -33.536,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.00093651
+   },
+   {
+    "name": "HBPH5N",
+    "position": [
+     {
+      "r": 2.5245,
+      "z": -0.5459
+     }
+    ],
+    "poloidal_angle": -0.42649563733434237,
+    "fylite:angle_deg": -24.4364,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.001579669
+   },
+   {
+    "name": "HBPH6N",
+    "position": [
+     {
+      "r": 2.592,
+      "z": -0.3797
+     }
+    ],
+    "poloidal_angle": -0.2898817354637382,
+    "fylite:angle_deg": -16.609,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.003531628
+   },
+   {
+    "name": "DBP26N",
+    "position": [
+     {
+      "r": 2.6406,
+      "z": -0.202
+     }
+    ],
+    "poloidal_angle": -0.1330900821108276,
+    "fylite:angle_deg": -7.6255,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.006391349
+   },
+   {
+    "name": "HBPH8N",
+    "position": [
+     {
+      "r": 1.8554,
+      "z": 1.0328
+     }
+    ],
+    "poloidal_angle": 0.46436753677336734,
+    "fylite:angle_deg": 26.6063,
+    "fylite:length": 0.024,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000297888
+   },
+   {
+    "name": "HBPD1N",
+    "position": [
+     {
+      "r": 1.9312,
+      "z": 0.956
+     }
+    ],
+    "poloidal_angle": 1.1752506130861695,
+    "fylite:angle_deg": 67.3369,
+    "fylite:length": 0.024,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000419384
+   },
+   {
+    "name": "NDBP30N",
+    "position": [
+     {
+      "r": 1.359,
+      "z": 1.0734
+     }
+    ],
+    "poloidal_angle": 2.0050900952271498,
+    "fylite:angle_deg": 114.8832,
+    "fylite:length": 0.032,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 3.6783e-05
+   },
+   {
+    "name": "HBPD3N",
+    "position": [
+     {
+      "r": 1.5007,
+      "z": 1.1318
+     }
+    ],
+    "poloidal_angle": 1.9300112667941094,
+    "fylite:angle_deg": 110.5815,
+    "fylite:length": 0.032,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000453599
+   },
+   {
+    "name": "HBPD4N",
+    "position": [
+     {
+      "r": 2.1088,
+      "z": 0.7773
+     }
+    ],
+    "poloidal_angle": 0.7963937376850125,
+    "fylite:angle_deg": 45.63,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.001003513
+   },
+   {
+    "name": "HBPD5N",
+    "position": [
+     {
+      "r": 1.4687,
+      "z": -1.0396
+     }
+    ],
+    "poloidal_angle": -1.35979300154579,
+    "fylite:angle_deg": -77.9104,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.002243476
+   },
+   {
+    "name": "DBP33N",
+    "position": [
+     {
+      "r": 1.6182,
+      "z": -1.1001
+     }
+    ],
+    "poloidal_angle": 3.7513932409440915,
+    "fylite:angle_deg": 214.939,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.001129846
+   },
+   {
+    "name": "HBPD7N",
+    "position": [
+     {
+      "r": 1.8883,
+      "z": -1.0371
+     }
+    ],
+    "poloidal_angle": -0.24550324857327838,
+    "fylite:angle_deg": -14.0663,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000406755
+   },
+   {
+    "name": "HBPD8N",
+    "position": [
+     {
+      "r": 1.995,
+      "z": -0.9991
+     }
+    ],
+    "poloidal_angle": -0.31555552876057474,
+    "fylite:angle_deg": -18.08,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000542188
+   },
+   {
+    "name": "HBPD9N",
+    "position": [
+     {
+      "r": 1.984,
+      "z": -0.8944
+     }
+    ],
+    "poloidal_angle": -0.7963937376850125,
+    "fylite:angle_deg": -45.63,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000620155
+   },
+   {
+    "name": "HBPD10N",
+    "position": [
+     {
+      "r": 2.108,
+      "z": -0.7753
+     }
+    ],
+    "poloidal_angle": -0.7963937376850125,
+    "fylite:angle_deg": -45.63,
+    "fylite:length": 0.0243,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 8.6725e-05
+   },
+   {
+    "name": "HBPL1T",
+    "position": [
+     {
+      "r": 2.3905,
+      "z": 0.206
+     }
+    ],
+    "poloidal_angle": -1.2803037260929602,
+    "fylite:angle_deg": -73.356,
+    "fylite:length": 0.0622,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000297392
+   },
+   {
+    "name": "HBPL2T",
+    "position": [
+     {
+      "r": 2.4113,
+      "z": 0.0998
+     }
+    ],
+    "poloidal_angle": -1.4412283191145936,
+    "fylite:angle_deg": -82.5763,
+    "fylite:length": 0.0622,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000246278
+   },
+   {
+    "name": "HBPL3T",
+    "position": [
+     {
+      "r": 2.4192,
+      "z": -0.0058
+     }
+    ],
+    "poloidal_angle": -1.549409062140958,
+    "fylite:angle_deg": -88.7746,
+    "fylite:length": 0.0622,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000216306
+   },
+   {
+    "name": "HBPL4T",
+    "position": [
+     {
+      "r": 2.4105,
+      "z": -0.1095
+     }
+    ],
+    "poloidal_angle": -1.7260660530400682,
+    "fylite:angle_deg": -98.8963,
+    "fylite:length": 0.0622,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000190929
+   },
+   {
+    "name": "HBPL5T",
+    "position": [
+     {
+      "r": 2.3862,
+      "z": -0.216
+     }
+    ],
+    "poloidal_angle": -1.8440328571823648,
+    "fylite:angle_deg": -105.6553,
+    "fylite:length": 0.0622,
+    "fylite:weight": 0.0,
+    "fylite:bit_error": 0.000138034
+   }
+  ]
+ },
+ "lh_antennas": {
+  "antenna": [
+   {
+    "name": "LH1",
+    "frequency": 2450000000.0,
+    "fylite:max_power": 4000000.0,
+    "fylite:n_parallel": [
+     1.91,
+     2.43
+    ]
+   },
+   {
+    "name": "LH2",
+    "frequency": 4600000000.0,
+    "fylite:max_power": 6000000.0,
+    "fylite:n_parallel": [
+     1.8,
+     2.23
+    ]
+   }
+  ]
+ },
+ "fylite:grid": {
+  "nr": 65,
+  "nz": 65,
+  "rmin": 1.2,
+  "rmax": 2.8,
+  "zmin": -1.4,
+  "zmax": 1.4
+ },
+ "fylite:ui": {
+  "r0": {
+   "value": 1.85
+  },
+  "z0": {
+   "value": 0
+  },
+  "a": {
+   "value": 0.45
+  },
+  "kappa": {
+   "value": 1.65
+  },
+  "du": {
+   "value": 0.4
+  },
+  "dl": {
+   "value": 0.5
+  },
+  "ip": {
+   "value": 400
+  },
+  "xr": {
+   "value": 1.606
+  },
+  "xz": {
+   "value": -0.722
+  }
+ },
+ "fylite:vessel_resistivity_uohm_m": 0.74,
+ "fylite:reference_discharge": {
+  "shot": 137985,
+  "time_s": 4,
+  "aturns": [
+   416856.3,
+   910283.5,
+   957129.3,
+   1769983,
+   -373416.8,
+   16135.9,
+   405891.1,
+   690831.7,
+   1132760,
+   1872260,
+   -417998.1,
+   21605.7
+  ],
+  "ip": 393459.5,
+  "bcentr": 1.8,
+  "rcentr": 1.75,
+  "loopMeas": [
+   0.13823777,
+   0.13769831,
+   0.12809082,
+   0.1159914,
+   0.11288803,
+   0.10203205,
+   0.09088347,
+   0.08455868,
+   0.07152529,
+   0.06648585,
+   0.06335227,
+   0.06854789,
+   0.12902753,
+   0.13737825,
+   0.1417688,
+   0.15219881,
+   0.16834427,
+   0.13850537,
+   0.13602006,
+   0.126486,
+   0.12370279,
+   0.113008,
+   0.09395364,
+   0.08783107,
+   0.07300588,
+   0.07007535,
+   0.07211318,
+   0.08237472,
+   0.13430703,
+   0.15063579,
+   0.15612924,
+   0.16792499,
+   0.18190707,
+   0.17293394,
+   0.15386529
+  ],
+  "loopWeights": [
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   0,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   0,
+   0,
+   0,
+   0
+  ],
+  "pres": [
+   8919,
+   8746.08,
+   8574.58,
+   8404.49,
+   8235.8,
+   8068.53,
+   7902.67,
+   7738.22,
+   7575.18,
+   7413.55,
+   7253.33,
+   7094.52,
+   6937.12,
+   6781.13,
+   6626.55,
+   6473.39,
+   6321.63,
+   6171.29,
+   6022.35,
+   5874.83,
+   5728.71,
+   5584.01,
+   5440.71,
+   5298.83,
+   5158.36,
+   5019.3,
+   4881.65,
+   4745.41,
+   4610.58,
+   4477.16,
+   4345.15,
+   4214.55,
+   4085.36,
+   3957.58,
+   3831.22,
+   3706.26,
+   3582.71,
+   3460.58,
+   3339.85,
+   3220.54,
+   3102.64,
+   2986.14,
+   2871.06,
+   2757.39,
+   2645.13,
+   2534.27,
+   2424.83,
+   2316.8,
+   2210.18,
+   2104.98,
+   2001.18,
+   1898.79,
+   1797.81,
+   1698.25,
+   1600.09,
+   1503.34,
+   1408.01,
+   1314.08,
+   1221.57,
+   1130.46,
+   1040.77,
+   952.49,
+   865.62,
+   780.16,
+   696.1
+  ],
+  "probeMeas": [
+   -0.07249777054054148,
+   0.11300414475231313,
+   0.14880377721675594,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.052743959873691806,
+   0.038773445188104314,
+   0.04594142690854056,
+   -0.11696500946509296,
+   -0.053347511847394107,
+   0.1131592151032646,
+   0.06920053419905013,
+   0.08836915890270412,
+   0.1469926390814552,
+   0.14461632225099041,
+   0.13517006112413885,
+   0.12603851413152367,
+   0.12140927384861808,
+   0.12020445564456718,
+   0.12308896653811095,
+   0.1300987060431247,
+   0.0,
+   0.0,
+   0.1372393470222123,
+   -0.13622086171189315,
+   0.08508910275968072,
+   0.1390037665390029,
+   0.0825468811164667,
+   -0.011463571438008304,
+   -0.13311751888895743,
+   -0.0636278792720893,
+   0.0,
+   -0.09097009119189732,
+   0.04091842850732237,
+   -0.11556687932053022,
+   0.059127013720161395,
+   0.07699006499306171,
+   -0.03329216551174777,
+   0.0,
+   -0.036074433614202844,
+   -0.08594902278410724,
+   -0.08125372495612287,
+   -0.03430888428146112,
+   -0.004541358201257533,
+   0.009467982307318788,
+   0.011374201673178055,
+   0.0,
+   -0.0016305665932675058,
+   -0.009236447147060518,
+   -0.014392628570113843,
+   -0.012000688966922536,
+   0.00821179508852831,
+   0.0,
+   1.8874861716579653e-05,
+   -0.02717896722226205,
+   -0.0103388979492807,
+   -0.002356941120447715,
+   -0.0022199885313948222,
+   -0.0013593244776557846,
+   0.0,
+   0.018686325098952912,
+   0.04000977653188548,
+   0.0,
+   -0.0023696509502767423,
+   0.1305526867525854,
+   0.1468311190694618,
+   0.0,
+   0.09763133105471641,
+   -0.0442073740622876,
+   -0.12890045021725188,
+   -0.0970230994474103,
+   0.1469926390814552,
+   0.14461632225099041,
+   0.13517006112413885,
+   0.12603851413152367,
+   0.12140927384861808
+  ],
+  "probeWeights": [
+   0.0,
+   1.0,
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   1.0,
+   1.0,
+   0.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   0.0,
+   0.0,
+   1.0,
+   1.0,
+   0.0,
+   0.0,
+   1.0,
+   1.0,
+   1.0,
+   0.0,
+   0.0,
+   1.0,
+   1.0,
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "point": {
+   "n_e_line19": [
+    6.124240033741457,
+    6.404197041101507,
+    5.677729701175522,
+    3.6151386645235393,
+    6.981782093393021,
+    6.996485181058894,
+    0.030678888419914018,
+    0.1324266975801466,
+    6.499929836786817,
+    5.7048972978636865,
+    0.9079196963544871
+   ],
+   "bpolar": [
+    0.2994649415614019,
+    0.4667492751545852,
+    0.373720358533157,
+    0.5857813615803897,
+    0.37078391723474696,
+    0.04927778116639702,
+    -0.07743615428970924,
+    -0.19745409208747997,
+    -0.5128017990572149,
+    -0.5782615807848158,
+    -7.503824950083629e-05
+   ],
+   "weight_nel": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "weight_pol": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "fringe_dropped": [
+    7,
+    8
+   ]
+  },
+  "ipMeasured": 400939.94375,
+  "loopMeasTotal": [
+   0.4480952660964113,
+   0.44778847658780413,
+   0.45319613811972986,
+   0.4554595144311345,
+   0.454015930392813,
+   0.4597156100087939,
+   0.4632886365236452,
+   0.4689413831669087,
+   0.4877856180163695,
+   0.4982623700736304,
+   0.519358587224692,
+   0.5225368784511532,
+   0.38599920284824657,
+   0.36482267416581826,
+   0.33475539804645266,
+   0.32462867413625063,
+   0.32625150176443357,
+   0.44812770222137577,
+   0.4470588778862131,
+   0.4486040883764702,
+   0.4496309334541778,
+   0.45648883780638133,
+   0.46724015843254446,
+   0.4769288840595079,
+   0.5022871584456716,
+   0.5186837950210821,
+   0.5304651108801965,
+   0.5284414304998925,
+   0.40883651902009427,
+   0.3645113806451657,
+   0.3304708986133575,
+   0.31629706126046786,
+   0.32179444830421994,
+   0.37651866808557743,
+   0.37831191674126113
+  ],
+  "fylite:channel_provenance": {
+   "loopMeas": "delivered reconstruction (a-file csilop), coil share removed — NOT a raw reading",
+   "loopMeasTotal": "raw est2 reduction at 4 s — TOTAL flux, coils included",
+   "basis_disagreement": "measured 2026-08-24 (T-A20): `loopMeasTotal` minus THIS page's own coil share sits 5.1 % rms away from `loopMeas` on the 30 weighted channels (up to 12.8 % on one, 16 positive and 14 negative — a shape, not an offset), while the coil share itself is 3.03x the plasma signal there. Both blocks come from ONE est2 slice record (tools/est2-dump-to-device.py writes them together), so this is the difference between two SUBTRACTIONS — ours and the delivering code's, which used response tables this repository does not ship — not two reductions of the shot. Consequence for a fit: held exact it lands in the residual (raw basis converges, residual 5.15e-5, weighted chi2 8.60e-4); set the coils or the vessel free and the normal equations go singular (outer iteration 78 / 137). Pinned by python/tests/test_east_raw_basis.py.",
+   "probeMeas": "raw est2 reduction at 4 s — full field, coils included",
+   "point": "raw est2 reduction of the POINT chords (n_e-line and ∫n_e B dl, both /1e19), fringe gate applied",
+   "reduction": "fylite.io.est2.reduce_est2 (the same code the live reader and the HDF5 dump reader both run)",
+   "pulled_from": "202.127.204.12:east",
+   "corpus": "/home/salmon/workspace/fydata/corpus/east/137985"
+  },
+  "delivered": {
+   "psi_norm": [
+    0.0,
+    0.015625,
+    0.03125,
+    0.046875,
+    0.0625,
+    0.078125,
+    0.09375,
+    0.109375,
+    0.125,
+    0.140625,
+    0.15625,
+    0.171875,
+    0.1875,
+    0.203125,
+    0.21875,
+    0.234375,
+    0.25,
+    0.265625,
+    0.28125,
+    0.296875,
+    0.3125,
+    0.328125,
+    0.34375,
+    0.359375,
+    0.375,
+    0.390625,
+    0.40625,
+    0.421875,
+    0.4375,
+    0.453125,
+    0.46875,
+    0.484375,
+    0.5,
+    0.515625,
+    0.53125,
+    0.546875,
+    0.5625,
+    0.578125,
+    0.59375,
+    0.609375,
+    0.625,
+    0.640625,
+    0.65625,
+    0.671875,
+    0.6875,
+    0.703125,
+    0.71875,
+    0.734375,
+    0.75,
+    0.765625,
+    0.78125,
+    0.796875,
+    0.8125,
+    0.828125,
+    0.84375,
+    0.859375,
+    0.875,
+    0.890625,
+    0.90625,
+    0.921875,
+    0.9375,
+    0.953125,
+    0.96875,
+    0.984375,
+    1.0
+   ],
+   "q": [
+    0.78250178,
+    0.795368531,
+    0.799101451,
+    0.805679099,
+    0.812850259,
+    0.820541005,
+    0.828395486,
+    0.836505618,
+    0.845054728,
+    0.853849107,
+    0.862977275,
+    0.872515922,
+    0.882195187,
+    0.892110026,
+    0.902384722,
+    0.913175464,
+    0.923997337,
+    0.935348248,
+    0.94720146,
+    0.959348568,
+    0.971967217,
+    0.984914804,
+    0.998537527,
+    1.01247898,
+    1.02698762,
+    1.04207164,
+    1.0576904,
+    1.07396489,
+    1.09090161,
+    1.10847769,
+    1.12682463,
+    1.14593223,
+    1.16588069,
+    1.18671786,
+    1.20855341,
+    1.23135944,
+    1.25528764,
+    1.2804242,
+    1.30683975,
+    1.3346155,
+    1.36397593,
+    1.39501982,
+    1.42776964,
+    1.46243966,
+    1.49941745,
+    1.53886927,
+    1.58089065,
+    1.62603334,
+    1.67454559,
+    1.72673155,
+    1.78313376,
+    1.84493891,
+    1.91266074,
+    1.9866656,
+    2.06884471,
+    2.16001032,
+    2.26260202,
+    2.38170613,
+    2.51860559,
+    2.67919245,
+    2.87679512,
+    3.13689582,
+    3.49168646,
+    4.06981549,
+    7.59438769
+   ],
+   "pressure": [
+    8918.99767,
+    8746.08333,
+    8574.57951,
+    8404.48623,
+    8235.80347,
+    8068.53124,
+    7902.66954,
+    7738.21837,
+    7575.17772,
+    7413.5476,
+    7253.32801,
+    7094.51895,
+    6937.12042,
+    6781.13241,
+    6626.55494,
+    6473.38799,
+    6321.63156,
+    6171.28567,
+    6022.3503,
+    5874.82546,
+    5728.71115,
+    5584.00737,
+    5440.71412,
+    5298.83139,
+    5158.35919,
+    5019.29752,
+    4881.64638,
+    4745.40576,
+    4610.57568,
+    4477.15612,
+    4345.14709,
+    4214.54858,
+    4085.36061,
+    3957.58316,
+    3831.21624,
+    3706.25985,
+    3582.71398,
+    3460.57865,
+    3339.85384,
+    3220.53956,
+    3102.63581,
+    2986.14258,
+    2871.05989,
+    2757.38772,
+    2645.12608,
+    2534.27497,
+    2424.83438,
+    2316.80433,
+    2210.1848,
+    2104.9758,
+    2001.17732,
+    1898.78938,
+    1797.81196,
+    1698.24507,
+    1600.08871,
+    1503.34288,
+    1408.00757,
+    1314.0828,
+    1221.56855,
+    1130.46483,
+    1040.77163,
+    952.488967,
+    865.616829,
+    780.155219,
+    696.104137
+   ],
+   "dpressure_dpsi": [
+    -69167.2892,
+    -68605.3573,
+    -68043.4254,
+    -67481.4935,
+    -66919.5616,
+    -66357.6298,
+    -65795.6979,
+    -65233.766,
+    -64671.8341,
+    -64109.9022,
+    -63547.9703,
+    -62986.0384,
+    -62424.1065,
+    -61862.1746,
+    -61300.2427,
+    -60738.3109,
+    -60176.379,
+    -59614.4471,
+    -59052.5152,
+    -58490.5833,
+    -57928.6514,
+    -57366.7195,
+    -56804.7876,
+    -56242.8557,
+    -55680.9238,
+    -55118.992,
+    -54557.0601,
+    -53995.1282,
+    -53433.1963,
+    -52871.2644,
+    -52309.3325,
+    -51747.4006,
+    -51185.4687,
+    -50623.5368,
+    -50061.6049,
+    -49499.6731,
+    -48937.7412,
+    -48375.8093,
+    -47813.8774,
+    -47251.9455,
+    -46690.0136,
+    -46128.0817,
+    -45566.1498,
+    -45004.2179,
+    -44442.286,
+    -43880.3542,
+    -43318.4223,
+    -42756.4904,
+    -42194.5585,
+    -41632.6266,
+    -41070.6947,
+    -40508.7628,
+    -39946.8309,
+    -39384.899,
+    -38822.9671,
+    -38261.0353,
+    -37699.1034,
+    -37137.1715,
+    -36575.2396,
+    -36013.3077,
+    -35451.3758,
+    -34889.4439,
+    -34327.512,
+    -33765.5801,
+    -33203.6482
+   ],
+   "f_df_dpsi": [
+    -4.26891176,
+    -4.18511026,
+    -4.10130876,
+    -4.01750727,
+    -3.93370577,
+    -3.84990427,
+    -3.76610278,
+    -3.68230128,
+    -3.59849978,
+    -3.51469829,
+    -3.43089679,
+    -3.34709529,
+    -3.2632938,
+    -3.1794923,
+    -3.0956908,
+    -3.01188931,
+    -2.92808781,
+    -2.84428631,
+    -2.76048482,
+    -2.67668332,
+    -2.59288182,
+    -2.50908033,
+    -2.42527883,
+    -2.34147733,
+    -2.25767584,
+    -2.17387434,
+    -2.09007284,
+    -2.00627135,
+    -1.92246985,
+    -1.83866835,
+    -1.75486686,
+    -1.67106536,
+    -1.58726386,
+    -1.50346237,
+    -1.41966087,
+    -1.33585937,
+    -1.25205788,
+    -1.16825638,
+    -1.08445488,
+    -1.00065339,
+    -0.91685189,
+    -0.833050394,
+    -0.749248897,
+    -0.6654474,
+    -0.581645904,
+    -0.497844407,
+    -0.414042911,
+    -0.330241414,
+    -0.246439917,
+    -0.162638421,
+    -0.078836924,
+    0.0049645726,
+    0.0887660692,
+    0.172567566,
+    0.256369062,
+    0.340170559,
+    0.423972056,
+    0.507773552,
+    0.591575049,
+    0.675376546,
+    0.759178042,
+    0.842979539,
+    0.926781036,
+    1.01058253,
+    1.09438403
+   ],
+   "psi_axis": -0.649323639,
+   "psi_boundary": -0.488674656,
+   "ip": 393459.508,
+   "axis": {
+    "r": 1.83075588,
+    "z": -0.0750043509
+   },
+   "boundary": {
+    "r": [
+     1.37735406,
+     1.39056576,
+     1.40021871,
+     1.425,
+     1.44572065,
+     1.46731565,
+     1.49360215,
+     1.525,
+     1.55,
+     1.575,
+     1.625,
+     1.65,
+     1.7,
+     1.75,
+     1.8,
+     1.84805603,
+     1.875,
+     1.925,
+     1.95,
+     2.0,
+     2.025,
+     2.06980175,
+     2.1,
+     2.125,
+     2.15,
+     2.175,
+     2.2,
+     2.225,
+     2.2432719,
+     2.25,
+     2.25326338,
+     2.25,
+     2.23209847,
+     2.21786379,
+     2.19947984,
+     2.175,
+     2.14955038,
+     2.11687823,
+     2.07815058,
+     2.05,
+     2.025,
+     1.9794302,
+     1.95,
+     1.91506651,
+     1.875,
+     1.83219489,
+     1.8,
+     1.75,
+     1.71397744,
+     1.675,
+     1.62784483,
+     1.60568966,
+     1.575,
+     1.546661,
+     1.51471401,
+     1.48931399,
+     1.46751533,
+     1.44839399,
+     1.425,
+     1.40397106,
+     1.3944956,
+     1.37955287,
+     1.375,
+     1.37373918,
+     1.375,
+     1.37735406
+    ],
+    "z": [
+     0.0,
+     0.0875,
+     0.13125,
+     0.213645386,
+     0.2625,
+     0.30625,
+     0.35,
+     0.393096924,
+     0.421795212,
+     0.44226108,
+     0.475787522,
+     0.484058193,
+     0.497354921,
+     0.49971452,
+     0.493314361,
+     0.48125,
+     0.473492055,
+     0.451321366,
+     0.437452333,
+     0.406896263,
+     0.388629374,
+     0.35,
+     0.319615083,
+     0.290968929,
+     0.257993389,
+     0.218481741,
+     0.173010702,
+     0.110098014,
+     0.04375,
+     -0.00290661693,
+     -0.0875,
+     -0.132604944,
+     -0.21875,
+     -0.2625,
+     -0.30625,
+     -0.352313675,
+     -0.39375,
+     -0.4375,
+     -0.48125,
+     -0.510202318,
+     -0.532394261,
+     -0.56875,
+     -0.591181276,
+     -0.6125,
+     -0.636995879,
+     -0.65625,
+     -0.672140869,
+     -0.692399215,
+     -0.7,
+     -0.70916676,
+     -0.718348234,
+     -0.721517309,
+     -0.693104833,
+     -0.65625,
+     -0.6125,
+     -0.56875,
+     -0.525,
+     -0.48125,
+     -0.421328767,
+     -0.35,
+     -0.30625,
+     -0.21875,
+     -0.157695891,
+     -0.0875,
+     -0.0358923153,
+     0.0
+    ]
+   },
+   "fylite:provenance": "delivered reconstruction of #137985 @ 4 s, read from equilibrium_east137985_4000ms.fyo.jsonld (g137985_loop.04000) — another code, another basis, more channels than this page fits: a REFERENCE, not a truth"
+  }
+ },
+ "fylite:point": {
+  "fylite:laser_wavelength": 0.0004325,
+  "fylite:faraday_constant": 2.62e-13,
+  "interferometer": [
+   {
+    "name": "point_n1",
+    "first_point": {
+     "r": 2.5,
+     "z": 0.425
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_n2",
+    "first_point": {
+     "r": 2.5,
+     "z": 0.34
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_n3",
+    "first_point": {
+     "r": 2.5,
+     "z": 0.255
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_n4",
+    "first_point": {
+     "r": 2.5,
+     "z": 0.17
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_n5",
+    "first_point": {
+     "r": 2.5,
+     "z": 0.085
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_n6",
+    "first_point": {
+     "r": 2.5,
+     "z": 0.0
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_n7",
+    "first_point": {
+     "r": 2.5,
+     "z": -0.085
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_n8",
+    "first_point": {
+     "r": 2.5,
+     "z": -0.17
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_n9",
+    "first_point": {
+     "r": 2.5,
+     "z": -0.255
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_n10",
+    "first_point": {
+     "r": 2.5,
+     "z": -0.34
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_n11",
+    "first_point": {
+     "r": 2.5,
+     "z": -0.425
+    },
+    "fylite:theta": 0.0
+   }
+  ],
+  "polarimeter": [
+   {
+    "name": "point_f1",
+    "first_point": {
+     "r": 2.5,
+     "z": 0.425
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_f2",
+    "first_point": {
+     "r": 2.5,
+     "z": 0.34
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_f3",
+    "first_point": {
+     "r": 2.5,
+     "z": 0.255
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_f4",
+    "first_point": {
+     "r": 2.5,
+     "z": 0.17
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_f5",
+    "first_point": {
+     "r": 2.5,
+     "z": 0.085
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_f6",
+    "first_point": {
+     "r": 2.5,
+     "z": 0.0
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_f7",
+    "first_point": {
+     "r": 2.5,
+     "z": -0.085
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_f8",
+    "first_point": {
+     "r": 2.5,
+     "z": -0.17
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_f9",
+    "first_point": {
+     "r": 2.5,
+     "z": -0.255
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_f10",
+    "first_point": {
+     "r": 2.5,
+     "z": -0.34
+    },
+    "fylite:theta": 0.0
+   },
+   {
+    "name": "point_f11",
+    "first_point": {
+     "r": 2.5,
+     "z": -0.425
+    },
+    "fylite:theta": 0.0
+   }
+  ]
+ },
+ "fylite:slices": [
+  {
+   "time_s": 1.0,
+   "loopMeasTotal": [
+    0.5855861500474088,
+    0.5850564745297604,
+    0.58961533376192,
+    0.5895098382045486,
+    0.5860108682980487,
+    0.5868721007038858,
+    0.5837777719395066,
+    0.5845127823929679,
+    0.5883383735043535,
+    0.5905566187159423,
+    0.5974419566302328,
+    0.6012602276209684,
+    0.5538490380872219,
+    0.5469365866276414,
+    0.5370709443039963,
+    0.5266455213988868,
+    0.5206762675093459,
+    0.5857571476771983,
+    0.5827070424369691,
+    0.5813680193745574,
+    0.5816053985965899,
+    0.5835064804405716,
+    0.5821140021259534,
+    0.5841400032462786,
+    0.5902601303839368,
+    0.5955498013618545,
+    0.6017277606184187,
+    0.6064180732689515,
+    0.5618822876738278,
+    0.5439582329425301,
+    0.5313216933938347,
+    0.5167533199631046,
+    0.5176073430420994,
+    0.5479443897518258,
+    0.552566098563307
+   ],
+   "aturns": [
+    943796.2631835938,
+    1138488.6782226562,
+    1243762.813671875,
+    1321899.9135546875,
+    -29632.610705566407,
+    -44676.8130078125,
+    951362.3287109374,
+    1149820.3226562499,
+    1218957.2404296873,
+    1353250.578046875,
+    -40405.26998291016,
+    -51458.9878125
+   ],
+   "ip": 223278.809375,
+   "probeMeas": [
+    -0.04192060826174602,
+    0.06046521535366899,
+    0.08074673242606685,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.03433291844811127,
+    0.02970318170224787,
+    0.028220292854581105,
+    -0.042420391856755585,
+    -0.018178999950710456,
+    0.042341866999662574,
+    0.030503515459518248,
+    0.03846245638026996,
+    0.06223219275625309,
+    0.06630392839557504,
+    0.06927938452061165,
+    0.06986523712991033,
+    0.0700801285951505,
+    0.07051161205393078,
+    0.07205212514357781,
+    0.07393827403493398,
+    0.0,
+    0.0,
+    0.06497200927577663,
+    -0.05267084745779124,
+    0.03698579957483243,
+    0.05270137085214482,
+    0.035194915603675825,
+    -0.002425751844105215,
+    -0.047534942559972364,
+    -0.02901465295858602,
+    0.0,
+    -0.010238804709548738,
+    0.03332697397579725,
+    -0.033534564397071226,
+    0.007775585346257176,
+    0.01606068870092664,
+    -0.006222662853483016,
+    0.0,
+    -0.008543441389818973,
+    -0.027975339633567246,
+    -0.027033347000311035,
+    -0.018002081691630388,
+    -0.012081855343854888,
+    -0.005539198359088655,
+    -0.001589115383837584,
+    0.0,
+    -0.0014971873959847165,
+    -0.0019988614035860437,
+    -0.0006833112838389339,
+    0.003947495330570688,
+    0.014439023988441664,
+    0.0,
+    2.0531419718949568e-05,
+    0.007072160767188129,
+    0.009764760881686915,
+    0.0058973834016545655,
+    -0.002459954938943133,
+    -0.009862222411970028,
+    0.0,
+    -0.010120650451549737,
+    0.019668346270694758,
+    0.0,
+    -0.0049857926186045644,
+    0.04808755598784096,
+    0.05576510219438353,
+    0.0,
+    0.02602064829054761,
+    -0.03609603360206595,
+    -0.062246261004598284,
+    -0.019793525252968774,
+    0.06223219275625309,
+    0.06630392839557504,
+    0.06927938452061165,
+    0.06986523712991033,
+    0.0700801285951505
+   ],
+   "probeWeights": [
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "point": {
+    "n_e_line19": [
+     0.135598253365155,
+     0.15047075822997796,
+     0.08829602869964685,
+     15.286385511833624,
+     0.07691365645363141,
+     0.0054065673386680104,
+     0.1506493767827406,
+     0.03883028410405284,
+     0.061542078960529656,
+     0.14409905091082686,
+     1.073939058844742
+    ],
+    "bpolar": [
+     0.04252724325353076,
+     0.08451138467486904,
+     0.03963920597126672,
+     0.1515565568538104,
+     0.1316121128496297,
+     0.02782435303940454,
+     -0.06815123379745498,
+     -0.20792461954641198,
+     -0.1529966920974704,
+     -0.11132790319378527,
+     -2.3694942130241518e-05
+    ],
+    "weight_nel": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     0.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "weight_pol": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     0.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "fringe_dropped": [
+     6
+    ]
+   },
+   "loopWeights": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "time_s": 1.5,
+   "loopMeasTotal": [
+    0.5402759877349668,
+    0.5398602346675477,
+    0.5455576007271741,
+    0.5478647048792178,
+    0.5455547387533507,
+    0.5502179351128933,
+    0.5514458315553894,
+    0.5550762076933474,
+    0.5659653510086433,
+    0.5711990931771871,
+    0.5818976629866552,
+    0.5847748120700953,
+    0.5155483463415068,
+    0.5058097968946489,
+    0.4918424789951761,
+    0.48190954295856037,
+    0.47779906844754466,
+    0.540430573937131,
+    0.5392225225205093,
+    0.5406499091036745,
+    0.5417552377029524,
+    0.5477827886571593,
+    0.5541298594199442,
+    0.5603295078984789,
+    0.5751125045706009,
+    0.5846978244796787,
+    0.5928164508518412,
+    0.5951884215561303,
+    0.5268108861541732,
+    0.5012714709613012,
+    0.482151590247853,
+    0.46694319674937457,
+    0.4687463511662656,
+    0.5061450873687395,
+    0.5140260190887854
+   ],
+   "aturns": [
+    684528.6567382812,
+    1140951.9536132812,
+    1264221.5591796874,
+    1404801.6223828124,
+    -124581.44033203126,
+    -17919.847578125,
+    690317.6806640625,
+    1079140.457910156,
+    1307112.8902343751,
+    1477500.0650781249,
+    -144751.67138671875,
+    -41040.345
+   ],
+   "ip": 277185.05625,
+   "probeMeas": [
+    -0.05545354867664347,
+    0.08578825956835034,
+    0.11403125972303371,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.03708439352778081,
+    0.02732738449725785,
+    0.030544951997868566,
+    -0.0624122298132991,
+    -0.026634318681733188,
+    0.05895317443591057,
+    0.038370480731534574,
+    0.04903218602059025,
+    0.0829914900645448,
+    0.08373530812590627,
+    0.08298516101113936,
+    0.08179830941721229,
+    0.08187736608017224,
+    0.08307547954907461,
+    0.08610073743432448,
+    0.09019406560049185,
+    0.0,
+    0.0,
+    0.08767403479376998,
+    -0.07678461866176436,
+    0.048094094319631214,
+    0.07776229039446708,
+    0.04605615676623817,
+    -0.007846066458809276,
+    -0.07522954158926992,
+    -0.043107585195085646,
+    0.0,
+    -0.04132067248879798,
+    0.03505997030532346,
+    -0.059598321736753945,
+    0.03376182780375066,
+    0.042160039533817556,
+    -0.014958510619192365,
+    0.0,
+    -0.015672220117059044,
+    -0.04133032579343656,
+    -0.038679275249443965,
+    -0.01938937647913011,
+    -0.01038015017106356,
+    -0.002421348156739231,
+    0.000258240545169636,
+    0.0,
+    -0.0037306042905023997,
+    -0.0059381507125497645,
+    -0.005711402061847084,
+    -0.0007367424119584482,
+    0.012338248298707263,
+    0.0,
+    2.2404978684642636e-05,
+    -0.01837456120712561,
+    -0.008689551633429353,
+    -0.003763574513225692,
+    -0.003635651711803188,
+    -0.002452030020920168,
+    0.0,
+    0.011189205294766363,
+    0.0223234633284236,
+    0.0,
+    -0.0011544986501943494,
+    0.07316522411860732,
+    0.0831122341353373,
+    0.0,
+    0.050454914784926246,
+    -0.03966730462046382,
+    -0.08528564376244635,
+    -0.055161413051137524,
+    0.0829914900645448,
+    0.08373530812590627,
+    0.08298516101113936,
+    0.08179830941721229,
+    0.08187736608017224
+   ],
+   "probeWeights": [
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "point": {
+    "n_e_line19": [
+     0.15436739503522312,
+     0.19244266431280682,
+     0.0014217512569531172,
+     15.344110060491358,
+     0.18169024287297536,
+     0.139711801563141,
+     0.14492462564412215,
+     0.241024508621597,
+     0.1498100912525339,
+     0.16198636815305184,
+     1.1778182380348954
+    ],
+    "bpolar": [
+     0.05384884624531233,
+     0.06616677487806295,
+     0.09106859170934087,
+     0.1451090978413723,
+     0.1682899959205124,
+     0.05223428941452034,
+     -0.006693655257494434,
+     -0.13115163355002898,
+     -0.15779736875824518,
+     -0.1406138419945937,
+     -3.8767920151072595e-05
+    ],
+    "weight_nel": [
+     1.0,
+     1.0,
+     0.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "weight_pol": [
+     1.0,
+     1.0,
+     0.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "fringe_dropped": [
+     3
+    ]
+   },
+   "loopWeights": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "time_s": 2.0,
+   "loopMeasTotal": [
+    0.4932836305886984,
+    0.49293038871314393,
+    0.49850594195719655,
+    0.5012068930341198,
+    0.49944493459116707,
+    0.5055012297137167,
+    0.5090250304468525,
+    0.5144284041926043,
+    0.5309520302928653,
+    0.5392078076607288,
+    0.5546361100554466,
+    0.5568240287959427,
+    0.45625507694219586,
+    0.4419073137207862,
+    0.4213860695916558,
+    0.41208985798492687,
+    0.4113084510962747,
+    0.49334812764013525,
+    0.4926549281723337,
+    0.49471430671061656,
+    0.49593060235991315,
+    0.5031944143991294,
+    0.5132247309888162,
+    0.5218798714238184,
+    0.5431141150931615,
+    0.5562232068251307,
+    0.5658341114888887,
+    0.5657160897955277,
+    0.4722256953697424,
+    0.4384735497305716,
+    0.41254286540376717,
+    0.39777915700675953,
+    0.4028746587233327,
+    0.44631837883908687,
+    0.45273297332931983
+   ],
+   "aturns": [
+    481075.62910929765,
+    1043499.8078782487,
+    1219887.095064975,
+    1529932.0080445544,
+    -263095.2901647587,
+    8928.715723623143,
+    497550.8919593131,
+    931236.5491568688,
+    1306811.7202970297,
+    1595463.8331528467,
+    -284691.4908531869,
+    -15453.62952506188
+   ],
+   "ip": 338189.7,
+   "probeMeas": [
+    -0.06527902712526543,
+    0.10567119747619423,
+    0.14293741734713616,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.04245989455777161,
+    0.028308408955025132,
+    0.034435081483820476,
+    -0.08832474263965409,
+    -0.0380130783556651,
+    0.08334630610491194,
+    0.051047819063414664,
+    0.06541738883264414,
+    0.10991525114155491,
+    0.1078535889053223,
+    0.10248893001662165,
+    0.09764606698784316,
+    0.0961997052488053,
+    0.0970121479170431,
+    0.10068838489766944,
+    0.10673887190210467,
+    0.0,
+    0.0,
+    0.10984313508874767,
+    -0.10349755164573014,
+    0.06307544060238042,
+    0.10564714336337565,
+    0.06115332631946542,
+    -0.011108424341670683,
+    -0.10434822525261112,
+    -0.05376436778226366,
+    0.0,
+    -0.06981030229821769,
+    0.03527141704222597,
+    -0.08968327422808918,
+    0.05276044486929259,
+    0.0649119945210286,
+    -0.0262828011185491,
+    0.0,
+    -0.02518685866526133,
+    -0.06114648576148762,
+    -0.05697154758220941,
+    -0.024022545132911955,
+    -0.006507773523532506,
+    0.0032757225169180947,
+    0.004667295555462344,
+    0.0,
+    -0.004012844749356701,
+    -0.008537650989259182,
+    -0.010463970907599318,
+    -0.0063851610691409,
+    0.009915109737714844,
+    0.0,
+    2.937341278414948e-05,
+    -0.026821062810934812,
+    -0.0124925104338866,
+    -0.004811508398489844,
+    -0.0037394928165405475,
+    -0.001592451696625488,
+    0.0,
+    0.019138769119698865,
+    0.028779969301142884,
+    0.0,
+    0.00010826458651233018,
+    0.0999270816060838,
+    0.11315786298423369,
+    0.0,
+    0.07573044123603558,
+    -0.0400107216792878,
+    -0.10530823490810179,
+    -0.0805960661981958,
+    0.10991525114155491,
+    0.1078535889053223,
+    0.10248893001662165,
+    0.09764606698784316,
+    0.0961997052488053
+   ],
+   "probeWeights": [
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "point": {
+    "n_e_line19": [
+     0.10060569446258873,
+     0.0855514576853615,
+     0.15703186947453604,
+     14.164952414472843,
+     0.0717065845436435,
+     0.049376002154206476,
+     0.12113451836827314,
+     0.027818179039752818,
+     0.023023920091506455,
+     0.08054151840028723,
+     1.7353342251485488
+    ],
+    "bpolar": [
+     0.1577019052767444,
+     0.3438669910658424,
+     0.2544253302370813,
+     0.4028642878427893,
+     0.28889494666043913,
+     0.050819096738506514,
+     -0.07220189222983413,
+     -0.36626844886213106,
+     -0.34592663861821304,
+     -0.21413528329776255,
+     -1.8664879119071203e-05
+    ],
+    "weight_nel": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "weight_pol": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "fringe_dropped": []
+   },
+   "loopWeights": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "time_s": 2.5,
+   "loopMeasTotal": [
+    0.47598912073446925,
+    0.4756623980495489,
+    0.4813295542111498,
+    0.4842835717587963,
+    0.48268731886509214,
+    0.4886625914361784,
+    0.49215652285408784,
+    0.49742527152021887,
+    0.5139954896499866,
+    0.5226684444085097,
+    0.5393997745121878,
+    0.5409964471920191,
+    0.4130835816508683,
+    0.393825414959603,
+    0.3658413246975492,
+    0.35572970769477996,
+    0.355891375428631,
+    0.4760037637007931,
+    0.47551769296835056,
+    0.4777314299752368,
+    0.4789750166111355,
+    0.4864446992520831,
+    0.4969784862049151,
+    0.5060248565921369,
+    0.5286891701961476,
+    0.5430076403057026,
+    0.5531528913356943,
+    0.5507503037442006,
+    0.4362586728445399,
+    0.3928734625447657,
+    0.3594266105651698,
+    0.3441157086015938,
+    0.3493904578133339,
+    0.4032483495838254,
+    0.408144836093621
+   ],
+   "aturns": [
+    436558.12118077045,
+    1049573.8957108601,
+    1048441.1659769493,
+    1658779.665416151,
+    -367551.9450997834,
+    12738.87837445854,
+    444506.0247621442,
+    897734.1839418316,
+    1223662.9637221536,
+    1707848.8036045793,
+    -396454.95320235146,
+    1343.0885499255492
+   ],
+   "ip": 401544.19375,
+   "probeMeas": [
+    -0.06916580159088158,
+    0.1117639473039364,
+    0.15039730351316305,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.042506966911258985,
+    0.02751754309002965,
+    0.03268166137751351,
+    -0.10079519475099688,
+    -0.04039484451836726,
+    0.10888146491779807,
+    0.07111973821215072,
+    0.08820738324725731,
+    0.1440569590066594,
+    0.14006839822540207,
+    0.13089911855201358,
+    0.12297279343969954,
+    0.11930342885842345,
+    0.11896311351447232,
+    0.12266162305902995,
+    0.13009286854911653,
+    0.0,
+    0.0,
+    0.13079556425883576,
+    -0.1319803290036743,
+    0.08582353210375655,
+    0.1335832322033239,
+    0.08229759141060901,
+    -0.005148574853754992,
+    -0.12388912832869077,
+    -0.05245803437518478,
+    0.0,
+    -0.08293770584993405,
+    0.03481362349301384,
+    -0.09988028086366885,
+    0.05223416598169012,
+    0.0660863896857327,
+    -0.03876895155279923,
+    0.0,
+    -0.026786508709305715,
+    -0.07835624987871541,
+    -0.07409271342513411,
+    -0.0304986692280162,
+    -0.007195242220539447,
+    0.00660402856762344,
+    0.00887131441054977,
+    0.0,
+    -0.002772211894227167,
+    -0.009410757813293752,
+    -0.013295504146422601,
+    -0.009830025882437683,
+    0.009473706374399751,
+    0.0,
+    2.74251957455134e-05,
+    -0.027956271423737668,
+    -0.013744764200725606,
+    -0.005494581285079869,
+    -0.0027673796143007955,
+    0.0010004923825011076,
+    0.0,
+    0.018421562858944533,
+    0.041134448411642245,
+    0.0,
+    -0.006737594118379395,
+    0.12385382879951705,
+    0.139496721063034,
+    0.0,
+    0.09095028769859556,
+    -0.03388110335925038,
+    -0.11196109333479282,
+    -0.08602994997675192,
+    0.1440569590066594,
+    0.14006839822540207,
+    0.13089911855201358,
+    0.12297279343969954,
+    0.11930342885842345
+   ],
+   "probeWeights": [
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "point": {
+    "n_e_line19": [
+     1.531144761979783,
+     1.3038497679188723,
+     1.6988906095781229,
+     14.71617854161878,
+     1.66832637331321,
+     1.5707816503866892,
+     0.0027298594347362204,
+     0.1736070546286869,
+     1.4267522826447177,
+     1.0948199004992283,
+     0.012614305664114726
+    ],
+    "bpolar": [
+     0.24971719412303048,
+     0.43882661993342015,
+     0.521964418121093,
+     0.5977313358296529,
+     0.36272977565227316,
+     0.07119643811010593,
+     -0.07285450504651174,
+     -0.3702035352674131,
+     -0.5195162499780056,
+     -0.44239624388594284,
+     1.4556448339235079e-05
+    ],
+    "weight_nel": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     0.0,
+     0.0,
+     1.0,
+     1.0,
+     0.0
+    ],
+    "weight_pol": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     0.0,
+     0.0,
+     1.0,
+     1.0,
+     0.0
+    ],
+    "fringe_dropped": [
+     7,
+     8,
+     11
+    ]
+   },
+   "loopWeights": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "time_s": 3.0,
+   "loopMeasTotal": [
+    0.46539346355245087,
+    0.465037651122522,
+    0.4704357814732621,
+    0.4728396596656093,
+    0.47130236976413203,
+    0.4771295569439739,
+    0.4807030771486364,
+    0.48623343248206846,
+    0.5046272256820326,
+    0.5148026252981985,
+    0.5354700950483797,
+    0.5387599701057618,
+    0.4037178968899562,
+    0.38316297694178175,
+    0.3538267587038733,
+    0.34389736620840916,
+    0.3453946047467314,
+    0.4654443278451226,
+    0.4647641114829039,
+    0.466745219260121,
+    0.4679232551506474,
+    0.47530300710175705,
+    0.48618619030283644,
+    0.4958515233505903,
+    0.5206811207744223,
+    0.5367560050482182,
+    0.5485301485242955,
+    0.54670656574502,
+    0.4272559094459083,
+    0.38274807536312944,
+    0.34871143259888937,
+    0.33426357727219835,
+    0.33997606921323514,
+    0.39400850201086446,
+    0.3975058242646492
+   ],
+   "aturns": [
+    436477.61651067453,
+    992458.0717241646,
+    929268.2323251857,
+    1785797.3612314356,
+    -404643.0526763614,
+    22161.92096612005,
+    449633.7173189975,
+    827673.4957069926,
+    1173153.2232363862,
+    1788510.3827738243,
+    -433159.9445003094,
+    21302.85802134901
+   ],
+   "ip": 399829.1,
+   "probeMeas": [
+    -0.07164822674239618,
+    0.11297656750460676,
+    0.14884850884928036,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.05063015906387406,
+    0.037341369596851866,
+    0.04473399888910452,
+    -0.11626451056883651,
+    -0.05317772716228996,
+    0.11220946252190206,
+    0.06849624477819552,
+    0.08750516620434073,
+    0.1485164652525644,
+    0.144046264017867,
+    0.13359085631983525,
+    0.12462150496988676,
+    0.1204539653228218,
+    0.11967433396710343,
+    0.12289802093628219,
+    0.13010138908751517,
+    0.0,
+    0.0,
+    0.1347004326827941,
+    -0.13615441742300133,
+    0.08529333830770668,
+    0.13869734972653477,
+    0.08251381797782815,
+    -0.011243595040426912,
+    -0.13244846191395857,
+    -0.06299931698467498,
+    0.0,
+    -0.08861211164458377,
+    0.0402059818995865,
+    -0.11352164318123406,
+    0.05779454943200739,
+    0.07497528942935189,
+    -0.03272137490668148,
+    0.0,
+    -0.035728442173689194,
+    -0.08483827402005358,
+    -0.07983588841365172,
+    -0.03174705320677634,
+    -0.005047316674636871,
+    0.009405959010787496,
+    0.011303185399506673,
+    0.0,
+    -0.0017705997747205207,
+    -0.009359997862403921,
+    -0.014604795339754183,
+    -0.012452373956583601,
+    0.006541100658064109,
+    0.0,
+    2.1982138498379276e-05,
+    -0.029026502084677667,
+    -0.012548110661128735,
+    -0.003808375563173807,
+    -0.0028242567643333074,
+    -0.0010485234733713833,
+    0.0,
+    0.018747086819252416,
+    0.04001211722394544,
+    0.0,
+    -0.0026024150824934785,
+    0.13028895444672797,
+    0.14639990341929848,
+    0.0,
+    0.0966789326341233,
+    -0.04438313611880815,
+    -0.12775620999366605,
+    -0.09505736842910441,
+    0.1485164652525644,
+    0.144046264017867,
+    0.13359085631983525,
+    0.12462150496988676,
+    0.1204539653228218
+   ],
+   "probeWeights": [
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "point": {
+    "n_e_line19": [
+     2.0227751635513753,
+     1.5433081745818134,
+     2.169512245364815,
+     15.818491246690547,
+     2.2004005640490267,
+     1.8042031074309726,
+     0.016848663522321932,
+     0.1271939593555842,
+     1.7932135341022502,
+     1.255909377577348,
+     2.107449325961725
+    ],
+    "bpolar": [
+     0.27611053943184255,
+     0.48416265893893173,
+     0.4612185430220316,
+     0.5519769703322563,
+     0.40554292483240323,
+     0.0828180041239283,
+     -0.0861959229578388,
+     -0.27575186644715605,
+     -0.49723633113050447,
+     -0.39831585274468556,
+     -3.8585335948354256e-05
+    ],
+    "weight_nel": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     0.0,
+     0.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "weight_pol": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     0.0,
+     0.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "fringe_dropped": [
+     7,
+     8
+    ]
+   },
+   "loopWeights": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "time_s": 4.0,
+   "loopMeasTotal": [
+    0.4480952660964113,
+    0.44778847658780413,
+    0.45319613811972986,
+    0.4554595144311345,
+    0.454015930392813,
+    0.4597156100087939,
+    0.4632886365236452,
+    0.4689413831669087,
+    0.4877856180163695,
+    0.4982623700736304,
+    0.519358587224692,
+    0.5225368784511532,
+    0.38599920284824657,
+    0.36482267416581826,
+    0.33475539804645266,
+    0.32462867413625063,
+    0.32625150176443357,
+    0.44812770222137577,
+    0.4470588778862131,
+    0.4486040883764702,
+    0.4496309334541778,
+    0.45648883780638133,
+    0.46724015843254446,
+    0.4769288840595079,
+    0.5022871584456716,
+    0.5186837950210821,
+    0.5304651108801965,
+    0.5284414304998925,
+    0.40883651902009427,
+    0.3645113806451657,
+    0.3304708986133575,
+    0.31629706126046786,
+    0.32179444830421994,
+    0.37651866808557743,
+    0.37831191674126113
+   ],
+   "aturns": [
+    425770.5123085551,
+    904115.00299737,
+    947112.9030012375,
+    1754474.3790222772,
+    -406068.99887840345,
+    15812.920086246906,
+    431811.6228341584,
+    743033.7453589109,
+    1169960.8309483293,
+    1755557.3839727722,
+    -440840.9292814047,
+    21518.144163830446
+   ],
+   "ip": 400939.94375,
+   "probeMeas": [
+    -0.07249777054054148,
+    0.11300414475231313,
+    0.14880377721675594,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.052743959873691806,
+    0.038773445188104314,
+    0.04594142690854056,
+    -0.11696500946509296,
+    -0.053347511847394107,
+    0.1131592151032646,
+    0.06920053419905013,
+    0.08836915890270412,
+    0.1469926390814552,
+    0.14461632225099041,
+    0.13517006112413885,
+    0.12603851413152367,
+    0.12140927384861808,
+    0.12020445564456718,
+    0.12308896653811095,
+    0.1300987060431247,
+    0.0,
+    0.0,
+    0.1372393470222123,
+    -0.13622086171189315,
+    0.08508910275968072,
+    0.1390037665390029,
+    0.0825468811164667,
+    -0.011463571438008304,
+    -0.13311751888895743,
+    -0.0636278792720893,
+    0.0,
+    -0.09097009119189732,
+    0.04091842850732237,
+    -0.11556687932053022,
+    0.059127013720161395,
+    0.07699006499306171,
+    -0.03329216551174777,
+    0.0,
+    -0.036074433614202844,
+    -0.08594902278410724,
+    -0.08125372495612287,
+    -0.03430888428146112,
+    -0.004541358201257533,
+    0.009467982307318788,
+    0.011374201673178055,
+    0.0,
+    -0.0016305665932675058,
+    -0.009236447147060518,
+    -0.014392628570113843,
+    -0.012000688966922536,
+    0.00821179508852831,
+    0.0,
+    1.8874861716579653e-05,
+    -0.02717896722226205,
+    -0.0103388979492807,
+    -0.002356941120447715,
+    -0.0022199885313948222,
+    -0.0013593244776557846,
+    0.0,
+    0.018686325098952912,
+    0.04000977653188548,
+    0.0,
+    -0.0023696509502767423,
+    0.1305526867525854,
+    0.1468311190694618,
+    0.0,
+    0.09763133105471641,
+    -0.0442073740622876,
+    -0.12890045021725188,
+    -0.0970230994474103,
+    0.1469926390814552,
+    0.14461632225099041,
+    0.13517006112413885,
+    0.12603851413152367,
+    0.12140927384861808
+   ],
+   "probeWeights": [
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "point": {
+    "n_e_line19": [
+     6.124240033741457,
+     6.404197041101507,
+     5.677729701175522,
+     3.6151386645235393,
+     6.981782093393021,
+     6.996485181058894,
+     0.030678888419914018,
+     0.1324266975801466,
+     6.499929836786817,
+     5.7048972978636865,
+     0.9079196963544871
+    ],
+    "bpolar": [
+     0.2994649415614019,
+     0.4667492751545852,
+     0.373720358533157,
+     0.5857813615803897,
+     0.37078391723474696,
+     0.04927778116639702,
+     -0.07743615428970924,
+     -0.19745409208747997,
+     -0.5128017990572149,
+     -0.5782615807848158,
+     -7.503824950083629e-05
+    ],
+    "weight_nel": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     0.0,
+     0.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "weight_pol": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     0.0,
+     0.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "fringe_dropped": [
+     7,
+     8
+    ]
+   },
+   "loopWeights": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "time_s": 5.0,
+   "loopMeasTotal": [
+    0.43018221824228775,
+    0.4298810761967904,
+    0.4349675543813027,
+    0.43703833453066276,
+    0.43571683244779363,
+    0.4413221512050778,
+    0.44507504836214307,
+    0.45083803323717836,
+    0.4702373130688902,
+    0.4810322616102154,
+    0.5026402092035887,
+    0.5058136197078638,
+    0.36821044038296047,
+    0.34685981635958313,
+    0.31657262997213476,
+    0.3064532607268283,
+    0.30793262866679727,
+    0.43022682604814466,
+    0.4293850218329284,
+    0.4309908353126833,
+    0.43196973889482404,
+    0.438758997860147,
+    0.4495356926518399,
+    0.45924903713619913,
+    0.4848234487212822,
+    0.5013698971662479,
+    0.5132625675837208,
+    0.511297411446744,
+    0.39170911485478366,
+    0.34729417994985073,
+    0.3129963389724586,
+    0.29888626210062774,
+    0.3038015844442861,
+    0.3587336715552745,
+    0.3605221905400967
+   ],
+   "aturns": [
+    389115.61711981747,
+    849649.0076771349,
+    921746.7680615719,
+    1734716.1976330446,
+    -411123.54260133044,
+    15842.711343595298,
+    405756.06735380564,
+    698403.9723855198,
+    1125288.5303217822,
+    1732076.4629873144,
+    -441564.54468982056,
+    21638.461014851484
+   ],
+   "ip": 399389.65625,
+   "probeMeas": [
+    -0.07273185868586218,
+    0.11306701340856744,
+    0.1480020761854459,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.053186765306732706,
+    0.03903360077342485,
+    0.046623256117213754,
+    -0.11873238067658441,
+    -0.05467621759897592,
+    0.11354480027951168,
+    0.06862534847095585,
+    0.0879141882274247,
+    0.1483988454976438,
+    0.1453389638011187,
+    0.1352941970451162,
+    0.12598730472522066,
+    0.12128751021433767,
+    0.12001137410204442,
+    0.12294434005536566,
+    0.12997930648165631,
+    0.0,
+    0.0,
+    0.13609000590758377,
+    -0.1362167293802096,
+    0.0844282714367283,
+    0.13868718852253484,
+    0.08152993732490281,
+    -0.012532102638817192,
+    -0.13319640239168773,
+    -0.0647493393662865,
+    0.0,
+    -0.0913061386684128,
+    0.041647612254228236,
+    -0.1180339677758219,
+    0.06090686744751126,
+    0.0792988633352475,
+    -0.033319688549255815,
+    0.0,
+    -0.03726162872599561,
+    -0.08688352260530079,
+    -0.08205447693493276,
+    -0.03422666592826007,
+    -0.005258081138789087,
+    0.009394899135885445,
+    0.011580407071994184,
+    0.0,
+    -0.0013104018300967488,
+    -0.008954536378975673,
+    -0.014169212557958746,
+    -0.011901797949804577,
+    0.008995238604136854,
+    0.0,
+    2.7266733652931706e-05,
+    -0.027429066940013715,
+    -0.010326384369338878,
+    -0.0022207900892756947,
+    -0.0023385232641169474,
+    -0.0017456331950442383,
+    0.0,
+    0.018777942560815594,
+    0.03917510274865861,
+    0.0,
+    -0.0014609737171510085,
+    0.1307311068123375,
+    0.1465384233256335,
+    0.0,
+    0.09763741065234727,
+    -0.04539365282911231,
+    -0.13020497352716287,
+    -0.09788104907791996,
+    0.1483988454976438,
+    0.1453389638011187,
+    0.1352941970451162,
+    0.12598730472522066,
+    0.12128751021433767
+   ],
+   "probeWeights": [
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "point": {
+    "n_e_line19": [
+     5.256432411102251,
+     5.232258284366641,
+     5.989261656685839,
+     8.270159932760095,
+     4.801360058929183,
+     5.170496090274614,
+     0.055244605915424384,
+     0.13015966592534575,
+     5.182554506125641,
+     5.979502520836947,
+     0.3310227108173254
+    ],
+    "bpolar": [
+     0.29293185248580234,
+     0.4508235758075989,
+     0.3675964748707146,
+     0.5949843564997567,
+     0.3664221564212514,
+     0.06328001419685901,
+     -0.09082170677543482,
+     -0.24159882946096967,
+     -0.4963302505036507,
+     -0.47179230704444797,
+     -2.3623212622030707e-05
+    ],
+    "weight_nel": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     0.0,
+     0.0,
+     1.0,
+     1.0,
+     0.0
+    ],
+    "weight_pol": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     0.0,
+     0.0,
+     1.0,
+     1.0,
+     0.0
+    ],
+    "fringe_dropped": [
+     7,
+     8,
+     11
+    ]
+   },
+   "loopWeights": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "time_s": 6.0,
+   "loopMeasTotal": [
+    0.4090914458608388,
+    0.4088376873935249,
+    0.4136513010355852,
+    0.4154634257900735,
+    0.4142089369716589,
+    0.41958990455361633,
+    0.42335544509853557,
+    0.42908939853945366,
+    0.44864597761073277,
+    0.4595685602111846,
+    0.4815854749822525,
+    0.48478323194046735,
+    0.34721151505950654,
+    0.32568515875593895,
+    0.2950788145197891,
+    0.28513632380225834,
+    0.28670888711182885,
+    0.40913761001174376,
+    0.408328751993905,
+    0.40977428646122277,
+    0.41060461921849567,
+    0.417107079618427,
+    0.42757457611734984,
+    0.43722785412155835,
+    0.46291486570142826,
+    0.47960655644275907,
+    0.49163581584359434,
+    0.48967857007097104,
+    0.37074138024074343,
+    0.3263672734817965,
+    0.29205440569052,
+    0.2782237490438269,
+    0.2834971025681379,
+    0.3378336222834463,
+    0.33926026644772894
+   ],
+   "aturns": [
+    353503.87290039065,
+    779166.08984375,
+    880998.2336914062,
+    1704553.7271484376,
+    -418267.94765625,
+    15675.755576171876,
+    366137.10205078125,
+    640605.7676757813,
+    1069874.5469726564,
+    1701412.87859375,
+    -445357.880859375,
+    20579.56716796875
+   ],
+   "ip": 400567.625,
+   "probeMeas": [
+    -0.07406771155999574,
+    0.11410270454869469,
+    0.14934086377305314,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.05489763675727402,
+    0.04057202551157255,
+    0.04805974192030104,
+    -0.11908572138548555,
+    -0.055067960054711255,
+    0.11335892647503526,
+    0.06872166618062142,
+    0.0881382195475344,
+    0.14857571308427914,
+    0.14548677503936136,
+    0.13530229209317143,
+    0.12580951801220375,
+    0.12083108635357381,
+    0.11948052084749217,
+    0.12236897816143752,
+    0.12937643364754772,
+    0.0,
+    0.0,
+    0.13598210847986586,
+    -0.13582377085619357,
+    0.08384287788130845,
+    0.1380889521455395,
+    0.0808180927893115,
+    -0.013261428938816771,
+    -0.13278897700340678,
+    -0.06544344863085844,
+    0.0,
+    -0.09125585816855468,
+    0.04291914066641209,
+    -0.1188280749738602,
+    0.06119751632631981,
+    0.08011234376175419,
+    -0.03273921024876063,
+    0.0,
+    -0.03735974238807228,
+    -0.08682973460582012,
+    -0.08224630152890537,
+    -0.034572754937149876,
+    -0.005127904706414404,
+    0.009542652147550868,
+    0.011689408582179232,
+    0.0,
+    -0.001271197432544577,
+    -0.008920521177917006,
+    -0.014127901793269601,
+    -0.011815165865108578,
+    0.009764041550829385,
+    0.0,
+    2.2415117244681484e-05,
+    -0.026181781006451983,
+    -0.009132707516147887,
+    -0.001506471213057677,
+    -0.0021377342769460985,
+    -0.0020715541390589247,
+    0.0,
+    0.017800665643377803,
+    0.03874618137697877,
+    0.0,
+    -0.0009146231283947088,
+    0.13050294999226855,
+    0.1459288345093326,
+    0.0,
+    0.09718060899066572,
+    -0.046339251149419086,
+    -0.13125284873946644,
+    -0.09824527757508689,
+    0.14857571308427914,
+    0.14548677503936136,
+    0.13530229209317143,
+    0.12580951801220375,
+    0.12083108635357381
+   ],
+   "probeWeights": [
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "point": {
+    "n_e_line19": [
+     3.6169687377967414,
+     4.450183886920896,
+     5.403819388051659,
+     3.9971303159457436,
+     6.570132654617572,
+     6.239014564649697,
+     0.05413702723628706,
+     0.25985227986037396,
+     4.5120230552607845,
+     4.291152366124036,
+     0.6795359247750183
+    ],
+    "bpolar": [
+     0.342445352840864,
+     0.4021521994415247,
+     0.5057372601462358,
+     0.6364195361811075,
+     0.4632062993060481,
+     0.05904656144528607,
+     -0.08728833076356658,
+     -0.20467868649696955,
+     -0.5906921368026532,
+     -0.3873992345562619,
+     -9.332738327135132e-06
+    ],
+    "weight_nel": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     0.0,
+     0.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "weight_pol": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     0.0,
+     0.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "fringe_dropped": [
+     7,
+     8
+    ]
+   },
+   "loopWeights": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "time_s": 7.0,
+   "loopMeasTotal": [
+    0.36384869939424735,
+    0.3636563571702036,
+    0.36819205668771243,
+    0.37013730253235383,
+    0.3693169639408789,
+    0.3750279703113466,
+    0.37940540819898805,
+    0.3853623230944021,
+    0.40477584426588936,
+    0.41508928668512207,
+    0.4351382348264581,
+    0.43684847373148705,
+    0.3011574307790605,
+    0.28040314952168555,
+    0.250258113412245,
+    0.24130732604367883,
+    0.24315254232334158,
+    0.3638048765495917,
+    0.3635199974644866,
+    0.3654697385719642,
+    0.3663170535789083,
+    0.3731613317952914,
+    0.38458069083328944,
+    0.39434877287508585,
+    0.4197922819592902,
+    0.4356230209757847,
+    0.44640521070125233,
+    0.4426527764305005,
+    0.32460682225352994,
+    0.2807544670394647,
+    0.24650988949532002,
+    0.2336964243425449,
+    0.23956349304880695,
+    0.29176509130699196,
+    0.2949820930558166
+   ],
+   "aturns": [
+    214520.691933207,
+    760356.6810411509,
+    823772.5321008663,
+    1557250.4595064975,
+    -416196.5830948329,
+    13281.702728573639,
+    226335.8288453357,
+    603318.3728148206,
+    1030433.367496906,
+    1565584.9047029703,
+    -443915.1475479579,
+    17280.689472462873
+   ],
+   "ip": 399859.61875,
+   "probeMeas": [
+    -0.06895121384602844,
+    0.11296494007207801,
+    0.1518601218751674,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.04643691495098019,
+    0.03064976832942559,
+    0.037913102722899474,
+    -0.11314096830148293,
+    -0.04962414149339707,
+    0.11201063013066008,
+    0.06864533191927871,
+    0.08750469455612953,
+    0.1494982060855389,
+    0.14514391866758602,
+    0.13448514327368657,
+    0.1251147977380614,
+    0.12025249194570042,
+    0.11891985119985365,
+    0.12186962283493409,
+    0.12878434808926126,
+    0.0,
+    0.0,
+    0.1330568513445233,
+    -0.13388827321663357,
+    0.08324592690233537,
+    0.13626390612813408,
+    0.08029010945861803,
+    -0.010702008701769166,
+    -0.13137562449150966,
+    -0.0585015684641047,
+    0.0,
+    -0.09504855481368923,
+    0.03374534614196249,
+    -0.11481490625122559,
+    0.06124844990352708,
+    0.07817709070984115,
+    -0.038248965825858294,
+    0.0,
+    -0.03449968775665523,
+    -0.08405253747944666,
+    -0.07898894039710792,
+    -0.031607058134855925,
+    -0.0050728675535006386,
+    0.009951803520702887,
+    0.012131215723784243,
+    0.0,
+    -0.0013256174099255547,
+    -0.009381028763226865,
+    -0.01500377721315299,
+    -0.013169348932644435,
+    0.008324368686495127,
+    0.0,
+    2.7027227622767078e-05,
+    -0.028838392342712186,
+    -0.011038395198629035,
+    -0.002035031502226306,
+    -0.0018527897685131677,
+    -0.0010940815864392325,
+    0.0,
+    0.019837386067410694,
+    0.03882349747208791,
+    0.0,
+    -0.0020231068076762256,
+    0.1280921710115231,
+    0.14409802360763135,
+    0.0,
+    0.09903652825258977,
+    -0.03522196424892872,
+    -0.11922472826753663,
+    -0.09742327589950632,
+    0.1494982060855389,
+    0.14514391866758602,
+    0.13448514327368657,
+    0.1251147977380614,
+    0.12025249194570042
+   ],
+   "probeWeights": [
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "point": {
+    "n_e_line19": [
+     2.3834381603235903,
+     2.3431900819396416,
+     0.42165047083694684,
+     14.277311241921996,
+     0.9526990999530787,
+     0.572614913895407,
+     0.06974669333718139,
+     0.2427102502498203,
+     0.47329775672561236,
+     3.9560215980130176,
+     2.4345764676163846
+    ],
+    "bpolar": [
+     0.3766082649349038,
+     0.47467539907184764,
+     0.43302584521443105,
+     0.7037044291822703,
+     0.4847707808484881,
+     0.06780035100726284,
+     -0.08906700216097704,
+     -0.2433799075868669,
+     -0.6853756847838106,
+     -0.4103672586742304,
+     -5.599931667307714e-05
+    ],
+    "weight_nel": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     0.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "weight_pol": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     0.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "fringe_dropped": [
+     7
+    ]
+   },
+   "loopWeights": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  }
+ ],
+ "fylite:slices_provenance": "pulled from 202.127.204.12:east by tools/mds-shot-to-fyo.py 0.1.0, reduced by fylite.io.est2.reduce_est2 (the same code the live reader and the HDF5 dump reader both run) (window ±5.0 ms, POINT window ±30.0 ms); 9 slices 1–7 s. Loop values are TOTAL flux (the page removes the coils' share); the source documents are site data and live outside this repository."
+}

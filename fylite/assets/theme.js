@@ -1,4 +1,4 @@
-// Light / dark switching, shared by all three pages.
+// Light / dark switching, shared by every page.
 //
 // Three states, in the order the CSS resolves them: no choice stored (follow
 // the operating system), an explicit "light", an explicit "dark".  The
@@ -7,12 +7,49 @@
 // Loaded in <head>, BEFORE the body renders, so a stored dark choice is
 // applied without a white flash.  The button itself is wired up on
 // DOMContentLoaded, since it lives in the header.
+//
+// ★THE BUTTON CARRIES NO TEXT.  It used to read `☀ 浅色` / `☾ 深色` /
+// `◐ 跟随系统`, which cost it a translation, a width that changed with the
+// language, and two characters — `☾` and `◐` — whose glyphs are not shipped by
+// every platform, so the mark itself was a font lottery.  It is an inline SVG
+// now, drawn in `currentColor`, and what the three states MEAN is in the
+// tooltip and the aria-label, which are still translated.
+//
+// ★AND THEREFORE THIS FILE NO LONGER NEEDS THE i18n RUNTIME.  It uses it when
+// it is there (a scenario page switches language without reloading, and the
+// tooltip has to follow), and falls back to the two strings below when it is
+// not — which is what lets a static page carry this file alone, ~2 KB, instead
+// of the 116 KB of catalogues it used to have to load to write one word on a
+// button.
 
 (function () {
   'use strict';
 
   var KEY = 'fylite-theme';
   var root = document.documentElement;
+
+  // 16x16, `currentColor`, so the button inherits the header's colour and its
+  // hover state without a second rule.
+  var ICON = {
+    system: '<svg viewBox="0 0 16 16" aria-hidden="true">'
+          + '<circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/>'
+          + '<path fill="currentColor" d="M8 2a6 6 0 0 0 0 12z"/></svg>',
+    light: '<svg viewBox="0 0 16 16" aria-hidden="true">'
+         + '<circle cx="8" cy="8" r="3.2" fill="currentColor"/>'
+         + '<g stroke="currentColor" stroke-width="1.5" stroke-linecap="round">'
+         + '<path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.1 3.1l1.4 1.4'
+         + 'M11.5 11.5l1.4 1.4M12.9 3.1l-1.4 1.4M4.5 11.5l-1.4 1.4"/></g></svg>',
+    dark: '<svg viewBox="0 0 16 16" aria-hidden="true">'
+        + '<path fill="currentColor" d="M13.5 10.4A6 6 0 0 1 5.6 2.5a6 6 0 1 0 7.9 7.9z"/></svg>',
+  };
+
+  // Used only when there is no catalogue on the page — see the head comment.
+  var FALLBACK = {
+    zh: { system: '跟随系统', light: '浅色', dark: '深色',
+          system_eff: '跟随系统（{eff}）', now: '当前：{what}，点击切换' },
+    en: { system: 'System', light: 'Light', dark: 'Dark',
+          system_eff: 'System ({eff})', now: 'Now: {what} — click to switch' },
+  };
 
   function stored() {
     try { return localStorage.getItem(KEY); } catch (e) { return null; }
@@ -38,13 +75,26 @@
     return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
 
-  var LABEL = { light: '☀ 浅色', dark: '☾ 深色', system: '◐ 跟随系统' };
+  function T(key, params) {
+    if (self.FyI18n) return self.FyI18n.t(key, params);
+    var tab = FALLBACK[/^zh/.test(root.lang || 'zh') ? 'zh' : 'en'];
+    var s = tab[key.replace(/^theme\./, '')];
+    if (s === undefined) return key;
+    return params ? s.replace(/\{(\w+)\}/g, function (m, n) {
+      return n in params ? params[n] : m;
+    }) : s;
+  }
 
   function label(btn) {
     var v = stored() || 'system';
-    btn.textContent = LABEL[v];
-    btn.title = '当前：' + (v === 'system' ? '跟随系统（' + effective() + '）'
-                                           : LABEL[v]) + '，点击切换';
+    btn.innerHTML = ICON[v];
+    //: what the button SHOWS is the state; what it does not show — the name of
+    //: that state, and that following the system currently means dark — is the
+    //: whole reason the tooltip is not decoration here
+    var what = v === 'system'
+      ? T('theme.system_eff', { eff: T('theme.' + effective()) })
+      : T('theme.' + v);
+    btn.title = T('theme.now', { what: what });
     btn.setAttribute('aria-label', btn.title);
   }
 
@@ -76,6 +126,7 @@
     var onSys = function () { if (!stored()) { label(btn); repaint(); } };
     if (mq.addEventListener) mq.addEventListener('change', onSys);
     else if (mq.addListener) mq.addListener(onSys);
+    if (self.FyI18n) self.FyI18n.onChange(function () { label(btn); });
   }
 
   if (document.readyState === 'loading')

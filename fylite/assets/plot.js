@@ -5,6 +5,18 @@
 (function (root) {
   'use strict';
 
+  /**
+   * Smallest 1-2-5 step that keeps labels at least `minPx` apart.
+   * `spanPx` may be 0 before the first layout, hence the guard.
+   */
+  function niceStep(span, spanPx, minPx) {
+    if (!(span > 0) || !(spanPx > 0)) return 1;
+    var want = span * minPx / spanPx;
+    var pow = Math.pow(10, Math.floor(Math.log10(want)));
+    var m = want / pow;
+    return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * pow;
+  }
+
   function css(el, name) {
     return getComputedStyle(el).getPropertyValue(name).trim();
   }
@@ -40,11 +52,29 @@
     };
   }
 
+  /**
+   * The colour of series `i` in a plot that draws MANY of them.
+   *
+   * ★A plot with a coil per channel cannot take its colours from the
+   * palette's five named roles — there are twelve of them on the smallest
+   * bundled machine.  The rotation stays inside the theme by taking the
+   * accent's own hue as the starting point and stepping around the wheel by
+   * the golden angle, which is what keeps adjacent channels distinguishable
+   * without a hand-picked table that would have to grow with the machine.
+   * Lives here rather than in a page: "which colour is series i" is a
+   * plotting question, and two pages answering it differently would draw
+   * the same channel in two colours.
+   */
+  function seriesColor(col, i) {
+    return 'hsl(' + ((210 + i * 137.508) % 360).toFixed(1) + ' 62% 46%)';
+  }
+
   // --- poloidal cross-section ----------------------------------------------
 
   /**
    * opts: {machine, grid, psi, psiAxis, psiBnd, lcfs, target, reference,
-   *        axis, xpoint, loops, loopColor, loopUsed, coilLabel, coilFill,
+   *        axis, xpoint, loops, loopColor, loopUsed, chords, chordColor,
+   *        coilLabel, coilFill,
    *        handles, legend, legendAnchor, nLevels, caption, view}
    */
   function poloidal(canvas, o) {
@@ -80,32 +110,55 @@
     ctx.fillStyle = col.muted;
     ctx.font = '11px system-ui, sans-serif';
     ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    var rstep = (rmax - rmin) > 2.2 ? 0.5 : 0.4,
-        zstep = (zmax - zmin) > 3.2 ? 1.0 : 0.5;
+    // Tick spacing has to come from the PIXELS, not from the data range: a
+    // step chosen for a 1.6 m wide EAST view puts twenty labels across a
+    // 10 m wide ITER view and they run together into a single smear.
+    var rstep = niceStep(rmax - rmin, s * (rmax - rmin), 46),
+        zstep = niceStep(zmax - zmin, s * (zmax - zmin), 26);
+    var dec = function (st) { return st < 0.999 ? 1 : 0; };
     for (var r = Math.ceil(rmin / rstep) * rstep; r <= rmax; r += rstep) {
-      ctx.fillText(r.toFixed(1), X(r), Y(zmin) + 5);
+      ctx.fillText(r.toFixed(dec(rstep)), X(r), Y(zmin) + 5);
       ctx.beginPath(); ctx.moveTo(X(r), Y(zmin)); ctx.lineTo(X(r), Y(zmin) - 4);
       ctx.stroke();
     }
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     for (var z = Math.ceil(zmin / zstep) * zstep; z <= zmax; z += zstep) {
-      ctx.fillText(z.toFixed(1), X(rmin) - 6, Y(z));
+      ctx.fillText(z.toFixed(dec(zstep)), X(rmin) - 6, Y(z));
       ctx.beginPath(); ctx.moveTo(X(rmin), Y(z)); ctx.lineTo(X(rmin) + 4, Y(z));
       ctx.stroke();
     }
     ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     ctx.fillText('R [m]', (X(rmin) + X(rmax)) / 2, p.h - 14);
 
-    // vessel elements
-    if (M.vessel) {
+    // Vessel: some decks give it as discrete rectangular elements (EAST),
+    // others as closed polylines (ITER's annular inner/outer walls).  Both
+    // are decoration — no vessel current enters any solve.
+    ctx.globalAlpha = 0.45;
+    //: a caller may be analysing a MOVED vessel (wall-proximity sweeps);
+    //: drawing the descriptor's copy would put the picture and the number
+    //: in disagreement with nothing to say so
+    var vessel = o.vesselOverride || M.vessel;
+    if (vessel && vessel.length) {
       ctx.fillStyle = col.wall;
-      ctx.globalAlpha = 0.45;
-      M.vessel.forEach(function (v) {
+      vessel.forEach(function (v) {
         ctx.fillRect(X(v.r - v.w / 2), Y(v.z + v.h / 2),
                      Math.max(1.5, s * v.w), Math.max(1.5, s * v.h));
       });
-      ctx.globalAlpha = 1;
     }
+    if (M.vesselOutline && M.vesselOutline.length) {
+      ctx.strokeStyle = col.wall;
+      ctx.lineWidth = 1;
+      M.vesselOutline.forEach(function (o) {
+        ctx.beginPath();
+        for (var vi = 0; vi < o.r.length; vi++) {
+          var vx = X(o.r[vi]), vy = Y(o.z[vi]);
+          if (vi === 0) ctx.moveTo(vx, vy); else ctx.lineTo(vx, vy);
+        }
+        ctx.closePath();
+        ctx.stroke();
+      });
+    }
+    ctx.globalAlpha = 1;
     // PF coils (only those inside the drawn box get a label)
     ctx.strokeStyle = col.coil; ctx.lineWidth = 1.2;
     ctx.fillStyle = col.coil;
@@ -142,16 +195,20 @@
     if (o.psi && o.nLevels) {
       ctx.lineWidth = 0.8;
       ctx.strokeStyle = col.flux;
-      var a = o.psiAxis, b = o.psiBnd;
-      for (var k = 1; k <= o.nLevels; k++) {
-        var lev = a + (b - a) * k / (o.nLevels + 1);
-        drawSegs(ctx, FyPhys.contour(o.grid, o.psi, lev), X, Y);
-      }
-      // a few surfaces outside the boundary, dashed
+      var a = o.psiAxis, b = o.psiBnd, k;
+      //: ★The kernel computes these and they travel with the solve.  There
+      //: is no local fallback: every caller that draws a psi field has a
+      //: worker behind it, and the one path that does not (an imported
+      //: g-file) needs shape metrics, never contours — checked, not assumed.
+      //: A caller that asks for levels without bringing segments is a wiring
+      //: mistake, and silently drawing nothing would hide it.
+      if (!o.fluxSegs)
+        throw new Error('FyPlot.poloidal: nLevels given without fluxSegs');
+      var f = o.fluxSegs;
+      for (k = 0; k < f.inner.length && k < o.nLevels; k++)
+        drawSegs(ctx, f.inner[k], X, Y);
       ctx.setLineDash([2, 3]);
-      for (k = 1; k <= 4; k++) {
-        drawSegs(ctx, FyPhys.contour(o.grid, o.psi, b - (a - b) * k * 0.25), X, Y);
-      }
+      for (k = 0; k < f.outer.length; k++) drawSegs(ctx, f.outer[k], X, Y);
       ctx.setLineDash([]);
     }
 
@@ -182,6 +239,27 @@
       ctx.strokeStyle = col.lcfs; ctx.lineWidth = 2;
       polyline(ctx, o.lcfs, X, Y, true);
     }
+    //: ★★SIGHT LINES, drawn where they look.  A chord diagnostic is the one
+    //: measurement whose GEOMETRY is the physics — which flux surfaces it
+    //: crosses is the whole content of `∫n_e dl` — and a page that reported
+    //: eleven numbers without showing where the eleven beams go asks the
+    //: reader to hold the machine in their head.  Drawn under the markers
+    //: and over the flux map, in the deck's own coordinates, and clipped to
+    //: the view like everything else.
+    if (o.chords && o.chords.length) {
+      ctx.save();
+      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = o.chordColor || col.accent;
+      o.chords.forEach(function (c) {
+        ctx.globalAlpha = c.weight === 0 ? 0.28 : 0.85;
+        if (c.weight === 0) ctx.setLineDash([3, 3]); else ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.moveTo(X(c.r0), Y(c.z0));
+        ctx.lineTo(X(c.r1), Y(c.z1));
+        ctx.stroke();
+      });
+      ctx.restore();
+    }
     // flux loops, drawn as squares: filled = fitted, hollow = weight zero
     if (o.loops) {
       ctx.lineWidth = 1.2;
@@ -194,6 +272,23 @@
       });
     }
     // axis + X point
+    // a circle in machine coordinates — the region a criterion is stated
+    // over, drawn where the criterion applies rather than described in prose
+    if (o.circle) {
+      ctx.strokeStyle = col.accent; ctx.lineWidth = 1.4;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      //: ★clamped: on a canvas with no layout yet (a result panel still
+      //: folded), the fitted scale `s` goes negative and `arc` THROWS on a
+      //: negative radius — which aborts the caller mid-draw and, measured on
+      //: the breakdown bar, left its busy latch stuck on the first solve.
+      //: Every other primitive here just draws nowhere at negative scale;
+      //: this one has to be told to.
+      ctx.arc(X(o.circle.r), Y(o.circle.z),
+              Math.max(0, s * o.circle.radius), 0, 2 * Math.PI);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
     if (o.axis) marker(ctx, X(o.axis[0]), Y(o.axis[1]), col.fg, '+');
     if (o.xpoint && isFinite(o.xpoint[0]))
       marker(ctx, X(o.xpoint[0]), Y(o.xpoint[1]), col.lcfs, 'x');
@@ -318,13 +413,25 @@
     var xmin = o.xmin, xmax = o.xmax, ymin = o.ymin, ymax = o.ymax;
     o.series.forEach(function (s) {
       for (var i = 0; i < s.x.length; i++) {
-        if (!isFinite(s.x[i]) || !isFinite(s.y[i])) continue;
+        if (!isFinite(s.x[i])) continue;
+        //: an envelope carries two y arrays and no `y`; both edges have to
+        //: be inside the frame or the band is drawn clipped and reads as a
+        //: narrower uncertainty than it is
+        var ys = s.kind === 'envelope' ? [s.yLo[i], s.yHi[i]] : [s.y[i]];
         if (xmin === undefined || s.x[i] < xmin) xmin = s.x[i];
         if (xmax === undefined || s.x[i] > xmax) xmax = s.x[i];
-        if (ymin === undefined || s.y[i] < ymin) ymin = s.y[i];
-        if (ymax === undefined || s.y[i] > ymax) ymax = s.y[i];
+        for (var k = 0; k < ys.length; k++) {
+          if (!isFinite(ys[k])) continue;
+          if (ymin === undefined || ys[k] < ymin) ymin = ys[k];
+          if (ymax === undefined || ys[k] > ymax) ymax = ys[k];
+        }
       }
     });
+    // A threshold you cannot see is not a threshold: make room for it.
+    if (o.hline !== undefined && isFinite(o.hline)) {
+      if (ymin === undefined || o.hline < ymin) ymin = o.hline;
+      if (ymax === undefined || o.hline > ymax) ymax = o.hline;
+    }
     if (!(xmax > xmin)) { xmin -= 1; xmax += 1; }
     if (!(ymax > ymin)) { ymin -= 1; ymax += 1; }
     var m = 0.06 * (ymax - ymin);
@@ -338,8 +445,72 @@
     pad.l = Math.max(pad.l, Math.ceil(tickW) + (o.ylabel ? 24 : 10));
     var X = function (v) { return pad.l + (v - xmin) / (xmax - xmin) * (p.w - pad.l - pad.r); };
     var Y = function (v) { return p.h - pad.b - (v - ymin) / (ymax - ymin) * (p.h - pad.t - pad.b); };
+    //: ★★THE INVERSE MAPPING, LEFT ON THE CANVAS.  A figure a reader can
+    //: only look at is half a figure: the first thing anyone does with a
+    //: time trace is point at a moment and ask to see it.  The page cannot
+    //: work out where the axes are — the padding, the nice-step rounding and
+    //: the auto range all live in here — so the plot leaves behind what it
+    //: alone knows.  `toData` is CSS pixels relative to the canvas, which is
+    //: what a click event gives.
+    canvas.fyxy = {
+      xmin: xmin, xmax: xmax, ymin: ymin, ymax: ymax,
+      toData: function (px, py) {
+        var w = p.w - pad.l - pad.r, h = p.h - pad.t - pad.b;
+        return { x: xmin + (px - pad.l) / (w || 1) * (xmax - xmin),
+                 y: ymin + (p.h - pad.b - py) / (h || 1) * (ymax - ymin),
+                 inside: px >= pad.l && px <= p.w - pad.r &&
+                         py >= pad.t && py <= p.h - pad.b };
+      },
+    };
 
     ctx.fillStyle = col.bg; ctx.fillRect(0, 0, p.w, p.h);
+
+    // Bands go down first, under everything: they are context, not data.
+    // `o.bands = [{x0, x1, color, label}]` — an x interval and a colour, the
+    // smallest primitive that says "this stretch of time is the ramp".
+    if (o.bands) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(pad.l, pad.t, p.w - pad.l - pad.r, p.h - pad.t - pad.b);
+      ctx.clip();
+      o.bands.forEach(function (b) {
+        var x0 = X(Math.max(b.x0, xmin)), x1 = X(Math.min(b.x1, xmax));
+        if (!(x1 > x0)) return;
+        ctx.globalAlpha = 0.10;
+        ctx.fillStyle = b.color || col.muted;
+        ctx.fillRect(x0, pad.t, x1 - x0, p.h - pad.t - pad.b);
+        ctx.globalAlpha = 1;
+        if (b.label) {
+          ctx.fillStyle = col.muted;
+          ctx.font = '10px system-ui, sans-serif';
+          ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+          ctx.fillText(b.label, (x0 + x1) / 2, pad.t + 2);
+        }
+      });
+      ctx.restore();
+    }
+    // a marked instant — the slice the profiles below belong to
+    if (o.marker !== undefined && isFinite(o.marker)) {
+      ctx.save();
+      ctx.strokeStyle = col.accent; ctx.lineWidth = 1.2;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(X(o.marker), pad.t); ctx.lineTo(X(o.marker), p.h - pad.b);
+      ctx.stroke();
+      ctx.restore();
+    }
+    // a horizontal reference level — a threshold belongs on the plot, not
+    // only in the caption
+    if (o.hline !== undefined && isFinite(o.hline) &&
+        o.hline >= ymin && o.hline <= ymax) {
+      ctx.save();
+      ctx.strokeStyle = col.warn || col.accent; ctx.lineWidth = 1.2;
+      ctx.setLineDash([6, 3]);
+      ctx.beginPath();
+      ctx.moveTo(pad.l, Y(o.hline)); ctx.lineTo(p.w - pad.r, Y(o.hline));
+      ctx.stroke();
+      ctx.restore();
+    }
     ctx.strokeStyle = col.grid; ctx.lineWidth = 1;
     ctx.strokeRect(pad.l, pad.t, p.w - pad.l - pad.r, p.h - pad.t - pad.b);
     ctx.fillStyle = col.muted; ctx.font = '11px system-ui, sans-serif';
@@ -376,7 +547,32 @@
       ctx.fillText(o.ylabel, 0, 0); ctx.restore();
     }
 
+    // ★Envelopes go under every line, whatever order the caller listed them
+    // in: a +-1 sigma band painted over its own mean hides the quantity it
+    // is the uncertainty OF.
     o.series.forEach(function (s) {
+      if (s.kind !== 'envelope') return;
+      ctx.save();
+      ctx.beginPath();
+      var started = false, i;
+      for (i = 0; i < s.x.length; i++) {
+        if (!isFinite(s.yHi[i])) continue;
+        if (!started) { ctx.moveTo(X(s.x[i]), Y(s.yHi[i])); started = true; }
+        else ctx.lineTo(X(s.x[i]), Y(s.yHi[i]));
+      }
+      for (i = s.x.length - 1; i >= 0; i--) {
+        if (!isFinite(s.yLo[i])) continue;
+        ctx.lineTo(X(s.x[i]), Y(s.yLo[i]));
+      }
+      ctx.closePath();
+      ctx.globalAlpha = s.alpha === undefined ? 0.22 : s.alpha;
+      ctx.fillStyle = s.color;
+      ctx.fill();
+      ctx.restore();
+    });
+
+    o.series.forEach(function (s) {
+      if (s.kind === 'envelope') return;
       ctx.strokeStyle = s.color; ctx.fillStyle = s.color;
       ctx.lineWidth = s.width || 1.8;
       ctx.setLineDash(s.dash || []);
@@ -423,11 +619,21 @@
       ctx.globalAlpha = 1;
       var y = pad.t + 10;
       labels.forEach(function (s) {
-        ctx.strokeStyle = s.color; ctx.lineWidth = 2.4;
-        ctx.setLineDash(s.dash || []);
-        ctx.beginPath();
-        ctx.moveTo(bx, y); ctx.lineTo(bx + 22, y);
-        ctx.stroke(); ctx.setLineDash([]);
+        if (s.kind === 'envelope') {
+          //: a band's key is a band, not a line: drawn as a line it reads as
+          //: one more curve, which is the thing it is not
+          ctx.save();
+          ctx.globalAlpha = s.alpha === undefined ? 0.22 : s.alpha;
+          ctx.fillStyle = s.color;
+          ctx.fillRect(bx, y - 4, 22, 8);
+          ctx.restore();
+        } else {
+          ctx.strokeStyle = s.color; ctx.lineWidth = 2.4;
+          ctx.setLineDash(s.dash || []);
+          ctx.beginPath();
+          ctx.moveTo(bx, y); ctx.lineTo(bx + 22, y);
+          ctx.stroke(); ctx.setLineDash([]);
+        }
         ctx.fillStyle = col.fg;
         ctx.fillText(s.label, bx + 28, y);
         y += 15;
@@ -520,6 +726,7 @@
   }
 
   root.FyPlot = { poloidal: poloidal, xy: xy, palette: palette,
-                  prepare: prepare, deviceView: deviceView,
+                  seriesColor: seriesColor,
+                  deviceView: deviceView,
                   legendHTML: legendHTML, currentScale: currentScale };
 })(typeof self !== 'undefined' ? self : globalThis);

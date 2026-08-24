@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>版权与致谢 · fylite</title>
+<link rel="icon" href="assets/fy_mark.svg">
+<meta name="description" content="fylite 的版权、许可（Apache-2.0）、白盒移植的上游出处、对拍数据来源、致谢与参考文献。">
+<link rel="alternate" hreflang="zh" href="https://fusion-yun.github.io/fylite/credits.html">
+<link rel="alternate" hreflang="en" href="https://fusion-yun.github.io/fylite/credits.en.html">
+<script>try{localStorage.setItem('fylite-lang','zh')}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/site.css">
+<!-- ★ONE script, ~2 KB.  This page used to pull the i18n runtime and eight
+     catalogue files — 156 KB, of which 116 KB was tool prose it never shows —
+     in order to fill in text that is now simply in the markup.  `theme.js` is
+     what is left, and since the switches went wordless it no longer needs the
+     catalogues either. -->
+<script src="assets/theme.js"></script>
+</head>
+<body data-page="credits">
+
+<header class="top">
+  <a class="brand" href="index.html"><img src="assets/fy_mark.svg" alt="" width="32" height="32"></a>
+  <div class="titles">
+  <h1>版权与致谢</h1>
+  <span class="sub">许可 · 出处 · 致谢 · 参考文献</span>
+  </div>
+  <nav>
+    <a href="scenario/design.html">放电设计</a>
+    <a href="scenario/model.html">物理建模</a>
+    <a href="scenario/analysis.html">实验分析</a>
+    <button id="theme-toggle" class="iconbtn" type="button"></button>
+  </nav>
+</header>
+
+<main class="doc">
+
+<p class="lead">本页陈述三事：本项目的<strong>版权与许可</strong>、各物理模块的<strong>出处</strong>，以及应予致谢的工作。逐文件的授权声明以仓库中的 <code>NOTICE</code> 为准，本页为其可读摘要；本页作出的任何陈述，均应能在 <code>NOTICE</code> 与 <code>ACKNOWLEDGEMENTS.md</code> 中找到依据。</p>
+
+<h2>版权与许可</h2>
+
+<p>fylite 由中国科学院等离子体物理研究所（ASIPP）开发，按 <strong>Apache License 2.0</strong> 发布。允许自由使用、修改与再分发（含商业用途），条件为保留版权声明与 <code>NOTICE</code>，并对所作修改予以说明。</p>
+
+<pre class="licence">fylite
+Copyright 2026 Institute of Plasma Physics, Chinese Academy of Sciences (ASIPP)
+and the fylite contributors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</pre>
+
+<p>★本页面（<code>app/</code> 下的浏览器演示）与它加载的 <code>.wasm</code> 计算内核同属该许可：内核由本仓 Rust 源码编译，制品的 sha256 与出处记录在仓库文档里，可逐位核对。</p>
+
+<h2>上级项目：FyTok</h2>
+
+<p>fylite 是 <a href="https://github.com/fusion-yun/fytok">FyTok</a> 的<strong>轻量版</strong>——FyTok 是<strong>上级项目</strong>（同为 <strong>Apache-2.0</strong>，中国科学院等离子体物理研究所）：Python 写的完整托卡马克集成建模框架，插件机制、工作流调度、异构执行与可追溯，面向超算 / 云计算。两者同为本体层 <strong>fyo 语义契约</strong>的实现，fylite 取轻型一端：关键求解器以 Rust 重写、经 WebAssembly 在浏览器内免安装运行，并<strong>充当 FyTok 的最小功能验证</strong>——两级实现独立编码、答对同一份契约，因此实现间对拍是<strong>交叉检验</strong>而不是自证。芯部输运的通道声明语法直接取自 FyTok 的 <code>fytrans</code>（见下表），逐位对拍也以它为基准。</p>
+
+<h2>移植与出处</h2>
+
+<p>下列模块系上游代码的<strong>白盒移植</strong>，而非依文献所作的独立实现。此项区分属许可义务，故在此正文陈述，而不置于脚注。</p>
+
+<div class="table-scroll">
+<table>
+  <thead><tr>
+    <th>上游</th>
+    <th>作者 / 机构</th>
+    <th>许可</th>
+    <th>fylite 取用了什么</th>
+  </tr></thead>
+  <tbody>
+    <tr><td>GACODE — GEO</td><td>J. Candy (General Atomics)</td><td>Apache-2.0</td>
+        <td>磁面局域几何（Miller 系形状与度规）</td></tr>
+    <tr><td>GACODE — NEO</td><td>E. Belli, J. Candy (General Atomics)</td><td>Apache-2.0</td>
+        <td>新经典解析模型与漂移动理学求解</td></tr>
+    <tr><td>GACODE — TGLF</td><td>G. M. Staebler et al. (General Atomics)</td><td>Apache-2.0</td>
+        <td>回旋朗道流体模型、FLR 拟合表、俘获闭包表</td></tr>
+    <tr><td>GACODE — TGYRO / expro</td><td>General Atomics 与 GACODE 贡献者</td><td>Apache-2.0</td>
+        <td>NEO / TGLF 输入映射、源项与辐射、体积分、input.gacode 读写</td></tr>
+    <tr><td>NCLASS</td><td>W. A. Houlberg</td><td>随 NEO</td>
+        <td>随 NEO 携带的新经典系数</td></tr>
+    <tr><td>METIS</td><td>J. F. Artaud et al. (CEA/IRFM)</td><td>CeCILL-C</td>
+        <td>快中性束模型：弦衰减、Janev 停止截面、Stix 临界能量与束驱电流</td></tr>
+    <tr><td>FyTok — fytrans</td><td>中国科学院等离子体物理研究所（fylite 的上级项目）</td><td>Apache-2.0</td>
+        <td>通道声明语法（保持逐字一致，使声明可在上级项目与本项目之间往返）；1.5D 输运核以它为逐位对拍基准</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p><strong>修改说明</strong>（Apache-2.0 §4b）：移植是翻译不是复制——模块状态改为显式参数，LAPACK / UMFPACK 换成本仓自写的稠密与稀疏例程，上游 <code>STOP</code> 的地方改返回错误码，且可重入。若干处<strong>有意偏离</strong>上游行为（多在上游悄悄覆盖自己的输入之处），每一处都在源码里就地写明。</p>
+
+<p>GACODE 两个修订版并存且是有意为之：GEO / NEO / TGYRO 取自 <code>5efddfdf1</code>，TGLF 取自 <code>6357db306</code>，与移植时对照的两份库一致。UMFPACK <strong>未</strong>移植——本仓的稀疏 LU 从零写起。</p>
+
+<h2>数据与对拍来源</h2>
+
+<ul>
+  <li><strong>GACODE 回归算例与录得输出</strong>（GA 标准算例、TGYRO treg01、libgeo/libneo/libtglf 录音）——移植的金标夹具（General Atomics，Apache-2.0）。</li>
+  <li><strong>EAST 实验数据与运行态 EFIT 工作流</strong>——ASIPP EAST 团队；诊断逐道几何经 fydata 到达 fylite。这些数据<strong>不随演示发布</strong>。</li>
+  <li><strong>ITER 装置描述与 IMAS 数据字典</strong>——ITER 组织，经 fyo / fydata 到达 fylite；演示内置的 ITER 位形即出自此。</li>
+  <li><strong>跨程序基准</strong>：0D 对 METIS（CEA/IRFM）、ITER 情景对 FUSE、电磁与垂直稳定性对 TokSys（General Atomics）——这些程序均未在此再分发。</li>
+</ul>
+
+<h2>这些代码是怎么写出来的</h2>
+
+<p>fylite 的物理模块依据上列公开文献与开源代码构建，<strong>并有 AI 辅助</strong>（Anthropic Claude）。正确性不由作者身份主张，而由对上游实现的<strong>金标夹具</strong>逐模块确立：比对录得答案，并写明容差及其误差来源。此外，fylite 亦向 AI 宿主暴露自身接口（MCP / JSON-RPC）——此为产品功能，与构建方式属两事。</p>
+
+<h2>致谢</h2>
+
+<p>本项目建立在他人公开的物理、代码与数据之上。谨此逐项致谢：</p>
+
+<ul>
+  <li><strong>General Atomics 与 GACODE 贡献者</strong>（J. Candy、E. Belli、G. M. Staebler 等）——新经典、湍流与磁面几何三条实现线的上游；<strong>W. A. Houlberg</strong>（NCLASS，随 NEO 携带）。</li>
+  <li><strong>CEA/IRFM 与 METIS 作者</strong>（J. F. Artaud 等）——快中性束模型与 0D 口径的出处，也是 0D 对拍的基准。</li>
+  <li><strong>TokSys 的作者</strong>（General Atomics）——电磁与垂直稳定性的跨程序锚点。</li>
+  <li><strong>ASIPP EAST 团队</strong>——放电数据、运行态 EFIT 工作流与逐道诊断几何。</li>
+  <li><strong>李国强、任启龙、钱金平、L. L. Lao 等</strong>——将 EFIT 移植至 EAST 并建立动理学重构（KEFIT），本仓重构线的上游参照基线。</li>
+  <li><strong>孙有文</strong>——HT-7 软 X 射线层析工作（相机几何参数化与弦-格林/加权伪逆方法骨架）。</li>
+  <li><strong>兰婷</strong>——整理 EAST 实验数据语料，逐道诊断几何经 fydata 到达本项目。</li>
+  <li><strong>黄耀与 EAST PCS 组</strong>——等离子体控制系统接口说明（磁探针几何与平衡↔PCS 变量的交叉核对）。</li>
+  <li><strong>私人通讯</strong>：夏天阳（边界与集成）、胡也民（平衡）、肖小涛（输运）。</li>
+  <li><strong>ITER 组织</strong>——IMAS 数据字典与 ITER 装置描述，经 fyo / fydata 到达本项目；演示内置的 ITER 位形即出自此。</li>
+  <li><strong>下节参考文献的作者</strong>——本项目所用的每一条公式均注明出处，无一为此处首创。</li>
+</ul>
+
+<p>★若你发现这里用到了某项工作而没有被列出，请开一个 issue——那是疏漏，不是选择。</p>
+
+<h2>参考文献</h2>
+
+<p>本站所用方法均为公开方法。★本节原置于首页，现收于此——出处与致谢属同一事，不宜分置两处维护。</p>
+
+<h3>平衡与重构</h3>
+
+<ul>
+  <li>平衡本身是 Grad–Shafranov 方程（Grad 与 Rubin 1958；Shafranov 1966）。</li>
+  <li><span>由磁测量拟合 p′/FF′ 多项式、并在等离子体电流等式约束下与平衡交替求解，是 Lao 等人给出的重构框架：</span><br>
+    L. L. Lao, H. St. John, R. D. Stambaugh, A. G. Kellman, W. Pfeiffer,
+    <em>Reconstruction of current profile parameters and plasma shapes in
+    tokamaks</em>, Nuclear Fusion <strong>25</strong> (1985) 1611.</li>
+  <li><span>自由边界求解与垂直位置的稳定处理：</span><br>
+    S. C. Jardin, <em>Computational Methods in Plasma Physics</em>,
+    CRC Press, 2010.</li>
+  <li><span>规则网格上的快速直接解法：</span><br>
+    R. W. Hockney, <em>A fast direct solution of Poisson's equation using
+    Fourier analysis</em>, Journal of the ACM <strong>12</strong> (1965) 95.</li>
+  <li><span>安全因子、形状量等平衡量的定义，以及托卡马克物理的通用背景：</span><br>
+    J. Wesson, <em>Tokamaks</em>, 4th ed., Oxford University Press, 2011.</li>
+</ul>
+
+<h3>输运与湍流</h3>
+
+<ul>
+  <li><span>新经典电导率与自举电流的解析式：</span><br>
+    O. Sauter, C. Angioni, Y. R. Lin-Liu, <em>Neoclassical conductivity and
+    bootstrap current formulas</em>, Physics of Plasmas <strong>6</strong>
+    (1999) 2834.</li>
+  <li><span>自举电流的重新标定（与上一条<strong>分开保留</strong>，两条读数相差数个百分点）：</span><br>
+    A. Redl, C. Angioni, E. Belli, O. Sauter, <em>A new set of analytical
+    formulae for the computation of the bootstrap current</em>, Physics of
+    Plasmas <strong>28</strong> (2021) 022502.</li>
+  <li><span>解析新经典变体与俘获份额：</span><br>
+    C. S. Chang, F. L. Hinton, Physics of Fluids <strong>25</strong> (1982) 1493;
+    Y. R. Lin-Liu, R. L. Miller, Physics of Plasmas <strong>2</strong> (1995) 1666.</li>
+  <li><span>回旋朗道流体准线性输运模型（TGLF）：</span><br>
+    G. M. Staebler, J. E. Kinsey, R. E. Waltz, <em>A theory-based transport
+    model with comprehensive physics</em>, Physics of Plasmas <strong>14</strong>
+    (2007) 055909.</li>
+  <li><span>漂移动理学方程的直接求解（NEO）：</span><br>
+    E. A. Belli, J. Candy, <em>Kinetic calculation of neoclassical transport
+    including self-consistent electron and impurity dynamics</em>, Plasma
+    Physics and Controlled Fusion <strong>50</strong> (2008) 095010.</li>
+</ul>
+
+<h3>0-D 集成建模、源项与原子数据</h3>
+
+<ul>
+  <li><span>能量约束标度律：</span><br>
+    ITER Physics Basis, Nuclear Fusion <strong>39</strong> (1999) 2175 (IPB98(y,2));
+    P. N. Yushmanov et al., Nuclear Fusion <strong>30</strong> (1990) 1999 (ITER89-P).</li>
+  <li><span>D-T 反应率：</span><br>
+    H.-S. Bosch, G. M. Hale, <em>Improved formulas for fusion cross-sections
+    and thermal reactivities</em>, Nuclear Fusion <strong>32</strong> (1992) 611.</li>
+  <li><span>L–H 阈值功率：</span><br>
+    Y. Martin et al., <em>Power requirement for accessing the H-mode</em>,
+    Journal of Physics: Conference Series <strong>123</strong> (2008) 012033.</li>
+  <li><span>0-D 集成建模的对标程序，也是快中性束模型的出处：</span><br>
+    J. F. Artaud et al., <em>Metis: a fast integrated tokamak modelling tool</em>,
+    Nuclear Fusion <strong>58</strong> (2018) 105001.</li>
+  <li><span>杂质辐射冷却曲线：</span><br>
+    T. Pütterich et al., Nuclear Fusion <strong>59</strong> (2019) 056013;
+    Open-ADAS, <a href="https://open.adas.ac.uk">open.adas.ac.uk</a>.</li>
+  <li><span>中性束停止与电荷交换截面：</span><br>
+    R. K. Janev, C. D. Boley, D. E. Post, <em>Penetration of energetic neutral
+    beams into fusion plasmas</em>, Nuclear Fusion <strong>29</strong> (1989) 2125.</li>
+</ul>
+
+<h2>完整文本</h2>
+
+<p>本页为摘要。具约束力的、逐文件的声明见仓库：</p>
+
+<ul>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/main/LICENSE">LICENSE</a>
+      — <span>Apache License 2.0 全文</span></li>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/main/NOTICE">NOTICE</a>
+      — <span>逐文件的移植出处、修改说明，以及「不含什么」</span></li>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/main/ACKNOWLEDGEMENTS.md">ACKNOWLEDGEMENTS.md</a>
+      — <span>可读的致谢全表：上游代码、转写的公式、数据与夹具、刻意未取的东西</span></li>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/main/CONTRIBUTORS.md">CONTRIBUTORS.md</a>
+      — <span>维护者与版权归属</span></li>
+</ul>
+
+<p>仓库：<a href="https://github.com/fusion-yun/fylite">github.com/fusion-yun/fylite</a></p>
+
+</main>
+
+<footer>
+  <a class="mark" href="index.html" tabindex="-1" aria-hidden="true"><img src="assets/fy_mark.svg" alt="" width="24" height="24"></a>
+  <a href="index.html">fylite 首页</a>
+  <a href="features.html">物理功能</a>
+  <a class="iconbtn" href="credits.en.html" hreflang="en" title="切换到 English" aria-label="切换到 English"><img class="flag" src="assets/flag-zh.svg" alt="" width="24" height="16"></a>
+  <span class="copy">© 2026 中国科学院等离子体物理研究所（ASIPP）与 fylite 贡献者 · Apache-2.0 · alpha 版</span>
+  <span class="ver" title="kernel 0.0.1 · ABI 111 · app 0.0.1-alpha">内核 0.0.1 · ABI 111 · 前端 0.0.1-alpha</span>
+  <a class="qr" href="https://fusion-yun.github.io/fylite/credits.html" title="https://fusion-yun.github.io/fylite/credits.html"><img src="assets/qr-credits.svg" alt="QR" width="37" height="37"></a>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 100" width="240" height="100" role="img" aria-label="fylite — FUYUN TOKAMAK SIMULATOR - LITE">
+  <!-- fylite logo, the app's copy of docs/figures/fylite_logo.svg.
+       ★Two differences from the docs banner, both deliberate:
+       1. no 1280x640 banner canvas around it — this one sits in a 28 px header
+          strip, where four fifths of that canvas is transparent padding;
+       2. the plate is painted WHITE rather than with the `url(#bg)` gradient
+          the file never defined (so it never painted at all): the mark is dark
+          blue, the header behind it is light or dark depending on the reader,
+          and a logo that vanishes in one of the two themes is not a logo. -->
+  <rect width="238" height="98" x="1" y="1" rx="12" fill="#ffffff" stroke="#e1e4e8" stroke-width="1"/>
+  <text x="50%" y="46%" font-family="Arial, sans-serif" font-size="72" font-weight="bold" dominant-baseline="middle" text-anchor="middle">
+    <tspan fill="#FF8C00" font-style="italic">Fy</tspan><tspan fill="#003366">Lite</tspan>
+  </text>
+  <line x1="40" y1="64" x2="200" y2="64" stroke="#003366" stroke-width="1" stroke-opacity="0.1"/>
+  <text x="50%" y="81%" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="7" fill="#42526E" dominant-baseline="middle" text-anchor="middle" letter-spacing="3.5" font-weight="500">FUYUN TOKAMAK SIMULATOR - LITE</text>
+</svg>

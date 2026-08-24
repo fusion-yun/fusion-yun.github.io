@@ -1,0 +1,4566 @@
+{
+ "$schema": "fylite/east-signals/1",
+ "generated_by": "tools/east-signals-to-app.py",
+ "generated_at": "2026-08-23",
+ "source": {
+  "file": "/home/salmon/workspace/fydata/machine/tokamak/east/fyo/0.0.0/east_signal_catalog.yaml",
+  "sha256": "261b0218534e9290c3478db155907090d2c84cf47a70e00dfa18eb1c49d41a90",
+  "retrieved": "2026-07-07",
+  "index": "http://202.127.205.54/wiki/index.php/OfflineEFIT_(signal_name)",
+  "note": "EAST Wiki harvest (202.127.205.54, internal). Names and units are the upstream's; this file renames trees to lower case and emits nodes as tags. Nothing is verified here — see app/tests/validate-east-catalog.mjs."
+ },
+ "server_hint": "202.127.204.12:8000",
+ "categories": [
+  "Energy_EAST",
+  "Fueling Systems",
+  "Fundamental parameters",
+  "Heating and CD Systems",
+  "Impurities",
+  "Magnetic diagnostics",
+  "Neutrons and confined/lost ion/alpha particles",
+  "Radiation measurement",
+  "Turbulence measurements",
+  "Visible and infrared cameras"
+ ],
+ "diagnostics": [
+  {
+   "title": "Neutral Beam Injection (NBI) System",
+   "category": "Heating and CD Systems",
+   "description": "Neutral Beam Injection (NBI) System",
+   "location": "Horizontal ports A & F",
+   "responsible": "Chundong HU (ext: 63146)",
+   "specifications": {
+    "Beam Energy": "50-80 keV",
+    "Beam Power": "0-4 MW per beam line",
+    "Beam Pulse": "0-100 s"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Neutral_Beam_Injection_(NBI)_System",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\NBI1LHV",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "acceleration voltage of No. 1 beamline's left ion source"
+    },
+    {
+     "node": "\\NBI1LHI",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "A",
+     "dim": "1-D",
+     "desc": "beam current of No. 1 beamline's left ion source"
+    },
+    {
+     "node": "\\NBI1RHV",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "acceleration voltage of No. 1 beamline's right ion source"
+    },
+    {
+     "node": "\\NBI1RHI",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "A",
+     "dim": "1-D",
+     "desc": "beam current of No. 1 beamline's right ion source"
+    },
+    {
+     "node": "\\NBI2LHV",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "acceleration voltage of No. 2 beamline's left ion source"
+    },
+    {
+     "node": "\\NBI2LHI",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "A",
+     "dim": "1-D",
+     "desc": "beam current of No. 2 beamline's left ion source"
+    },
+    {
+     "node": "\\NBI2RHV",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "acceleration voltage of No. 2 beamline's right ion source"
+    },
+    {
+     "node": "\\NBI2RHI",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "A",
+     "dim": "1-D",
+     "desc": "beam current of No. 2 beamline's right ion source"
+    },
+    {
+     "node": "\\PNBI1LSOURCE",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "source power of No. 1 beamline's left ion source"
+    },
+    {
+     "node": "\\PNBI1RSOURCE",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "source power of No. 1 beamline's right ion source"
+    },
+    {
+     "node": "\\PNBI2LSOURCE",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "source power of No. 2 beamline's left ion source"
+    },
+    {
+     "node": "\\PNBI2RSOURCE",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "source power of No. 2 beamline's right ion source"
+    },
+    {
+     "node": "\\NBI1LNP",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "constant",
+     "desc": "average injected power of No. 1 beamline's left ion source"
+    },
+    {
+     "node": "\\NBI1LE1",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "%",
+     "dim": "constant",
+     "desc": "ratio of full energy particles"
+    },
+    {
+     "node": "\\NBI1LE2",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "%",
+     "dim": "constant",
+     "desc": "ratio of half energy particles"
+    },
+    {
+     "node": "\\NBI1LE3",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "%",
+     "dim": "constant",
+     "desc": "ratio of third energy particles"
+    },
+    {
+     "node": "\\NBI1RNP",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "constant",
+     "desc": "average injected power of No. 1 beamline's right ion source"
+    },
+    {
+     "node": "\\NBI1RE1",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "%",
+     "dim": "constant",
+     "desc": "ratio of full energy particles"
+    },
+    {
+     "node": "\\NBI1RE2",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "%",
+     "dim": "constant",
+     "desc": "ratio of half energy particles"
+    },
+    {
+     "node": "\\NBI1RE3",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "%",
+     "dim": "constant",
+     "desc": "ratio of third energy particles"
+    },
+    {
+     "node": "\\NBI2LNP",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "constant",
+     "desc": "average injected power of No. 2 beamline's left ion source"
+    },
+    {
+     "node": "\\NBI2LE1",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "%",
+     "dim": "constant",
+     "desc": "ratio of full energy particles"
+    },
+    {
+     "node": "\\NBI2LE2",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "%",
+     "dim": "constant",
+     "desc": "ratio of half energy particles"
+    },
+    {
+     "node": "\\NBI2LE3",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "%",
+     "dim": "constant",
+     "desc": "ratio of third energy particles"
+    },
+    {
+     "node": "\\NBI2RNP",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "constant",
+     "desc": "average injected power of No. 2 beamline's right ion source"
+    },
+    {
+     "node": "\\NBI2RE1",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "%",
+     "dim": "constant",
+     "desc": "ratio of full energy particles"
+    },
+    {
+     "node": "\\NBI2RE2",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "%",
+     "dim": "constant",
+     "desc": "ratio of half energy particles"
+    },
+    {
+     "node": "\\NBI2RE3",
+     "tree": "analysis",
+     "sub_tree": "NBI_EAST",
+     "kind": "processed",
+     "unit": "%",
+     "dim": "constant",
+     "desc": "ratio of third energy particles"
+    }
+   ]
+  },
+  {
+   "title": "Ion Cyclotron Resonance Heating (ICRH) System",
+   "category": "Heating and CD Systems",
+   "description": "Ion Cyclotron Resonance Heating (ICRH) System",
+   "location": "Horizontal port B and I",
+   "responsible": "Yanping Zhao (ext: 63501)",
+   "specifications": {
+    "Frequency coverage": "25-70 MHz",
+    "Spectral resolution": "±1MHz(-3dB)",
+    "Source power": "0-12MW",
+    "Harmonic component": "≤-30dBm",
+    "Working Mode": "Continuous wave",
+    "Transmission Line": "9 Inch Coaxial Line (50Ω)",
+    "Matching System": "Triple Liquid Stud tuners"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Ion_Cyclotron_Resonance_Heating_(ICRH)_System",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\ICRF1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for injected power of No.1 transmitter"
+    },
+    {
+     "node": "\\ICRF2",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for rejected power of No.1 transmitter"
+    },
+    {
+     "node": "\\ICRF3",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for injected power of No.2 transmitter"
+    },
+    {
+     "node": "\\ICRF4",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for rejected power of No.2 transmitter"
+    },
+    {
+     "node": "\\ICRF5",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for injected power of No.3 transmitter"
+    },
+    {
+     "node": "\\ICRF6",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for rejected power of No.3 transmitter"
+    },
+    {
+     "node": "\\ICRF7",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for injected power of No.4 transmitter"
+    },
+    {
+     "node": "\\ICRF8",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for rejected power of No.4 transmitter"
+    },
+    {
+     "node": "\\ICRF9",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for injected power of No.5 transmitter"
+    },
+    {
+     "node": "\\ICRF10",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for rejected power of No.5 transmitter"
+    },
+    {
+     "node": "\\ICRF11",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for injected power of No.6 transmitter"
+    },
+    {
+     "node": "\\ICRF12",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for rejected power of No.6 transmitter"
+    },
+    {
+     "node": "\\ICRF13",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for injected power of No.7 transmitter"
+    },
+    {
+     "node": "\\ICRF14",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for rejected power of No.7 transmitter"
+    },
+    {
+     "node": "\\ICRF15",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for injected power of No.8 transmitter"
+    },
+    {
+     "node": "\\ICRF16",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for rejected power of No.8 transmitter"
+    },
+    {
+     "node": "\\PICRFII",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "injected power from antenna I"
+    },
+    {
+     "node": "\\PICRFIR",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "rejected power to antenna I"
+    },
+    {
+     "node": "\\PICRFBI",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "injected power from antenna B"
+    },
+    {
+     "node": "\\PICRFBR",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "rejected power to antenna B"
+    },
+    {
+     "node": "\\PICRF1I",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "injected power of No.1 transmitter"
+    },
+    {
+     "node": "\\PICRF1R",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "rejected power of No.1 transmitter"
+    },
+    {
+     "node": "\\PICRF2I",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "injected power of No.2 transmitter"
+    },
+    {
+     "node": "\\PICRF2R",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "rejected power of No.2 transmitter"
+    },
+    {
+     "node": "\\PICRF3I",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "injected power of No.3 transmitter"
+    },
+    {
+     "node": "\\PICRF3R",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "rejected power of No.3 transmitter"
+    },
+    {
+     "node": "\\PICRF4I",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "injected power of No.4 transmitter"
+    },
+    {
+     "node": "\\PICRF4R",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "rejected power of No.4 transmitter"
+    },
+    {
+     "node": "\\PICRF5I",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "injected power of No.5 transmitter"
+    },
+    {
+     "node": "\\PICRF5R",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "rejected power of No.5 transmitter"
+    },
+    {
+     "node": "\\PICRF6I",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "injected power of No.6 transmitter"
+    },
+    {
+     "node": "\\PICRF6R",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "rejected power of No.6 transmitter"
+    },
+    {
+     "node": "\\PICRF7I",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "injected power of No.7 transmitter"
+    },
+    {
+     "node": "\\PICRF7R",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "rejected power of No.7 transmitter"
+    },
+    {
+     "node": "\\PICRF8I",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "injected power of No.8 transmitter"
+    },
+    {
+     "node": "\\PICRF8R",
+     "tree": "analysis",
+     "sub_tree": "ICRF_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "rejected power of No.8 transmitter"
+    }
+   ]
+  },
+  {
+   "title": "LHW Current Drive and Heating System",
+   "category": "Heating and CD Systems",
+   "description": "2.45 GHz and 4.6 GHz LHW Current Drive and Heating System",
+   "location": "Horizontal port N (2.45 GHz), Horizontal port E (4.6 GHz)",
+   "responsible": "Mao WANG (ext: 63294)",
+   "specifications": {},
+   "source_url": "http://202.127.205.54/wiki/index.php/LHW_Current_Drive_and_Heating_System",
+   "signal_pattern": [
+    "PLHI1, PLHR1, PLHI2, PLHR2"
+   ],
+   "signals": []
+  },
+  {
+   "title": "Electron Cyclotron Resonance Heating/Current Drive (ECRH/ECCD) System",
+   "category": "Heating and CD Systems",
+   "description": "Electron Cyclotron Resonance Heating/Current Drive (ECRH/ECCD) System",
+   "location": "Horizontal port M",
+   "responsible": "Handong XU (ext: 63332), Xiaojie WANG(ext: 66514), Jian ZHANG",
+   "specifications": {
+    "Frequency": "140GHz",
+    "Maximum power": "1MW with a goal of 100s for each Gyrotron system",
+    "Adjustable injection angle range of wave beam": "Poloidal angle: ±5 ° ∓25 °, Toroidal angle: ±25°"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Electron_Cyclotron_Resonance_Heating/Current_Drive_(ECRH/ECCD)_System",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\ECRH1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for injected power measurement of No.1 gyrotron"
+    },
+    {
+     "node": "\\ECRH2",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for injected power measurement of No.2 gyrotron"
+    },
+    {
+     "node": "\\ECRH3",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for injected power measurement of No.3 gyrotron"
+    },
+    {
+     "node": "\\ECRH4",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "output of detector for injected power measurement of No.4 gyrotron"
+    },
+    {
+     "node": "\\PECRH1I",
+     "tree": "analysis",
+     "sub_tree": "ECRH_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "injected power of No.1 gyrotron"
+    },
+    {
+     "node": "\\PECRH2I",
+     "tree": "analysis",
+     "sub_tree": "ECRH_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "injected power of No.2 gyrotron"
+    },
+    {
+     "node": "\\PECRH3I",
+     "tree": "analysis",
+     "sub_tree": "ECRH_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "injected power of No.3 gyrotron"
+    },
+    {
+     "node": "\\PECRH4I",
+     "tree": "analysis",
+     "sub_tree": "ECRH_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "injected power of No.4 gyrotron"
+    }
+   ]
+  },
+  {
+   "title": "Gas puffing system",
+   "category": "Fueling Systems",
+   "description": "Gas puffing system",
+   "location": "Horizontal ports J, K, D, B; Upper port O; Lower ports O, C, H",
+   "responsible": "Jinhua WU (ext: 61332)",
+   "specifications": {
+    "Working gas": "D2, He, SiD4 for wall conditioning; D2 for plasma discharge; Ar for impurity gas injection exp",
+    "Flow range": "0-0.83 Pa*{m^3/s}",
+    "Pressure range": "1-2.2 bar"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Gas_puffing_system",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\JHG1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\JHG2",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\JHG3",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\JHG4",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\JHG5",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\JHG6",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\OUG1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\ODG1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\HDG1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\CDG1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\DHG1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KHG1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    }
+   ]
+  },
+  {
+   "title": "Supersonic Molecular Beam Injection",
+   "category": "Fueling Systems",
+   "description": "Supersonic Molecular Beam Injection",
+   "location": "Horizontal port A (SMBI-1&SMBI-2) and J (SMBI-3)",
+   "responsible": "XingWei ZHENG (ext: 63616)",
+   "specifications": {
+    "Working gas": "D2 or other gases if necessary",
+    "Working Pressure": "1 30 Bar（usually 3MPa)",
+    "Velocity": "1.3 2.2 km/s"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Supersonic_Molecular_Beam_Injection",
+   "signal_pattern": [
+    "SMBI1, ..., SMBI3"
+   ],
+   "signals": []
+  },
+  {
+   "title": "Pellet Injection System",
+   "category": "Fueling Systems",
+   "description": "Pellet Injection System",
+   "location": "Horizontal port J with two injection lines: LFS/HFS",
+   "responsible": "Xingjia YAO (ext: 63656)",
+   "specifications": {
+    "Material": "Hydrogen/Deuterium",
+    "Pellet shape": "Cylinder",
+    "Pellet size": "D=2 mm, L=2 mm",
+    "Nominal particle flux/pellet": "3.78×10^20",
+    "Injection frequency": "1-10 Hz",
+    "Injection velocity": "150-300 m/s"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Pellet_Injection_System",
+   "signal_pattern": [
+    "GACVPI20, VPI20"
+   ],
+   "signals": []
+  },
+  {
+   "title": "Rogowski loops for plasma current measurement",
+   "category": "Magnetic diagnostics",
+   "description": "Plasma current Rogowski loops",
+   "location": null,
+   "responsible": "Tonghui SHI (ext: 62335), Dalong CHEN (ext: 62335), Huihui WANG (ext: 62335), Jinping QIAN (ext: 62380), Youwen SUN (ext: 63052)",
+   "specifications": {
+    "Sampling frequency": "10 kHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Rogowski_loops_for_plasma_current_measurement",
+   "signal_pattern": [
+    "IPG, IPE, IPM, IPV1"
+   ],
+   "signals": []
+  },
+  {
+   "title": "Rogowski loops for PF current measurement",
+   "category": "Magnetic diagnostics",
+   "description": "PF current Rogowski loops",
+   "location": null,
+   "responsible": "Tonghui SHI (ext: 62335), Dalong CHEN (ext: 62335), Huihui WANG (ext: 62335), Jinping QIAN (ext: 62380), Youwen SUN (ext: 63052)",
+   "specifications": {
+    "Sampling frequency": "10 kHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Rogowski_loops_for_PF_current_measurement",
+   "signal_pattern": [
+    "PF1P, ..., PF12P"
+   ],
+   "signals": []
+  },
+  {
+   "title": "Flux loops for loop voltage measurement",
+   "category": "Magnetic diagnostics",
+   "description": "Flux loops for loop voltage measurement",
+   "location": null,
+   "responsible": "Tonghui SHI (ext: 62335), Dalong CHEN (ext: 62335), Huihui WANG (ext: 62335), Jinping QIAN (ext: 62380), Youwen SUN (ext: 63052)",
+   "specifications": {
+    "Sampling frequency": "10 kHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Flux_loops_for_loop_voltage_measurement",
+   "signal_pattern": [
+    "VP1, ..., VP5",
+    "FL1A, ..., FL35A",
+    "FL1B, ..., FL35B"
+   ],
+   "signals": []
+  },
+  {
+   "title": "Flux loops",
+   "category": "Magnetic diagnostics",
+   "description": "Flux loops",
+   "location": null,
+   "responsible": "Tonghui SHI (ext: 62335), Dalong CHEN (ext: 62335), Huihui WANG (ext: 62335), Jinping QIAN (ext: 62380), Youwen SUN (ext: 63052)",
+   "specifications": {
+    "Sampling frequency": "10 kHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Flux_loops",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Equilibrium magnetic probes",
+   "category": "Magnetic diagnostics",
+   "description": "Equilibrium magnetic probes",
+   "location": null,
+   "responsible": "Tonghui SHI (ext: 62335), Dalong CHEN (ext: 62335), Huihui WANG (ext: 62335), Jinping QIAN (ext: 62380), Youwen SUN (ext: 63052)",
+   "specifications": {
+    "Sampling frequency": "10 kHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Equilibrium_magnetic_probes",
+   "signal_pattern": [
+    "DBP1T, ..., DBP38T",
+    "DBP1N, ..., DBP38N",
+    "HBP1T, ..., HBP38T",
+    "HBP1N, ..., HBP38N",
+    "LBP1T, ..., LBP38T",
+    "LBP1N, ..., LBP38N"
+   ],
+   "signals": []
+  },
+  {
+   "title": "RMP magnetic probes",
+   "category": "Magnetic diagnostics",
+   "description": "RMP magnetic probes",
+   "location": null,
+   "responsible": "Tonghui SHI (ext: 62335), Dalong CHEN (ext: 62335), Huihui WANG (ext: 62335), Jinping QIAN (ext: 62380), Youwen SUN (ext: 63052)",
+   "specifications": {
+    "Sampling frequency": "10 kHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/RMP_magnetic_probes",
+   "signal_pattern": [
+    "BP_AB_1DT, BP_BC_1DT, ..., BP_PA_1DT",
+    "BP_AB_1DN, BP_BC_1DN, ..., BP_PA_1DN",
+    "BP_AB_2DT, BP_BC_2DT, ..., BP_PA_2DT",
+    "BP_AB_2DN, BP_BC_2DN, ..., BP_PA_2DN",
+    "BP_AB_3DT, BP_BC_3DT, ..., BP_PA_3DT",
+    "BP_AB_3DN, BP_BC_3DN, ..., BP_PA_3DN",
+    "BP_AB_4UT, BP_BC_4UT, ..., BP_PA_4UT",
+    "BP_AB_4UN, BP_BC_4UN, ..., BP_PA_4UN",
+    "BP_AB_5UT, BP_BC_5UT, ..., BP_PA_5UT",
+    "BP_AB_5UN, BP_BC_5UN, ..., BP_PA_5UN",
+    "BP_AB_6UT, BP_BC_6UT, ..., BP_PA_6UT",
+    "BP_AB_6UN, BP_BC_6UN, ..., BP_PA_6UN"
+   ],
+   "signals": []
+  },
+  {
+   "title": "Saddle loops",
+   "category": "Magnetic diagnostics",
+   "description": "Saddle loops",
+   "location": null,
+   "responsible": "Tonghui SHI (ext: 62335), Dalong CHEN (ext: 62335), Huihui WANG (ext: 62335), Jinping QIAN (ext: 62380), Youwen SUN (ext: 63052)",
+   "specifications": {
+    "Sampling frequency": "10 kHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Saddle_loops",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Regular Mirnov coils",
+   "category": "Magnetic diagnostics",
+   "description": "Regular Mirnov coils",
+   "location": null,
+   "responsible": "Tonghui SHI (ext: 62335), Dalong CHEN (ext: 62335), Huihui WANG (ext: 62335), Jinping QIAN (ext: 62380), Youwen SUN (ext: 63052)",
+   "specifications": {
+    "Sampling frequency": "100 kHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Regular_Mirnov_coils",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\CMP1T",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KMP1T",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\CMP26T",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KMP26T",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\CMP1N",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KMP1N",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\CMP26N",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KMP26N",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    }
+   ]
+  },
+  {
+   "title": "Toroidal Mirnov coils",
+   "category": "Magnetic diagnostics",
+   "description": "Toroidal Mirnov coils",
+   "location": null,
+   "responsible": "Tonghui SHI (ext: 62335), Dalong CHEN (ext: 62335), Huihui WANG (ext: 62335), Jinping QIAN (ext: 62380), Youwen SUN (ext: 63052)",
+   "specifications": {
+    "Sampling frequency": "50 kHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Toroidal_Mirnov_coils",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\MITAB2",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\MITBC2",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\MITPA2",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    }
+   ]
+  },
+  {
+   "title": "High frequency Mirnov coils",
+   "category": "Magnetic diagnostics",
+   "description": "High frequency Mirnov coils",
+   "location": null,
+   "responsible": "Tonghui SHI (ext: 62335), Dalong CHEN (ext: 62335), Huihui WANG (ext: 62335), Jinping QIAN (ext: 62380), Youwen SUN (ext: 63052)",
+   "specifications": {
+    "Sampling frequency": "1 MHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/High_frequency_Mirnov_coils",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\KHP1T",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KHP2T",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KHP3T",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KHP1N",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KHP2N",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KHP3N",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KHP6T",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KHP7T",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KHP8T",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KHP6N",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KHP7N",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KHP8N",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\LHP6T",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\LHP7T",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\LHP8T",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\LHP6N",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\LHP7N",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\LHP8N",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    }
+   ]
+  },
+  {
+   "title": "Diamagnetic loops",
+   "category": "Magnetic diagnostics",
+   "description": "Diamagnetic loop",
+   "location": null,
+   "responsible": "Tonghui SHI (ext: 62335), Dalong CHEN (ext: 62335), Huihui WANG (ext: 62335), Jinping QIAN (ext: 62380), Youwen SUN (ext: 63052)",
+   "specifications": {
+    "Sampling frequency": "10 kHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Diamagnetic_loops",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\Diaop1a",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Diaop2a",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Diahi1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Diaop1b",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Diaop2b",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Diahi2",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Diaop1c",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Diaop2c",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    }
+   ]
+  },
+  {
+   "title": "Rogowski loops for halo current measurement",
+   "category": "Magnetic diagnostics",
+   "description": "Rogowski loop for halo current measurement",
+   "location": null,
+   "responsible": "Tonghui SHI (ext: 62335), Dalong CHEN (ext: 62335), Huihui WANG (ext: 62335), Jinping QIAN (ext: 62380), Youwen SUN (ext: 63052)",
+   "specifications": {
+    "Sampling frequency": "10 kHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Rogowski_loops_for_halo_current_measurement",
+   "signal_pattern": [
+    "HaloFG1N, ..., HaloFG4N",
+    "Halono1N, ..., Halono4N",
+    "HaloCD7N, ..., HaloCD14N",
+    "HaoloKL15N, HaoloKL18N"
+   ],
+   "signals": []
+  },
+  {
+   "title": "ELMs coil current Rogowski loops",
+   "category": "Magnetic diagnostics",
+   "description": "ELMs coil current Rogowski loops",
+   "location": null,
+   "responsible": "Tonghui SHI (ext: 62335), Dalong CHEN (ext: 62335), Huihui WANG (ext: 62335), Jinping QIAN (ext: 62380), Youwen SUN (ext: 63052)",
+   "specifications": {
+    "Sampling frequency": "100 kHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/ELMs_coil_current_Rogowski_loops",
+   "signal_pattern": [
+    "IRMPL1, ..., IRMPL8",
+    "IRMPU1, ..., IRMPU8"
+   ],
+   "signals": []
+  },
+  {
+   "title": "Confinement / energy scalars",
+   "category": "Energy_EAST",
+   "description": null,
+   "location": null,
+   "responsible": null,
+   "specifications": {},
+   "source_url": null,
+   "signal_pattern": [
+    "taue_dia",
+    "taue_mhd",
+    "tau_98",
+    "tau_89",
+    "H98_dia",
+    "H89_dia",
+    "H98_mhd",
+    "H89_mhd"
+   ],
+   "signals": []
+  },
+  {
+   "title": "Visible camera",
+   "category": "Visible and infrared cameras",
+   "description": "EAST Visible Camera Diagnostic Systems (CCDs)",
+   "location": "Horizontal port D",
+   "responsible": "Jianhua YANG (ext: 61763)",
+   "specifications": {
+    "Frame rate": "20-120 fps",
+    "Spatial resolution": "<10mm@5000mm"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Visible_camera",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Infrared camera (IR)/visible CCD",
+   "category": "Visible and infrared cameras",
+   "description": "Infrared camera (IR) / visible CCD",
+   "location": "Horizontal port K",
+   "responsible": "Kaifu GAN (Abroad), Zhendong YANG (ext: 65213), Bin ZHANG (ext:65213)，Meiwen CHEN (ext: 65213)",
+   "specifications": {
+    "View field": "The IR CCD and visible CCD share the endoscope, which views the upper and lower divertor, lower hybrid wave antenna, and limiter (N, O, P port).",
+    "Spectral range (IR)": "2.5-5 um",
+    "Window size (IR)": "640*512 (pixel)",
+    "Frame rate (IR)": "115 Hz (full frame), 2.9 kHz(132*3)",
+    "Spatial resolution divertor region (IR)": "4 mm",
+    "Window size (visible CCD)": "800*600 (pixel)",
+    "Spatial resolution divertor region (visible CCD)": "3 mm"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Infrared_camera_(IR)/visible_CCD",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "3-channel HCN interferometer",
+   "category": "Fundamental parameters",
+   "description": "3-channel HCN interferometer",
+   "location": "Vertical port K",
+   "responsible": "Xuechao WEI (ext: 65211), Weiming LI (ext:65211)",
+   "specifications": {
+    "Wavelength of the probing beam": "337 um",
+    "Temporal resolution": "upto 100 us",
+    "Sampling frequency": "10 kHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/3-channel_HCN_interferometer",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\HCN1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\HCN2",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\HCN3",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\dfsdev",
+     "tree": "pcs_east",
+     "sub_tree": null,
+     "kind": "processed",
+     "unit": "10^19 m^-3",
+     "dim": "1-D",
+     "desc": "chord averaged n_e at major radius of 1.82 m"
+    }
+   ]
+  },
+  {
+   "title": "Thomson scattering (core)",
+   "category": "Fundamental parameters",
+   "description": "Thomson scattering (core)",
+   "location": "Vertical port L",
+   "responsible": "Qing ZANG (ext: 61394)",
+   "specifications": {
+    "Working condition": "n_e>0.5*10^19 m^-3, T_e>100 eV"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Thomson_scattering_(core)",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\TS3",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "signal for occurrence of the laser"
+    },
+    {
+     "node": "\\Te_maxTS",
+     "tree": "analysis",
+     "sub_tree": "TS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\R_coreTS",
+     "tree": "analysis",
+     "sub_tree": "TS_EAST",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Z_coreTS",
+     "tree": "analysis",
+     "sub_tree": "TS_EAST",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Te_coreTS",
+     "tree": "analysis",
+     "sub_tree": "TS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "2-D",
+     "desc": "Te profiles"
+    },
+    {
+     "node": "\\ne_coreTS",
+     "tree": "analysis",
+     "sub_tree": "TS_EAST",
+     "kind": "processed",
+     "unit": "m^-3",
+     "dim": "2-D",
+     "desc": "ne profiles"
+    },
+    {
+     "node": "\\Te_coreTSerr",
+     "tree": "analysis",
+     "sub_tree": "TS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "2-D",
+     "desc": "errorbar of Te_coreTS"
+    },
+    {
+     "node": "\\ne_coreTSerr",
+     "tree": "analysis",
+     "sub_tree": "TS_EAST",
+     "kind": "processed",
+     "unit": "m^-3",
+     "dim": "2-D",
+     "desc": "errorbar of ne_coreTS"
+    }
+   ]
+  },
+  {
+   "title": "Thomson scattering (edge)",
+   "category": "Fundamental parameters",
+   "description": null,
+   "location": null,
+   "responsible": null,
+   "specifications": {},
+   "source_url": "http://202.127.205.54/wiki/index.php/Thomson_scattering_(edge)",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Michelson interferometer",
+   "category": "Fundamental parameters",
+   "description": "Michelson interferometer (X-mode ECE)",
+   "location": "Horizontal port P",
+   "responsible": "Zeying ZHU (ext: 61347), Hailin ZHAO (ext:61763)",
+   "specifications": {
+    "Frequency coverage": "80-500 GHz",
+    "Spectral resolution": "2.8 GHz",
+    "Sampling frequency": "The temporal resolution is about 33 ms, which corresponds to a sampling frequency of about 30 Hz for the temperature profile."
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Michelson_interferometer",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\MPI_INTERFER",
+     "tree": "east",
+     "sub_tree": "MPI_EAST",
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "interferogram raw data"
+    },
+    {
+     "node": "\\MPI_REFER",
+     "tree": "east",
+     "sub_tree": "MPI_EAST",
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": "signal for occurrence of mirror turn-around marker"
+    },
+    {
+     "node": "\\Te0_MI",
+     "tree": "analysis",
+     "sub_tree": "MPI_Analy",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "1-D",
+     "desc": "evolution of Te at major radius of 1.9 m"
+    },
+    {
+     "node": "\\Te0_MIerr",
+     "tree": "analysis",
+     "sub_tree": "MPI_Analy",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "1-D",
+     "desc": "errobar of Te0_HRS"
+    },
+    {
+     "node": "\\R_MI",
+     "tree": "analysis",
+     "sub_tree": "MPI_Analy",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Z_MI",
+     "tree": "analysis",
+     "sub_tree": "MPI_Analy",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Te_MI",
+     "tree": "analysis",
+     "sub_tree": "MPI_Analy",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "2-D",
+     "desc": "Te profiles"
+    },
+    {
+     "node": "\\Te_MIerr",
+     "tree": "analysis",
+     "sub_tree": "MPI_Analy",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "2-D",
+     "desc": "errorbar of Te_MI"
+    }
+   ]
+  },
+  {
+   "title": "32-channel heterodyne radiometer",
+   "category": "Fundamental parameters",
+   "description": "32-channel heterodyne radiometer (X-mode ECE)",
+   "location": "Horizontal port P",
+   "responsible": "Hailin ZHAO (ext:61763), Erzhong LI (ext:61763)",
+   "specifications": {
+    "Frequency coverage": "starting from 105.1 GHz with a frequency interval of 2 GHz",
+    "Spectral resolution": "0.5 GHz",
+    "Temporal resolution": "upto 2.5 us",
+    "Sampling frequency": "1 MHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/32-channel_heterodyne_radiometer",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\HRS01H",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\HRS02H",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\HRS31H",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\HRS32H",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Te0_HRS",
+     "tree": "analysis",
+     "sub_tree": "HRS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "1-D",
+     "desc": "evolution of Te at major radius of 1.9 m"
+    },
+    {
+     "node": "\\Te0_HRSerr",
+     "tree": "analysis",
+     "sub_tree": "HRS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "1-D",
+     "desc": "errobar of Te0_HRS"
+    },
+    {
+     "node": "\\R_HRS",
+     "tree": "analysis",
+     "sub_tree": "HRS_EAST",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Z_HRS",
+     "tree": "analysis",
+     "sub_tree": "HRS_EAST",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Te_HRS",
+     "tree": "analysis",
+     "sub_tree": "HRS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "2-D",
+     "desc": "Te profiles"
+    },
+    {
+     "node": "\\Te_HRSerr",
+     "tree": "analysis",
+     "sub_tree": "HRS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "2-D",
+     "desc": "errorbar of Te_HRS"
+    }
+   ]
+  },
+  {
+   "title": "New 16-channel heterodyne radiometer",
+   "category": "Fundamental parameters",
+   "description": "New 16-channel heterodyne radiometer (X-mode ECE)",
+   "location": "Horizontal port P",
+   "responsible": "Hailin ZHAO (ext:61763), Ang TI (ext:61763)",
+   "specifications": {
+    "Frequency coverage": "HRS33H-HRS40H: starting from 106 GHz with a frequency interval of 2 GHz, HRS41H-HRS48H: starting from 97 GHz with a frequency interval of 1 GHz",
+    "Spectral resolution": "0.5 GHz for HRS33H-HRS40H, 0.2 GHz for HRS41H-HRS48H",
+    "Temporal resolution": "upto 2.5 us",
+    "Sampling frequency": "1 MHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/New_16-channel_heterodyne_radiometer",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\HRS33H",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\HRS34H",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\HRS47H",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\HRS48H",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Te0_HRS",
+     "tree": "analysis",
+     "sub_tree": "HRS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "1-D",
+     "desc": "evolution of Te at major radius of 1.9 m"
+    },
+    {
+     "node": "\\Te0_HRSerr",
+     "tree": "analysis",
+     "sub_tree": "HRS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "1-D",
+     "desc": "errobar of Te0_HRS"
+    },
+    {
+     "node": "\\R_HRS",
+     "tree": "analysis",
+     "sub_tree": "HRS_EAST",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Z_HRS",
+     "tree": "analysis",
+     "sub_tree": "HRS_EAST",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Te_HRS",
+     "tree": "analysis",
+     "sub_tree": "HRS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "2-D",
+     "desc": "Te profiles"
+    },
+    {
+     "node": "\\Te_HRSerr",
+     "tree": "analysis",
+     "sub_tree": "HRS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "2-D",
+     "desc": "errorbar of Te_HRS"
+    }
+   ]
+  },
+  {
+   "title": "8-channel ECE radiometer",
+   "category": "Fundamental parameters",
+   "description": "8-channel ECE radiometer",
+   "location": "Horizontal port D",
+   "responsible": "Bili LING (ext: 63340), Jianbin LIU (ext:63282)",
+   "specifications": {
+    "Frequency coverage": "starting from 103 GHz with a frequency interval of 1 GHz",
+    "Spectral resolution": "0.5 GHz?",
+    "Temporal resolution": "upto 10 us?",
+    "Sampling frequency": "100 kHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/8-channel_ECE_radiometer",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\ECED1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\ECED2",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\ECED7",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\ECED8",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    }
+   ]
+  },
+  {
+   "title": "11-channel POlarimeter-INTferometer",
+   "category": "Fundamental parameters",
+   "description": "11-channel POlarimeter-INTferometer (POINT)",
+   "location": "Horizontal port O",
+   "responsible": "Zhiyong ZOU (ext: 65211), Weiming LI (ext:65211)",
+   "specifications": {
+    "Temporal resolution": "upto 1 us",
+    "Sampling frequency": "10MHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/11-channel_POlarimeter-INTferometer",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\POINT0",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\POINT1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\POINT11",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\POINT12",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\POINT_N1",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "10^19 m^-2",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\POINT_N2",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "10^19 m^-2",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\POINT_N10",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "10^19 m^-2",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\POINT_N11",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "10^19 m^-2",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\POINT_F1",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "degree",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\POINT_F2",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "degree",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\POINT_F10",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "degree",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\POINT_F11",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "degree",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\qmin",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "Unity",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\qminErr",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "Unity",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\q0",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "Unity",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\q0Err",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "Unity",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\R_POINT",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Z_POINT",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\ne_POINT",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "10^19 m^-2",
+     "dim": "2-D",
+     "desc": null
+    },
+    {
+     "node": "\\ne_POINTerr",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "10^19 m^-2",
+     "dim": "2-D",
+     "desc": null
+    },
+    {
+     "node": "\\J_POINT",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "MA/m^-2",
+     "dim": "2-D",
+     "desc": null
+    },
+    {
+     "node": "\\J_POINTerr",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "MA/m^-2",
+     "dim": "2-D",
+     "desc": null
+    },
+    {
+     "node": "\\q_POINT",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "Unity",
+     "dim": "2-D",
+     "desc": null
+    },
+    {
+     "node": "\\q_POINTerr",
+     "tree": "east",
+     "sub_tree": "POINT_Analy",
+     "kind": "processed",
+     "unit": "Unity",
+     "dim": "2-D",
+     "desc": null
+    }
+   ]
+  },
+  {
+   "title": "Q-、V-、W-band density profile reflectometry",
+   "category": "Fundamental parameters",
+   "description": "Q-、V-、W-band density profile reflectometry (X-mode)",
+   "location": "Horizontal port J",
+   "responsible": "Xiang HAN (ext: 64276), Yumin WANG (ext: 64276)",
+   "specifications": {
+    "Frequency coverage": "32-110 GHz",
+    "Sampling frequency": "64 MHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Q-、V-、W-band_density_profile_reflectometry",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\R_ReflJ",
+     "tree": "analysis",
+     "sub_tree": "ReflJ_EAST",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "2-D",
+     "desc": null
+    },
+    {
+     "node": "\\Z_ReflJ",
+     "tree": "analysis",
+     "sub_tree": "ReflJ_EAST",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\ne_ReflJ",
+     "tree": "analysis",
+     "sub_tree": "ReflJ_EAST",
+     "kind": "processed",
+     "unit": "10^19 m^-3",
+     "dim": "2-D",
+     "desc": "ne profiles"
+    },
+    {
+     "node": "\\ne_ReflJerr",
+     "tree": "analysis",
+     "sub_tree": "ReflJ_EAST",
+     "kind": "processed",
+     "unit": "10^19 m^-3",
+     "dim": "2-D",
+     "desc": "errorbar of ne_ReflJ"
+    }
+   ]
+  },
+  {
+   "title": "Density profile reflectometer (USTC)",
+   "category": "Fundamental parameters",
+   "description": "Density profile reflectometer (X-mode and O-mode)",
+   "location": "Horizontal port K",
+   "responsible": "Jin ZHANG, Chu ZHOU",
+   "specifications": {
+    "Frequency coverage": "33-75 GHz",
+    "Temporal resolution": "10 us",
+    "Sampling frequency": "60 MHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Density_profile_reflectometer_(USTC)",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Lithium beam emission spectroscopy",
+   "category": "Fundamental parameters",
+   "description": "Lithium beam emission spectroscopy (Li-BES)",
+   "location": "Horizontal port D",
+   "responsible": "Guanghai HU (ext: 63248), Yifeng WANG (ext: 63342)",
+   "specifications": {
+    "Observation area": "0.75a<r<1.05a",
+    "Channels": "4X16（poloidal X radial）",
+    "Spatial resolution": "1 cm",
+    "Sampling frequency": "upto 1 MHz."
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Lithium_beam_emission_spectroscopy",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Thermal Helium beam",
+   "category": "Fundamental parameters",
+   "description": "Thermal Helium beam ( He-BES)",
+   "location": "Horizontal port P",
+   "responsible": "Wei ZHANG (ext: 63248), Yang YE (ext:63342)",
+   "specifications": {
+    "Space resolution": "5 mm",
+    "Sampling rate": "upto 1.25 MS/s"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Thermal_Helium_beam",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\hea1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\hea20",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\heb1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\heb20",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\hec1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\hec20",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\hed1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\hed20",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    }
+   ]
+  },
+  {
+   "title": "Charge eXchange Recombination Spectroscopy (Toroidal)",
+   "category": "Fundamental parameters",
+   "description": "Charge eXchange Recombination Spectroscopy (Toroidal)",
+   "location": "Horizontal port D",
+   "responsible": "Yingying LI (ext: 61309)",
+   "specifications": {
+    "Channel number": "30",
+    "Radial range": "R=1550-2326 mm",
+    "Impurity lines": "C6+，He2+，Li3+",
+    "Spatial Resolution": "1 3.5 cm (core to edge)"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Charge_eXchange_Recombination_Spectroscopy_(Toroidal)",
+   "signal_pattern": [
+    "Ti0_CXRS_T",
+    "Ti0_CXRS_Ter",
+    "Vt0_CXRS_T",
+    "Vt0_CXRS_Ter"
+   ],
+   "signals": [
+    {
+     "node": "\\Ti0_CXRS_T",
+     "tree": "analysis",
+     "sub_tree": "CXRS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "1-D",
+     "desc": "evolution of Ti at major radius of 1.9 m"
+    },
+    {
+     "node": "\\Ti0_CXRS_Ter",
+     "tree": "analysis",
+     "sub_tree": "CXRS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "1-D",
+     "desc": "errorbar of Ti0_CXRS_T"
+    },
+    {
+     "node": "\\Vt0_CXRS_T",
+     "tree": "analysis",
+     "sub_tree": "CXRS_EAST",
+     "kind": "processed",
+     "unit": "km/s",
+     "dim": "1-D",
+     "desc": "evolution of Vt at major radius of 1.9 m"
+    },
+    {
+     "node": "\\Vt0_CXRS_Ter",
+     "tree": "analysis",
+     "sub_tree": "CXRS_EAST",
+     "kind": "processed",
+     "unit": "km/s",
+     "dim": "1-D",
+     "desc": "errorbar of Vt0_CXRS_T"
+    },
+    {
+     "node": "\\R_CXRS_T",
+     "tree": "analysis",
+     "sub_tree": "CXRS_EAST",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Z_CXRS_T",
+     "tree": "analysis",
+     "sub_tree": "CXRS_EAST",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Ti_CXRS_T",
+     "tree": "analysis",
+     "sub_tree": "CXRS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "2-D",
+     "desc": "Ti profiles"
+    },
+    {
+     "node": "\\Ti_CXRS_Terr",
+     "tree": "analysis",
+     "sub_tree": "CXRS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "2-D",
+     "desc": "errorbar of Ti_CXRS_T"
+    },
+    {
+     "node": "\\Vt_CXRS_T",
+     "tree": "analysis",
+     "sub_tree": "CXRS_EAST",
+     "kind": "processed",
+     "unit": "km/s",
+     "dim": "2-D",
+     "desc": "Vt profiles"
+    },
+    {
+     "node": "\\Vt_CXRS_Terr",
+     "tree": "analysis",
+     "sub_tree": "CXRS_EAST",
+     "kind": "processed",
+     "unit": "km/s",
+     "dim": "2-D",
+     "desc": "errorbar of Vt_CXRS_T"
+    }
+   ]
+  },
+  {
+   "title": "Charge eXchange Recombination Spectroscopy (Edge)",
+   "category": "Fundamental parameters",
+   "description": "Charge eXchange Recombination Spectroscopy (Edge)",
+   "location": "Horizontal port P",
+   "responsible": "Yingying LI (ext: 61309)",
+   "specifications": {
+    "Channel number": "32",
+    "Radial range": "Pedestal region",
+    "Impurity lines": "C6+",
+    "Spatial Resolution": "7 mm"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Charge_eXchange_Recombination_Spectroscopy_(Edge)",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Charge eXchange Recombination Spectroscopy (Poloidal)",
+   "category": "Fundamental parameters",
+   "description": "Charge eXchange Recombination Spectroscopy (Poloidal)",
+   "location": "Horizontal port A",
+   "responsible": "Yingying LI (ext: 61309)",
+   "specifications": {
+    "Channel number": "15",
+    "Radial range": "R=1850-2370 mm",
+    "Impurity lines": "C6+",
+    "Spatial Resolution": "? mm"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Charge_eXchange_Recombination_Spectroscopy_(Poloidal)",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Tangential X-ray Crystal Spectrometer",
+   "category": "Fundamental parameters",
+   "description": "Tangential X-ray Crystal Spectrometer (TXCS)",
+   "location": "Horizontal port C",
+   "responsible": "Fudi Wang (ext: 62369)",
+   "specifications": {
+    "Spatial coverage": "±0.45 m",
+    "Temporal resolution": "10-50 ms",
+    "Spatial resolution": "1-3 cm"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Tangential_X-ray_Crystal_Spectrometer",
+   "signal_pattern": [
+    "Ti0_TXCS",
+    "Ti0_TXCSerr",
+    "Vt0_TXCS",
+    "Vt0_TXCSerr",
+    "Te0_TXCS",
+    "Te0_TXCSerr"
+   ],
+   "signals": [
+    {
+     "node": "\\Ti0_TXCS",
+     "tree": "analysis",
+     "sub_tree": "TXCS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "1-D",
+     "desc": "evolution of Ti at major radius of 1.9 m"
+    },
+    {
+     "node": "\\Ti0_TXCSerr",
+     "tree": "analysis",
+     "sub_tree": "TXCS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "1-D",
+     "desc": "errorbar of Ti0_TXCS"
+    },
+    {
+     "node": "\\Vt0_TXCS",
+     "tree": "analysis",
+     "sub_tree": "TXCS_EAST",
+     "kind": "processed",
+     "unit": "km/s",
+     "dim": "1-D",
+     "desc": "evolution of Vt at major radius of 1.9 m"
+    },
+    {
+     "node": "\\Vt0_TXCSerr",
+     "tree": "analysis",
+     "sub_tree": "TXCS_EAST",
+     "kind": "processed",
+     "unit": "km/s",
+     "dim": "1-D",
+     "desc": "errorbar of Vt0_TXCS"
+    },
+    {
+     "node": "\\Te0_TXCS",
+     "tree": "analysis",
+     "sub_tree": "TXCS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "1-D",
+     "desc": "evolution of Te at major radius of 1.9 m"
+    },
+    {
+     "node": "\\Te0_TXCSerr",
+     "tree": "analysis",
+     "sub_tree": "TXCS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "1-D",
+     "desc": "errorbar of Te0_TXCS"
+    },
+    {
+     "node": "\\R_TXCS",
+     "tree": "analysis",
+     "sub_tree": "TXCS_EAST",
+     "kind": "processed",
+     "unit": "cm",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Z_TXCS",
+     "tree": "analysis",
+     "sub_tree": "TXCS_EAST",
+     "kind": "processed",
+     "unit": "cm",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Ti_TXCS",
+     "tree": "analysis",
+     "sub_tree": "TXCS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "2-D",
+     "desc": "Ti profiles"
+    },
+    {
+     "node": "\\Ti_TXCSerr",
+     "tree": "analysis",
+     "sub_tree": "TXCS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "2-D",
+     "desc": "errorbar of Ti_TXCS"
+    },
+    {
+     "node": "\\Vt_TXCS",
+     "tree": "analysis",
+     "sub_tree": "TXCS_EAST",
+     "kind": "processed",
+     "unit": "km/s",
+     "dim": "2-D",
+     "desc": "Vt profiles"
+    },
+    {
+     "node": "\\Vt_TXCSerr",
+     "tree": "analysis",
+     "sub_tree": "TXCS_EAST",
+     "kind": "processed",
+     "unit": "km/s",
+     "dim": "2-D",
+     "desc": "errorbar of Vt_TXCS"
+    },
+    {
+     "node": "\\Te_TXCS",
+     "tree": "analysis",
+     "sub_tree": "TXCS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "2-D",
+     "desc": "Te profiles"
+    },
+    {
+     "node": "\\Te_TXCSerr",
+     "tree": "analysis",
+     "sub_tree": "TXCS_EAST",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "2-D",
+     "desc": "errorbar of Te_TXCS"
+    }
+   ]
+  },
+  {
+   "title": "Poloidal X-ray Crystal Spectrometer",
+   "category": "Fundamental parameters",
+   "description": null,
+   "location": null,
+   "responsible": null,
+   "specifications": {},
+   "source_url": "http://202.127.205.54/wiki/index.php/Poloidal_X-ray_Crystal_Spectrometer",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Visible Bremsstrahlung Measurement System",
+   "category": "Fundamental parameters",
+   "description": "Visible Bremsstrahlung Measurement System",
+   "location": "Horizontal port D",
+   "responsible": "Yingjie CHEN",
+   "specifications": {
+    "Spatial resolution": "2.5 cm",
+    "Temporal resolution": "20 us",
+    "Sampling frequency": "50 kHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Visible_Bremsstrahlung_Measurement_System",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\VB0",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\VB1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\VB6",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\VB7",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\VB11",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\VB12",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Zeff_ave",
+     "tree": "analysis",
+     "sub_tree": "Brem_EAST",
+     "kind": "processed",
+     "unit": "unity",
+     "dim": "1-D",
+     "desc": "average effective charge number"
+    },
+    {
+     "node": "\\Zeff_aveErr",
+     "tree": "analysis",
+     "sub_tree": "Brem_EAST",
+     "kind": "processed",
+     "unit": "unity",
+     "dim": "1-D",
+     "desc": "errorbar of Zeff_ave"
+    },
+    {
+     "node": "\\R_Brem",
+     "tree": "analysis",
+     "sub_tree": "Brem_EAST",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Z_Brem",
+     "tree": "analysis",
+     "sub_tree": "Brem_EAST",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Brem",
+     "tree": "analysis",
+     "sub_tree": "Brem_EAST",
+     "kind": "processed",
+     "unit": "mW*m^-3*nm^-1",
+     "dim": "2-D",
+     "desc": "profiles of bremstrahlung"
+    },
+    {
+     "node": "\\BremErr",
+     "tree": "analysis",
+     "sub_tree": "Brem_EAST",
+     "kind": "processed",
+     "unit": "mW*m^-3*nm^-1",
+     "dim": "2-D",
+     "desc": "errorbar of Brem"
+    },
+    {
+     "node": "\\Zeff",
+     "tree": "analysis",
+     "sub_tree": "Brem_EAST",
+     "kind": "processed",
+     "unit": "unity",
+     "dim": "2-D",
+     "desc": "profiles of effective charge number"
+    },
+    {
+     "node": "\\ZeffErr",
+     "tree": "analysis",
+     "sub_tree": "Brem_EAST",
+     "kind": "processed",
+     "unit": "unity",
+     "dim": "2-D",
+     "desc": "errorbar of Zeff"
+    }
+   ]
+  },
+  {
+   "title": "Motional Stark Effect Diagnostic",
+   "category": "Fundamental parameters",
+   "description": null,
+   "location": null,
+   "responsible": null,
+   "specifications": {},
+   "source_url": "http://202.127.205.54/wiki/index.php/Motional_Stark_Effect_Diagnostic",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Multi-energy soft x-ray diagnostic",
+   "category": "Fundamental parameters",
+   "description": "Multi-energy soft x-ray diagnostic (ME-SXR)",
+   "location": "Horizontal port J",
+   "responsible": "Yongliang LI (ext: 63342)",
+   "specifications": {
+    "Spatial resolution": "10 mm",
+    "Temporal resolution": "100kHz (no foil)"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Multi-energy_soft_x-ray_diagnostic",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\MSA1D2",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\MSA1D19",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\MSA1D21",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\MSA2D2",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\MSA2D19",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\MSA2D21",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\MSA3D2",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\MSA3D21",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\MSA4D2",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\MSA4D19",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\MSA4D21",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\MSA5D2",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\MSA5D18",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\MSA5D20",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\MSA5D21",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    }
+   ]
+  },
+  {
+   "title": "High Field Side probe",
+   "category": "Fundamental parameters",
+   "description": "High Field Side probe (HFS-probe)",
+   "location": "High field side of port M",
+   "responsible": "Ning YAN (ext: 61721), Jie LI (ext:63324)",
+   "specifications": {
+    "Sampling frequency": "The temporal resolution is 1 μs, which corresponds to a sampling frequency of 1 MHz. (isolator band pass 1.5 MHz, PXIe-6368 sampling rate 2 MHz for electrodes signal sampling and PXIe-6356-1 MHz for probe stroke driving circuit signal sampling, the NI program for sampling is 1 MHz)",
+    "Probe position (taking tokamak reference system and coordinate system)": "Probe Z position: 139.6 mm for the upper one. -146.5 mm for the lower one.",
+    "Time interval of one stroke:": "Within 100 ms to reach the end point at a full plug with some shift as a variation of Bt and driving current, but usually this time interval is enough to give a profile measurement in quiescent/quasi-quiescent state."
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/High_Field_Side_probe",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Low Field Side-Probe",
+   "category": "Fundamental parameters",
+   "description": "Low Field Side-Probe (LFS-probe)",
+   "location": "Horizontal Port J and K",
+   "responsible": "Ning YAN (TEL: 61721)",
+   "specifications": {
+    "Spatial resolution": "1 mm",
+    "Temporal resolution": "1 MHz",
+    "Maximum speed of the probes": "2 m/s, 2 m/s2"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Low_Field_Side-Probe",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Divertor Langmuir Probes",
+   "category": "Fundamental parameters",
+   "description": "Divertor Langmuir Probes (Div-LPs)",
+   "location": "Ports D and O (Upper Probes), Ports D-G (Lower Probes)",
+   "responsible": "Jichan XU (ext: 63342), Wei FENG (ext:63282), Liang WANG (ext: 63248)",
+   "specifications": {},
+   "source_url": "http://202.127.205.54/wiki/index.php/Divertor_Langmuir_Probes",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\UIIS01",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\UOIS01",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\LIIS01",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\LOIS01",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\UIIS28",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\UOIS26",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\LIIS15",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\LOIS20",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\UIVP01",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\UOVP01",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\LIVP01",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\LOVP01",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\UIVP28",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\UOVP26",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\LIVP15",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\LOVP20",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\UIVF01",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\UOVF01",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\LIVF01",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\LOVF01",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\UIVF28",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\UOVF26",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\LIVF15",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\LOVF20",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\UILPS",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": "Distance to Upper Inboard div-corner"
+    },
+    {
+     "node": "\\UOLPS",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": "Distance to Upper Outboard div-corner"
+    },
+    {
+     "node": "\\LILPS",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": "Distance to Lower Inboard div-corner"
+    },
+    {
+     "node": "\\LOLPS",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": "Distance to Lower Outboard div-corner"
+    },
+    {
+     "node": "\\UIJS",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "A*m^-2",
+     "dim": "2-D",
+     "desc": "Ion saturation current"
+    },
+    {
+     "node": "\\UINE",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "10^19 m^-3",
+     "dim": "2-D",
+     "desc": "Electron density"
+    },
+    {
+     "node": "\\UITE",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "2-D",
+     "desc": "Electron temperature"
+    },
+    {
+     "node": "\\UIFP",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "V",
+     "dim": "2-D",
+     "desc": "Floating potential"
+    },
+    {
+     "node": "\\UIQP",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "W*m^-2",
+     "dim": "2-D",
+     "desc": "Parallel heat flux"
+    },
+    {
+     "node": "\\UOJS",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "A*m^-2",
+     "dim": "2-D",
+     "desc": "Ion saturation current"
+    },
+    {
+     "node": "\\UONE",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "10^19 m^-3",
+     "dim": "2-D",
+     "desc": "Electron density"
+    },
+    {
+     "node": "\\UOTE",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "2-D",
+     "desc": "Electron temperature"
+    },
+    {
+     "node": "\\UOFP",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "V",
+     "dim": "2-D",
+     "desc": "Floating potential"
+    },
+    {
+     "node": "\\UOQP",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "W*m^-2",
+     "dim": "2-D",
+     "desc": "Parallel heat flux"
+    },
+    {
+     "node": "\\LIJS",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "A*m^-2",
+     "dim": "2-D",
+     "desc": "Ion saturation current"
+    },
+    {
+     "node": "\\LINE",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "10^19 m^-3",
+     "dim": "2-D",
+     "desc": "Electron density"
+    },
+    {
+     "node": "\\LITE",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "2-D",
+     "desc": "Electron temperature"
+    },
+    {
+     "node": "\\LIFP",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "V",
+     "dim": "2-D",
+     "desc": "Floating potential"
+    },
+    {
+     "node": "\\LIQP",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "W*m^-2",
+     "dim": "2-D",
+     "desc": "Parallel heat flux"
+    },
+    {
+     "node": "\\LOJS",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "A*m^-2",
+     "dim": "2-D",
+     "desc": "Ion saturation current"
+    },
+    {
+     "node": "\\LONE",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "10^19 m^-3",
+     "dim": "2-D",
+     "desc": "Electron density"
+    },
+    {
+     "node": "\\LOTE",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "eV",
+     "dim": "2-D",
+     "desc": "Electron temperature"
+    },
+    {
+     "node": "\\LOFP",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "V",
+     "dim": "2-D",
+     "desc": "Floating potential"
+    },
+    {
+     "node": "\\LOQP",
+     "tree": "analysis",
+     "sub_tree": "DivLP_Analy",
+     "kind": "processed",
+     "unit": "W*m^-2",
+     "dim": "2-D",
+     "desc": "Parallel heat flux"
+    }
+   ]
+  },
+  {
+   "title": "Bolometer diagnostic",
+   "category": "Radiation measurement",
+   "description": "Bolometer diagnostic",
+   "location": "Horizontal port O",
+   "responsible": "Yanmin DUAN (ext: 62987), Songtao MAO (ext:62987)",
+   "specifications": {
+    "Photon energy range": "Infrared ray - 10 keV",
+    "Sampling frequency": "10 kHz",
+    "Temporal resolution": "1-10 ms, determined by the bandwidth of the electronics which is lower than sampling frequency.",
+    "Space resolution": "3-6 cm"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Bolometer_diagnostic",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\Bolo1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Bolo2",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Bolo47",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Bolo48",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    }
+   ]
+  },
+  {
+   "title": "Fast bolometer",
+   "category": "Radiation measurement",
+   "description": "Fast bolometer",
+   "location": "Horizontal port P and Vertical port C",
+   "responsible": "Yanmin DUAN (ext: 62987), Songtao MAO (ext:62987)",
+   "specifications": {
+    "Photon energy range": "7 eV-6 keV",
+    "Sampling frequency": "100 kHz",
+    "Temporal resolution": "0.1 ms, determined by the bandwidth of the electronics which is lower than sampling frequency.",
+    "Space resolution": "3-6 cm"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Fast_bolometer",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\Pxuv1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Pxuv64",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Cxuv1V",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Cxuv24V",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\PradTot_axuv",
+     "tree": "analysis",
+     "sub_tree": "Prad_EAST",
+     "kind": "processed",
+     "unit": "kW",
+     "dim": "1-D",
+     "desc": "total radiation power from AXUV"
+    },
+    {
+     "node": "\\R_axuv",
+     "tree": "analysis",
+     "sub_tree": "Prad_EAST",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Z_axuv",
+     "tree": "analysis",
+     "sub_tree": "Prad_EAST",
+     "kind": "processed",
+     "unit": "m",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\Prad_axuv",
+     "tree": "analysis",
+     "sub_tree": "Prad_EAST",
+     "kind": "processed",
+     "unit": "kW/m^2",
+     "dim": "2-D",
+     "desc": "line averaged radiation power density from AXUV"
+    }
+   ]
+  },
+  {
+   "title": "Soft X-ray imaging",
+   "category": "Radiation measurement",
+   "description": "Soft X-ray imaging",
+   "location": "Horizontal port P and Vertical port C",
+   "responsible": "Liqing XU (62987), Kaiyun CHEN (62020)",
+   "specifications": {
+    "Spatial coverage": "U & D: both cover the whole poloidal section",
+    "Sampling frequency": "The temporal resolution is about 0.01 ms, which corresponds to a sampling frequency of about 100 kHz for the SXR radiation profile."
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Soft_X-ray_imaging",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\SXR1U",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "a.u.",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\SXR46U",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "a.u.",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\SXR1D",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "a.u.",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\SXR43D",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "a.u.",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\SXR7V",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "a.u.",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\SXR30V",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "a.u.",
+     "dim": "1-D",
+     "desc": null
+    }
+   ]
+  },
+  {
+   "title": "Hard X-ray diagnostics",
+   "category": "Radiation measurement",
+   "description": "Hard X-ray diagnostics",
+   "location": "Horizontal port A",
+   "responsible": "Shiyao LIN (62987), Jizong ZHANG (62987)",
+   "specifications": {
+    "Spatial coverage": "Covers the upper poloidal section",
+    "Sampling frequency": "The temporal resolution is about 0.01 ms, which corresponds to a sampling frequency of about 100 kHz for the HXR radiation profile."
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Hard_X-ray_diagnostics",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\HX1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "a.u.",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\HX20",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "a.u.",
+     "dim": "1-D",
+     "desc": null
+    }
+   ]
+  },
+  {
+   "title": "Filterscope",
+   "category": "Impurities",
+   "description": "Filterscope",
+   "location": "Horizontal port G",
+   "responsible": "Wei GAO (ext: 66391), Zong XU (ext:65213)",
+   "specifications": {
+    "Wavelength coverage": "Dα (656.1nm) , LiI (670.8nm), LiII (548.6nm), CIII (464.7nm), WI (400.8nm), Dγ (434.0nm), OII (441.5nm), HeI (468.6nm), Visible Bremsstrahlung (538.0 nm)",
+    "Spatial resolution": "about 22 mm",
+    "Sampling Frequency": "50 kHz-100 kHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Filterscope",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\LiIIM1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": null,
+     "desc": null
+    },
+    {
+     "node": "\\OIIU",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": null,
+     "desc": null
+    },
+    {
+     "node": "\\OIIM",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": null,
+     "desc": null
+    },
+    {
+     "node": "\\OIIL",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": null,
+     "desc": null
+    },
+    {
+     "node": "\\MoU",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": null,
+     "desc": null
+    },
+    {
+     "node": "\\MoM",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": null,
+     "desc": null
+    },
+    {
+     "node": "\\MoL",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": null,
+     "desc": null
+    }
+   ]
+  },
+  {
+   "title": "Divertor visible spectrometer",
+   "category": "Impurities",
+   "description": "Divertor visible spectrometer",
+   "location": "Horizontal port G",
+   "responsible": "Juan HUANG (ext:65633), ChengRui WU (ext:65213), Wei GAO (ext: 61763)",
+   "specifications": {
+    "Spatial resolution": "6 cm (Upper and down divertor), 7cm (middle horizontal tangential)",
+    "Spectral resolution": "0.004 nm (SP2750 at 2400 g/mm) , 0.018 nm (SCT320 at 1800 g/mm)"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Divertor_visible_spectrometer",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "XEUV spectrometers (S)",
+   "category": "Impurities",
+   "description": null,
+   "location": null,
+   "responsible": null,
+   "specifications": {},
+   "source_url": "http://202.127.205.54/wiki/index.php/XEUV_spectrometers_(S)",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "XEUV spectrometers (L)",
+   "category": "Impurities",
+   "description": "XEUV spectrometer (L)",
+   "location": "Horizontal port C",
+   "responsible": "Yongcai Shen (ext:61309)",
+   "specifications": {
+    "Wavelength coverage": "5-50 nm",
+    "Spectral resolution": "0.015@20 nm",
+    "Spatial resolution": "≥25 mm",
+    "Temporal resolution": "≥20 ms",
+    "CCD pixels": "2048*2048"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/XEUV_spectrometers_(L)",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Fast EUV spectrometer (Longer wavelength)",
+   "category": "Impurities",
+   "description": "Fast EUV Spectrometer (EUV_Long)",
+   "location": "Horizontal port D",
+   "responsible": "Ling ZHANG (ext: 61347)",
+   "specifications": {
+    "Wavelength coverage": "20-500 Å",
+    "Spectral resolution": "0.22 Å@200 Å",
+    "Temporal resolution": "5 ms"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Fast_EUV_spectrometer_(Longer_wavelength)",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Divertor W source spectroscopy",
+   "category": "Impurities",
+   "description": "Divertor W source spectroscopy",
+   "location": "Horizontal port H",
+   "responsible": "Hongmin MAO (ext: 61575), Zhenhua HU (ext:65751)",
+   "specifications": {
+    "Wavelength coverage": "WI (400.9 nm)",
+    "Poloidal resolution": "14 mm",
+    "Sampling frequency": "150 Hz for 16 LOS, 1500 Hz for 1 LOS",
+    "Spatial coverage": "156 mm at UI divertor, 270 mm at UO divertor"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Divertor_W_source_spectroscopy",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Soft X-ray spectrum",
+   "category": "Impurities",
+   "description": "Soft X-Ray Spectrum (SXPHA)",
+   "location": "Horizontal port A",
+   "responsible": "Jizong ZHANG (ext: 62987)",
+   "specifications": {
+    "Energy coverage": "2-20 keV",
+    "Energy resolution": "<150 eV@5.9 keV",
+    "Temporal resolution": "50 ms"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Soft_X-ray_spectrum",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\SXPHA01",
+     "tree": "east",
+     "sub_tree": "SXPHA_EAST",
+     "kind": "raw",
+     "unit": "Counts",
+     "dim": "2-D",
+     "desc": "Spectra"
+    },
+    {
+     "node": "\\SXPHA02",
+     "tree": "east",
+     "sub_tree": "SXPHA_EAST",
+     "kind": "raw",
+     "unit": "Counts",
+     "dim": "2-D",
+     "desc": "Spectra"
+    },
+    {
+     "node": "\\SXPHA09",
+     "tree": "east",
+     "sub_tree": "SXPHA_EAST",
+     "kind": "raw",
+     "unit": "Counts",
+     "dim": "2-D",
+     "desc": "Spectra"
+    },
+    {
+     "node": "\\SXPHA10",
+     "tree": "east",
+     "sub_tree": "SXPHA_EAST",
+     "kind": "raw",
+     "unit": "Counts",
+     "dim": "2-D",
+     "desc": "Spectra"
+    }
+   ]
+  },
+  {
+   "title": "Solid State Neutral Particle Analyzer",
+   "category": "Neutrons and confined/lost ion/alpha particles",
+   "description": "Solid State Neutral Particle Analyzer (SSNPA)",
+   "location": "Horizontal port P & Vertical port B&N",
+   "responsible": "Jizong ZHANG (ext: 62987)",
+   "specifications": {
+    "Space coverage": "Horizontal port P: the whole tangential and anti-tangential section",
+    "Sampling frequency": "The temporal resolution is about 0.01 ms, which corresponds to a sampling frequency of about 100 kHz."
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Solid_State_Neutral_Particle_Analyzer",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\SSNPA01P",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\SSNPA32P",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\SSNPA01N",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\SSNPA07N",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\SSNPA01B",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\SSNPA09B",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    }
+   ]
+  },
+  {
+   "title": "Runaway electron diagnostic system",
+   "category": "Neutrons and confined/lost ion/alpha particles",
+   "description": "Runaway electron diagnostic system",
+   "location": "Horizontal port D",
+   "responsible": "Ruijie ZHOU (ext: 65202)",
+   "specifications": {
+    "Energy coverage": "0.5 MeV-12 MeV",
+    "Temporal resolution of spectra measurement": "50 ms",
+    "Energy spectral resolution": "3 keV-15 keV",
+    "Temporal resolution of flux measurement": "1 ms",
+    "Sampling frequency of flux measurement": "100 kHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Runaway_electron_diagnostic_system",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\RA1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\RA6",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    }
+   ]
+  },
+  {
+   "title": "Neutron flux monitor",
+   "category": "Neutrons and confined/lost ion/alpha particles",
+   "description": "Neutron flux monitor (^235U, ^3He)",
+   "location": "Outside ports D, F, J and M",
+   "responsible": "Guoqiang ZHONG (ext: 65202)",
+   "specifications": {
+    "Energy coverage": "Thermal to 2.5 MeV",
+    "Sampling frequency": "The temporal resolution is about 5 ms for conventional experiments, and it could be upto 1 ms for NBI experiment."
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Neutron_flux_monitor",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\ZZ1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "Counts/ms",
+     "dim": "1-D",
+     "desc": "^3He"
+    },
+    {
+     "node": "\\ZZ2",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "Counts/ms",
+     "dim": "1-D",
+     "desc": "^3He"
+    },
+    {
+     "node": "\\ZZ7",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "Counts/ms",
+     "dim": "1-D",
+     "desc": "^235U"
+    },
+    {
+     "node": "\\ZZ8",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "Counts/ms",
+     "dim": "1-D",
+     "desc": "^235U"
+    }
+   ]
+  },
+  {
+   "title": "Neutron fluctuation",
+   "category": "Neutrons and confined/lost ion/alpha particles",
+   "description": "Neutron fluctuation",
+   "location": "Outside port D",
+   "responsible": "Neng PU (ext: 65202)",
+   "specifications": {
+    "Energy coverage": "Thermal to 2.5MeV",
+    "Sampling frequency": "100 kHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Neutron_fluctuation",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\NF1",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\NF2",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\NF3",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "V",
+     "dim": "1-D",
+     "desc": null
+    }
+   ]
+  },
+  {
+   "title": "Neutron camera",
+   "category": "Neutrons and confined/lost ion/alpha particles",
+   "description": "Neutron camera (6 channels BC-501A)",
+   "location": "Outside port K",
+   "responsible": "Guoqiang ZHONG (ext: 65202)",
+   "specifications": {
+    "Energy coverage": "Thermal to 2.5 MeV",
+    "Spectral resolution": "15 cm",
+    "Sampling frequency": "The temporal resolution is about 5 ms for conventional experiments, and it could be upto 1 ms for NBI experiment."
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Neutron_camera",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Neutron Spectra",
+   "category": "Neutrons and confined/lost ion/alpha particles",
+   "description": "Neutron Spectra (BC-501A)",
+   "location": "Outside port D",
+   "responsible": "Guoqiang ZHONG (ext: 65202)",
+   "specifications": {
+    "Energy coverage": "100 keV to 4 MeV",
+    "Sampling frequency": "The temporal resolution is about 5 ms for conventional experiments, and it could be upto 1 ms for NBI experiment."
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Neutron_Spectra",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Gamma ray diagnostic system",
+   "category": "Neutrons and confined/lost ion/alpha particles",
+   "description": "Gamma ray diagnostic system",
+   "location": "Horizontal port K",
+   "responsible": "Ruijie ZHOU (ext: 65202)",
+   "specifications": {
+    "Energy coverage": "0.5 MeV-6 MeV",
+    "Temporal resolution of spectra measurement": "5 ms",
+    "Energy spectral resolution": "6 keV",
+    "Temporal resolution of flux measurement": "5 ms"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Gamma_ray_diagnostic_system",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\RGC1",
+     "tree": null,
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "Counts",
+     "dim": "1-D",
+     "desc": null,
+     "unfetchable": "upstream tree 'EAST (Befor shot 65726)' is not a plain tree name"
+    },
+    {
+     "node": "\\RGC6",
+     "tree": null,
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "Counts",
+     "dim": "1-D",
+     "desc": null,
+     "unfetchable": "upstream tree 'EAST (Befor shot 65726)' is not a plain tree name"
+    },
+    {
+     "node": "\\RGC1",
+     "tree": "east",
+     "sub_tree": "gamma_east",
+     "kind": "processed",
+     "unit": "Counts (kHz)",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\RGC6",
+     "tree": "east",
+     "sub_tree": "gamma_east",
+     "kind": "processed",
+     "unit": "Counts (kHz)",
+     "dim": "1-D",
+     "desc": null
+    }
+   ]
+  },
+  {
+   "title": "Fast-ion D-alpha",
+   "category": "Neutrons and confined/lost ion/alpha particles",
+   "description": "Fast-ion D-alpha",
+   "location": "Horizontal port O, vertical upper ports B and N",
+   "responsible": "Juan HUANG (ext:65633) , YuMei HOU (ext:65213), Zhao JIN (ext:65213)",
+   "specifications": {
+    "Spatial resolution": "5 cm (Upper port), 5 cm (middle horizontal tangential port O)",
+    "Spectral resolution": "0.032 nm"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Fast-ion_D-alpha",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Fast-ion loss detector",
+   "category": "Neutrons and confined/lost ion/alpha particles",
+   "description": "Fast-ion loss detector",
+   "location": "Above midplane port J",
+   "responsible": "Jiafeng CHANG (ext: 65633)",
+   "specifications": {
+    "CCD": ">100 fps",
+    "PMT": "5×5@2 MHz",
+    "Energy range": "10 keV-2 MeV (D^+)"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Fast-ion_loss_detector",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Electron cyclotron emission imaging system",
+   "category": "Turbulence measurements",
+   "description": "Electron cyclotron emission imaging system (ECE Imaging)",
+   "location": "Horizontal port F",
+   "responsible": "Chengming Qu",
+   "specifications": {
+    "Total Channels": "24 (Poloidal) × 16 (Radial)",
+    "Local Osillator Freq": "90-140 GHz",
+    "IF Frequency range": "2-18 GHz",
+    "Spectral resolution": "0.9 GHz",
+    "Spatial Resolution": "1 cm",
+    "Time Resolution": "2.5 20 μs"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Electron_cyclotron_emission_imaging_system",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "CO2 laser collective scattering system",
+   "category": "Turbulence measurements",
+   "description": "CO2 laser collective scattering system",
+   "location": "Vertical port A",
+   "responsible": "Yadong Li (ext: 63278)",
+   "specifications": {
+    "Measurement parameters": "density fluctuation",
+    "Wave number": "8 cm^-1 < k\\thita<18 cm^-1",
+    "Wave number resolution": "Δk=2-2.5 cm^-1",
+    "Normalized larmor radius": "k\\rho_s 1.1-4.5"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/CO2_laser_collective_scattering_system",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Density fluctuation reflectometry",
+   "category": "Turbulence measurements",
+   "description": "Density fluctuation reflectometry",
+   "location": "Horizontal port K",
+   "responsible": "Fei WEN (ext: 60405), Hao QU (ext: 64276)",
+   "specifications": {
+    "Frequency coverage": "50-110 GHz",
+    "Sampling frequency": "2 MHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Density_fluctuation_reflectometry",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "8-channel Doppler backscattering system",
+   "category": "Turbulence measurements",
+   "description": "8-channel Doppler Backscattering System",
+   "location": "Horizontal port K",
+   "responsible": "Chu ZHOU, Jianqiang HU",
+   "specifications": {
+    "Injecting frequency": "55, 57.5, 60, 62.5 67.5, 70, 72.5, 75 GHz",
+    "Sampling frequency": "10 MHz",
+    "Wavenumber range": "4-12 cm^-1",
+    "Measurable radial range": "Depends on the toroidal field and density profile"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/8-channel_Doppler_backscattering_system",
+   "signal_pattern": null,
+   "signals": [
+    {
+     "node": "\\S550I",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "rad",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\S550Q",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "rad",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\S575I",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "rad",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\S575Q",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "rad",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\S600I",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "rad",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\S600Q",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "rad",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\S625I",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "rad",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\S625Q",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "rad",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\S675I",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "rad",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\S675Q",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "rad",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\S700I",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "rad",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\S700Q",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "rad",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\S725I",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "rad",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\S725Q",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "rad",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\S750I",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "rad",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\S750Q",
+     "tree": "east",
+     "sub_tree": null,
+     "kind": "raw",
+     "unit": "rad",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KDBS1",
+     "tree": "analysis",
+     "sub_tree": null,
+     "kind": "processed",
+     "unit": "kHz",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KDBS2",
+     "tree": "analysis",
+     "sub_tree": null,
+     "kind": "processed",
+     "unit": "kHz",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KDBS3",
+     "tree": "analysis",
+     "sub_tree": null,
+     "kind": "processed",
+     "unit": "kHz",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KDBS4",
+     "tree": "analysis",
+     "sub_tree": null,
+     "kind": "processed",
+     "unit": "kHz",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KDBS5",
+     "tree": "analysis",
+     "sub_tree": null,
+     "kind": "processed",
+     "unit": "kHz",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KDBS6",
+     "tree": "analysis",
+     "sub_tree": null,
+     "kind": "processed",
+     "unit": "kHz",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KDBS7",
+     "tree": "analysis",
+     "sub_tree": null,
+     "kind": "processed",
+     "unit": "kHz",
+     "dim": "1-D",
+     "desc": null
+    },
+    {
+     "node": "\\KDBS8",
+     "tree": "analysis",
+     "sub_tree": null,
+     "kind": "processed",
+     "unit": "kHz",
+     "dim": "1-D",
+     "desc": null
+    }
+   ]
+  },
+  {
+   "title": "2-channel Doppler backscattering system",
+   "category": "Turbulence measurements",
+   "description": "2-channel Doppler Backscattering System",
+   "location": "Horizontal port K",
+   "responsible": "Chu ZHOU, Ming Yuan WANG, Xiao Hui ZHANG",
+   "specifications": {
+    "Injecting frequency": "50 GHz-75 GHz",
+    "Sampling frequency": "10/20 MHz",
+    "Wavenumber range": "4-22 cm^-1",
+    "Measurable radial range": "Depends on the toroidal field and density profile"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/2-channel_Doppler_backscattering_system",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Gas Puff Imaging",
+   "category": "Turbulence measurements",
+   "description": "Gas Puff Imaging (GPI)",
+   "location": "Horizontal ports O and P",
+   "responsible": "Ning YAN (ext: 61347), Jie LI (ext:63342)",
+   "specifications": {},
+   "source_url": "http://202.127.205.54/wiki/index.php/Gas_Puff_Imaging",
+   "signal_pattern": null,
+   "signals": []
+  },
+  {
+   "title": "Beam Emission Spectrometer using the heating NBI in Port A",
+   "category": "Turbulence measurements",
+   "description": "Beam Emission Spectrometer using the heating NBI in Port A (NBI-BES)",
+   "location": "Horizontal port P",
+   "responsible": "Ran CHEN (ext: 63248), Huajie WANG (ext: 65663)",
+   "specifications": {
+    "Radial coverage": "R=1.844-2.426 m",
+    "Coverage during one shot": "200x100 mm^2",
+    "Channels layout": "16 × 8 or 8 × 16 (radial × vertical)",
+    "Spatial resolution": "<1.5 cm in the core, 2-3 cm in the edge",
+    "System bandwidth": ">1 MHz",
+    "Maximum DAQ frequency": "2 MHz"
+   },
+   "source_url": "http://202.127.205.54/wiki/index.php/Beam_Emission_Spectrometer_using_the_heating_NBI_in_Port_A",
+   "signal_pattern": null,
+   "signals": []
+  }
+ ]
+}

@@ -22,7 +22,7 @@
   var TYPE = 'fylite:AppSession/1';
 
   var CONTEXT = {
-    fyo: 'https://fusion-yun.github.io/fytok/fyo/',
+    fyo: 'https://fusion-yun.github.io/fyo/v0.draft/',
     fylite: 'urn:fylite:',
   };
 
@@ -46,6 +46,12 @@
   function apply(values, doc) {
     var applied = [], skipped = [];
     Object.keys(values || {}).forEach(function (id) {
+      //: ★a namespaced key is not a control and never was: the pages write
+      //: their own `fylite:...` entries into the same block (which source,
+      //: an imported profile, the Ip that came with it) and read them
+      //: themselves.  Counting those as "skipped" told every reader of a
+      //: round-tripped file that three of its settings had been dropped.
+      if (id.indexOf(':') >= 0) return;
       var el = (doc || document).getElementById(id);
       if (!el) { skipped.push(id); return; }
       var v = values[id];
@@ -63,12 +69,22 @@
     return { applied: applied, skipped: skipped };
   }
 
-  function num(a) { return Array.prototype.map.call(a, function (v) { return +v; }); }
-
   /** Round to `d` significant digits — psi carries no information past ~7. */
+  /**
+   * An array at `d` significant digits, with what is not a number written
+   * as `null`.
+   *
+   * ★★NOT ZERO.  This helper writes every numeric array this app exports,
+   * and a non-finite entry used to come out as an exact `0` — a slice that
+   * failed to solve, a q(0) that could not be formed, a channel with no
+   * reading, all indistinguishable in the file from a measurement that
+   * happened to be zero.  `null` is valid JSON and is the honest spelling;
+   * a reader that wants zeros can still choose them, which is not something
+   * the other direction allows.
+   */
   function sig(a, d) {
     return Array.prototype.map.call(a, function (v) {
-      return isFinite(v) ? +v.toPrecision(d || 7) : 0;
+      return isFinite(v) ? +v.toPrecision(d || 7) : null;
     });
   }
 
@@ -82,6 +98,15 @@
       'fylite:created': new Date().toISOString(),
       'fylite:psi_convention': 'full_flux_Wb_axis_max',
       'fylite:coil_current_units': 'A.turns',
+      //: ★WHICH build wrote this file.  `fylite:kernel` is the handshake —
+      //: the ABI, and the wasm's own sha256, i.e. the exact binary that
+      //: answered.  These two are the RELEASE either half belongs to, which
+      //: is what a reader holding the file a year later can act on: a sha256
+      //: identifies a build but does not tell you where it sits in a history.
+      //: Both come from the GENERATED `assets/version.js`; a page that did
+      //: not load it writes null rather than a guess.
+      'fylite:kernel_version': (root.FyVersion || {}).kernel || null,
+      'fylite:app_version': (root.FyVersion || {}).app || null,
       'fylite:kernel': kernel || null,
       'fylite:config': config,
     };
@@ -92,44 +117,60 @@
    * up with fydata's A-Box rather than inventing a private layout.
    */
   function equilibrium(grid, r, profiles, q) {
-    var slice = {
-      global_quantities: {
-        ip: r.ip,
-        psi_axis: r.psiAxis,
-        psi_boundary: r.psiBnd,
-        magnetic_axis: { r: r.axisR, z: r.axisZ },
-      },
-      profiles_2d: [{
-        grid_type: { name: 'rectangular', index: 1 },
-        grid: {
-          dim1: sig(gridAxis(grid.rmin, grid.rmax, grid.nr), 9),
-          dim2: sig(gridAxis(grid.zmin, grid.zmax, grid.nz), 9),
-        },
-        psi: sig(r.psi, 7),
-      }],
-    };
+    //: ★★Every path below is DECLARED (`rust/fylite/src/fyo.rs`, generated
+    //: into `assets/fyo-interface.js` and `python/fylite/_fyo_interface.py`).
+    //: This function used to spell them inline while `fyo.py` spelled its
+    //: own — which is how `psi_norm` came to be written bare here and
+    //: prefixed there, inside documents both typed `fyo:equilibrium`: no
+    //: error, just a section the other host could not find.  A page names
+    //: the SLOT now and never where it goes.
+    var F = root.FyFyo;
+    var doc = { '@type': F.type('EQUILIBRIUM') };
+    F.put(doc, 'EQUILIBRIUM', 'ip', r.ip);
+    F.put(doc, 'EQUILIBRIUM', 'psi_axis', r.psiAxis);
+    F.put(doc, 'EQUILIBRIUM', 'psi_boundary', r.psiBnd);
+    F.put(doc, 'EQUILIBRIUM', 'axis_r', r.axisR);
+    F.put(doc, 'EQUILIBRIUM', 'axis_z', r.axisZ);
+    F.put(doc, 'EQUILIBRIUM', 'grid_r',
+          sig(gridAxis(grid.rmin, grid.rmax, grid.nr), 9));
+    F.put(doc, 'EQUILIBRIUM', 'grid_z',
+          sig(gridAxis(grid.zmin, grid.zmax, grid.nz), 9));
+    //: ★★TWELVE DIGITS FOR THE MAP, seven for everything else.  The psi map
+    //: is the one array downstream DIFFERENTIATES: `B_R = -(dpsi/dz)/(2 pi r)`
+    //: over a half-cell step, which amplifies the file's own rounding by
+    //: `psi / dz` — on this deck 0.5 / 0.044, so seven digits in psi become
+    //: a part in 1e5 in B.  Measured: the probe check against a native
+    //: recomputation sat at exactly 1.0e-5 and the bootstrap at 5.5e-6, both
+    //: of them the file's resolution rather than any disagreement about the
+    //: physics.  Digits are cheap; a tolerance loosened to cover them is not.
+    F.put(doc, 'EQUILIBRIUM', 'psi_2d', sig(r.psi, 12));
+    var slice = doc.time_slice[0];
+    slice.profiles_2d[0].grid_type = { name: 'rectangular', index: 1 };
     if (r.lcfs && r.lcfs.length) {
       var ro = [], zo = [];
       for (var i = 0; i + 1 < r.lcfs.length; i += 2) {
         ro.push(+r.lcfs[i].toPrecision(7));
         zo.push(+r.lcfs[i + 1].toPrecision(7));
       }
-      slice.boundary = { outline: { r: ro, z: zo } };
+      F.put(doc, 'EQUILIBRIUM', 'boundary_r', ro);
+      F.put(doc, 'EQUILIBRIUM', 'boundary_z', zo);
     }
     if (profiles) {
-      slice.profiles_1d = {
-        psi_norm: sig(profiles.x, 7),
-        pressure: sig(profiles.p, 7),
-        dpressure_dpsi: sig(profiles.pprime, 7),
-        f_df_dpsi: sig(profiles.ffprime, 7),
-      };
+      F.put(doc, 'LADDER', 'psin', sig(profiles.x, 7));
+      F.put(doc, 'EQUILIBRIUM', 'pressure', sig(profiles.p, 7));
+      F.put(doc, 'EQUILIBRIUM', 'dpressure_dpsi', sig(profiles.pprime, 7));
+      F.put(doc, 'EQUILIBRIUM', 'f_df_dpsi', sig(profiles.ffprime, 7));
       if (q) {
-        slice.profiles_1d.f = sig(q.f, 7);
-        slice.profiles_1d['fylite:q_psi_norm'] = sig(q.x, 7);
-        slice.profiles_1d.q = sig(q.q, 7);
+        F.put(doc, 'EQUILIBRIUM', 'f', sig(q.f, 7));
+        F.put(doc, 'EQUILIBRIUM', 'q_1d', sig(q.q, 7));
+        //: ★this one has no slot: it is the q profile's OWN psi_N grid,
+        //: which the DD has no place for and no other host writes — a
+        //: private extension, and it stays spelled here rather than being
+        //: promoted into a shared table it has no second writer for
+        slice.profiles_1d[root.FyNames.q('q_psi_norm')] = sig(q.x, 7);
       }
     }
-    return { '@type': 'fyo:equilibrium', time_slice: [slice] };
+    return doc;
   }
 
   function gridAxis(lo, hi, n) {
@@ -169,20 +210,32 @@
   }
 
   /** Reject anything that is not one of our documents, loudly. */
-  function parse(text) {
+  /**
+   * Read one of this app's documents.
+   *
+   * ★★`fylite:config` IS NOT PART OF EVERY DOCUMENT.  It is the page's
+   * control state, and a SESSION file is meaningless without it — but a data
+   * document (measured points, chord readings, a profile, a time series) is a
+   * measurement someone else may have written, and demanding a block of this
+   * app's slider values from it turns "here are my Thomson points" into
+   * `导入失败：文档里没有 fylite:config`.  So the requirement belongs to the
+   * caller that needs it: `parse(text)` still enforces it, and the data
+   * formats say `parse(text, { config: false })`.
+   */
+  function parse(text, opts) {
     var d = JSON.parse(text);
     if (!d || d['@type'] !== TYPE) {
-      var got = d && d['@type'] ? d['@type'] : '(无 @type)';
-      throw new Error('不是本页的会话文档：@type = ' + got +
-                      '，需要 ' + TYPE);
+      var got = d && d['@type'] ? d['@type'] : '@type';
+      throw new Error(FyI18n.t('sess.not_ours', { got: got, want: TYPE }));
     }
-    if (!d['fylite:config']) throw new Error('文档里没有 fylite:config');
+    if (!(opts && opts.config === false) && !d['fylite:config'])
+      throw new Error(FyI18n.t('sess.no_config'));
     return d;
   }
 
   root.FySession = {
     TYPE: TYPE, collect: collect, apply: apply, envelope: envelope,
     equilibrium: equilibrium, pfActive: pfActive, magnetics: magnetics,
-    parse: parse, sig: sig, num: num,
+    parse: parse, sig: sig,
   };
 })(typeof self !== 'undefined' ? self : globalThis);

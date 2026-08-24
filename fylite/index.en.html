@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>fylite online demos</title>
+<link rel="icon" href="assets/fy_mark.svg">
+<meta name="description" content="Three interactive tokamak-modelling demos, one typical scenario per page: machine design, physics modelling, experiment analysis. Open and use — every computation runs in the browser, with no server behind it.">
+<link rel="alternate" hreflang="zh" href="https://fusion-yun.github.io/fylite/index.html">
+<link rel="alternate" hreflang="en" href="https://fusion-yun.github.io/fylite/index.en.html">
+<script>try{localStorage.setItem('fylite-lang','en')}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/site.css">
+<!-- ★ONE script, ~2 KB.  This page used to pull the i18n runtime and eight
+     catalogue files — 156 KB, of which 116 KB was tool prose it never shows —
+     in order to fill in text that is now simply in the markup.  `theme.js` is
+     what is left, and since the switches went wordless it no longer needs the
+     catalogues either. -->
+<script src="assets/theme.js"></script>
+</head>
+<body data-page="index">
+
+<header class="top">
+  <a class="brand" href="index.en.html"><img src="assets/fy_mark.svg" alt="" width="32" height="32"></a>
+  <div class="titles">
+  <h1>fylite online demos</h1>
+  <span class="sub">Tokamak integrated modelling, solved in the browser</span>
+  </div>
+  <nav>
+    <a href="scenario/design.html">Discharge design</a>
+    <a href="scenario/model.html">Physics modelling</a>
+    <a href="scenario/analysis.html">Experiment analysis</a>
+    <button id="theme-toggle" class="iconbtn" type="button"></button>
+  </nav>
+</header>
+
+<main class="doc">
+
+<p class="hero"><img src="assets/fylite_logo.svg" alt="fylite — FUYUN TOKAMAK SIMULATOR - LITE" width="240" height="100"></p>
+
+<p class="lead">Three interactive tokamak modelling scenarios, ordered as a device is actually worked through: <strong>design</strong> a discharge, <strong>model</strong> the evolution of its profiles, and <strong>infer</strong> its configuration back from measurements. Every computation runs locally in the browser — nothing to install, no server involved. Most controls answer while being dragged (milliseconds for 0-D, one to two seconds for equilibria); only the self-consistent equilibrium–transport bar of the modelling scenario belongs to the <strong>offline tier</strong> (seconds) and must be started explicitly.</p>
+
+<p class="alpha"><strong>This is an alpha release.</strong> Capabilities and numerical conventions are still moving: interfaces, pages and result formats may change without a migration path. What each capability is judged by, and where its limits are, is on <a href="features.en.html">capabilities and limits</a>.</p>
+
+<h2>Three scenarios</h2>
+
+<p>The demos are grouped by <strong>what they are for</strong> into three scenarios, in the order a machine is actually worked through: <strong>design to model to inference</strong>. One scenario is one page and one interface: one compute kernel, one toolbar; the page is a stack of <strong>function bars</strong>, and <strong>each bar has its own run key and its own fold</strong> — press the one you want; folding affects reading only. Bars are ordered by the dependencies they declare, and a bar whose upstream has not run yet says so in its strip.</p>
+
+<!-- The scenario cards are written by tools/make-app-pages.mjs out of the one
+     table in assets/site.js that the navigation is built from, so the entrance
+     cannot advertise a scenario that has moved nor drop one by forgetting a
+     card — the same guarantee the injected version had, kept without the page
+     having to run any JavaScript.
+     ★These are the ONLY cards.  A hand-written grid used to sit below them,
+     one card per PART, because a page carried several demos and a card was
+     the only way to reach one of them.  Since the site was cut back to four
+     typical scenarios a page carries one part, so that grid said the same
+     four things twice — and the copy that had to be maintained by hand was
+     the one saying them second. -->
+<div class="cards">
+  <a class="card panel" href="scenario/design.html">
+    <h3>Discharge design →</h3>
+    <p>Which operating point, can the shape be solved for, and can the supplies deliver it. The 0-D bar fixes the point (I<sub>p</sub>, loop voltage, fusion power, Q); the shape bar solves the coil currents for a target cross-section and checks them forward; the pulse bar gives the per-channel current and voltage.</p>
+  </a>
+  <a class="card panel" href="scenario/model.html">
+    <h3>Physics modelling / prediction →</h3>
+    <p>How the profiles of a shot come out: 1.5-D core transport at fixed geometry, and the self-consistent loop that feeds the pressure back into a free-boundary equilibrium.</p>
+  </a>
+  <a class="card panel" href="scenario/analysis.html">
+    <h3>Experiment analysis / inversion →</h3>
+    <p>Recover the equilibrium from flux loops, magnetic probes, POINT and Thomson, with a pressure profile as the kinetic constraint and error bars from a sampled posterior.</p>
+  </a>
+</div>
+
+<h2>fylite and FyTok: one contract, two implementations</h2>
+
+<p>fylite is not a standalone program but the <strong>light implementation</strong> of the <strong>fyo semantic contract</strong>. The same contract has a heavy implementation — <a href="https://github.com/fusion-yun/fytok">FyTok</a>, a full integrated-modelling framework in Python. The contract sits on the semantics of the IMAS Data Dictionary (DD v4) and addresses physical quantities by semantic path, so the two speak the same language.</p>
+
+<div class="table-scroll">
+<table>
+  <thead><tr>
+    <th></th>
+    <th>fylite (the light end — this site)</th>
+    <th>FyTok (the heavy end)</th>
+  </tr></thead>
+  <tbody>
+    <tr><th>What it is</th>
+        <td>A self-contained equilibrium–transport–turbulence kernel: Grad-Shafranov forward and inverse, the 1.5-D core transport step, neoclassical (NEO) and gyro-Landau-fluid (TGLF) models, 0-D integration, magnetic reconstruction</td><td>A full integrated modelling and analysis framework: plugins, workflow scheduling, heterogeneous execution, provenance, and interoperation with existing codes</td></tr>
+    <tr><th>How it is assembled</th>
+        <td>No plugin machinery — the physics is <strong>built in</strong>; a Rust kernel with a thin Python assembly layer; numpy is the only dependency</td><td>Equilibrium / transport / sources register as <strong>plugins</strong>: native implementations, wrapped external codes and NN surrogates are interchangeable</td></tr>
+    <tr><th>Where it runs</th>
+        <td>One machine — or <strong>the browser itself</strong>: the same kernel compiled to WebAssembly, nothing to install, nothing leaves your computer</td><td>HPC clusters and the cloud</td></tr>
+    <tr><th>One run</th>
+        <td>Sub-second (a free-boundary forward solve is about 0.05 s) — answers while you drag the slider</td><td>Ten minutes to hours</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>★<strong>The light end doubles as the heavy end's minimal functional verification.</strong> The two are <strong>coded independently</strong> against the same contract, so comparing them is a <strong>cross-check between implementations</strong> rather than a code confirming itself. Below that, each module is held to gold fixtures from its upstream reference (NEO end-to-end at the 10<sup>−10</sup> level, TGLF-NN 51 fields within 0.5%), and above it the chain is compared against EAST shots, ITER scenarios and codes such as METIS and FUSE.</p>
+
+<p>The two ends form a loop: the light end gets a capability working, the heavy end produces the high-accuracy reference solution, that solution calibrates reduced and surrogate models, and those go back into the light end as fast models.</p>
+
+<h2>Scope and disclaimer</h2>
+
+<ul>
+  <li>This distribution embeds the configuration and computational domain of a single device (the ITER machine description, <strong>without a reference discharge</strong>). Any other device is an <strong>input</strong>, imported through the device control in the toolbar.</li>
+  <li>The reconstruction model carries no vessel-eddy degrees of freedom, and the profile parameters of the forward solve are not the like-named parameters of established reconstruction codes. Differences of a few per cent against published results arise from these simplifications rather than from solver accuracy.</li>
+  <li>Configurations obtained from the free-boundary solve are usually classified as limiter-bounded; an X-point constraint changes the field structure and does not force the boundary to be reclassified as diverted.</li>
+  <li><strong>This site is a capability demonstration, not an engineering design tool.</strong> The configurations and profiles obtained here must not be used as a design basis for any device.</li>
+  <li>The 0-D layer performs no transport solve: the analysis tier prescribes its profiles and the prediction tier closes only a zero-dimensional energy balance. <strong>Neither is a 1-D transport prediction.</strong></li>
+</ul>
+
+<h2>Execution and data</h2>
+
+<p>All computation is executed in the visitor own browser. No data is submitted to any server: the parameters set and the results obtained never leave the machine, and are discarded when the page is closed. A single compute kernel (WebAssembly) is downloaded on the first visit; every solve thereafter is local.</p>
+
+</main>
+
+<footer>
+  <a class="mark" href="index.en.html" tabindex="-1" aria-hidden="true"><img src="assets/fy_mark.svg" alt="" width="24" height="24"></a>
+  <a href="features.en.html">Capability</a>
+  <a href="credits.en.html">Copyright and credits</a>
+  <a class="iconbtn" href="index.html" hreflang="zh" title="Switch to 中文" aria-label="Switch to 中文"><img class="flag" src="assets/flag-en.svg" alt="" width="24" height="16"></a>
+  <span class="copy">© 2026 Institute of Plasma Physics, Chinese Academy of Sciences (ASIPP) and the fylite contributors · Apache-2.0 · alpha release</span>
+  <span class="ver" title="kernel 0.0.1 · ABI 111 · app 0.0.1-alpha">kernel 0.0.1 · ABI 111 · front end 0.0.1-alpha</span>
+  <a class="qr" href="https://fusion-yun.github.io/fylite/index.en.html" title="https://fusion-yun.github.io/fylite/index.en.html"><img src="assets/qr-index-en.svg" alt="QR" width="37" height="37"></a>
+</footer>
+
+</body>
+</html>

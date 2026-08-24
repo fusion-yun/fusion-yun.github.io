@@ -1,0 +1,27 @@
+{
+ "@context": {"fylite": "urn:fylite:"},
+ "@id": "fylite:app/case/evolve-default",
+ "@type": "fylite:AppSession/1",
+ "fylite:page": "evolve",
+ "fylite:case": {
+  "fylite:name": "缺省（回到出厂设置）",
+  "fylite:name_en": "Defaults (as shipped)",
+  "fylite:note": "★这一档不是一个算例，是**回到页面的出厂设置**：换过几轮控件之后，它是唯一能把这条栏放回已知起点的一步。它不点任何装置，也不需要导入任何文件。",
+  "fylite:note_en": "★Not a worked case but a RESET: after a few rounds of dragging controls this is the one step that puts the bar back on a known starting point. It names no machine and needs no file."
+ },
+ "fylite:config": {
+  "geometry": "miller",
+  "ch-heat": true, "ch-density": false, "ch-current": false,
+  "dt": 0.002, "nsteps": 60, "dttarget": 0.02, "nlev": 31,
+  "te0": 3.0, "ti0": 2.5, "peakt": 1.5, "peakn": 0.5,
+  "edgete": 0.3, "edgeti": 0.3, "edgene": 0.5, "vloop": 0,
+  "pe": 4, "pi": 4, "dep": 0, "depw": 0.30, "fuel": 2,
+  "alpha": false, "brem": true, "ohmic": true, "bootstrap": true,
+  "icd": 0, "zeff": 1.5, "species": "", "cimp": 0, "dtfrac": 0.5,
+  "closure": "0", "chiratio": 1.0, "dchi": 0.3, "pinch": 0, "dpc": 0,
+  "useref": false, "sawtooth": false, "sawmix": 1.20,
+  "ip": 400, "couple": 0, "relax": 0.5,
+  "chi0": 0.6, "ne0": 3.0, "amin": 0.6, "rmaj": 3.0,
+  "kappa": 1.6, "delta": 0.30, "q95": 3.5, "bunit": 2.0
+ }
+}

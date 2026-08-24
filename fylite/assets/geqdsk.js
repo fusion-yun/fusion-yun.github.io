@@ -16,13 +16,15 @@
 //     pprime_gfile = -p'_app            ffprim_gfile = -FF'_app
 //
 // Every one of these was verified against a real g-file rather than assumed
-// (see .github/validate-geqdsk.mjs).
+// (see tests/app/validate-geqdsk.mjs).
 //
 // Array order: the g-file writes ((psirz(i,j), i=1,nw), j=1,nh) — R fastest.
 // This app stores fields row-major as [i * nz + j] with i the R index.
 
 (function (root) {
   'use strict';
+
+  var T = root.FyI18n.t;
 
   var TWO_PI = 2 * Math.PI;
 
@@ -36,13 +38,13 @@
    */
   function parse(text) {
     var nl = text.indexOf('\n');
-    if (nl < 0) throw new Error('g-file: 只有一行，不是 GEQDSK');
+    if (nl < 0) throw new Error(T('gfile.one_line'));
     var header = text.slice(0, nl).replace(/\r$/, '');
     var htok = header.trim().split(/\s+/);
     var nw = parseInt(htok[htok.length - 2], 10);
     var nh = parseInt(htok[htok.length - 1], 10);
     if (!(nw > 0 && nh > 0))
-      throw new Error('g-file: 头行末尾读不出 nw / nh');
+      throw new Error(T('gfile.no_dims'));
 
     var body = text.slice(nl + 1);
     var re = /[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eEdD][-+]?\d+)?/g;
@@ -53,8 +55,7 @@
     var k = 0;
     var take = function (n) {
       if (k + n > nums.length)
-        throw new Error('g-file: 数值不足（要 ' + n + '，只剩 ' +
-                        (nums.length - k) + '）');
+        throw new Error(T('gfile.short', { want: n, left: nums.length - k }));
       return nums.slice(k, k += n);
     };
     var a = take(5), b = take(5), c = take(5), d = take(5);
@@ -232,8 +233,54 @@
     inp.click();
   }
 
-  root.FyGeqdsk = { parse: parse, format: format, f16: f16,
+  /**
+   * Prompt for SEVERAL local files and hand back all of them at once.
+   *
+   * ★★Why this is separate from :func:`openText` rather than a flag on it.
+   * The two have different callback shapes — one file's text, or every
+   * file's outcome — and a boolean that silently changes what a callback
+   * receives is how a caller ends up reading `result[0]` as a character.
+   *
+   * ★And why it exists at all: importing a machine RELOADS the page (a
+   * half-swapped page is still showing the previous tokamak's numbers), so
+   * one-file-at-a-time meant one reload per machine and only the last one
+   * left selected.  A reader with four decks could not simply load them.
+   *
+   * `cb([{name, text, error}])` — a file that could not be read comes back
+   * named, with its error, rather than being dropped: an import that
+   * silently takes three of four files is worse than one that fails.
+   */
+  function openTexts(cb, accept) {
+    var inp = document.createElement('input');
+    inp.type = 'file';
+    inp.multiple = true;
+    if (accept) inp.accept = accept;
+    inp.style.display = 'none';
+    inp.addEventListener('change', function () {
+      var files = Array.prototype.slice.call(inp.files || []);
+      inp.remove();
+      if (!files.length) return;
+      var out = new Array(files.length), left = files.length;
+      files.forEach(function (f, i) {
+        var rd = new FileReader();
+        rd.onload = function () {
+          out[i] = { name: f.name, text: String(rd.result) };
+          if (--left === 0) cb(out);
+        };
+        rd.onerror = function () {
+          out[i] = { name: f.name, error: rd.error };
+          if (--left === 0) cb(out);
+        };
+        rd.readAsText(f);
+      });
+    });
+    document.body.appendChild(inp);
+    inp.click();
+  }
+
+  root.FyGeqdsk = { parse: parse, format: format,
                     saveText: saveText, openText: openText,
-                    psiFromGfile: psiFromGfile, resample: resample,
+                    openTexts: openTexts,
+                    psiFromGfile: psiFromGfile,
                     qOnUniform: qOnUniform, boundaryShape: boundaryShape };
 })(typeof self !== 'undefined' ? self : globalThis);
