@@ -28,7 +28,7 @@ fusion-yun.github.io
 | `_includes/head-custom.html` | 主题头部注入：favicon 指向 `figures/fuyun_mark.svg`；首页插图（`figure` / `figcaption`）的图框与图注体例 | 本仓 |
 | `figures/` | 站点图形与首页插图，见下表 | 本仓 + fydoc |
 | `LICENSE` | 站点分路径许可通告（Part A/C；Part B 已撤）| 本仓 |
-| `fylite/` | fylite 在线演示：**十页**——首页 / 功能 / 版权各中英两份 + 三条场景页（`scenario/design·model·analysis.html`）+ 工具页 `mdsplus.html`；另有 `assets/`、`devices/`、`LICENSE` | 私有仓 `fusion-yun/fylite` 的 `app/` |
+| `fylite/` | fylite 在线演示：**十页**——首页 / 功能 / 版权各中英两份 + 三条场景页（`scenario/design·model·analysis.html`）+ 工具页 `mdsplus.html`；另有 `assets/`、`cases/`（**九份**，见下）、`devices/`、`LICENSE` | 私有仓 `fusion-yun/fylite` 的 `app/` |
 
 ## 首页插图
 
@@ -63,17 +63,19 @@ fusion-yun.github.io
   `assets/fylite_rs.wasm` / `fylite_tglf.wasm` / `fylite_dke.wasm` 是 Rust 内核的
   WebAssembly 构建，**不含源码**；`assets/*.js` 只做数据编排、绘图与 ABI 调用，求解全部
   在二进制内。
-- ★**上游 `app/` 的三个子目录不发布**：`app/tests/`（40 个闸子脚本，内含对照数字与私有仓
-  路径）、`app/server/`（网关与 mdsip 客户端源码）与 `app/cases/`（算例会话文档）。站点
-  只承载**演示本身**——这与站点 `LICENSE` Part C 说的「编译二进制制品与随其分发的装载
-  脚本」是同一条界。★由此站点上有两处与私有仓里跑的不一样，都不是故障：
-  - 工具页 `mdsplus.html` **取不到数**（它要一个能开套接字的网关进程），页面自己会说这句话；
-  - 场景页的**算例菜单是空的**（`cases/catalogue.jsonld` 取不到，首次进入也就没有初始
-    算例）。这条路径 `scenario.js` 早已按「读不到目录」处理：`case.nocat`——「这一栏照常
-    可用，只是菜单是空的」；控制台里那一条 404 就是这次取目录本身。
+- ★**上游 `app/` 的两个子目录不发布**：`app/tests/`（40 个闸子脚本，内含对照数字与私有仓
+  路径）与 `app/server/`（网关与 mdsip 客户端源码）。站点只承载**演示本身**——这与站点
+  `LICENSE` Part C 说的「编译二进制制品与随其分发的装载脚本」是同一条界。★因此工具页
+  `mdsplus.html` 在站点上**取不到数**（它要一个能开套接字的网关进程），页面自己会说这
+  句话；那不是故障。
+- ★**算例只撤下 `cases/evolve-fuse-*.jsonld` 那九份**，其余九份照发，菜单与初始算例都在。
+  发布出去的 `cases/catalogue.jsonld` 因此是上游那份的**子集**——工作流按名字前缀改写，
+  order 与 `fylite:initial` 全不动，正文一个字不改。**别在本仓手工改它**：下次发布会按
+  上游重新生成。（目录若还点着撤下的那九份，页面会连报九次 `case.failed`；工作流有自检
+  拦这一条，另拦「文件在但目录没点名」。）
 - ★`fylite/LICENSE`（Part C 的就地重述）**只存在于本仓**，上游 `app/` 里没有这个文件；
-  同步时要**保留**它。工作流现在的写法是 `rm -rf site/fylite && cp -r src/app site/fylite`，
-  会把它删掉——发布前先修工作流，或像本次一样同步后放回。
+  同步时要**保留**它。工作流已于 2026-08-25 改好（`fylite@27c734a`）：先取出、发布后放回，
+  取不到就拒绝发布；连同上面两条口径与逐字校验一起，都在 `publish-app.yml` 的 Sync 步骤里。
 
 ## 本地预览
 

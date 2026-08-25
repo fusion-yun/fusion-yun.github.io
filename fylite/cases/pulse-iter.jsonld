@@ -1,0 +1,31 @@
+{
+ "@context": {
+  "fylite": "urn:fylite:"
+ },
+ "@id": "fylite:app/case/pulse-iter",
+ "@type": "fylite:AppSession/1",
+ "fylite:page": "pulse",
+ "fylite:case": {
+  "fylite:name": "ITER 的脉冲轨迹（15 MA 爬升到平顶）",
+  "fylite:name_en": "ITER pulse trajectory (ramp to the 15 MA flat top)",
+  "fylite:device": "iter",
+  "fylite:note": "★这一栏**有上游**：它按「位形与线圈电流」栏解出的那个平顶位形来设计轨迹，所以**先跑上面那一栏**再按这里的计算键。共用形状与 0D 那一档同源（a = 1.75 m、κ = 1.90、δ<sub>u</sub>/δ<sub>l</sub> = 0.25/0.40、I<sub>p</sub> = 15 MA），理由见 `zerod-iter-15ma` 的说明（a 的上限是器壁给的）。★★**这台机器上「被动段」是 0，那不是出错**：ITER 的真空室在卷宗里是一层 <code>annular</code> 壳（内外两条轮廓），**不是**离散的被动元件——EAST 那边是 90 段带电阻率的元件，所以那边报 90 路。0 路意味着这条轨迹里**没有被动电流**这一项，图上那一栏因此是空的，**峰值电压是纯电感 + 电阻的前馈值**。要被动那一项，得有一份把真空室离散成元件的卷宗。★实测：21 个波点，峰值 1154 V/匝——这是 15 MA 在 1 s 内爬起来的量级，**不是**任何一台电源的实际能力，这一栏报的是「要多少」，不是「有多少」。",
+  "fylite:note_en": "★This bar <strong>has an upstream</strong>: it designs the trajectory toward the flat-top configuration the 「configuration and coil currents」 bar solved, so run that one first. The shared shape is the same as the 0-D case's (a = 1.75 m, kappa = 1.90, delta_u/delta_l = 0.25/0.40, I_p = 15 MA); the reason for a is in `zerod-iter-15ma`'s note (the ceiling comes from the wall). ★★<strong>On this machine the passive count is 0, and that is not an error</strong>: ITER's vacuum vessel is described in the deck as an <code>annular</code> shell (an inner and an outer outline), <strong>not</strong> as discretised elements — EAST's is 90 elements with resistivity, which is why it reports 90. Zero means this trajectory carries no passive-current term, the passive figure is therefore empty, and the peak voltage is a purely inductive-plus-resistive feed-forward. Getting the passive term back needs a deck that discretises the vessel. ★Measured: 21 waypoints, peak 1154 V/turn — the scale of ramping 15 MA in 1 s, and <strong>not</strong> any real supply's capability: this bar reports what is <em>needed</em>, not what exists."
+ },
+ "fylite:config": {
+  "tbd": 0,
+  "tramp": 1,
+  "tflat": 8,
+  "tend": 10,
+  "npts": 21,
+  "a0": 0.45,
+  "nverify": 4,
+  "vcap": 0,
+  "ip": 15000,
+  "r0": 6.2,
+  "a": 1.75,
+  "kappa": 1.9,
+  "du": 0.25,
+  "dl": 0.4
+ }
+}

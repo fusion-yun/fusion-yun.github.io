@@ -1,0 +1,34 @@
+{
+ "@context": {
+  "fylite": "urn:fylite:"
+ },
+ "@id": "fylite:app/case/breakdown-iter",
+ "@type": "fylite:AppSession/1",
+ "fylite:page": "breakdown",
+ "fylite:case": {
+  "fylite:name": "ITER 场零（击穿前的零场区）",
+  "fylite:name_en": "ITER field null (the null region before breakdown)",
+  "fylite:device": "iter",
+  "fylite:note": "★场零点取在 R = 6.2 m、Z = 0，零场区半径 0.60 m。★<strong>页面自己 seed 的那一组不是随手来的</strong>：这一栏在装置装好之后按<strong>机器的包围盒</strong>把零点放在中半径、略高于中平面（ITER 上是 R = 6.168 m、Z = 0.537 m，半径 0.30 m）——那是「多数机器上这类零点实际所在」的位置。这一档把它挪回<strong>中平面</strong>并把零场区放大到 0.60 m，因为 ITER 的击穿区就在那里；线圈电流上限从 2 kA·匝提到 20 kA·匝，那是这台机器的量级。★实测：这一组设定下圆盘上 |B<sub>pol</sub>| 最大 0.021 mT ≤ 容差 2.00 mT（485 次迭代）。★这一栏<strong>不依赖上游</strong>：场零是击穿之前的事，位形还不存在。★共用参数按 ITER 15 MA 设：I<sub>p</sub> = 15 MA、R<sub>0</sub> = 6.2 m、a = 1.75 m、κ = 1.90、δ<sub>u</sub>/δ<sub>l</sub> = 0.25/0.40。★<strong>a 与建模页那一档（2.0 m）不同，这是有理由的</strong>：这一页解的是<strong>真空室内的自由边界平衡</strong>，共用滑杆的量程由装置卷宗给出（选 ITER 后 a ∈ [0.665, 1.895]），2.0 m 的名义小半径落在器壁给的上限之外；建模页跑的是解析 Miller 几何，那里 2.0 是名义值、没有器壁要满足。这组形状是<strong>量出来的</strong>——「位形与线圈电流」栏在它上面收敛到位形误差 0.0242（容差 0.0282），而 ITER 名义的 κ = 1.70 / δ = 0.33 在这台机器的线圈组上到不了（实测 0.0520）。",
+  "fylite:note_en": "★The null sits at R = 6.2 m, Z = 0 with a 0.60 m disc. ★<strong>The seeded default is not arbitrary</strong>: once a machine is loaded this bar places the null from the machine's own bounding box — mid-radius, slightly above the midplane (on ITER that is R = 6.168 m, Z = 0.537 m, radius 0.30 m), which is where such nulls actually sit on most machines. This case moves it back to the <strong>midplane</strong> and widens the disc to 0.60 m, because that is where ITER's breakdown region is, and raises the per-channel ceiling from 2 to 20 kA·turns, which is this machine's scale. ★Measured: with these settings the worst |B<sub>pol</sub>| on the disc is 0.021 mT against a 2.00 mT tolerance (485 iterations). ★This bar has <strong>no upstream</strong>: the null is what happens before breakdown, when there is no configuration yet. ★The shared parameters are ITER 15 MA: I<sub>p</sub> = 15 MA, R<sub>0</sub> = 6.2 m, a = 1.75 m, κ = 1.90, δ<sub>u</sub>/δ<sub>l</sub> = 0.25/0.40. ★<strong>a differs from the modelling page's 2.0 m on purpose</strong>: this page solves a free-boundary equilibrium <strong>inside the real vessel</strong>, and the shared sliders are rescaled from the machine description (with ITER selected, a ∈ [0.665, 1.895]) — the nominal 2.0 m sits outside the ceiling the wall imposes, while the modelling page runs analytic Miller geometry where 2.0 is nominal and no wall has to be satisfied. This shape was <strong>measured</strong>: the configuration bar converges on it to a shape error of 0.0242 against a tolerance of 0.0282, whereas ITER's nominal κ = 1.70 / δ = 0.33 is not reachable with this coil set (0.0520)."
+ },
+ "fylite:config": {
+  "nullr": 6.2,
+  "nullz": 0,
+  "radius": 0.6,
+  "btol": 2,
+  "usefluxTarget": true,
+  "flux": 0.5,
+  "wnull": 1,
+  "wflux": 1,
+  "uselimits": true,
+  "imax": 20000,
+  "usexref": false,
+  "ip": 15000,
+  "r0": 6.2,
+  "a": 1.75,
+  "kappa": 1.9,
+  "du": 0.25,
+  "dl": 0.4
+ }
+}

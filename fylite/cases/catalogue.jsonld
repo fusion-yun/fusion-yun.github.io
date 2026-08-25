@@ -1,0 +1,75 @@
+{
+ "@context": {
+  "fylite": "urn:fylite:"
+ },
+ "@id": "fylite:CaseCatalogue/app",
+ "@type": "fylite:CaseCatalogue/1",
+ "fylite:note": "The worked cases a published page offers from a menu. ★★A case is a SESSION DOCUMENT -- byte-for-byte the shape `导出 → 会话文件` writes -- and applying one goes through the same `FySession.apply` an imported file goes through. So a reader can save their own run and it is a case; and a case cannot drift into a format only the menu can read. What a case may NOT do is carry a result: it is a set of INPUTS, and the page still has to run.  ★★`fylite:bar` NAMES THE BAR, and since 2026-08-24 it is honoured: the menu machinery is `scenario.js`'s (`S.cases`), not one bar's private code, so any bar that carries a `<select id=\"<page>-<bar>-case\">` gets the cases written for it.  ★`fylite:initial` marks the one case a bar starts a FIRST VISIT on (no trace of the reader in `localStorage`).  It is NOT the factory settings — the 「缺省」 case is still the one step back to those, and it stays in the menu.  A case is never applied over a session the reader already has.",
+ "fylite:cases": [
+  {
+   "fylite:case_id": "evolve-default",
+   "fylite:document": "evolve-default.jsonld",
+   "fylite:bar": "evolve",
+   "fylite:order": 0
+  },
+  {
+   "fylite:case_id": "evolve-east-hmode",
+   "fylite:document": "evolve-east-hmode.jsonld",
+   "fylite:bar": "evolve",
+   "fylite:device": "east",
+   "fylite:order": 1
+  },
+  {
+   "fylite:case_id": "evolve-iter-15ma",
+   "fylite:document": "evolve-iter-15ma.jsonld",
+   "fylite:bar": "evolve",
+   "fylite:order": 2,
+   "fylite:initial": true
+  },
+  {
+   "fylite:case_id": "evolve-iter-15ma-benchmark",
+   "fylite:document": "evolve-iter-15ma-benchmark.jsonld",
+   "fylite:bar": "evolve",
+   "fylite:order": 3
+  },
+  {
+   "fylite:case_id": "transport-iter-15ma",
+   "fylite:document": "transport-iter-15ma.jsonld",
+   "fylite:bar": "transport",
+   "fylite:order": 0,
+   "fylite:initial": true
+  },
+  {
+   "fylite:case_id": "zerod-iter-15ma",
+   "fylite:document": "zerod-iter-15ma.jsonld",
+   "fylite:bar": "zerod",
+   "fylite:device": "iter",
+   "fylite:order": 0,
+   "fylite:initial": true
+  },
+  {
+   "fylite:case_id": "breakdown-iter",
+   "fylite:document": "breakdown-iter.jsonld",
+   "fylite:bar": "breakdown",
+   "fylite:device": "iter",
+   "fylite:order": 0,
+   "fylite:initial": true
+  },
+  {
+   "fylite:case_id": "pulse-iter",
+   "fylite:document": "pulse-iter.jsonld",
+   "fylite:bar": "pulse",
+   "fylite:device": "iter",
+   "fylite:order": 0,
+   "fylite:initial": true
+  },
+  {
+   "fylite:case_id": "discharge-iter",
+   "fylite:document": "discharge-iter.jsonld",
+   "fylite:bar": "discharge",
+   "fylite:device": "iter",
+   "fylite:order": 0,
+   "fylite:initial": true
+  }
+ ]
+}

@@ -1,0 +1,50 @@
+{
+ "@context": {
+  "fylite": "urn:fylite:"
+ },
+ "@id": "fylite:app/case/zerod-iter-15ma",
+ "@type": "fylite:AppSession/1",
+ "fylite:page": "zerod",
+ "fylite:case": {
+  "fylite:name": "ITER 15 MA 感应燃烧（0D 功率平衡）",
+  "fylite:name_en": "ITER 15 MA inductive burn (0-D power balance)",
+  "fylite:device": "iter",
+  "fylite:note": "★<strong>这一栏是设计场景，不是预测</strong>：密度与温度是<strong>你给的</strong>平顶值，0D 拿它们算功率账与运行域，不解输运方程——「Q 是多少」在这里是<strong>记账的结果</strong>，不是预言。要预测那一半在建模页。★等离子体那一组是<strong>调到设计点上的</strong>，不是抄来的：n<sub>e</sub>(0) = 10×10<sup>19</sup> m<sup>-3</sup>、T<sub>e</sub>(0) = 20 keV、T<sub>i</sub>/T<sub>e</sub> = 0.9、Z<sub>eff</sub> = 1.8、氘氚各半、辅助加热 33 MW，切片停在平顶（t = 5.00 s）。实测读数：<strong>P<sub>fus</sub> = 335 MW、P<sub>α</sub> = 67.5 MW、Q = 10.16</strong>——<strong>Q 与 ITER 的设计点对得上</strong>；P<sub>fus</sub> 比 500 MW 低，两个原因都写在这里：这一档的 a = 1.75 m（体积约是名义的 0.86），辅助加热取 33 MW 而不是 50 MW。★温度扫过一遍才定的这个数：T<sub>e</sub>(0) = 8 / 12 / 16 / 20 keV 分别给 Q = 0.92 / 3.12 / 6.37 / 10.16。★共用参数按 ITER 15 MA 设：I<sub>p</sub> = 15 MA、R<sub>0</sub> = 6.2 m、a = 1.75 m、κ = 1.90、δ<sub>u</sub>/δ<sub>l</sub> = 0.25/0.40。★<strong>a 与建模页那一档（2.0 m）不同，这是有理由的</strong>：这一页解的是<strong>真空室内的自由边界平衡</strong>，共用滑杆的量程由装置卷宗给出（选 ITER 后 a ∈ [0.665, 1.895]），2.0 m 的名义小半径落在器壁给的上限之外；建模页跑的是解析 Miller 几何，那里 2.0 是名义值、没有器壁要满足。这组形状是<strong>量出来的</strong>——「位形与线圈电流」栏在它上面收敛到位形误差 0.0242（容差 0.0282），而 ITER 名义的 κ = 1.70 / δ = 0.33 在这台机器的线圈组上到不了（实测 0.0520）。",
+  "fylite:note_en": "★<strong>This bar is a design scenario, not a prediction</strong>: the density and temperature are flat-top values <strong>you give</strong>, and the 0-D tier does the power accounting and operating-space checks on them — it does not solve a transport equation. 「What is Q」 here is <strong>the result of the accounting</strong>, not a forecast; the predictive half lives on the modelling page. ★The plasma group was <strong>tuned onto the design point</strong>, not copied: n<sub>e</sub>(0) = 10×10<sup>19</sup> m<sup>-3</sup>, T<sub>e</sub>(0) = 20 keV, T<sub>i</sub>/T<sub>e</sub> = 0.9, Z<sub>eff</sub> = 1.8, 50:50 D-T, 33 MW auxiliary, with the slice on the flat top (t = 5.00 s). Measured: <strong>P<sub>fus</sub> = 335 MW, P<sub>α</sub> = 67.5 MW, Q = 10.16</strong> — <strong>Q lands on ITER's design point</strong>; P<sub>fus</sub> falls short of 500 MW for two reasons, both stated here: this case runs at a = 1.75 m (about 0.86 of the nominal volume) and takes 33 MW of auxiliary power rather than 50 MW. ★The temperature was scanned to fix that number: T<sub>e</sub>(0) = 8 / 12 / 16 / 20 keV give Q = 0.92 / 3.12 / 6.37 / 10.16. ★The shared parameters are ITER 15 MA: I<sub>p</sub> = 15 MA, R<sub>0</sub> = 6.2 m, a = 1.75 m, κ = 1.90, δ<sub>u</sub>/δ<sub>l</sub> = 0.25/0.40. ★<strong>a differs from the modelling page's 2.0 m on purpose</strong>: this page solves a free-boundary equilibrium <strong>inside the real vessel</strong>, and the shared sliders are rescaled from the machine description (with ITER selected, a ∈ [0.665, 1.895]) — the nominal 2.0 m sits outside the ceiling the wall imposes, while the modelling page runs analytic Miller geometry where 2.0 is nominal and no wall has to be satisfied. This shape was <strong>measured</strong>: the configuration bar converges on it to a shape error of 0.0242 against a tolerance of 0.0282, whereas ITER's nominal κ = 1.70 / δ = 0.33 is not reachable with this coil set (0.0520)."
+ },
+ "fylite:config": {
+  "tau_law": "0",
+  "hfac": 1,
+  "meff": 2.5,
+  "w0": 1,
+  "t_rampup_end": 1,
+  "t_flattop_end": 8,
+  "t_end": 10,
+  "ne": 10,
+  "te": 20,
+  "tite": 0.9,
+  "pn": 1,
+  "pt": 1.5,
+  "zeff": 1.8,
+  "dtf": 0.5,
+  "eqauto": true,
+  "pfscale": 1,
+  "uqon": false,
+  "uqn": 200,
+  "uqsne": 0.1,
+  "uqste": 0.1,
+  "uqsip": 0.03,
+  "uqseed": 7,
+  "pnbi": 33,
+  "t_on": 1,
+  "t_off": 8,
+  "slice": 100,
+  "phiavail": 0,
+  "ip": 15000,
+  "r0": 6.2,
+  "a": 1.75,
+  "kappa": 1.9,
+  "du": 0.25,
+  "dl": 0.4
+ }
+}

@@ -1,0 +1,40 @@
+{
+ "@context": {
+  "fylite": "urn:fylite:"
+ },
+ "@id": "fylite:app/case/discharge-iter",
+ "@type": "fylite:AppSession/1",
+ "fylite:page": "discharge",
+ "fylite:case": {
+  "fylite:name": "ITER 15 MA 的平顶位形（自由边界反解）",
+  "fylite:name_en": "ITER 15 MA flat-top configuration (free-boundary inverse solve)",
+  "fylite:device": "iter",
+  "fylite:note": "★这一档的形状是**量出来的**，不是抄 ITER 名义值：a = 1.75 m、κ = 1.90、δ<sub>u</sub>/δ<sub>l</sub> = 0.25/0.40 在这台机器的 12 路线圈上收敛到**位形误差 0.0242**（容差 0.0282，取第 8 趟）。★**ITER 名义的 κ = 1.70 / δ = 0.33 到不了**——同样的设定实测 0.0520，接近容差的两倍；扫过 a ∈ [1.5, 1.895]、κ ∈ [1.65, 2.0]、三组 δ、三档 γ 之后，上面那一组是过判据的那个。★**a 比建模页那一档的 2.0 m 小是有理由的**：这一页解的是**真空室内**的自由边界平衡，共用滑杆的量程由卷宗给出（选 ITER 后 a ∈ [0.665, 1.895]），2.0 m 落在**器壁给的上限**之外。★这一栏是**脉冲轨迹栏的上游**：那一栏按这里解出的平顶位形设计轨迹，所以先跑这里。",
+  "fylite:note_en": "★This shape was <strong>measured, not copied</strong> from ITER's nominal numbers: a = 1.75 m, kappa = 1.90, delta_u/delta_l = 0.25/0.40 converge on this machine's 12 coil channels to a <strong>shape error of 0.0242</strong> against a 0.0282 tolerance (pass 8). ★<strong>ITER's nominal kappa = 1.70 / delta = 0.33 does not get there</strong> — the same settings measure 0.0520, nearly twice the tolerance; after scanning a in [1.5, 1.895], kappa in [1.65, 2.0], three delta pairs and three gammas, the set above is the one that passes. ★<strong>a is smaller than the modelling page's 2.0 m for a reason</strong>: this page solves a free-boundary equilibrium <strong>inside the vessel</strong>, and the shared sliders are rescaled from the deck (with ITER selected, a in [0.665, 1.895]), so 2.0 m sits outside the ceiling the wall imposes. ★This bar is the <strong>pulse bar's upstream</strong>: that bar designs its trajectory toward the flat top solved here, so run this one first."
+ },
+ "fylite:config": {
+  "class": "limiter",
+  "z0": 0,
+  "usex": false,
+  "xr": 4.944,
+  "xz": -3.459,
+  "xr2": 1.62,
+  "xz2": 1,
+  "profsrc": "analytic",
+  "beta0": 0.55,
+  "emp": 1,
+  "enp": 1,
+  "startmode": "auto",
+  "icap": 0,
+  "gamma": 0.4,
+  "passes": 8,
+  "showref": false,
+  "wide": true,
+  "ip": 15000,
+  "r0": 6.2,
+  "a": 1.75,
+  "kappa": 1.9,
+  "du": 0.25,
+  "dl": 0.4
+ }
+}
