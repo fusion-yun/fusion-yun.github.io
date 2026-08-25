@@ -4,4 +4,4 @@
 // What the footer shows and what an exported document records.  The wasm's
 // `sha256` (in the kernel handshake) says exactly WHICH binary answered;
 // these say which release it belongs to.
-self.FyVersion = { kernel: '0.0.1', abi: 111, app: '0.0.1-alpha' };
+self.FyVersion = { kernel: '0.0.1', abi: 112, app: '0.0.1-alpha' };

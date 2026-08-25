@@ -7313,6 +7313,56 @@ function evolveRun(msg) {
   var edgeTe = rp ? st.te[n - 1] : sp.edgeTe;
   var edgeTi = rp ? st.ti[n - 1] : sp.edgeTi;
 
+  //: ★★THE PEDESTAL IS A RESULT NOW, when asked (T-M4): with the model on,
+  //: the edge temperature is the EPED1-NN surrogate's pedestal top —
+  //: p_ped/(2 n_e,ped k), EPED's own T_e = T_i convention — and the two
+  //: sliders that used to set it are disabled on the page.  The ladder
+  //: stops at `edgePsin` (~0.95) and EPED's own top sits at psi_N =
+  //: 1 - width (~0.96 on ITER), so the Dirichlet point IS the pedestal
+  //: top this bar's metric can stand on; the pedestal INTERIOR is not on
+  //: the ladder and is not modelled — the model supplies the boundary
+  //: value, nothing else.
+  //:
+  //: ★beta_N feeds back: EPED takes the GLOBAL beta_N, which is what the
+  //: march is computing — so the model is re-evaluated each step on the
+  //: PREVIOUS step's reading, lagged one step exactly like the Ohmic
+  //: rate.  The first evaluation uses the initial profiles' own beta_N.
+  //: ★a reference-pinned run keeps the reference's edge: reproducing
+  //: published profiles under a different boundary would be a third
+  //: problem again.
+  var evBetaNOf = function (state) {
+    var pv = new Float64Array(n);
+    for (var bq = 0; bq < n; bq++)
+      pv[bq] = (state.ne[bq] * state.te[bq]
+                + state.ni[bq] * state.ti[bq]) * EV_QE;
+    var vol = evVolume(geo.rho, geo.vprime);
+    var pAvg = vol > 0 ? evVolInt(geo.rho, geo.vprime, pv) / vol : 0;
+    var betaT = 2 * EV_MU0 * pAvg / (geo.b0 * geo.b0);
+    var ipMA = Math.abs(sp.ip) / 1e6;
+    return ipMA > 0 ? betaT * 100 * geo.a * Math.abs(geo.b0) / ipMA : 0;
+  };
+  var ctx0Pedestal = null;
+  var evPedestalEval = function (betan) {
+    var inp = {
+      a: geo.a, betan: Math.max(0.05, betan), bt: Math.abs(geo.b0),
+      delta: sp.delta, ip: Math.abs(sp.ip) / 1e6, kappa: sp.kappa,
+      //: deuterium, or the DT average when the burn is on — the same
+      //: composition statement the alpha channel makes
+      mass: sp.alpha ? 2.5 : 2.0,
+      neped: sp.edgeNe / 1e19, r: geo.r0, zeffped: sp.zeff };
+    var res = fy.eped1nn(inp);
+    return { inputs: inp,
+             pPed: res.pPed[0], width: res.width[0],
+             pPedAll: Array.from(res.pPed), widthAll: Array.from(res.width),
+             extrapolation: res.extrapolation, worstInput: res.worstInput,
+             tPed: res.pPed[0] / (2 * sp.edgeNe * EV_QE) };
+  };
+  if (sp.pedestal && !rp) {
+    ctx0Pedestal = evPedestalEval(evBetaNOf(st));
+    edgeTe = ctx0Pedestal.tPed;
+    edgeTi = ctx0Pedestal.tPed;
+  }
+
   var ctx = { sp: sp, geo: geo, rho: geo.rho, channels: channels,
               psiPrev: null, pAux: (sp.pE + sp.pI) * 1e6,
               //: ★the two auxiliary powers the march itself integrated, kept
@@ -7321,6 +7371,9 @@ function evolveRun(msg) {
               //: in it would answer a different question.
               pAuxBeam: 0, pAuxLh: 0, torqueBeam: null,
               pFastPar: null, pFastPerp: null,
+              //: T-M4 — the pedestal record the readings and the export
+              //: carry when the model drives the edge
+              pedestal: ctx0Pedestal,
               //: the beam's own driven current on the ladder, when a beam
               //: is what the auxiliary power is, and the wave's beside it —
               //: two arrays, because attributing q(psi) is the whole point
@@ -7670,6 +7723,18 @@ function evolveRun(msg) {
         ctx.dtCapped = (ctx.dtCapped | 0) + 1;
       tNow += res.dt;
       var rd = evReadings(ctx, st, src.diag, tNow);
+      //: ★T-M4: the NEXT step's edge from THIS step's beta_N — lagged one
+      //: step, like the Ohmic rate; the reading carries what was applied
+      //: so a reader can see the boundary the step actually ran under.
+      if (sp.pedestal && !rp) {
+        rd.pedTPed = edgeTe;
+        rd.pedPPed = ctx.pedestal ? ctx.pedestal.pPed : null;
+        rd.pedWidth = ctx.pedestal ? ctx.pedestal.width : null;
+        rd.pedExtrap = ctx.pedestal ? ctx.pedestal.extrapolation : null;
+        ctx.pedestal = evPedestalEval(rd.betaN);
+        edgeTe = ctx.pedestal.tPed;
+        edgeTi = ctx.pedestal.tPed;
+      }
       rd.dt = res.dt; rd.delta = res.delta; rd.retries = res.retries;
       rd.steady = res.steady;
       rd.crashes = crashes.length;
@@ -7871,6 +7936,11 @@ function evolveRun(msg) {
   //: profile they cannot re-derive, and the gate's oracle is `beam_deposit`
   //: at THESE parameters and no others.
   post({ type: 'evolve', trace: trace, rounds: rounds, crashes: crashes,
+         //: ★T-M4: the pedestal record the last step ran under — the ten
+         //: EPED inputs AND the full eighteen-output answer, so the gate's
+         //: oracle can re-call `eped1nn` at exactly these numbers and the
+         //: page can be held to having applied the standard solution
+         pedestal: (sp.pedestal && ctx.pedestal) ? ctx.pedestal : null,
          beam: beam ? evBeamReport(beam, sp) : null,
          //: ★★THE WAVE'S OWN RECORD (T-M10), whole and beside the beam's —
          //: never merged with it.  Two sources that deposit in different

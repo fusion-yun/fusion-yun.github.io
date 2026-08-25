@@ -50,6 +50,7 @@ self.FyI18n.register('zh', {
   'cr.thanks.lead': '本项目建立在他人公开的物理、代码与数据之上。谨此逐项致谢：',
   'cr.thanks.gacode': '<strong>General Atomics 与 GACODE 贡献者</strong>（J. Candy、E. Belli、G. M. Staebler 等）——新经典、湍流与磁面几何三条实现线的上游；<strong>W. A. Houlberg</strong>（NCLASS，随 NEO 携带）。',
   'cr.thanks.metis': '<strong>CEA/IRFM 与 METIS 作者</strong>（J. F. Artaud 等）——快中性束模型与 0D 口径的出处，也是 0D 对拍的基准。',
+  'cr.thanks.eped': '<strong>P. B. Snyder、O. Meneghini 与 EPED / EPED1-NN 的作者</strong>（General Atomics）——台基模型的出处：EPED1 的两条约束（Phys. Plasmas 16 056118 (2009)）经 EPED1-NN 代理（Nucl. Fusion 57 086034 (2017)）进入本项目，网络权重取自开源 EPEDNN.jl（ProjectTorreyPines，Apache-2.0，本仓随附许可与校验和）。',
   'cr.thanks.toksys': '<strong>TokSys 的作者</strong>（General Atomics）——电磁与垂直稳定性的跨程序锚点。',
   'cr.thanks.east': '<strong>ASIPP EAST 团队</strong>——放电数据、运行态 EFIT 工作流与逐道诊断几何。',
   'cr.thanks.kefit': '<strong>李国强、任启龙、钱金平、L. L. Lao 等</strong>——将 EFIT 移植至 EAST 并建立动理学重构（KEFIT），本仓重构线的上游参照基线。',

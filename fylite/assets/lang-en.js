@@ -4,6 +4,16 @@
 // reconstruction terms), not a literal rendering of the Chinese.
 
 self.FyI18n.register('en', {
+  // --- worked cases (any bar may carry a menu; see scenario.js) --------
+  'case': 'Worked case',
+  'case.pick': '(custom: every control below is your own)',
+  'case.applied': 'Case \u201c{name}\u201d loaded: {n} controls set. <strong>Nothing was run</strong> \u2014 this bar marches only when you press its key.',
+  'case.initial': 'This bar\u2019s <strong>initial case</strong> \u201c{name}\u201d is in place ({n} controls). \u2605These are <strong>not the factory settings</strong>: the \u201cDefaults\u201d entry in the menu is the one step back to those. <strong>Nothing was run.</strong>',
+  'case.needs': '\u2605This case is still <strong>missing an input</strong>. Import it, then press the key:<ul>{list}</ul>',
+  'case.device': '\u2605This case was written for device <strong>{want}</strong> and the page is on <strong>{have}</strong>. A case <strong>will not switch machines for you</strong> (that rebuilds the worker and throws away anything you imported) \u2014 use the device selector in the toolbar.',
+  'case.failed': 'Case \u201c{id}\u201d could not be read ({why}) and was skipped; the others are unaffected.',
+  'case.nocat': 'The case catalogue could not be read ({why}): the bar works as before, the menu is simply empty \u2014 every control is still your own.',
+  'case.wrong_bar': 'This case was written for the \u201c{bar}\u201d bar and this is \u201c{here}\u201d \u2014 nothing was applied.',
   // --- shared chrome --------------------------------------------------
   'bar.fold': 'Fold this bar',
   'bar.unfold': 'Unfold this bar',

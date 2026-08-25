@@ -129,15 +129,15 @@
       <div class="ctl" data-shape><label><span data-i18n="x.kappa">拉长比 κ</span> <span class="val" id="model-v-kappa"></span></label>
         <input type="range" id="model-kappa" min="1.0" max="2.2" step="0.02" value="1.6"></div>
       <div class="ctl" data-shape><label><span data-i18n="x.delta">三角度 δ</span> <span class="val" id="model-v-delta"></span></label>
-        <input type="range" id="model-delta" min="0" max="0.6" step="0.02" value="0.3"></div>
+        <input type="range" id="model-delta" min="-0.5" max="0.8" step="0.02" value="0.3"></div>
       </div>
       <div>
       <div class="ctl" data-shape><label><span data-i18n="x.q95">边界 q</span> <span class="val" id="model-v-q95"></span></label>
         <input type="range" id="model-q95" min="1.5" max="8" step="0.1" value="3.5"></div>
       <div class="ctl" data-shape><label><span data-i18n="x.bunit">B<sub>0</sub> [T]</span> <span class="val" id="model-v-bunit"></span></label>
-        <input type="range" id="model-bunit" min="0.5" max="8" step="0.1" value="2.0"></div>
+        <input type="range" id="model-bunit" min="0.5" max="14" step="0.1" value="2.0"></div>
       <div class="ctl"><label><span data-i18n="x.ne0">中心密度 n<sub>e</sub>(0) [10<sup>19</sup> m<sup>-3</sup>]</span> <span class="val" id="model-v-ne0"></span></label>
-        <input type="range" id="model-ne0" min="0.5" max="20" step="0.5" value="3.0"></div>
+        <input type="range" id="model-ne0" min="0.5" max="60" step="0.5" value="3.0"></div>
       <div class="ctl"><label><span data-i18n="x.chi0">χ₀ [m²/s]</span> <span class="val" id="model-v-chi0"></span></label>
         <input type="range" id="model-chi0" min="0.05" max="5" step="0.05" value="0.6"></div>
       </div>
@@ -164,6 +164,16 @@
 <div>
     <div data-part="model" class="panel">
       <h2 data-i18n="x.model">输运模型</h2>
+      <!-- The worked cases this bar offers.  ★Same machinery as every other
+           bar's (`scenario.js`'s `S.cases`), same format as what 「导出 →
+           会话文件」 writes — a case is a session document under `app/cases/`,
+           applied through the same `FySession.apply` an imported file goes
+           through. -->
+      <div class="ctl"><label for="model-transport-case" data-i18n="case">算例</label>
+        <select id="model-transport-case">
+          <option value="" data-i18n="case.pick"></option>
+        </select></div>
+      <p class="note case-note" id="model-transport-case-note" hidden></p>
       <div class="ctl"><label for="model-transport-closure" data-i18n="x.closure">闭包</label>
         <select id="model-transport-closure">
           <option value="0" data-i18n="x.cl.const"></option>
@@ -178,7 +188,7 @@
       <div class="ctl"><label><span data-i18n="x.pinch">箍缩速度 v [m/s]</span> <span class="val" id="model-v-pinch"></span></label>
         <input type="range" id="model-pinch" min="-3" max="1" step="0.05" value="0"></div>
       <div class="ctl"><label><span data-i18n="x.edge">边界值 T(1) [keV]</span> <span class="val" id="model-v-edge"></span></label>
-        <input type="range" id="model-edge" min="0.05" max="2" step="0.05" value="0.3"></div>
+        <input type="range" id="model-edge" min="0.05" max="6" step="0.05" value="0.3"></div>
       <div class="ctl"><label><span data-i18n="x.dpc">Pereverzev–Corrigan d<sub>PC</sub> [m²/s]</span> <span class="val" id="model-v-dpc"></span></label>
         <input type="range" id="model-dpc" min="0" max="4" step="0.05" value="0"></div>
       <div class="ctl"><label><span data-i18n="x.n">网格点数</span> <span class="val" id="model-v-n"></span></label>
@@ -246,9 +256,9 @@
            `app/cases/`, applied through the same `FySession.apply` an
            imported file goes through, so what the menu offers and what a
            reader can save are the same thing. -->
-      <div class="ctl"><label for="model-evolve-case" data-i18n="e.case">算例</label>
+      <div class="ctl"><label for="model-evolve-case" data-i18n="case">算例</label>
         <select id="model-evolve-case">
-          <option value="" data-i18n="e.case.pick"></option>
+          <option value="" data-i18n="case.pick"></option>
         </select></div>
       <p class="note case-note" id="model-evolve-case-note" hidden></p>
       <div class="ctl"><label for="model-evolve-geometry" data-i18n="e.geom">几何来源</label>
@@ -348,13 +358,16 @@
       <div class="ctl"><label><span data-i18n="e.peakt">温度峰化指数</span> <span class="val" id="model-evolve-v-peakt"></span></label>
         <input type="range" id="model-evolve-peakt" min="0.5" max="3" step="0.1" value="1.5"></div>
       <div class="ctl"><label><span data-i18n="e.peakn">密度峰化指数</span> <span class="val" id="model-evolve-v-peakn"></span></label>
-        <input type="range" id="model-evolve-peakn" min="0.1" max="2" step="0.1" value="0.5"></div>
+        <input type="range" id="model-evolve-peakn" min="0.1" max="4" step="0.1" value="0.5"></div>
+      <div class="ctl">
+        <label><input type="checkbox" id="model-evolve-pedestal"> <span data-i18n="e.pedestal">台基模型（EPED1-NN 解出边界温度）</span></label></div>
+      <p class="note" id="model-evolve-pedestal-note" hidden></p>
       <div class="ctl"><label><span data-i18n="e.edgete">边界 T<sub>e</sub>(a) [keV]</span> <span class="val" id="model-evolve-v-edgete"></span></label>
-        <input type="range" id="model-evolve-edgete" min="0.02" max="3" step="0.02" value="0.3"></div>
+        <input type="range" id="model-evolve-edgete" min="0.02" max="8" step="0.02" value="0.3"></div>
       <div class="ctl"><label><span data-i18n="e.edgeti">边界 T<sub>i</sub>(a) [keV]</span> <span class="val" id="model-evolve-v-edgeti"></span></label>
-        <input type="range" id="model-evolve-edgeti" min="0.02" max="3" step="0.02" value="0.3"></div>
+        <input type="range" id="model-evolve-edgeti" min="0.02" max="8" step="0.02" value="0.3"></div>
       <div class="ctl"><label><span data-i18n="e.edgene">边界 n<sub>e</sub>(a) [10<sup>19</sup> m<sup>-3</sup>]</span> <span class="val" id="model-evolve-v-edgene"></span></label>
-        <input type="range" id="model-evolve-edgene" min="0.1" max="5" step="0.1" value="0.5"></div>
+        <input type="range" id="model-evolve-edgene" min="0.1" max="40" step="0.1" value="0.5"></div>
       <div class="ctl"><label><span data-i18n="e.vloop">环电压 V<sub>loop</sub> [V]（电流道边界）</span> <span class="val" id="model-evolve-v-vloop"></span></label>
         <input type="range" id="model-evolve-vloop" min="-1" max="5" step="0.05" value="0"></div>
       <p class="note" data-i18n="e.prof_note"></p>
@@ -511,7 +524,7 @@
           <option value="" data-i18n="e.species.none"></option>
         </select></div>
       <div class="ctl"><label><span data-i18n="e.cimp">杂质浓度 n<sub>z</sub>/n<sub>e</sub> [%]</span> <span class="val" id="model-evolve-v-cimp"></span></label>
-        <input type="range" id="model-evolve-cimp" min="0" max="5" step="0.05" value="0"></div>
+        <input type="range" id="model-evolve-cimp" min="0" max="5" step="0.01" value="0"></div>
       <div class="ctl"><label><span data-i18n="e.dtfrac">燃料占比 n<sub>D</sub> = n<sub>T</sub> = f·n<sub>e</sub></span> <span class="val" id="model-evolve-v-dtfrac"></span></label>
         <input type="range" id="model-evolve-dtfrac" min="0.1" max="0.5" step="0.025" value="0.500"></div>
       <!-- ★the impurity in the quasi-neutrality.  Without it Z_eff entered

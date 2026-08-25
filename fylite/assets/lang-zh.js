@@ -6,6 +6,16 @@
 // were Chinese grammar.
 
 self.FyI18n.register('zh', {
+  // --- 算例（任何一条栏都可以有一份菜单，见 scenario.js 的 installCases）---
+  'case': '算例',
+  'case.pick': '（自定义：下面每个控件都是你自己的）',
+  'case.applied': '已载入算例「{name}」：{n} 个控件被设定。<strong>没有开算</strong>——这一栏按计算键才跑。',
+  'case.initial': '这一栏的<strong>初始算例</strong>「{name}」已就位（{n} 个控件）。★这<strong>不是出厂设置</strong>：菜单里的「缺省」那一档才是回到出厂值的那一步。<strong>没有开算</strong>。',
+  'case.needs': '★这一档还<strong>缺输入</strong>，先导入再按计算键：<ul>{list}</ul>',
+  'case.device': '★这一算例是按装置 <strong>{want}</strong> 写的，当前页面在 <strong>{have}</strong> 上。算例<strong>不会替你换装置</strong>（换装置要重建 worker，会把你导入的东西一并丢掉）——要换请用工具条上的装置选择器。',
+  'case.failed': '算例「{id}」读不进来（{why}），已跳过；其余算例不受影响。',
+  'case.nocat': '算例目录读不到（{why}）：这一栏照常可用，只是菜单是空的——所有控件仍然是你自己的。',
+  'case.wrong_bar': '这份算例是写给「{bar}」栏的，这里是「{here}」栏——没有套用。',
   // --- shared chrome --------------------------------------------------
   'bar.fold': '收起这一栏',
   'bar.unfold': '展开这一栏',

@@ -783,6 +783,25 @@ FyScenario.whenDevices(function () {
     $(id).addEventListener('change', run);
   });
   $('closure').addEventListener('change', syncClosure);
+
+  // --- the worked cases ----------------------------------------------------
+  //
+  // ★★THIS BAR RE-RUNS, and that is not a contradiction of 「算例不开算」.
+  // That rule's reason is COST: the 含时演化 bar takes seconds, and starting
+  // seconds of work because a menu changed is what an offline-tier bar must
+  // not do.  This bar's contract is the opposite one — 拖控件即重算, a steady
+  // solve on 41 points is microseconds — so a case that set the controls and
+  // left the figure showing the PREVIOUS solve would put the bar in a state
+  // it never otherwise shows.  Every one of its own controls already runs it
+  // on `change`; a case is not a weaker kind of control.
+  //: ★the kernel loads asynchronously and this bar does NOT auto-run on
+  //: ready, so the INITIAL case waits for the wasm: applied before it lands,
+  //: it would set the controls and leave the figures empty.
+  var ready;
+  var whenReady = new Promise(function (res) { ready = res; });
+  S.cases({ when: whenReady,
+            after: function () { syncClosure(); syncLabels(); run(); } });
+
   S.onRun(run);
 
   S.onRefresh(function () {
@@ -800,6 +819,7 @@ FyScenario.whenDevices(function () {
   self.FyLite.load(self.FySite.url('assets/fylite_rs.wasm')).then(function (inst) {
     fy = inst;
     setBusy(false, T('x.ready'));
+    ready();
   }).catch(function (e) {
     setBusy(false, T('x.fail', { why: String(e && e.message || e) }), 'err');
   });
@@ -1113,6 +1133,10 @@ FyScenario.whenDevices(function () {
       te0: +$('te0').value * 1e3, ti0: +$('ti0').value * 1e3,
       ne0: +$('ne0').value * 1e19, edgeNe: +$('edgene').value * 1e19,
       edgeTe: +$('edgete').value * 1e3, edgeTi: +$('edgeti').value * 1e3,
+      //: ★T-M4 — with the pedestal model on, the edge temperature is the
+      //: EPED1-NN pedestal top and the two sliders above are disabled on
+      //: the page rather than quietly ignored in the worker
+      pedestal: on('pedestal'),
       peakT: +$('peakt').value, peakN: +$('peakn').value,
       vLoop: +$('vloop').value, b0Dot: 0,
       closure: +$('closure').value | 0, chi0: +$('chi0').value,
@@ -1678,6 +1702,19 @@ FyScenario.whenDevices(function () {
         rows.push([T('e.row.wfast'), f(r.wFast / 1e3, 1) + ' kJ']);
       if (r.torqueBeam != null && isFinite(r.torqueBeam))
         rows.push([T('e.row.torquenbi'), f(r.torqueBeam, 2) + ' N·m']);
+      //: ★T-M4: the boundary the step actually ran under, when the
+      //: pedestal model set it — the solved top, the pressure and width
+      //: it came from, and the extrapolation distance when the machine
+      //: sat outside EPED1-NN's training box (0 stays silent).
+      if (r.pedTPed != null && isFinite(r.pedTPed)) {
+        rows.push([T('e.row.tped'),
+                   f(r.pedTPed / 1e3, 3) + ' keV' +
+                   (r.pedPPed ? ' · ' + f(r.pedPPed / 1e3, 1) + ' kPa · Δψ '
+                     + f(r.pedWidth, 3) : '')]);
+        if (r.pedExtrap > 0)
+          rows.push([T('e.row.tped_extrap'),
+                     f(100 * r.pedExtrap, 1) + ' %']);
+      }
       //: ★what the named impurity IMPLIES, next to what the run actually
       //: used.  Quasi-neutrality with one impurity gives Z_eff = 1 + c Z(Z-1)
       //: and n_i/n_e = 1 - Z c; this tier runs on the Z_eff CONTROL and an
@@ -1876,9 +1913,13 @@ FyScenario.whenDevices(function () {
   }
   var speciesReady = false;
 
+  var evolveReady;
+  var whenEvolveReady = new Promise(function (res) { evolveReady = res; });
+
   function onReady(m) {
     if (m && m.species) fillSpecies(m.species);
     setBusy(false, T('e.ready'));
+    evolveReady();
   }
 
   function onStep(m) {
@@ -1934,6 +1975,9 @@ FyScenario.whenDevices(function () {
              //: take "O((a/R)^2)" on this page's word
              r2: m.r2 || null, rmaj2: m.rmaj2 || null,
              prandtl: m.prandtl === undefined ? null : m.prandtl,
+             //: ★T-M4: the pedestal record — inputs and all eighteen
+             //: outputs — when the model set the boundary
+             pedestal: m.pedestal || null,
              //: ★the beam's whole record, inputs included, when a beam
              //: was what the auxiliary power was
              beam: m.beam || null,
@@ -2115,7 +2159,10 @@ FyScenario.whenDevices(function () {
                 'alpha', 'brem',
                 'ohmic', 'bootstrap', 'sawtooth', 'useref',
                 'wave', 'wavepower', 'wavevloop', 'wavefuel', 'quasi',
-                'couplefixed', 'beam', 'beamorbit', 'lh'];
+                'couplefixed', 'beam', 'beamorbit', 'lh',
+                //: T-M4 — a run whose edge was solved and one whose edge
+                //: was a slider are different runs
+                'pedestal'];
   //: ★one list for the file: `collect`/`apply` already know a checkbox from
   //: a range, so a switch does not need a second carrier of its own — and a
   //: switch left out of the session is a run that cannot be reproduced
@@ -2364,6 +2411,8 @@ FyScenario.whenDevices(function () {
           sm['fylite:w_fast'] = col('wFast');
           sm['fylite:torque_nbi'] = col('torqueBeam');
         }
+        //: T-M4 — the boundary each step ran under, when the model set it
+        if (last.pedestal) sm['fylite:t_ped'] = col('pedTPed');
 
         doc['fylite:result'] = { equilibrium: eq, core_profiles: cp,
                                  core_transport: ct, core_sources: cs,
@@ -2465,6 +2514,42 @@ FyScenario.whenDevices(function () {
         //: SEPARATE fields: injected, absorbed, shine-through, orbit loss,
         //: driven current, shielding factor.  One "heating power" and one
         //: "current" would be exactly the collapse this item removed.
+        //: ★T-M4: the pedestal record — the ten EPED inputs and the full
+        //: eighteen-output answer at 12 significant digits, so the gate's
+        //: oracle can re-call `kernel.eped1nn` at exactly these numbers,
+        //: plus which solution was APPLIED (index 0, dmagGH/sol0 — the
+        //: standard EPED1 prediction) and the T_ped the march's edge took.
+        if (last.pedestal) {
+          var pd = last.pedestal;
+          doc['fylite:pedestal'] = {
+            'fylite:model': 'eped1nn',
+            'fylite:source':
+              'Snyder PoP 16 056118 (2009); Meneghini NF 57 086034 (2017);'
+              + ' EPEDNN.jl (Apache-2.0)',
+            'fylite:inputs': {
+              'fylite:a': sig([pd.inputs.a], 12)[0],
+              'fylite:beta_n': sig([pd.inputs.betan], 12)[0],
+              'fylite:b_t': sig([pd.inputs.bt], 12)[0],
+              'fylite:delta': sig([pd.inputs.delta], 12)[0],
+              'fylite:ip_ma': sig([pd.inputs.ip], 12)[0],
+              'fylite:kappa': sig([pd.inputs.kappa], 12)[0],
+              'fylite:mass': pd.inputs.mass,
+              'fylite:neped_1e19': sig([pd.inputs.neped], 12)[0],
+              'fylite:r_major': sig([pd.inputs.r], 12)[0],
+              'fylite:zeff_ped': sig([pd.inputs.zeffped], 12)[0],
+            },
+            'fylite:p_ped': sig(pd.pPedAll, 12),
+            'fylite:width': sig(pd.widthAll, 12),
+            'fylite:applied': {
+              'fylite:solution': 'dmagGH/sol0',
+              'fylite:p_ped': sig([pd.pPed], 12)[0],
+              'fylite:width': sig([pd.width], 12)[0],
+              'fylite:t_ped': sig([pd.tPed], 12)[0],
+            },
+            'fylite:extrapolation': pd.extrapolation,
+            'fylite:worst_input': pd.worstInput,
+          };
+        }
         if (last.beam) {
           var bm = last.beam, bin = bm.inputs;
           doc['fylite:beam'] = {
@@ -2852,6 +2937,21 @@ FyScenario.whenDevices(function () {
         }
       }
     }
+    //: ★★T-M4: with the PEDESTAL MODEL on, the edge temperature is the
+    //: EPED1-NN pedestal top (p_ped/(2 n_e,ped k), T_e = T_i — EPED's own
+    //: convention) and the two sliders that used to set it are disabled
+    //: rather than quietly ignored.  A run holding published reference
+    //: profiles keeps the reference's edge — the worker states that rule.
+    var pedOn = on('pedestal');
+    ['edgete', 'edgeti'].forEach(function (id) {
+      var e = $(id);
+      if (e) e.disabled = pedOn;
+    });
+    var pedNote = $('pedestal-note');
+    if (pedNote) {
+      pedNote.hidden = !pedOn;
+      if (pedOn) pedNote.innerHTML = T('e.ped.note');
+    }
     //: the turbulent budget is shown only on the tier that spends it
     var turb = $('turb');
     if (turb) turb.hidden = (+$('closure').value | 0) !== 3;
@@ -2978,108 +3078,16 @@ FyScenario.whenDevices(function () {
 
   // --- the worked cases ----------------------------------------------------
   //
-  // ★★A CASE IS A SESSION DOCUMENT, listed by `cases/catalogue.jsonld` and
-  // applied through the same `FySession.apply` an imported file goes
-  // through.  That is the whole design: what the menu offers and what
-  // 「导出 → 会话文件」 writes are one format, so a reader can save a run and
-  // hand it back as a case, and a case cannot drift into a shape only this
-  // menu can read.
-  //
-  // ★A case carries INPUTS and never a result — it does not run the bar.
-  // This one costs seconds; starting it because a menu changed is what an
-  // offline-tier bar must not do.
-  //
-  // ★A catalogue that will not load is REPORTED and the menu stays empty:
-  // the bar works without cases (that is how it worked before there were
-  // any), and a page that cannot open because a data file is missing is a
-  // worse failure than a menu with nothing in it.
-  var cases = {};
-  function loadCases() {
-    var sel = $('case');
-    if (!sel || typeof fetch !== 'function') return;
-    var dir = (location.pathname.indexOf('/scenario/') >= 0 ? '../' : '')
-              + 'cases/';
-    fetch(dir + 'catalogue.jsonld')
-      .then(function (r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      })
-      .then(function (cat) {
-        var want = ((cat && cat['fylite:cases']) || []).filter(function (e) {
-          return e['fylite:bar'] === 'evolve';
-        }).sort(function (a, b) {
-          return (a['fylite:order'] | 0) - (b['fylite:order'] | 0);
-        });
-        return Promise.all(want.map(function (e) {
-          return fetch(dir + e['fylite:document'])
-            .then(function (r) {
-              if (!r.ok) throw new Error('HTTP ' + r.status);
-              return r.json();
-            })
-            .then(function (doc) {
-              var id = e['fylite:case_id'];
-              cases[id] = { entry: e, doc: doc };
-              var o = document.createElement('option');
-              o.value = id;
-              o.textContent = caseName(doc);
-              sel.appendChild(o);
-            })
-            .catch(function (err) {
-              S.report(T('e.case.failed', { id: e['fylite:case_id'],
-                                            why: err.message }), 'err');
-            });
-        }));
-      })
-      .catch(function (err) {
-        S.report(T('e.case.nocat', { why: err.message }), 'err');
-      });
-  }
-
-  function caseName(doc) {
-    var c = doc['fylite:case'] || {};
-    return (FyI18n.current() === 'en' ? c['fylite:name_en'] : c['fylite:name'])
-           || c['fylite:name'] || doc['@id'];
-  }
-
-  /**
-   * Apply one case: the controls, then everything that reads them.
-   *
-   * ★What a case may NOT do is change the machine.  It DECLARES which one
-   * it was written for, and a mismatch is said out loud rather than acted
-   * on — switching the device rebuilds the worker and throws away whatever
-   * the reader had imported, which is not something a menu should do behind
-   * their back.
-   */
-  function applyCase(id) {
-    var rec = cases[id];
-    if (!rec) return;
-    var doc = rec.doc, c = doc['fylite:case'] || {};
-    if (doc['fylite:page'] !== 'evolve')
-      return S.report(T('msg.wrong_page', { page: doc['fylite:page'] }), 'err');
-    var r = FySession.apply(doc['fylite:config'], S.scope);
-    syncLabels(); syncGeometry(); costNote();
-    var en = FyI18n.current() === 'en';
-    var note = $('case-note');
-    if (note) {
-      var bits = [(en ? c['fylite:note_en'] : c['fylite:note'])
-                  || c['fylite:note'] || ''];
-      var needs = (en ? c['fylite:needs_en'] : c['fylite:needs'])
-                  || c['fylite:needs'];
-      if (needs && needs.length)
-        bits.push(T('e.case.needs', {
-          list: needs.map(function (n) { return '<li>' + n + '</li>'; })
-                     .join('') }));
-      var want = rec.entry['fylite:device'] || c['fylite:device'];
-      var act = self.FyDevices ? FyDevices.active() : null;
-      var have = act ? act.id : null;
-      if (want && have && want !== have)
-        bits.push(T('e.case.device', { want: want, have: have }));
-      note.innerHTML = bits.filter(Boolean).join(' ');
-      note.hidden = !note.innerHTML;
-    }
-    S.report(T('e.case.applied', { name: caseName(doc),
-                                   n: r.applied.length }));
-  }
+  // ★★The machinery is `scenario.js`'s (`S.cases`), not this bar's.  It used
+  // to live here with the bar it served written into it as the string
+  // `'evolve'` — ten bars, one of which could be handed a worked starting
+  // point, and the other nine could not because the code was in the wrong
+  // file.  What stays here is what is this bar's own: the three things that
+  // have to be re-derived once the controls have been written.
+  //: ★the INITIAL case waits for the worker's `ready`: the ADAS species menu
+  //: is filled from it, and 「Be」 applied before it arrives is 「」 after.
+  S.cases({ when: whenEvolveReady,
+            after: function () { syncLabels(); syncGeometry(); costNote(); } });
 
   CONTROLS.forEach(function (id) {
     var e = $(id);
@@ -3091,11 +3099,6 @@ FyScenario.whenDevices(function () {
     var e = $(id);
     if (e) e.addEventListener('change', function () { syncGeometry(); costNote(); });
   });
-  if ($('case'))
-    $('case').addEventListener('change', function () {
-      if (this.value) applyCase(this.value);
-    });
-  loadCases();
   S.onRun(run);
   S.onRefresh(function () { costNote(); draw(); drawXsec(); });
   //: ★before the first sync: the value beside a slider is painted from the

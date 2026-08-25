@@ -114,6 +114,15 @@
 <div>
     <div data-part="discharge" class="panel">
       <h2 data-i18n="z.tier">档位</h2>
+      <!-- The worked cases this bar offers.  ★Same machinery as every other
+           bar's (`scenario.js`'s `S.cases`): a case is a session document
+           under `app/cases/`, applied through the same `FySession.apply` an
+           imported file goes through. -->
+      <div class="ctl"><label for="design-zerod-case" data-i18n="case">算例</label>
+        <select id="design-zerod-case">
+          <option value="" data-i18n="case.pick"></option>
+        </select></div>
+      <p class="note case-note" id="design-zerod-case-note" hidden></p>
       <div class="tabs">
         <button id="design-zerod-tab-a" class="on" data-i18n="z.tier.a">分析</button>
         <button id="design-zerod-tab-b" data-i18n="z.tier.b">预测（实验）</button>
@@ -342,6 +351,12 @@
 <div>
     <div data-part="discharge" class="panel">
       <h2 data-i18n="design.target">目标位形</h2>
+      <!-- The worked cases this bar offers — `scenario.js`'s `S.cases`. -->
+      <div class="ctl"><label for="design-discharge-case" data-i18n="case">算例</label>
+        <select id="design-discharge-case">
+          <option value="" data-i18n="case.pick"></option>
+        </select></div>
+      <p class="note case-note" id="design-discharge-case-note" hidden></p>
       <p class="note" data-i18n="design.shape_moved"></p>
       <!-- ★T-D6: 位形类别 is an INPUT, not something read off the answer.
            It owns the X-point rows below: 限制器 asks for no field null at
@@ -523,6 +538,12 @@
     <div data-part="discharge" class="panel">
       <p class="caveat" data-i18n="pulse.caveat"></p>
       <h2 data-i18n="pulse.grid">轨迹</h2>
+      <!-- The worked cases this bar offers — `scenario.js`'s `S.cases`. -->
+      <div class="ctl"><label for="design-pulse-case" data-i18n="case">算例</label>
+        <select id="design-pulse-case">
+          <option value="" data-i18n="case.pick"></option>
+        </select></div>
+      <p class="note case-note" id="design-pulse-case-note" hidden></p>
       <div class="row">
         <div class="ctl"><label for="design-pulse-tbd" data-i18n="pulse.t_breakdown">击穿 [s]</label>
           <input type="number" id="design-pulse-tbd" step="0.05" value="0"></div>
@@ -641,6 +662,15 @@
 <div>
     <div data-part="discharge" class="panel">
       <h2 data-i18n="b.target">场零位置与判据</h2>
+      <!-- The worked cases this bar offers.  ★Same machinery as every other
+           bar's (`scenario.js`'s `S.cases`): a case is a session document
+           under `app/cases/`, applied through the same `FySession.apply` an
+           imported file goes through. -->
+      <div class="ctl"><label for="design-breakdown-case" data-i18n="case">算例</label>
+        <select id="design-breakdown-case">
+          <option value="" data-i18n="case.pick"></option>
+        </select></div>
+      <p class="note case-note" id="design-breakdown-case-note" hidden></p>
       <div class="row">
         <div class="ctl"><label for="design-breakdown-nullr">R<sub>null</sub> [m]</label>
           <input type="number" id="design-breakdown-nullr" step="0.005" value="1.85"></div>

@@ -1247,6 +1247,172 @@
      *              bars claim goes to the one that is running, except `ready`
      *              — the kernel handshake belongs to all of them.
      */
+    /**
+     * The worked cases a bar offers from a menu.
+     *
+     * ★★A CASE IS A SESSION DOCUMENT, listed by `cases/catalogue.jsonld` and
+     * applied through the same `FySession.apply` an imported file goes
+     * through.  That is the whole design: what the menu offers and what
+     * 「导出 → 会话文件」 writes are one format, so a reader can save a run and
+     * hand it back as a case, and a case cannot drift into a shape only this
+     * menu can read.
+     *
+     * ★★THIS USED TO BE THE 含时演化 BAR'S PRIVATE CODE, with the bar it
+     * served written into it as the string `'evolve'`.  Ten bars, one of
+     * which could be handed a worked starting point — and the other nine
+     * could not, because the machinery was in the wrong file.  It is here
+     * now and takes the bar from the bar; the catalogue's `fylite:bar` was
+     * always in the documents waiting for a reader that honoured it.
+     *
+     * ★A case carries INPUTS and never a result — it does not run the bar.
+     * ★A catalogue that will not load is REPORTED and the menu stays empty:
+     * a bar works without cases (that is how every one of them worked before
+     * there were any), and a page that cannot open because a data file is
+     * missing is a worse failure than a menu with nothing in it.
+     *
+     *   S.cases({ after: function () { ... }, when: readyPromise })
+     *
+     * `after` runs once the controls are written, for whatever the bar has
+     * to re-derive from them (labels, cost notes, a redrawn cross-section).
+     *
+     * ★`when` is a promise for THIS BAR BEING READY, and only the INITIAL
+     * case waits on it.  It is not ceremony: a menu built from a file that
+     * arrives in milliseconds can be applied before the bar's own async
+     * setup has landed, and a control that is not there yet is a control a
+     * case cannot write.  It was real — the ADAS species menu is filled from
+     * the worker's `ready` message, so 「Be」 applied before that message
+     * became the empty selection, and the ITER case quietly ran with no
+     * impurity radiation (T_e(0) 24.14 keV instead of 22.53).  A case the
+     * READER picks needs no such wait: by then everything has arrived.
+     */
+    function installCases(api, barId, opts) {
+      var T = root.FyI18n.t;
+      var sel = api.$('case');
+      var cases = {};
+      var initialId = null;
+      if (!sel || typeof fetch !== 'function') return { cases: cases };
+
+      function caseName(doc) {
+        var c = doc['fylite:case'] || {};
+        return (root.FyI18n.current() === 'en' ? c['fylite:name_en']
+                                               : c['fylite:name'])
+               || c['fylite:name'] || doc['@id'];
+      }
+
+      /**
+       * Apply one case: the controls, then whatever reads them.
+       *
+       * ★What a case may NOT do is change the machine.  It DECLARES which
+       * one it was written for, and a mismatch is said out loud rather than
+       * acted on — switching the device rebuilds the worker and throws away
+       * whatever the reader had imported, which is not something a menu
+       * should do behind their back.
+       */
+      function applyCase(id, quiet) {
+        var rec = cases[id];
+        if (!rec) return;
+        var doc = rec.doc, c = doc['fylite:case'] || {};
+        if (doc['fylite:page'] !== barId)
+          return api.report(T('case.wrong_bar', { bar: doc['fylite:page'],
+                                                  here: barId }), 'err');
+        var r = root.FySession.apply(doc['fylite:config'], api.scope);
+        api.sync();
+        if (opts.after) opts.after();
+        var en = root.FyI18n.current() === 'en';
+        var note = api.$('case-note');
+        if (note) {
+          var bits = [(en ? c['fylite:note_en'] : c['fylite:note'])
+                      || c['fylite:note'] || ''];
+          var needs = (en ? c['fylite:needs_en'] : c['fylite:needs'])
+                      || c['fylite:needs'];
+          if (needs && needs.length)
+            bits.push(T('case.needs', {
+              list: needs.map(function (n) { return '<li>' + n + '</li>'; })
+                         .join('') }));
+          var want = rec.entry['fylite:device'] || c['fylite:device'];
+          var act = root.FyDevices ? root.FyDevices.active() : null;
+          var have = act ? act.id : null;
+          if (want && have && want !== have)
+            bits.push(T('case.device', { want: want, have: have }));
+          note.innerHTML = bits.filter(Boolean).join(' ');
+          note.hidden = !note.innerHTML;
+        }
+        api.report(T(quiet ? 'case.initial' : 'case.applied',
+                     { name: caseName(doc), n: r.applied.length }));
+      }
+
+      //: ★THE INITIAL CASE is the catalogue's `fylite:initial`, applied ONCE
+      //: — on a first visit, when this bar has no trace of the reader in
+      //: `localStorage`.  It is NOT the factory settings: the 「缺省」 case is
+      //: still the one step back to those, and it is still in the menu.
+      //: ★NEVER over a session the reader already has: a menu may be pressed,
+      //: a starting point may not be imposed on work in progress.
+      var seenKey = 'fylite:seen:' + pageId + ':' + barId;
+      function firstVisit() {
+        try {
+          if (root.localStorage.getItem(seenKey)) return false;
+          root.localStorage.setItem(seenKey, '1');
+          return true;
+        } catch (e) {
+          //: a private window, a browser that blocks site data, a thumbnailer
+          //: — every one throws here, and none of them is a reason to impose
+          //: a starting point on every load
+          return false;
+        }
+      }
+
+      var dir = (location.pathname.indexOf('/scenario/') >= 0 ? '../' : '')
+                + 'cases/';
+      fetch(dir + 'catalogue.jsonld')
+        .then(function (r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        })
+        .then(function (cat) {
+          var want = ((cat && cat['fylite:cases']) || []).filter(function (e) {
+            return e['fylite:bar'] === barId;
+          }).sort(function (a, b) {
+            return (a['fylite:order'] | 0) - (b['fylite:order'] | 0);
+          });
+          return Promise.all(want.map(function (e) {
+            return fetch(dir + e['fylite:document'])
+              .then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+              })
+              .then(function (doc) {
+                var id = e['fylite:case_id'];
+                cases[id] = { entry: e, doc: doc };
+                if (e['fylite:initial']) initialId = id;
+                var o = document.createElement('option');
+                o.value = id;
+                o.textContent = caseName(doc);
+                sel.appendChild(o);
+              })
+              .catch(function (err) {
+                api.report(T('case.failed', { id: e['fylite:case_id'],
+                                              why: err.message }), 'err');
+              });
+          }));
+        })
+        .then(function () {
+          if (!(initialId && firstVisit())) return null;
+          //: ★wait for the bar, then apply — see `when` above
+          return Promise.resolve(opts.when).then(function () {
+            sel.value = initialId;
+            applyCase(initialId, true);
+          });
+        })
+        .catch(function (err) {
+          api.report(T('case.nocat', { why: err.message }), 'err');
+        });
+
+      sel.addEventListener('change', function () {
+        if (this.value) applyCase(this.value);
+      });
+      return { cases: cases, apply: applyCase };
+    }
+
     function addBar(part, p, barId, spec) {
       spec = spec || {};
       var bpre = pre + barId + '-';
@@ -1275,6 +1441,8 @@
       api.page = barId;
       api.bar = barId;
       api.sync = sync;
+      /** The worked cases this bar offers — see `installCases`. */
+      api.cases = function (o) { return installCases(api, barId, o || {}); };
       //: ★`state` is the fourth argument and the only one a bar has to think
       //: about: without it the marker is derived from the class, which is
       //: right for every bar that reports 「失败」 with `err` and 「未达」 with

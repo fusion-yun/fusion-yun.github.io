@@ -28,7 +28,7 @@
   //
   // A removed export still surfaces as a missing function at the call site
   // rather than as a version number, so the name list below stays.
-  var ABI_EXPECT = 111;
+  var ABI_EXPECT = 112;
 
   var REQUIRED = [
     'fylite_rs_alloc', 'fylite_rs_free', 'fylite_rs_ping',
@@ -131,6 +131,7 @@
     'fylite_rs_gs_fixed_box_ip',
     'fylite_rs_fast_ion_pressure_split', 'fylite_rs_beam_torque',
     'fylite_rs_spitzer_eta_perp',
+    'fylite_rs_eped1nn',
     'fylite_rs_geo_surface_r2', 'fylite_rs_equilibrium_ladder_r2',
     //: ★T-D18 / T-D7 (放电设计页) — the start design with a SET of field
     //: nulls, and the two pieces of wall geometry that turn 「间隙 = 某值」
@@ -174,14 +175,35 @@
   };
 
   Fy.prototype.alloc = function (n) {
-    var p = this.e.fylite_rs_alloc(BigInt(n * 8));
+    //: ★★n = 0 IS NOT A FAILURE, and treating it as one was a real bug.
+    //: A zero-size Rust allocation hands back a null pointer, and this
+    //: guard read that as「分配失败」—— so any machine whose deck has an
+    //: EMPTY set of something reached the reader as an internal error in
+    //: the allocator's vocabulary.  Measured: ITER's vacuum vessel is
+    //: described as an `annular` shell (an inner and an outer outline, no
+    //: discretised elements — see `fyodev.js`), so `M.vessel` is empty and
+    //: the 脉冲轨迹 bar died with
+    //: 「求解失败：fylite: wasm allocation of 0 f64 failed」 on a machine
+    //: that simply has no passive FILAMENTS.  The kernel itself is fine
+    //: with it — `channel_matrices` on an empty vessel returns the
+    //: coils-only matrices, verified against the native binding.
+    //:
+    //: ★One slot is taken even for n = 0 so the pointer is VALID and
+    //: ALIGNED: Rust's slice invariants require that of an empty slice
+    //: too, and a null pointer would be undefined behaviour on the other
+    //: side.  `n` stays 0 — that is what the callers read — and `take` is
+    //: what has to be given back, because `dealloc` must see the layout
+    //: that `alloc` saw.
+    var take = n > 0 ? n : 1;
+    var p = this.e.fylite_rs_alloc(BigInt(take * 8));
     if (p === 0) throw new Error('fylite: wasm allocation of ' + n +
                                  ' f64 failed');
-    return { ptr: p, n: n };
+    return { ptr: p, n: n, take: take };
   };
 
   Fy.prototype.free = function (b) {
-    if (b) this.e.fylite_rs_free(b.ptr, BigInt(b.n * 8));
+    if (b) this.e.fylite_rs_free(
+      b.ptr, BigInt((b.take === undefined ? b.n : b.take) * 8));
   };
 
   // Allocate and fill from a JS array / TypedArray.
@@ -2768,6 +2790,28 @@
         a.ptr, b.ptr, c.ptr, BigInt(n), out.ptr);
       if (rc !== 0) throw new SolveError('fylite_rs_spitzer_eta', rc);
       return s.get(out);
+    });
+  };
+
+  /**
+   * The EPED1-NN pedestal surrogate (T-M4): height [Pa] and width [psi_N]
+   * of the H-mode pedestal from ten scalars.  Index 0 of each is the
+   * STANDARD EPED1 prediction (dmagGH/sol0); `extrapolation` is how far
+   * the worst input sat outside the training box (0 = inside), with
+   * `worstInput` naming it.  Units are EPED's own: a/r [m], betan global,
+   * bt [T], delta effective, ip [MA], mass [amu], neped [1e19 m^-3].
+   */
+  Fy.prototype.eped1nn = function (o) {
+    var self = this;
+    return this.scope(function (s) {
+      var out = s.zeros(20);
+      var rc = self.e.fylite_rs_eped1nn(
+        +o.a, +o.betan, +o.bt, +o.delta, +o.ip, +o.kappa,
+        +o.mass, +o.neped, +o.r, +o.zeffped, out.ptr);
+      if (rc !== 0) throw new SolveError('fylite_rs_eped1nn', rc);
+      var v = s.get(out);
+      return { pPed: v.slice(0, 9), width: v.slice(9, 18),
+               extrapolation: v[18], worstInput: v[19] | 0 };
     });
   };
 

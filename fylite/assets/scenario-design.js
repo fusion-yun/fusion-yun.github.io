@@ -67,6 +67,20 @@ function critMark(key, cls) {
 //: being evaluated — and this body reads the machine on its first line.  It is
 //: the framework that knows when the machines are in, so it is the framework
 //: that calls this.
+// ★★ONE READY SIGNAL FOR THE PAGE, shared by the bars that need it.
+//
+// The worker's `ready` is claimed by ONE bar (`zerod`'s `on.ready`) — that is
+// how the bus works, and it is right: the handshake is the PAGE's news, not
+// four bars' news.  But an INITIAL CASE has to wait for it on any bar that
+// solves, and a bar that does not claim `ready` had no way to know.  Measured:
+// 击穿场零's case applied before the wasm landed and its re-run threw
+// 「wasm 尚未就绪」 into the console on every first visit.
+var FyDesignReady = (function () {
+  var fire;
+  var promise = new Promise(function (res) { fire = res; });
+  return { promise: promise, fire: function () { fire(); } };
+})();
+
 FyScenario.whenDevices(function () {
   'use strict';
 
@@ -799,6 +813,8 @@ FyScenario.whenDevices(function () {
     //: ★the kernel being ready is not a request to compute.  Every page
     //: now waits for its own button — loading a page and pressing it are
     //: two different acts, and only the second one asks for work.
+    //: ★and the page-level signal every bar's initial case waits on
+    FyDesignReady.fire();
   }
 
   function onError(m) {
@@ -1349,6 +1365,16 @@ FyScenario.whenDevices(function () {
     eqCache.clear(); solveSlice();
   });
   S.onRun(run);
+
+  // --- the worked cases ----------------------------------------------------
+  //
+  // ★The machinery is `scenario.js`'s (`S.cases`).  ★The INITIAL case waits
+  // for this page's worker: `FyDevice.applyRanges` below writes the machine's
+  // own numbers into these controls at init, and a case applied before that
+  // would be overwritten by the machine it was written for.
+  S.cases({ when: FyDesignReady.promise,
+            after: function () { syncLabels(); } });
+
   $('tab-a').addEventListener('click', function () { setTier('a'); });
   $('tab-b').addEventListener('click', function () { setTier('b'); });
   ['tau_law', 'hfac', 'meff', 'w0'].forEach(function (id) {
@@ -2777,6 +2803,21 @@ FyScenario.whenDevices(function () {
     $('status').innerHTML = msg;
     S.progress(0);
   }
+  // --- the worked cases ----------------------------------------------------
+  //
+  // ★This bar does NOT re-run on a case: one inverse solve is eight annealing
+  // passes of free-boundary solving (measured 10–15 s on ITER), which is what
+  // 「算例只设定，不开算」 is for.
+  //
+  // ★★ITS CONTROLS ARE NAMED `discharge-*`, and that is not a naming slip:
+  // `discharge` is this page's PART id, and a part's prefix is its own id
+  // (`scenario.js`, `addPart`: `pp = partId + '-'`).  So the resolver's chain
+  // — bar `design-discharge-<id>`, then part `discharge-<id>`, then page
+  // `design-<id>` — reaches them, and a case writes them like any other.
+  // ★This was briefly written up as a defect (T-C10) because a GATE resolved
+  // ids without the middle step.  The gate was wrong, not the page.
+  S.cases({ when: FyDesignReady.promise, after: function () { syncLabels(); } });
+
   S.onRun(run);
   //: ★the footnote names the machine, so this page asks for its own key; the
   //: page shows one footnote and the last part to ask wins
@@ -3920,6 +3961,14 @@ FyScenario.whenDevices(function () {
     keys.push(seedRow());
     drawKeys(); drawGrid();
   });
+  // --- the worked cases ----------------------------------------------------
+  //
+  // ★This bar does NOT re-run on a case: one trajectory is 21 waypoints of
+  // free-boundary solving (measured 7.7 s on ITER), and spending that because
+  // a menu changed is what 「算例只设定，不开算」 is for.  Its upstream has to
+  // have run anyway.
+  S.cases({ when: FyDesignReady.promise, after: function () { syncLabels(); } });
+
   S.onRun(run);
   S.onRefresh(function () { syncLabels(); drawKeys(); drawGrid(); });
   syncLabels();
@@ -4270,6 +4319,16 @@ FyScenario.whenDevices(function () {
     $(id).addEventListener('change', run);
   });
   S.onRun(run);
+
+  // --- the worked cases ----------------------------------------------------
+  //
+  // ★★THIS BAR RE-RUNS after a case, like the 1.5-D bar and unlike 含时演化:
+  // its own `nullr`/`nullz` handlers already run it on `change`, and the solve
+  // is milliseconds.  A case that set the null and left the figure on the
+  // previous one would show a state the bar never otherwise shows.
+  S.cases({ when: FyDesignReady.promise,
+            after: function () { syncLabels(); run(); } });
+
   //: delegated, because the rows are rebuilt on every solve
   $('coils').addEventListener('change', onLimitEdit);
   $('limreset').addEventListener('click', function () { resetLimits(); run(); });
