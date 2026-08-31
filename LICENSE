@@ -11,7 +11,10 @@ The path a file is served from determines which part governs it.
   ---------------------------------------------------------------------
   A      The site itself — pages, prose, figures,    CC BY-ND 4.0
          images, styles (everything not covered
-         by Part C)
+         by Parts B and C)
+  B      /spo/... and /fyo/... — the SpO and FyO     CC BY-ND 4.0
+         ontology artifacts (compiled serialisations
+         and the LinkML module sources)
   C      /fylite/... — fylite binary artifacts       Binary redistribution,
          (WebAssembly modules, loader scripts)       free of charge;
                                                      source not published
@@ -21,9 +24,11 @@ The published tree also carries its own copy of the applicable terms, so that th
 licence travels with the material: `/fylite/LICENSE`.  That copy restates Part C;
 this file remains the authoritative notice.
 
-Part B (the SpO and FyO ontology artifacts, served from /spo/ and /fyo/) has been
-WITHDRAWN — see the historical note below.  The part labels A and C are kept as they
-were, so that references to "Part C" in `/fylite/LICENSE` remain accurate.
+Part B (the SpO and FyO ontology artifacts, served from /spo/ and /fyo/) was WITHDRAWN
+on 2026-08-23 and was RESTORED on 2026-08-31 under CC BY-ND 4.0 — see the historical
+note below for what changed and what did not.
+The part labels A and C are kept as they were, so that references to "Part C" in
+`/fylite/LICENSE` remain accurate.
 
 
 PART A — THE SITE (CC BY-ND 4.0)
@@ -85,13 +90,33 @@ Before 2026-08-17 this repository carried a CC0 1.0 Universal public-domain
 dedication.  That dedication is irrevocable for material already published
 under it; the terms above apply from 2026-08-17 onward.
 
-From 2026-08-17 to 2026-08-23 this site also published the SpO and FyO ontology
-artifacts under /spo/ and /fyo/ (Part B, CC BY-ND 4.0).  Those trees have been
-WITHDRAWN pending a rights review of upstream material incorporated in them, and
-the prefix IRIs https://fusion-yun.github.io/spo/... and
-https://fusion-yun.github.io/fyo/... no longer resolve to published artifacts.
-The grant made under Part B is, like any CC licence, irrevocable as to copies
-already obtained; no new copies are distributed from this site.
+From 2026-08-17 to 2026-08-23 this site published the SpO and FyO ontology artifacts
+under /spo/ and /fyo/ (Part B, CC BY-ND 4.0).  They were WITHDRAWN on 2026-08-23:
+the FyO artifacts then carried roughly six thousand description strings lifted verbatim
+from the IMAS Data Dictionary, whose data schemas are licensed CC BY-ND 4.0 (Copyright
+2012-2025, ITER Organization).  Publishing a semantic lift that reproduces that text is
+distribution of Adapted Material, which the NoDerivatives term does not permit.  SpO was
+withdrawn with it because FyO imports it and the two are published as one plane.
+
+They were RESTORED on 2026-08-31, under CC BY-ND 4.0 as before.  What changed: FyO no
+longer reproduces the Data Dictionary's text.  Every description matching the DD
+verbatim was removed — 6910 of them — and each DD-derived element now REFERENCES the
+Dictionary through a `dd_path` or `dd_type_name` pointer instead.  A gate in the FyO
+repository fails the build if DD text reappears.  A defect in the compiler was also
+fixed in the same batch: it had been folding a corpus of DD examples into the compiled
+SpO artifacts, so part of the withdrawn material had entered through that route as well.
+
+What did NOT change, stated plainly: FyO still mirrors the STRUCTURE of the Data
+Dictionary — its class and slot layout follows the DD's paths.  Whether that structure
+is a substantial extraction of the DD database, which CC BY-ND reaches through Sui
+Generis Database Rights (legal code Section 4), has NOT been reviewed by anyone.  The
+copyright holder of these artifacts has accepted that position provisionally in order to
+resume publication; it is a decision to proceed while the question is open, not a
+finding that the question came back clear.  Should the ITER Organization object, or
+should the Dictionary's terms change, these trees will be withdrawn again.
+
+The grant made under Part B is, like any CC licence, irrevocable as to copies already
+obtained.
 
 
 =======================================================================
