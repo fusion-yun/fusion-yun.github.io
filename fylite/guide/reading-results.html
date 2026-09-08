@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>结果怎么读 (Reading a Result) · fylite 用户指南</title>
+<link rel="icon" href="../assets/fy_mark.svg">
+<meta name="description" content="一个数字本身不构成答案。fylite 的每个结果都带着它是怎么来的，
+以及它在哪里不等价——后者是这套工具与「给个数就走」的区别所在。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="guide.css">
+<script src="../assets/theme.js"></script>
+</head>
+<body data-page="guide">
+
+<header class="top">
+  <a class="brand" href="../index.html"><img src="../assets/fy_mark.svg" alt="" width="32" height="32"></a>
+  <div class="titles">
+  <h1>结果怎么读 (Reading a Result)</h1>
+  <span class="sub">fylite 用户指南</span>
+  </div>
+  <nav>
+    <a href="../index.html">演示首页</a>
+    <a href="../features.html">功能与边界</a>
+    <button id="theme-toggle" class="iconbtn" type="button"></button>
+  </nav>
+</header>
+
+<div class="guide-wrap">
+<aside class="guide-toc" aria-label="目录">
+    <a href="index.html">怎么开始 (Getting Started)</a>
+    <a href="browser.html">浏览器用法 (Using the Browser Pages)</a>
+    <a href="python.html">Python 用法 (Using the Python Package)</a>
+    <span class="here">结果怎么读 (Reading a Result)</span>
+    <a href="limits.html">能力与边界 (What It Does, and Where It Stops)</a>
+</aside>
+
+<main class="doc guide-body">
+
+<p>一个数字本身不构成答案。fylite 的每个结果都带着<strong>它是怎么来的</strong>，
+以及<strong>它在哪里不等价</strong>——后者是这套工具与「给个数就走」的区别所在。</p>
+<h2>溯源：每个结果带的那一段</h2>
+<p>每次运行都附一份溯源记录，至少说明三件事：</p>
+<ul>
+<li>
+<p><strong>它是什么的约化档。</strong> 一个约化模型总是某个更完整表述的简化；记录点名那个上游，
+而不是让你去猜这条曲线代表多高的保真度。</p>
+</li>
+<li>
+<p><strong>它在哪里不等价。</strong> 这是记录里最有用的一句：约化在什么条件下会失真、
+在哪个区间不该拿去下结论。</p>
+</li>
+<li>
+<p><strong>哪一个二进制答的。</strong> 内核有版本与 ABI 号；同一份输入在不同版本上可能给不同的数，
+所以「哪个版本算的」是结果的一部分，不是元数据里的装饰。</p>
+</li>
+</ul>
+<h2>三种「没有数」，含义各不相同</h2>
+<table>
+<thead>
+<tr>
+<th>你看到的</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>报错</strong></td>
+<td>请求落在模型适用范围之外。<strong>不会</strong>返回一个看起来像答案的数。</td>
+</tr>
+<tr>
+<td><strong>标为缺口</strong></td>
+<td>这个能力还没建。它被列在能力目录里，而不是被一个返回零的函数填上。</td>
+</tr>
+<tr>
+<td><strong>明说是批式</strong></td>
+<td>能算，但不是即时的；分步进行、可中断。</td>
+</tr>
+</tbody>
+</table>
+<p>★这三者被刻意分开，因为它们要求你做的事不同：第一种要改输入，第二种要等能力落地，
+第三种只要等它跑完。把它们混成同一个「失败」，会让前两种被当成第三种来等。</p>
+<h2>保真度声明的读法</h2>
+<p>凡是给出「与某某相差 X %」的地方，同时会给两样东西：</p>
+<ul>
+<li>
+<p><strong>零假设</strong>——「什么都不做」在同一指标上是多少。一个模型如果不比这条线好，
+它就什么也没说；准稳态窗口上这条线往往比直觉高得多。</p>
+</li>
+<li>
+<p><strong>残余归因清单</strong>——差距里已经解释掉的部分与<strong>尚未解释</strong>的部分，分开列。
+未归因的那些<strong>留在清单上</strong>，不打包进一句「符合良好」。</p>
+</li>
+</ul>
+<h2>数值一致性</h2>
+<p>同一份输入，浏览器与本机 Python 得到同一个数：两边是同一个内核的两次编译，
+不是两套实现。多线程与单线程也逐位一致——每个元素独立计算、同一算术顺序。
+这几条由自动门在每次改动时校验。</p>
+</main>
+</div>
+
+<footer>
+  <a class="mark" href="../index.html" tabindex="-1" aria-hidden="true"><img src="../assets/fy_mark.svg" alt="" width="24" height="24"></a>
+  <a href="../index.html">fylite 首页</a>
+  <a href="index.html">指南目录</a>
+  <span class="copy">© 2026 中国科学院等离子体物理研究所（ASIPP）与 fylite 贡献者 · Apache-2.0 · alpha 版</span>
+  <span class="ver" title="kernel 0.0.1 · interface 152 · app 0.0.1-alpha">内核 0.0.1 · 接口 152 · 前端 0.0.1-alpha</span>
+</footer>
+
+</body>
+</html>

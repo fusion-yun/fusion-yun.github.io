@@ -526,6 +526,23 @@ FyScenario.whenDevices(function () {
   //: could switch a deck-disowned channel back on would be overruling a
   //: calibration decision with a checkbox.
   var loopOff = {}, probeOff = {}, chanTab = 'loop', chanSort = 'wresid';
+  //: ★★★THE READER'S OWN LAYER, in two parts (2026-08-31, ruling: preset =
+  //: deck AND the shot's live gate, with the disagreement visible).
+  //:
+  //: `*Sig` is a per-channel sigma MULTIPLIER — the fit reads `w ∝ 1/σ`, so
+  //: 2.0 says "I trust this channel half as much".  Absent = 1.0 = as the
+  //: deck says; it multiplies the machine's weight rather than replacing it,
+  //: which is the same rule the worker's `loopScale` was written for.
+  //:
+  //: `*On` FORCES a deck-disowned channel back in.  It used to be
+  //: impossible on purpose — "a table that could switch a deck-disowned
+  //: channel back on would be overruling a calibration decision with a
+  //: checkbox" — and that argument is about VISIBILITY, not about the act:
+  //: measured on #137985, the deck fits 21 of 79 probes while the shot's own
+  //: live gate passes 37, and 17 of those are channels this machine's EFIT
+  //: simply never fits.  Hiding them makes the disagreement invisible;
+  //: showing them, marked, makes it a decision someone made.
+  var loopSig = {}, probeSig = {}, loopOn = {}, probeOn = {};
   var importedPressure = null, importedIp = null, refCase = null;
   //: ★★THE DELIVERED RECONSTRUCTION AS CURVES, not as six scalars.  It was
   //: already in the third column of the table; what a reader actually does
@@ -1204,7 +1221,13 @@ FyScenario.whenDevices(function () {
                    model: last.probes.b[i],
                    //: the deck's operational weight, which is 0 or 1 here
                    w: p.weight ? 1 : 0, deckOff: !p.weight,
-                   off: !!probeOff[i] });
+                   sig: probeSig[i] === undefined ? 1 : probeSig[i],
+                   forcedOn: !p.weight && !!probeOn[i],
+                   //: ★`off` means NOT IN THE FIT, deck verdict and reader
+                   //: layer already folded together — so every downstream
+                   //: filter is `!r.off` and none of them has to remember the
+                   //: rule a second time.
+                   off: p.weight ? !!probeOff[i] : !probeOn[i] });
       }
       return out;
     }
@@ -1216,7 +1239,12 @@ FyScenario.whenDevices(function () {
                  w: last ? last.wts[i] : NaN,
                  deckOff: !!(HAS_REF && M.reference.loopWeights &&
                              !M.reference.loopWeights[i]),
-                 off: !!loopOff[i] });
+                 sig: loopSig[i] === undefined ? 1 : loopSig[i],
+                 forcedOn: !!(HAS_REF && M.reference.loopWeights &&
+                              !M.reference.loopWeights[i] && loopOn[i]),
+                 off: (HAS_REF && M.reference.loopWeights &&
+                       !M.reference.loopWeights[i])
+                   ? !loopOn[i] : !!loopOff[i] });
     }
     return out;
   }
@@ -1232,7 +1260,7 @@ FyScenario.whenDevices(function () {
       var d = (r.model - r.meas);
       var v = isFinite(d) ? (probe ? d : d * (r.w || 0)) : NaN;
       w.push(v);
-      if (isFinite(v) && !r.off && !r.deckOff) { rms += v * v; n += 1; }
+      if (isFinite(v) && !r.off) { rms += v * v; n += 1; }
     });
     return { w: w, rms: n ? Math.sqrt(rms / n) : NaN, n: n };
   }
@@ -1258,7 +1286,7 @@ FyScenario.whenDevices(function () {
       rows.forEach(function (r) {
         var f = cal.factors[r.i];
         r.cal = (isFinite(f) && cal.median) ? f / cal.median : NaN;
-        r.calReject = isFinite(f) && !cal.keep[r.i] && !r.off && !r.deckOff;
+        r.calReject = isFinite(f) && !cal.keep[r.i] && !r.off;
       });
     var k = +$('outk').value;
     var order = rows.slice();
@@ -1273,13 +1301,17 @@ FyScenario.whenDevices(function () {
     order.sort(by[chanSort] || by.name);
     body.innerHTML = order.map(function (r) {
       var flag = isFinite(r.wresid) && isFinite(wr.rms) && wr.rms > 0 &&
-                 Math.abs(r.wresid) > k * wr.rms && !r.off && !r.deckOff;
+                 Math.abs(r.wresid) > k * wr.rms && !r.off;
       var d = r.model - r.meas;
-      return '<tr class="' + (r.off || r.deckOff ? 'off' : '') + '">' +
+      return '<tr class="' + (r.off ? 'off' : '') + '">' +
+        //: ★the box is enabled even for a deck-disowned channel — ticking it
+        //: is how a reader forces one back in, and the `*` beside the name
+        //: stays whether it is in or out, because what it marks is the
+        //: DECK's verdict, not the current state.
         '<td><input type="checkbox" data-chan="' + r.i + '"' +
-        (r.off || r.deckOff ? '' : ' checked') +
-        (r.deckOff ? ' disabled' : '') + '></td>' +
-        '<td class="name">' + r.name + (r.deckOff ? ' *' : '') + '</td>' +
+        (r.off ? '' : ' checked') + '></td>' +
+        '<td class="name">' + r.name + (r.deckOff ? ' *' : '') +
+        (r.forcedOn ? ' <span class="flag">↑</span>' : '') + '</td>' +
         '<td class="num">' + r.r.toFixed(3) + ', ' + r.z.toFixed(3) + '</td>' +
         '<td class="num">' + fmtSig(r.meas, 3) + '</td>' +
         '<td class="num">' + fmtSig(r.model, 3) + '</td>' +
@@ -1288,14 +1320,20 @@ FyScenario.whenDevices(function () {
         (flag ? ' !' : '') + '</td>' +
         '<td class="num">' + (isFinite(r.w) ? (+r.w).toPrecision(3) : '—') +
         '</td>' +
+        //: ★★the reader's sigma multiplier, editable in place.  `step` is
+        //: coarse on purpose: this is a statement about how much a channel is
+        //: trusted, and three decimals of it would be a false precision.
+        '<td class="num"><input type="number" class="sigbox" min="0.1" max="99"' +
+        ' step="0.1" data-sig="' + r.i + '" value="' +
+        (+r.sig).toFixed(1) + '"></td>' +
         '<td class="num' + (r.calReject ? ' flag' : '') + '">' +
         (isFinite(r.cal) ? r.cal.toFixed(3) + (r.calReject ? ' !' : '') : '—') +
         '</td></tr>';
     }).join('');
-    var used = rows.filter(function (r) { return !r.off && !r.deckOff; }).length;
+    var used = rows.filter(function (r) { return !r.off; }).length;
     var flagged = rows.filter(function (r) {
       return isFinite(r.wresid) && wr.rms > 0 &&
-             Math.abs(r.wresid) > k * wr.rms && !r.off && !r.deckOff; }).length;
+             Math.abs(r.wresid) > k * wr.rms && !r.off; }).length;
     cap.innerHTML = T(chanTab === 'probe' ? 'recon.chan.cap.probe'
                                           : 'recon.chan.cap.loop',
                       { used: used, all: rows.length,
@@ -1327,6 +1365,17 @@ FyScenario.whenDevices(function () {
       off: Object.keys(chanTab === 'probe' ? probeOff : loopOff).length,
       deck: deckOff, used: used, all: rows.length,
       dof: last && last.ndof !== undefined ? last.ndof : '—' });
+    //: ★★the reader's own layer, said separately from the deck's counts:
+    //: how many channels carry a sigma that is not 1.0, and how many the
+    //: deck disowns and this reader put back.  A forced-on channel that
+    //: went unmentioned would be the exact thing the old prohibition was
+    //: protecting against.
+    var nSig = rows.filter(function (r) { return r.sig !== 1; }).length;
+    var nOn = rows.filter(function (r) { return r.forcedOn; }).length;
+    var extra = T('recon.chan.sig.note');
+    if (nOn) extra += ' ' + T('recon.chan.forced', { n: nOn });
+    if (nSig) extra += ' ' + T('recon.chan.sigged', { n: nSig });
+    $('chan-note').innerHTML += ' ' + extra;
   }
 
   /** Switch off every channel the kernel's calibration rule rejects. */
@@ -1339,7 +1388,7 @@ FyScenario.whenDevices(function () {
     }
     var t = chanTab === 'probe' ? probeOff : loopOff, n = 0;
     chanRows().forEach(function (r) {
-      if (r.off || r.deckOff) return;
+      if (r.off) return;
       if (isFinite(cal.factors[r.i]) && !cal.keep[r.i]) { t[r.i] = true; n += 1; }
     });
     drawChannels();
@@ -1352,7 +1401,7 @@ FyScenario.whenDevices(function () {
     if (!(wr.rms > 0)) { S.report(T('recon.chan.nofit'), 'warn'); return; }
     var n = 0;
     rows.forEach(function (r, j) {
-      if (r.off || r.deckOff) return;
+      if (r.off) return;
       if (Math.abs(wr.w[j]) > k * wr.rms) {
         (chanTab === 'probe' ? probeOff : loopOff)[r.i] = true;
         n += 1;
@@ -1364,9 +1413,21 @@ FyScenario.whenDevices(function () {
   }
 
   function setAllChannels(off) {
-    var t = chanTab === 'probe' ? probeOff : loopOff;
+    var probe = chanTab === 'probe';
+    var t = probe ? probeOff : loopOff, on = probe ? probeOn : loopOn;
+    var sig = probe ? probeSig : loopSig;
     Object.keys(t).forEach(function (key) { delete t[key]; });
-    if (off) chanRows().forEach(function (r) { if (!r.deckOff) t[r.i] = true; });
+    //: ★「回到卷宗」(off === null) also drops the reader's sigmas and every
+    //: forced-on channel: it is the one control that means "forget what I
+    //: said", and a sigma left behind would make it a half-truth.
+    if (off === null) {
+      Object.keys(on).forEach(function (key) { delete on[key]; });
+      Object.keys(sig).forEach(function (key) { delete sig[key]; });
+    } else if (off) {
+      chanRows().forEach(function (r) { if (!r.deckOff) t[r.i] = true; });
+      Object.keys(on).forEach(function (key) { delete on[key]; });
+    }
+    remember();
     drawChannels();
   }
 
@@ -1400,6 +1461,22 @@ FyScenario.whenDevices(function () {
             set: { kin: false, neon: false, probefit: false, pointfit: false,
                    farfit: false, vesselfit: true },
             slide: { vridge: 0.05, vit: 2 } },
+    //: ★★★THE LIVE-SHOT FLOW, and it is the one the reader who came here with
+    //: a shot number wants: a server, a shot, a slice, the error bars, run.
+    //: Everything it switches OFF is switched off for a MEASURED reason, not
+    //: for tidiness — see the note.
+    live: { note: 'recon.preset.note.live', basis: 'raw',
+            set: { kin: false, neon: false, probefit: false, pointfit: false,
+                   farfit: false, vesselfit: false, coilfit: true },
+            //: ★★the posterior needs a source of variation or it is the same
+            //: fit N times — and this one is not invented: the loop sigma is
+            //: the INSTRUMENT's own, from the device document's per-loop
+            //: `bit_error` (median 9.06e-4 Wb/rad against a maximum reading
+            //: of 0.53), i.e. 0.0017, rounded to the slider's step.  Every
+            //: other preset leaves it at zero and the posterior then says
+            //: which switch is missing; this one is the flow where a reader
+            //: asked for error bars, so it arrives able to draw them.
+            slide: { mcloops: 0.002 } },
     twin: { note: 'recon.preset.note.twin',
             set: { kin: true, neon: true, probefit: true, pointfit: true,
                    farfit: true, vesselfit: false },
@@ -1482,9 +1559,26 @@ FyScenario.whenDevices(function () {
   }
 
   /** The mask the worker is sent: one entry per channel, deck order. */
-  function maskOf(off, n) {
+  function maskOf(off, n, invert) {
     var a = new Array(n);
-    for (var i = 0; i < n; i++) a[i] = off[i] ? 0 : 1;
+    for (var i = 0; i < n; i++) a[i] = (off[i] ? 1 : 0) ^ (invert ? 0 : 1);
+    return a;
+  }
+
+  /**
+   * The reader's sigma multipliers, as WEIGHT factors.
+   *
+   * ★The inversion happens here and is said here: the table's column is a
+   * sigma (bigger = trusted less) and the fit reads a weight (bigger =
+   * trusted more).  Doing it in the worker would leave the column's meaning
+   * two files away from the arithmetic that implements it.
+   */
+  function scaleOf(sig, n) {
+    var a = new Array(n);
+    for (var i = 0; i < n; i++) {
+      var v = sig[i];
+      a[i] = (isFinite(v) && v > 0) ? 1 / v : 1;
+    }
     return a;
   }
 
@@ -1592,7 +1686,7 @@ FyScenario.whenDevices(function () {
     var k = +$('outk').value;
     var flagged = rows.filter(function (r, i) {
       return isFinite(wr.w[i]) && wr.rms > 0 &&
-             Math.abs(wr.w[i]) > k * wr.rms && !r.off && !r.deckOff; }).length;
+             Math.abs(wr.w[i]) > k * wr.rms && !r.off; }).length;
     var fr = last.fitRows || {};
     var used = [];
     used.push(T('recon.verdict.src.loops', { n: last.nfit }));
@@ -1727,9 +1821,8 @@ FyScenario.whenDevices(function () {
     el.innerHTML = n && amp > 0
       ? T('recon.probefit.gap', { n: n, rms: Math.sqrt(s2 / n).toExponential(2),
                                   pct: (100 * Math.sqrt(s2 / n) / amp).toFixed(0),
-                                  src: T(refProbeSource === 'deck'
-                                         ? 'recon.probefit.src.deck'
-                                         : 'recon.probefit.src.file') })
+                                  src: T('recon.probefit.src.'
+                                         + (refProbeSource || 'file')) })
       : T('recon.probefit.have', { n: refProbes.length });
   }
 
@@ -2186,6 +2279,13 @@ FyScenario.whenDevices(function () {
       npp: +$('npp').value, nff: +$('nff').value,
       //: the reader's channel table, deck order, one entry per loop
       loopMask: maskOf(loopOff, M.loops.length),
+      //: ★★the reader's own layer, as the worker has always been able to take
+      //: it: a SCALE on the deck's weight, not a replacement.  `w ∝ 1/σ`, so
+      //: the multiplier goes in inverted — said here once rather than in the
+      //: worker, where the column's name would no longer be visible.
+      loopScale: scaleOf(loopSig, M.loops.length),
+      //: ★and the deck-disowned channels this reader asked for anyway
+      loopForce: maskOf(loopOn, M.loops.length, true),
       //: raw basis: hand over the TOTAL flux and let the worker remove the
       //: coils' share with the response it fits against
       loopMeasTotal: (basis === 'raw' && R.loopMeasTotal) ? R.loopMeasTotal : null,
@@ -2216,12 +2316,19 @@ FyScenario.whenDevices(function () {
                       (source === 'twin' ||
                        (refProbes.length > 0 &&
                         (basis === 'raw' || refProbeSource !== 'deck'))),
-                  //: the shot's own per-probe validity flags, when the deck
-                  //: carries them — see the worker's three-mask note
-                  shotWeights: (refProbeSource === 'deck' && basis === 'raw')
-                    ? (R.probeWeights || null) : null,
+                  //: the shot's own per-probe validity flags — see the
+                  //: worker's three-mask note.  ★★It is keyed on HAVING them,
+                  //: not on where the readings came from: it used to require
+                  //: `refProbeSource === 'deck'`, which meant a LIVE slice
+                  //: (whose flags are its own live-channel gate) passed none
+                  //: and the gate silently stopped applying.  What must hold
+                  //: is the raw basis — a delivered channel value has already
+                  //: had a reduction's verdict applied to it.
+                  shotWeights: basis === 'raw' ? (R.probeWeights || null) : null,
                   weight: +$('probew').value,
                   mask: M.probes ? maskOf(probeOff, M.probes.length) : null,
+                  scale: M.probes ? scaleOf(probeSig, M.probes.length) : null,
+                  force: M.probes ? maskOf(probeOn, M.probes.length, true) : null,
                   meas: refProbes.length ? refProbes : null },
       //: ★★T-A5 — the coil currents as OBSERVATIONS.  Two sigmas, both
       //: relative, and BOTH are required: the second is the one that is easy
@@ -2507,46 +2614,10 @@ FyScenario.whenDevices(function () {
   //: menu writes — one format, one meaning — and the file path stays for
   //: everything the browser cannot carry (another machine, an archive, a
   //: colleague).
-  //: ★★AND WHAT THE MODELLING SCENARIO LEFT FOR THIS ONE.  The chain used to
-  //: run one way into the modelling page; a predicted pressure profile is
-  //: exactly what this bar takes as its kinetic constraint, so a prediction
-  //: can now be reconstructed against the magnetics — which is how a
-  //: prediction gets checked rather than admired.
-  //:
-  //: ★Never applied without being asked, and applied by the FORMAT's own
-  //: `apply`: the file path and this path are one code path.
-  function offerHandoff() {
-    var host = document.getElementById('analysis-handoff-note');
-    if (!host) return;
-    var rec = self.FyHandoff && FyHandoff.peek();
-    if (!rec || rec.kind !== 'profile') { host.hidden = true; return; }
-    var fmt = FORMATS.profile;
-    host.hidden = false;
-    host.innerHTML =
-      T('handoff.waiting', {
-        from: T('handoff.from.' + rec.from),
-        what: T('handoff.kind.' + rec.kind),
-        name: rec.name,
-        ago: FyHandoff.ago(rec.when, T),
-      })
-      + ' <button type="button" class="link-btn" id="' + S.id('handoff-take')
-      + '">' + T('handoff.take') + '</button>'
-      + ' <button type="button" class="link-btn" id="' + S.id('handoff-drop')
-      + '">' + T('handoff.dismiss') + '</button>';
-    document.getElementById(S.id('handoff-take'))
-      .addEventListener('click', function () {
-        var msg;
-        try { msg = fmt.apply(rec.text, rec.name); }
-        catch (e) { S.report(T('io.failed', { why: e.message }), 'err'); return; }
-        FyHandoff.clear();
-        host.hidden = true;
-        S.report(T('handoff.taken', {
-          from: T('handoff.from.' + rec.from),
-          what: T('handoff.kind.' + rec.kind) }) + ' ' + msg);
-      });
-    document.getElementById(S.id('handoff-drop'))
-      .addEventListener('click', function () { host.hidden = true; });
-  }
+  //: ★★2026-09-01：「建模场景交来的预测剖面」那一格撤下。给的那一端（建模页的
+  //: 「交给反演场景」）同批撤掉，而这一格**只认 `kind === 'profile'`**，没有第二个
+  //: 来源——留着就是一个永远收不到东西的控件。预测剖面照旧从导入按钮进来，走的是
+  //: 同一个 `FORMATS.profile.apply`。
 
   function handOver() {
     var el = document.getElementById('analysis-handoff');
@@ -2944,7 +3015,13 @@ FyScenario.whenDevices(function () {
       var st = { cfg: FySession.collect(CONTROLS, S.scope),
                  source: source, basis: basis,
                  loopOff: Object.keys(loopOff),
-                 probeOff: Object.keys(probeOff) };
+                 probeOff: Object.keys(probeOff),
+                 //: ★the reader's own layer travels with the rest of it: a
+                 //: sigma typed into the table is a judgement about a
+                 //: channel, and losing it on a reload would make the column
+                 //: a scratchpad rather than a setting.
+                 loopOn: Object.keys(loopOn), probeOn: Object.keys(probeOn),
+                 loopSig: loopSig, probeSig: probeSig };
       self.localStorage.setItem(MEM_KEY, JSON.stringify(st));
     } catch (e) { /* private window, quota, disabled — not worth a word */ }
   }
@@ -2961,7 +3038,27 @@ FyScenario.whenDevices(function () {
     if ($('basis')) $('basis').value = basis;
     applyMask(loopOff, maskFromKeys(st.loopOff, M.loops.length));
     applyMask(probeOff, maskFromKeys(st.probeOff, (M.probes || []).length));
+    keysInto(loopOn, st.loopOn);
+    keysInto(probeOn, st.probeOn);
+    sigInto(loopSig, st.loopSig);
+    sigInto(probeSig, st.probeSig);
     return st;
+  }
+
+  /** `['3','7']` back into a set of forced-on indices. */
+  function keysInto(tab, keys) {
+    Object.keys(tab).forEach(function (k) { delete tab[k]; });
+    if (Array.isArray(keys)) keys.forEach(function (k) { tab[+k] = true; });
+  }
+
+  /** The stored sigma map, taking only positive finite numbers. */
+  function sigInto(tab, obj) {
+    Object.keys(tab).forEach(function (k) { delete tab[k]; });
+    if (!obj || typeof obj !== 'object') return;
+    Object.keys(obj).forEach(function (k) {
+      var v = +obj[k];
+      if (isFinite(v) && v > 0 && v !== 1) tab[+k] = v;
+    });
   }
 
   /** `['3','7']` back into the 1/0 array `applyMask` reads. */
@@ -2989,7 +3086,6 @@ FyScenario.whenDevices(function () {
     return { request: reconMessage(), runSlice: runSlice };
   });
   handOver();
-  offerHandoff();
   //: the file buttons locked with the run button before this layer
   //: existed; keep them locked while a solve is in flight
 
@@ -3019,12 +3115,14 @@ FyScenario.whenDevices(function () {
     chanTab = 'probe'; drawChannels(); });
   $('chan-all').addEventListener('click', function () { setAllChannels(false); });
   $('chan-none').addEventListener('click', function () { setAllChannels(true); });
-  $('chan-deck').addEventListener('click', function () { setAllChannels(false); });
+  //: ★「回到卷宗」和「全用」不是同一件事：前者是「忘掉我说过的一切」
+  //: （含 σ× 与强制打开），后者只是把关掉的道打开。
+  $('chan-deck').addEventListener('click', function () { setAllChannels(null); });
   $('chan-cut').addEventListener('click', cutOutliers);
   $('chan-cal').addEventListener('click', cutByCalibration);
   $('pin').addEventListener('click', pinCurrent);
   $('unpin').addEventListener('click', unpin);
-  ['mag', 'kin', 'ramp', 'twin'].forEach(function (k) {
+  ['live', 'mag', 'kin', 'ramp', 'twin'].forEach(function (k) {
     $('preset-' + k).addEventListener('click', function () { applyPreset(k); });
   });
   $('caltol').addEventListener('input', function () {
@@ -3060,10 +3158,38 @@ FyScenario.whenDevices(function () {
   //: rebuilt on every draw, and per-row listeners would be re-attached 35 or
   //: 79 times a fit — and leak the ones on the rows that were replaced
   $('chan-body').addEventListener('change', function (e) {
-    var t = e.target, idx = t && t.getAttribute && t.getAttribute('data-chan');
+    var t = e.target;
+    if (!t || !t.getAttribute) return;
+    var probe = chanTab === 'probe';
+    var sigIdx = t.getAttribute('data-sig');
+    if (sigIdx !== null && sigIdx !== undefined) {
+      //: ★a sigma is a positive number and nothing else.  An empty box or a
+      //: nonsense value goes back to 1.0 — "as the deck says" — rather than
+      //: to zero, which would silently drop the channel.
+      var v = parseFloat(t.value);
+      var tab = probe ? probeSig : loopSig;
+      if (!isFinite(v) || v <= 0) { v = 1; t.value = '1.0'; }
+      if (v === 1) delete tab[+sigIdx]; else tab[+sigIdx] = v;
+      remember();
+      drawChannels();
+      return;
+    }
+    var idx = t.getAttribute('data-chan');
     if (idx === null || idx === undefined) return;
-    var tbl = chanTab === 'probe' ? probeOff : loopOff;
-    if (t.checked) delete tbl[+idx]; else tbl[+idx] = true;
+    var i = +idx;
+    var rows = chanRows(), row = null, j;
+    for (j = 0; j < rows.length; j++) if (rows[j].i === i) { row = rows[j]; break; }
+    //: ★★a DECK-DISOWNED channel is switched by the FORCE-ON map, not by the
+    //: off map: the two mean different things, and folding them would make
+    //: "the deck says no and I said yes" indistinguishable from "the deck
+    //: said nothing and I said no".
+    if (row && row.deckOff) {
+      var on = probe ? probeOn : loopOn;
+      if (t.checked) on[i] = true; else delete on[i];
+    } else {
+      var off = probe ? probeOff : loopOff;
+      if (t.checked) delete off[i]; else off[i] = true;
+    }
     remember();
     drawChannels();
   });
@@ -3160,6 +3286,16 @@ FyScenario.whenDevices(function () {
                                                 : new Array(nL).fill(1);
       R.probeMeas = probes;
       R.probeWeights = pw;
+      //: ★★★AND THE PAGE'S OWN COPY, which is the whole point of setting the
+      //: first one.  `refProbes` is captured at module load and was replaced
+      //: only by a FILE import — so a live slice updated `R.probeMeas` and
+      //: nothing read it: with 磁探针参与拟合 ticked after a live read, the
+      //: probe rows carried the DECK's readings (#137985 @ 4.000 s) while the
+      //: loops carried the picked slice.  Measured before this line existed:
+      //: at t = 2.493 s the deck's probe 4 reads 0.000 and the slice's reads
+      //: 1.781e-1, and the fit was given the 0.000.
+      refProbes = probes.slice();
+      refProbeSource = 'live';
       if (m.bcentr !== null && m.bcentr !== undefined) R.bcentr = m.bcentr;
       //: ★the flag the source note reads: these numbers came off the tree,
       //: not out of the deck, and the two cannot be described by one sentence

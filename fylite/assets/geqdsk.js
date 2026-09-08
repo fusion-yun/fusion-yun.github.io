@@ -36,53 +36,93 @@
    * Numbers are scanned by pattern rather than by fixed columns: vintages
    * differ on whether a full-width negative eats its separating space.
    */
-  function parse(text) {
-    var nl = text.indexOf('\n');
-    if (nl < 0) throw new Error(T('gfile.one_line'));
-    var header = text.slice(0, nl).replace(/\r$/, '');
-    var htok = header.trim().split(/\s+/);
-    var nw = parseInt(htok[htok.length - 2], 10);
-    var nh = parseInt(htok[htok.length - 1], 10);
-    if (!(nw > 0 && nh > 0))
-      throw new Error(T('gfile.no_dims'));
+  //: ★★**这里不再有解析器**（2026-09-05 落地 `FYL-DESIGN-16` H-4 的第一块）。
+  //: 本仓曾有**三份** g-file 读法：原生一份、wasm 一份、这里的 JS 一份（286 行里
+  //: 有 45 行是它）。三份读同一种文件，而 g-file 的坑——`D`/`E` 指数、可选的边界与
+  //: 限制器尾巴、短文件——每一份都要各踩一次；`-16` 抬头把这一份点名为「第三份」。
+  //: 今天它撤了，页面问中间层，而中间层与 `fy data`、与 python 对拍的是同一段代码。
+  //:
+  //: 两个宿主，两条到达方式，**同一个产出者**（`GFile::to_node`）：
+  //:   · 桌面查看器 —— `POST /api/read?shape=gfile`（本进程原生读）
+  //:   · 静态站点 —— 中间层 wasm 的 `fylite_runtime_gfile_json`
+  //: 键名与从前逐字相同（`g.nw` / `g.pres` / `g.psirz` / `g.rbbbs`…），所以四处调用点
+  //: 一个字未改；实测同一份 g-file 两条路与旧 JS 读法 26 个键、逐值相同。
+  //:
+  //: ★**保持同步**。`parse` 的调用点在 `appio.js` 的「逐个候选格式试着读，读不动就
+  //: 抛」那个循环里——把它改成异步就要改那段控制流，而那段有成文的事故史（几种文本
+  //: 格式互相抢一个文件）。所以：桌面走同步 XHR（回环、本进程，与 `kernelapi.js`
+  //: 同一条纪律），站点走**已经实例化好的**那份 wasm（装置面板在启动时已经载入它，
+  //: 见下面的预热）。两者都还没有，就抛一句说得清的话。
+  var apiFace = null;   //: null 还没探 · false 没有这条路 · true 有
 
-    var body = text.slice(nl + 1);
-    var re = /[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eEdD][-+]?\d+)?/g;
-    var nums = [], m;
-    while ((m = re.exec(body)) !== null)
-      nums.push(parseFloat(m[0].replace(/[dD]/, 'e')));
-
-    var k = 0;
-    var take = function (n) {
-      if (k + n > nums.length)
-        throw new Error(T('gfile.short', { want: n, left: nums.length - k }));
-      return nums.slice(k, k += n);
-    };
-    var a = take(5), b = take(5), c = take(5), d = take(5);
-    var g = {
-      header: header, nw: nw, nh: nh,
-      rdim: a[0], zdim: a[1], rcentr: a[2], rleft: a[3], zmid: a[4],
-      rmaxis: b[0], zmaxis: b[1], simag: b[2], sibry: b[3], bcentr: b[4],
-      current: c[0],
-      fpol: take(nw), pres: take(nw), ffprim: take(nw), pprime: take(nw),
-      psirz: take(nw * nh), qpsi: take(nw),
-    };
-    void d;
-    // boundary + limiter are optional; a truncated tail is not fatal
+  function faceSync() {
+    if (apiFace !== null) return apiFace;
     try {
-      var nb = Math.round(nums[k++]), nl2 = Math.round(nums[k++]);
-      var bd = take(2 * nb), lm = take(2 * nl2);
-      g.nbbbs = nb; g.limitr = nl2;
-      g.rbbbs = bd.filter(function (_, i) { return i % 2 === 0; });
-      g.zbbbs = bd.filter(function (_, i) { return i % 2 === 1; });
-      g.rlim = lm.filter(function (_, i) { return i % 2 === 0; });
-      g.zlim = lm.filter(function (_, i) { return i % 2 === 1; });
-    } catch (e) {
-      g.nbbbs = 0; g.limitr = 0;
-      g.rbbbs = []; g.zbbbs = []; g.rlim = []; g.zlim = [];
-    }
-    return g;
+      var h = location.hostname;
+      if (!(h === '127.0.0.1' || h === 'localhost' || h === '::1' || h === '[::1]')) {
+        apiFace = false;
+        return apiFace;
+      }
+      var x = new XMLHttpRequest();
+      x.open('GET', root.FyRuntimeWeb.root() + 'api/health', false);
+      x.send();
+      apiFace = x.status === 200 && !!JSON.parse(x.responseText).file;
+    } catch (e) { apiFace = false; }
+    return apiFace;
   }
+
+  function parseByProcess(text) {
+    var x = new XMLHttpRequest();
+    x.open('POST', root.FyRuntimeWeb.root() + 'api/read?name=import.geqdsk&shape=gfile', false);
+    x.send(text);
+    var j = JSON.parse(x.responseText);
+    if (x.status !== 200 || j.error) throw new Error(j.error || ('HTTP ' + x.status));
+    return j;
+  }
+
+  function parseByWasm(text) {
+    var t = root.FyRuntimeWeb.callText('fylite_runtime_gfile_json', text);
+    //: ★`-2` 是「读不动」，正文就是那句话；`callText` 在这种情形下答的是那个负数，
+    //: 所以再问一次拿正文不值得——中间层把话写进了同一个缓冲，而它已经被当成状态码
+    //: 读走了。这里给一句同源的话：调用方只需要知道这份文件不是 g-file。
+    if (typeof t !== 'string') throw new Error(T('gfile.no_dims'));
+    return JSON.parse(t);
+  }
+
+  /**
+   * 读一份 g-file，答一个与从前逐字相同的对象。
+   *
+   * ★同步（理由见上）。抛出的是一句读得懂的话：调用方（`appio.js` 的候选循环）
+   * 拿「抛了」当作「这份文件不是这个格式」，所以抛什么话都不能是 `undefined`。
+   */
+  function parse(text) {
+    if (!root.FyRuntimeWeb) throw new Error('geqdsk: 缺 assets/runtimeweb.js');
+    if (faceSync()) return parseByProcess(text);
+    if (root.FyRuntimeWeb.instance()) return parseByWasm(text);
+    throw new Error(T('gfile.not_ready'));
+  }
+
+  //: ★★**预热，但只在真要用它的宿主上**（2026-09-05 实测改）。站点上装置面板启动时
+  //: 就会载入同一份 wasm，所以这一句通常什么也不用做；它在的理由是那些**不列装置**
+  //: 的页面——读者在那里打开一份 g-file 时，实例得已经在。
+  //: ★桌面宿主**不预热**：那里走 `/api/read`，把 0.51 MB 取回来一次也不用是白花的
+  //: （实测第一版就是这样：桌面宿主上既 GET 了那份 wasm，又 POST 了端点）。所以先
+  //: **异步**探一次请求面，探到就不取；顺带把 `apiFace` 定下来，于是后面那次同步探
+  //: 通常也省了。
+  try {
+    if (root.FyRuntimeWeb && typeof fetch === 'function') {
+      fetch(root.FyRuntimeWeb.root() + 'api/health', { headers: { accept: 'application/json' } })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) {
+          apiFace = !!(j && j.file);
+          if (!apiFace) root.FyRuntimeWeb.load().catch(function () { /* 站点没带它 */ });
+        })
+        .catch(function () {
+          apiFace = false;
+          root.FyRuntimeWeb.load().catch(function () { /* 站点没带它 */ });
+        });
+    }
+  } catch (e) { /* 没有 fetch 的宿主 */ }
 
   /** The app's psi field [Wb, axis = max] from a parsed g-file. */
   function psiFromGfile(g) {

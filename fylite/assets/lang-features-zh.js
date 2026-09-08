@@ -1,7 +1,8 @@
 // Chinese catalogue for the capability page only — what the physics can do,
 // what it deliberately cannot, and what each claim rests on.
 //
-// ★The authority is the repository's own `FEATURE.md` (口径日期 2026-08-22);
+// ★The authority is `docs/reference/fidelity.md` (quantitative limits) plus
+// `TODO.md` (the gaps) — `FEATURE.md` left the repo in `095374f`;
 // this page is its reader-facing summary and links back to it. A claim here
 // that FEATURE.md does not make is a bug, not a wording choice — and a number
 // quoted here must be the number recorded there.
@@ -138,7 +139,7 @@ self.FyI18n.register('zh', {
   'ft.todo.lead': '排序依据是<strong>判据强弱</strong>，不是难度，也不是时间表：外部答案齐备的先做，判据不齐的<strong>先补判据</strong>。',
   'ft.col.item': '事项',
   'ft.col.criterion': '判据来源',
-  'ft.t.icrh': '离子回旋的宿主接线（C 导出 + 装配层 + wasm）',
+  'ft.t.icrh': '离子回旋的宿主接线（内核导出 + 装配层 + 浏览器端）',
   'ft.t.icrh.s': '内核已落地并核过，接线未做',
   'ft.t.icrh.c': '已有：跨宿主逐位对照，与内核那七条判据',
   'ft.t.ecrh': '电子回旋的宿主接线',
@@ -157,7 +158,6 @@ self.FyI18n.register('zh', {
 
   'ft.src.h2': '出处与更细的口径',
   'ft.src.lead': '本页是摘要，逐条的口径与定量边界在仓库里：',
-  'ft.src.feature': '功能与缺口的权威口径（本页由它摘出）',
   'ft.src.fidelity': '逐条实测的<strong>定量</strong>适用边界——一项功能「能不能定量使用」以它为准',
   'ft.src.api': '接口与调用方式',
   'ft.src.credits': '上游出处、许可与致谢',

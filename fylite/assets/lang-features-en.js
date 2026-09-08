@@ -1,7 +1,8 @@
 // English catalogue for the capability page only — what the physics can do,
 // what it deliberately cannot, and what each claim rests on.
 //
-// ★The authority is the repository's own `FEATURE.md` (as of 2026-08-22); this
+// ★The authority is `docs/reference/fidelity.md` (quantitative limits) plus
+// `TODO.md` (the gaps) — `FEATURE.md` left the repo in `095374f`; this
 // page is its reader-facing summary and links back to it. A claim here that
 // FEATURE.md does not make is a bug, not a wording choice — and a number
 // quoted here must be the number recorded there.
@@ -139,7 +140,7 @@ self.FyI18n.register('en', {
   'ft.todo.lead': 'The order follows <strong>the strength of the available criterion</strong>, not difficulty and not a schedule: what has an external answer goes first, and what does not gets <strong>its criterion built first</strong>.',
   'ft.col.item': 'Item',
   'ft.col.criterion': 'Criterion',
-  'ft.t.icrh': 'Host wiring for ion cyclotron (C exports, assembly layer, wasm)',
+  'ft.t.icrh': 'Host wiring for ion cyclotron (kernel exports, assembly layer, browser side)',
   'ft.t.icrh.s': 'Kernel landed and checked; the wiring is not built',
   'ft.t.icrh.c': 'Available: cross-host bit-for-bit comparison, plus the kernel\'s own seven criteria',
   'ft.t.ecrh': 'Host wiring for electron cyclotron',
@@ -158,7 +159,6 @@ self.FyI18n.register('en', {
 
   'ft.src.h2': 'Sources and finer detail',
   'ft.src.lead': 'This page is a summary; the authoritative wording and the quantitative limits are in the repository:',
-  'ft.src.feature': 'the authoritative statement of capability and gaps (this page is drawn from it)',
   'ft.src.fidelity': 'the measured, <strong>quantitative</strong> limits — whether a capability may be used quantitatively is decided there',
   'ft.src.api': 'interfaces and call signatures',
   'ft.src.credits': 'upstream provenance, licences and acknowledgements',

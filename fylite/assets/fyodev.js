@@ -24,7 +24,17 @@
 (function (root) {
   'use strict';
 
-  var TYPE = 'fylite:DeviceDescription/1';
+  //: ★★文档类型名**取自生成的契约表**（`fyo-interface.js` 的 `TABLES.DEVICE.type`，
+  //: 由内核 `fyo.rs` 的 `@fyo-table` 生成，Python 与 Rust 读的是同一份）。
+  //: 2026-09-05 实测：这里从前写死 `fylite:DeviceDescription/1`，而**每一份发布出去的
+  //: 装置文档写的是 `fyo:DeviceDescription`**——于是页面读任何一台机器都当场抛
+  //: 「不是装置描述文档」。三种制品全带着这个毛病，构建全绿：没有任何东西把这个手写
+  //: 常量与那张生成表比过。写死一个契约里的名字，就是给它开了一条会漂移的第二真源。
+  var TYPE = (root.FyNames && root.FyNames.TABLES && root.FyNames.TABLES.DEVICE
+              && root.FyNames.TABLES.DEVICE.type) || 'fyo:DeviceDescription';
+  //: 旧拼法：2026-09-05 之前**本文件自己写出去的**文档带的是它。读得进，是因为读者
+  //: 手上可能正有一份那样的文件；写出去的一律是上面那个。
+  var TYPE_LEGACY = 'fylite:DeviceDescription/1';
   var CONTEXT = {
     fylite: 'urn:fylite:',
     imas: 'https://imas.iter.org/dd/4#',
@@ -50,16 +60,18 @@
 
   function toFyo(m) {
     var coils = m.coils.map(function (c) {
-      return {
-        name: c.name,
-        element: [{
-          geometry: {
-            geometry_type: 'rectangle',
-            rectangle: { r: c.r, z: c.z, width: c.w, height: c.h },
-          },
-          turns_with_sign: c.turns,
-        }],
+      var el = {
+        geometry: {
+          geometry_type: 'rectangle',
+          rectangle: { r: c.r, z: c.z, width: c.w, height: c.h },
+        },
+        turns_with_sign: c.turns,
       };
+      //: ★the two tilts go out as they came in (`fromFyo` reads them): a
+      //: document that dropped them would read back as untilted rectangles
+      if (c.a1 !== undefined) el['fylite:a1'] = c.a1;
+      if (c.a2 !== undefined) el['fylite:a2'] = c.a2;
+      return { name: c.name, element: [el] };
     });
     var limiterUnit = { outline: { r: m.limiter.r, z: m.limiter.z } };
     var vesselUnits = [];
@@ -242,7 +254,7 @@
   }
 
   function fromFyo(doc) {
-    if (!doc || doc['@type'] !== TYPE)
+    if (!doc || (doc['@type'] !== TYPE && doc['@type'] !== TYPE_LEGACY))
       fail('dev.not_device', { got: (doc && doc['@type']) || '@type',
                                want: TYPE });
     var pf = doc.pf_active || {};

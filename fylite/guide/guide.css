@@ -1,0 +1,66 @@
+/* 用户指南的版式补丁——只加**这本书需要而站点其余页面没有**的东西：
+   一条侧栏目录、正文的阅读宽度、MyST 容器（admonition）的呈现。
+   颜色、字体、页头页脚全部沿用 `site.css` / `style.css` 的记号，
+   这里不新起一套配色，指南与站点因此看起来是同一件东西。 */
+
+.guide-wrap {
+  display: grid;
+  grid-template-columns: minmax(11rem, 14rem) minmax(0, 1fr);
+  gap: 2.5rem;
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  align-items: start;
+}
+
+.guide-toc {
+  position: sticky;
+  top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  padding: 1rem 0;
+  font-size: .92rem;
+  line-height: 1.5;
+}
+.guide-toc a,
+.guide-toc .here {
+  padding: .35rem .6rem;
+  border-radius: .35rem;
+  text-decoration: none;
+}
+.guide-toc .here {
+  font-weight: 600;
+  background: var(--panel, rgba(127, 127, 127, .12));
+}
+
+.guide-body { max-width: 44rem; }
+.guide-body > :first-child { margin-top: 0; }
+
+/* MyST 的容器：`:::{note}` / `{important}` / `{warning}` 等 */
+.guide-body .admonition {
+  margin: 1.25rem 0;
+  padding: .85rem 1.1rem;
+  border-left: 3px solid var(--accent, #3987e5);
+  border-radius: 0 .4rem .4rem 0;
+  background: var(--panel, rgba(127, 127, 127, .08));
+}
+.guide-body .admonition-title {
+  margin: 0 0 .4rem;
+  font-weight: 600;
+  font-size: .92rem;
+  letter-spacing: .02em;
+}
+.guide-body .admonition > :last-child { margin-bottom: 0; }
+
+.guide-body table { width: 100%; }
+
+@media (max-width: 46rem) {
+  .guide-wrap { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .guide-toc {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--line, rgba(127, 127, 127, .25));
+  }
+}

@@ -32,8 +32,20 @@
     try { return localStorage.getItem(KEY); } catch (e) { return null; }
   }
 
-  /** Stored choice, else the browser's preference, else zh. */
+  /** `?lang=` on the URL, else the stored choice, else the browser's preference, else zh. */
   function initial() {
+    //: ★`lang` is a LAUNCH PARAMETER — one of the four `hosts.app.params`
+    //: in `python/fylite/_cli.json`, the file every host's command line is
+    //: built from; `fylite app --lang en` writes it here.  It is remembered
+    //: like a switch click would be, so the next page keeps the choice.
+    var q = null;
+    try {
+      q = new URLSearchParams(root.location.search).get('lang');
+    } catch (e) { /* no location, e.g. inside a worker */ }
+    if (q && cats[q]) {
+      try { localStorage.setItem(KEY, q); } catch (e) { /* private mode */ }
+      return q;
+    }
     var s = stored();
     if (s && cats[s]) return s;
     var nav = (root.navigator && root.navigator.languages) || [];
@@ -82,6 +94,18 @@
     });
     root_.querySelectorAll('[data-i18n-title]').forEach(function (el) {
       el.title = stripTags(t(el.getAttribute('data-i18n-title')));
+    });
+    //: ★★AND THE ACCESSIBLE NAME, separately from the tooltip.  A control whose
+    //: content is an icon has no text to be named by, and `title` is only the
+    //: LAST fallback in the accessible-name computation — some assistive
+    //: technology is configured never to reach it.  The header's page links
+    //: became icons on 2026-09-01 and would otherwise be announced as 「link」.
+    //: Kept as its own attribute rather than mirrored from `data-i18n-title`
+    //: so that a control which wants a longer tooltip than its name can still
+    //: have one.
+    root_.querySelectorAll('[data-i18n-aria]').forEach(function (el) {
+      el.setAttribute('aria-label',
+                      stripTags(t(el.getAttribute('data-i18n-aria'))));
     });
     var ttl = document.querySelector('title[data-i18n]');
     if (ttl) document.title = stripTags(ttl.innerHTML);

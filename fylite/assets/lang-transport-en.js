@@ -1,13 +1,10 @@
 // en catalogue for the 1.5D transport page only.
 
 self.FyI18n.register('en', {
-  "x.fmt.json": "JSON session (fyo)",
-  "x.geom": "Geometry (fixed)",
   "x.rmaj": "R/a",
   "x.kappa": "Elongation κ",
   "x.delta": "Triangularity δ",
   "x.q95": "Edge q",
-  "x.geom_note": "The flux-surface metric (V′, ⟨|∇r|²⟩) comes from <strong>the kernel’s own geo_do</strong>, one call per surface — no second set is computed in the page. q(ρ) is a <strong>prescribed</strong> parabola in this tier: no current diffusion is solved here, so q is an input, not a result.",
   "x.model": "Transport model",
   "x.chi0": "χ₀ [m²/s]",
   "x.pinch": "Pinch velocity v [m/s]",
@@ -55,7 +52,7 @@ self.FyI18n.register('en', {
   'x.turb_nrad': 'radii evaluated',
   'x.turb_nky': 'k<sub>y</sub> points',
   'x.turb_outer': 'outer-iteration cap',
-  'x.turb_note': '★This tier runs in a worker; the other three stay on the main thread. Cost is proportional to radii x k<sub>y</sub> x outer passes at ~25 ms per evaluation, so all three sliders at maximum is minutes — an offline tier, not an interactive one. ★The closure is evaluated OUTSIDE the loop and under-relaxed on chi: turbulent chi rises steeply with a/L_T, so an unrelaxed outer loop oscillates between an over- and an under-transported profile instead of converging.',
+  'x.turb_note': '★This tier runs in the background; the other three answer inline with the page. Cost is proportional to radii x k<sub>y</sub> x outer passes at ~25 ms per evaluation, so all three sliders at maximum is minutes — an offline tier, not an interactive one. ★The closure is evaluated OUTSIDE the loop and under-relaxed on chi: turbulent chi rises steeply with a/L_T, so an unrelaxed outer loop oscillates between an over- and an under-transported profile instead of converging.',
   'x.ser.chineo': 'chi neoclassical (floor)',
   'x.ser.chiturb': 'chi total (radii actually evaluated)',
   'x.row.outer': 'outer passes',

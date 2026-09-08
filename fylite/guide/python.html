@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python 用法 (Using the Python Package) · fylite 用户指南</title>
+<link rel="icon" href="../assets/fy_mark.svg">
+<meta name="description" content="★alpha 期这个包不在 PyPI 上（实测 pip install fylite 会失败）。分发面是
+自仓库打出来的轮：">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="guide.css">
+<script src="../assets/theme.js"></script>
+</head>
+<body data-page="guide">
+
+<header class="top">
+  <a class="brand" href="../index.html"><img src="../assets/fy_mark.svg" alt="" width="32" height="32"></a>
+  <div class="titles">
+  <h1>Python 用法 (Using the Python Package)</h1>
+  <span class="sub">fylite 用户指南</span>
+  </div>
+  <nav>
+    <a href="../index.html">演示首页</a>
+    <a href="../features.html">功能与边界</a>
+    <button id="theme-toggle" class="iconbtn" type="button"></button>
+  </nav>
+</header>
+
+<div class="guide-wrap">
+<aside class="guide-toc" aria-label="目录">
+    <a href="index.html">怎么开始 (Getting Started)</a>
+    <a href="browser.html">浏览器用法 (Using the Browser Pages)</a>
+    <span class="here">Python 用法 (Using the Python Package)</span>
+    <a href="reading-results.html">结果怎么读 (Reading a Result)</a>
+    <a href="limits.html">能力与边界 (What It Does, and Where It Stops)</a>
+</aside>
+
+<main class="doc guide-body">
+
+<h2>安装</h2>
+<p>★<strong>alpha 期这个包不在 PyPI 上</strong>（实测 <code>pip install fylite</code> 会失败）。分发面是
+<strong>自仓库打出来的轮</strong>：</p>
+<pre><code class="language-bash">bash tools/build-wheel.sh          # 出轮到 dist/
+pip install dist/fylite-*.whl
+</code></pre>
+<p>硬依赖只有 <code>numpy</code>。其余是可选项，且<strong>缺失时抛错并给出安装行</strong>，不静默降级：</p>
+<pre><code class="language-bash">pip install 'dist/fylite-*.whl[plot,yaml]'
+</code></pre>
+<aside class="admonition important"><p class="admonition-title">Important</p><p class="admonition-title">alpha 期的分发面：Linux x86-64</p><p>包里带的是<strong>预编译</strong>的内核，pip 不在安装时编译它。所以轮带<strong>平台标签</strong>，
+alpha 期公开的是 Linux x86-64 一个面——别的平台在<strong>安装时</strong>就被拒绝，
+而不是装完之后在第一次内核调用时报错。</p><p>其他平台上想用，两条路：用<a href="browser.html">浏览器</a>一路（无平台限制），
+或者从源码自行构建。</p></aside>
+<h2>三行开始</h2>
+<pre><code class="language-python">from fylite import scenario as S
+
+z = S.model.zerod()                     # 0 维放电，规定剖面
+t = S.model.transport(power=4.0)        # 一步 1.5 维输运
+f = S.analysis.profit(x, y, sigma_frac=0.05)   # 测量剖面拟合，GCV 定平滑
+</code></pre>
+<p>不需要装置描述、不需要炮号、不需要网络。确实需要装置的那些入口<strong>显式</strong>要一份——
+经环境变量或直接把路径交给入口，不会偷偷去找。</p>
+<h2>命令行在别处</h2>
+<p>★★2026-09-04 起<strong>本包没有命令行</strong>：没有 <code>fylite</code> 控制台脚本，没有 <code>python -m fylite</code>。
+装上它得到的是一个<strong>库</strong>——本章前面那些调用就是全部的用法。</p>
+<p>机器上那一条命令行是 Rust 的 <strong><code>fy</code></strong>（<code>bash rust/build.sh --exe</code>），它承载 <code>app</code> /
+<code>data</code> / <code>case</code> 三条；从前由 Python 承载的十一条动词都是库调用，逐条对照在
+<a href="cli.html">命令行</a>那一章的末节。两个常用的：</p>
+<pre><code class="language-python">from fylite.engine import manifest_catalog
+manifest_catalog()          # 能力目录（JSON-LD）：有哪些入口、各要什么、各给什么
+
+from fylite.engine.serve import mcp_stdio       # MCP stdio 服务器
+raise SystemExit(mcp_stdio())                   # 宿主配置里写成一行 `python -c`
+</code></pre>
+<p>能力目录也是把 fylite 接进别的工具（含 AI 工具链）时读的那一份。</p>
+<h2>与浏览器互通</h2>
+<p>浏览器页面导出的会话文件可以在 Python 里加载并继续；反过来，Python 算出的结果
+也能交给页面呈现。两边跑的是同一个内核，所以这不是「对得上」，是同一个数。</p>
+</main>
+</div>
+
+<footer>
+  <a class="mark" href="../index.html" tabindex="-1" aria-hidden="true"><img src="../assets/fy_mark.svg" alt="" width="24" height="24"></a>
+  <a href="../index.html">fylite 首页</a>
+  <a href="index.html">指南目录</a>
+  <span class="copy">© 2026 中国科学院等离子体物理研究所（ASIPP）与 fylite 贡献者 · Apache-2.0 · alpha 版</span>
+  <span class="ver" title="kernel 0.0.1 · interface 152 · app 0.0.1-alpha">内核 0.0.1 · 接口 152 · 前端 0.0.1-alpha</span>
+</footer>
+
+</body>
+</html>

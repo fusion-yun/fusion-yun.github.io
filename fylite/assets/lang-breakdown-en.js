@@ -8,7 +8,6 @@
 
 self.FyI18n.register('en', {
   'nav.breakdown': 'Breakdown null',
-  'b.fmt.json': 'JSON session (fyo)',
 
   'b.target': 'Null position and criterion',
   'b.radius': 'Criterion radius [m]',

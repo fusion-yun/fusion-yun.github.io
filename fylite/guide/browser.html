@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>浏览器用法 (Using the Browser Pages) · fylite 用户指南</title>
+<link rel="icon" href="../assets/fy_mark.svg">
+<meta name="description" content="演示站点是一组静态页面，加载后离线可用——没有服务端在替你算，
+计算全部发生在你自己的浏览器里，由 WebAssembly 形式的同一个内核完成。
+关掉网络、刷新之前，页面照常工作。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="guide.css">
+<script src="../assets/theme.js"></script>
+</head>
+<body data-page="guide">
+
+<header class="top">
+  <a class="brand" href="../index.html"><img src="../assets/fy_mark.svg" alt="" width="32" height="32"></a>
+  <div class="titles">
+  <h1>浏览器用法 (Using the Browser Pages)</h1>
+  <span class="sub">fylite 用户指南</span>
+  </div>
+  <nav>
+    <a href="../index.html">演示首页</a>
+    <a href="../features.html">功能与边界</a>
+    <button id="theme-toggle" class="iconbtn" type="button"></button>
+  </nav>
+</header>
+
+<div class="guide-wrap">
+<aside class="guide-toc" aria-label="目录">
+    <a href="index.html">怎么开始 (Getting Started)</a>
+    <span class="here">浏览器用法 (Using the Browser Pages)</span>
+    <a href="python.html">Python 用法 (Using the Python Package)</a>
+    <a href="reading-results.html">结果怎么读 (Reading a Result)</a>
+    <a href="limits.html">能力与边界 (What It Does, and Where It Stops)</a>
+</aside>
+
+<main class="doc guide-body">
+
+<p>演示站点是一组<strong>静态页面</strong>，加载后<strong>离线可用</strong>——没有服务端在替你算，
+计算全部发生在你自己的浏览器里，由 WebAssembly 形式的同一个内核完成。
+关掉网络、刷新之前，页面照常工作。</p>
+<h2>四个功能页，外加一个报告页</h2>
+<p>页面按<strong>目的</strong>组织，而不是按方法组织：</p>
+<figure class="numbered"><table>
+<thead>
+<tr>
+<th><p>页面</p></th>
+<th><p>回答什么问题</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p><strong>放电设计 (pulse_design)</strong></p></td>
+<td><p>这套线圈与波形能不能做出我要的这个位形？全程的磁通预算够不够？0 维参数落在哪里？</p></td>
+</tr>
+<tr>
+<td><p><strong>物理建模 (model)</strong></p></td>
+<td><p>给定加热与约束假设，定态剖面长什么样？边界与度规怎么定？功率平衡反演出什么？</p></td>
+</tr>
+<tr>
+<td><p><strong>实验分析 (analysis)</strong></p></td>
+<td><p>由测量反解出的平衡是什么样？剖面拟合的置信区间多宽？</p></td>
+</tr>
+<tr>
+<td><p><strong>装置数据 (data)</strong></p></td>
+<td><p>这一炮的原始通道长什么样？（<strong>唯一需要取数进程的一页</strong>，见本页末）</p></td>
+</tr>
+</tbody>
+</table></figure>
+<p>同一个工具可能出现在多个页面上——它只被实现<strong>一次</strong>，出现在它服务的每一条线上。</p>
+<p>第五页是<strong>算例报告 (report)</strong>：它不算数，只<strong>读</strong>——把一份运行记录（<code>record.jsonld</code>，
+可连同计划、呈现规格与数据集）画成与 Python 侧逐字段相同的报告。命令行那边的同一件事是
+<code>fylite cases --report</code>（参考书《算例报告》一章）。</p>
+<h2>单一可执行文件：离线的同一套页面</h2>
+<p>站点是静态的，但 <code>file://</code> 下浏览器取不到 <code>.wasm</code>，所以「双击本地的 index.html」这条路
+走不通。给离线的人、或没有 Python 的机器（尤其 Windows）的是<strong>一个文件</strong>：</p>
+<pre><code class="language-bash">fylite                      # 挑一个空闲端口，起本机服务，拉起系统浏览器
+fylite --page data --device east --lang en --theme dark
+fy --mdsip 127.0.0.1:8000    # 顺带接上取数（下一节）
+</code></pre>
+<p>它把整个站点编进了自己，起服务只绑<strong>回环地址</strong>、只答 <code>GET</code>/<code>HEAD</code>、不写任何文件。
+页面字节与站点<strong>一模一样</strong>——差别只在它另答一组只读的 <code>/api/*</code>，页面靠「那组端点答不答」
+判断自己在哪种宿主上，而不是看主机名。</p>
+<p><code>--page</code> / <code>--device</code> / <code>--lang</code> / <code>--theme</code> 是<strong>启动参数</strong>：它们同样可以直接写在地址里
+（<code>?device=east&#x26;lang=en</code>），因为两者是同一份定义的两种写法——命令行与页面读的是同一个
+参数表（<code>fylite --help</code> 列出全部）。</p>
+<h2>一次典型的使用</h2>
+<ol>
+<li>
+<p><strong>选装置</strong>。页面自带若干装置预置；换一个装置，几何与线圈随之整体切换。</p>
+</li>
+<li>
+<p><strong>调参数</strong>。左侧控件即时生效——单次求解、重构与重绘处于<strong>毫秒到秒</strong>量级。</p>
+</li>
+<li>
+<p><strong>读结果</strong>。图旁边给的不只是曲线：每次运行都带一份溯源记录，说明这个数
+是怎么来的、以及<strong>它在哪里不等价</strong>（见<a href="reading-results.html">结果怎么读</a>）。</p>
+</li>
+<li>
+<p><strong>导出会话</strong>。把这次运行的输入与结果存成一个文件，别人加载它就能得到
+同一次运行——也可以拿它到 Python 里继续算。</p>
+</li>
+</ol>
+<h2>批式的那一半，是明说的</h2>
+<p>有些任务不属于「拖一下就出」：自洽外环、全网格扫描。页面把它们<strong>显式标记为批式</strong>——
+可分步、可中断、有进度，而不是伪装成即时操作后让你盯着一个卡住的界面。这条区分
+是设计约束，不是实现细节。</p>
+<h2>语言与主题</h2>
+<p>站点是中英双语的，两类页面的做法不同，而这是有意的：</p>
+<ul>
+<li>
+<p><strong>散文页</strong>（首页 · 物理功能与边界 · 版权与致谢）语言在<strong>文件名</strong>里——<code>index.html</code> 与
+<code>index.en.html</code> 是两份，切换语言是跳到另一个文件。分享链接给别人，对方看到的就是你
+看到的那一版，而这些页面不必为此背上一套运行时。</p>
+</li>
+<li>
+<p><strong>功能页</strong>在<strong>运行时</strong>切换：点一下国旗按钮，整页文字换语言而<strong>不丢当前的输入与结果</strong>。
+选择记在浏览器里，下次还在。</p>
+</li>
+</ul>
+<p>主题是三态的：跟随系统 / 浅色 / 深色，按钮循环切换，选择同样记在浏览器里。
+语言与主题都可以由地址预置：<code>?lang=en</code>、<code>?theme=dark</code>（<code>?theme=system</code> 清掉记住的选择），
+连同 <code>?device=</code> 一起，正是上一节那几个启动参数。</p>
+<h2>一处与本机不同的行为</h2>
+<p>从 MDSplus 树取数的那一页（<strong>装置数据</strong>）需要一个能开套接字的进程站在页面前面——
+浏览器打不开裸 TCP，wasm 也不改变这件事。在<strong>纯静态站点</strong>上它取不到数据，
+<strong>页面自己会这么说</strong>（面板画成禁用并给出理由），而不是空着让你猜。</p>
+<p>要用它，就用上一节那个单一可执行文件并接上服务器：</p>
+<pre><code class="language-bash">fy --mdsip 127.0.0.1:8000     # 例如经 ssh 隧道到装置的 mdsip 服务器
+</code></pre>
+<p>端点是<strong>只读的窄口</strong>：没有取任意表达式的入口，守卫在宿主与客户端两侧各查一遍，
+且只绑回环地址——它坐在一个不做认证的协议前面，要给别人用，前面得放一个会认证的
+反向代理。细节见<a href="browser-app.html">浏览器演示</a>。</p>
+</main>
+</div>
+
+<footer>
+  <a class="mark" href="../index.html" tabindex="-1" aria-hidden="true"><img src="../assets/fy_mark.svg" alt="" width="24" height="24"></a>
+  <a href="../index.html">fylite 首页</a>
+  <a href="index.html">指南目录</a>
+  <span class="copy">© 2026 中国科学院等离子体物理研究所（ASIPP）与 fylite 贡献者 · Apache-2.0 · alpha 版</span>
+  <span class="ver" title="kernel 0.0.1 · interface 152 · app 0.0.1-alpha">内核 0.0.1 · 接口 152 · 前端 0.0.1-alpha</span>
+</footer>
+
+</body>
+</html>

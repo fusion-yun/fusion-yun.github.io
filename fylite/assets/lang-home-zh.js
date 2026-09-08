@@ -10,7 +10,7 @@ self.FyI18n.register('zh', {
   'home.title': 'fylite 在线演示',
   'home.h1': 'fylite 在线演示',
   'home.sub': '托卡马克集成建模，浏览器内即时求解',
-  'home.lead': '三个可交互的托卡马克建模场景，按一台装置被完整过一遍的次序排列：<strong>设计</strong>一炮放电、<strong>建模</strong>其剖面演化、由测量<strong>反演</strong>其位形。全部计算在本机浏览器内完成，无需安装、无需服务端；多数控件即拖即得（零维毫秒量级，平衡类一至二秒），仅建模场景的自洽平衡—输运一栏属<strong>离线档</strong>（秒量级），须显式启动。',
+  'home.lead': '四个页面：三个可交互的托卡马克建模场景，按一台装置被完整过一遍的次序排列——<strong>设计</strong>一炮放电、<strong>建模</strong>其剖面演化、由测量<strong>反演</strong>其位形；外加一页<strong>装置数据</strong>，它不算，只把装置自己存下来的数取到你面前（四个里唯一要服务端的一个）。★这三个场景的计算全部在本机浏览器内完成，无需安装、无需服务端；多数控件即拖即得（零维毫秒量级，平衡类一至二秒），仅建模场景的自洽平衡—输运一栏属<strong>离线档</strong>（秒量级），须显式启动。',
 
 
   //: ★阶段是**状态**不是名字，故与站名分开说一次：页脚每页都带，这一行是入口页
@@ -29,19 +29,19 @@ self.FyI18n.register('zh', {
 
 
   'home.run.h2': '运行方式与数据',
-  'home.run.p': '全部计算在访问者本机的浏览器内执行。页面不向任何服务器提交数据：所设参数与所得结果均不离开本机，关闭页面即消失。首次访问需下载一份计算内核（WebAssembly），其后每次求解均为本地执行。',
+  'home.run.p': '全部计算在访问者本机的浏览器内执行。页面不向任何服务器提交数据：所设参数与所得结果均不离开本机，关闭页面即消失。首次访问需下载一份计算内核，其后每次求解均为本地执行。',
   'home.two.h2': 'fylite 与 FyTok：一份契约的两级实现',
-  'home.two.p1': 'fylite 不是一个独立的程序，而是<strong>本体层 fyo 语义契约</strong>的<strong>轻型实现</strong>。同一份契约还有一个重型实现——<a href="https://github.com/fusion-yun/fytok">FyTok</a>，Python 写的完整集成建模框架。契约以 IMAS 数据字典（DD v4）语义为底，物理量按语义路径寻址，因此两边说的是同一套话。',
+  'home.two.p1': 'fylite 不是一个独立的程序，而是 <strong>fyo 语义契约</strong>的<strong>轻型实现</strong>。同一份契约还有一个重型实现——<a href="https://fusion-yun.github.io/">FyTok</a>，一套完整的集成建模框架。契约以 IMAS 数据字典（DD v4）语义为底，物理量按语义路径寻址，因此两边说的是同一套话。',
   'home.two.col.lite': 'fylite（轻型端，就是这里）',
   'home.two.col.tok': 'FyTok（重型端）',
   'home.two.row.what': '是什么',
   'home.two.lite.what': '自足的平衡—输运—湍流内核：Grad-Shafranov 正解与反解、1.5D 芯部输运、新经典（NEO）与回旋朗道流体（TGLF）、0D 集成、磁测量重构',
   'home.two.tok.what': '完整的集成建模与分析框架：插件机制、工作流调度、异构执行、可追溯，兼容新旧代码',
   'home.two.row.how': '怎么装',
-  'home.two.lite.how': '无插件机制，物理项<strong>内建</strong>；Rust 内核 + 一层 Python 装配；依赖只有 numpy',
+  'home.two.lite.how': '无插件机制，物理项<strong>内建</strong>：一份自足的计算内核，外加一层很薄的装配；对外几乎不依赖第三方组件',
   'home.two.tok.how': '平衡 / 输运 / 源项等按<strong>插件</strong>注册，原生实现、外部程序封装与 NN 代理可无缝互换',
   'home.two.row.where': '在哪跑',
-  'home.two.lite.where': '单机，或<strong>直接在浏览器里</strong>——同一份内核编译成 WebAssembly，免安装，数据不出本机',
+  'home.two.lite.where': '单机，或<strong>直接在浏览器里</strong>——同一份内核两处通用，免安装，数据不出本机',
   'home.two.tok.where': '超算 / 云计算',
   'home.two.row.cost': '一次多久',
   'home.two.lite.cost': '亚秒级（单次自由边界正解约 0.05 s），拖着滑块就出结果',

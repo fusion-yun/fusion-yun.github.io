@@ -75,8 +75,6 @@ main.doc { max-width: 1080px; }
 }
 .doc .intro .bound strong { color: var(--fg); }
 
-.tool-foot { margin-top: 22px; }
-
 /* ★A SCALE, not ten nudges.  The document face used to carry ten sizes between
    12 and 17 px — 12.5, 13.5, 14.5, 15.5 among them — spanning a factor of 1.42
    in total, so `h2` was 1.07x the body and `h3` was SMALLER than it: the page
@@ -109,14 +107,51 @@ main.doc { max-width: 1080px; }
 .doc h3 { font-size: 19px; margin: 26px 0 6px; line-height: 1.4; }
 .doc li { margin: 6px 0; }
 
+/* ★TWO ACROSS, NOT FOUR.  `minmax(240px, 1fr)` fitted four cards into the
+   1040 px content column at 248 px each, and these cards carry PROSE: 14 px
+   Chinese in 248 px is about **17 全角字 per line**, against the 40-45 this
+   site sets its body text to (docs/note/app-typography.md §3-B).  The visible
+   result was a band of four ragged columns whose text broke every few
+   characters, next to two cards that were half empty because their sentences
+   are shorter.  Two across gives 512 px — about 36 全角字 — and the four
+   sentences then fill two rows evenly.
+   ★The floor is what picks the count, so it is set to just above a third of
+   the column (a third would be 336 px): `auto-fit` can then never choose
+   three, at any width, without anyone having to maintain a breakpoint list. */
 .cards {
   display: grid; gap: 16px; margin: 20px 0 8px;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
 }
 @media (max-width: 760px) { .cards { grid-template-columns: 1fr; } }
-.card { display: block; text-decoration: none; color: inherit; }
-.card:hover { border-color: var(--accent); }
-.card h3 { margin: 0 0 6px; font-size: 19px; color: var(--accent); }
+/* a prose card wants more room than a readout panel's 14/16 */
+.card { display: block; text-decoration: none; color: inherit; padding: 16px 18px; }
+/* ★`.panel + .panel { margin-top: 14px }` is the stacking rule for panels in a
+   COLUMN, and it was leaking into this grid: every card but the first carried a
+   14 px top margin, so the first card's box sat 14 px above its own row and the
+   two rows could not line up.  A grid spaces itself with `gap`; the sibling
+   rule has nothing to do here. */
+.cards .panel + .panel { margin-top: 0; }
+/* ★The house hover is «colour + a tinted well» — the two signals
+   `header.top nav a.navic:hover` and `.iconbtn:hover` already use.  The card
+   had only half of it (the border), which on a bordered box is the weaker
+   half.  No shadow: nothing else on this site casts one, and a card that
+   lifts off the page would be the only thing that does.
+   ★`--bg` as the well is also the safe choice for contrast — it is the pair
+   the typography gate already measures (--muted on --bg, worst 4.67:1), so
+   the hover state cannot quietly fall under AA the way a bespoke tint could. */
+.card:hover { border-color: var(--accent); background: var(--bg); }
+/* ★A card is a LINK, and keyboard users had nothing tuned for it: the default
+   outline is drawn around a rounded, bordered box that already has a hover
+   treatment, so it read as a rendering artefact rather than a focus ring.
+   Same two signals as hover, plus a real ring that clears the border. */
+.card:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+  border-color: var(--accent); background: var(--bg);
+}
+.card h3 {
+  margin: 0 0 6px; font-size: 19px; color: var(--accent);
+  display: flex; align-items: center; gap: 9px;
+}
 .card p { margin: 0; font-size: 14px; color: var(--muted); line-height: 1.7; }
 
 /* The boundary a page is REQUIRED to state (D-2), called out rather than
@@ -133,8 +168,39 @@ main.doc { max-width: 1080px; }
 .doc .note { margin: 10px 0; font-size: 13px; }
 .doc code { font-size: 14px; }
 
-/* the nav marks the scenario the current page is */
-header.top nav a.on { font-weight: 700; text-decoration: underline; }
+/* the nav marks the page you are on ---------------------------------------
+ *
+ * ★★THE STRIP IS ICONS since 2026-09-01 (用户裁定), so 「current」 can no longer
+ * be bold-and-underlined: there is no text to weight.  It is the accent colour
+ * plus a tinted well — the same two signals `.iconbtn:hover` already uses, so
+ * a reader who has learnt one control on this strip has learnt them all.
+ * ★The old text rule is kept for any link that still has words (it costs
+ * nothing and a future entry might).
+ */
+/* ★`:is(header.top, header.shell)` — the original strip and the v2 one
+   (`pages/page_*.html`) carry the SAME nav, injected by the same
+   `installNav()`, so it gets the same rules from one place.  Copying them
+   into `shell.css` would have made the icon look a thing kept true in two
+   files, which is the drift this whole family of documents keeps naming. */
+:is(header.top, header.shell) nav a.on { font-weight: 700; text-decoration: underline; }
+:is(header.top, header.shell) nav a.navic {
+  width: 30px; height: 30px; padding: 0; flex: none;
+  display: grid; place-items: center;
+  border-radius: 6px; color: var(--muted);
+  /* an icon has no words to weight or underline */
+  font-weight: 400; text-decoration: none;
+}
+:is(header.top, header.shell) nav a.navic svg { width: 17px; height: 17px; display: block; }
+:is(header.top, header.shell) nav a.navic:hover { color: var(--accent); background: var(--bg); }
+:is(header.top, header.shell) nav a.navic.on {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+/* the same icon on an entrance card, beside the words rather than instead of
+   them — bigger, because a card is read at reading distance */
+.card h3 .card-ic { display: inline-flex; flex: none; color: var(--accent); }
+.card h3 .card-ic svg { width: 20px; height: 20px; display: block; }
 
 /* --- the mark, in every page's header ------------------------------------
  *
@@ -223,4 +289,10 @@ footer .qr img {
   padding: 5px; image-rendering: pixelated; border: 1px solid var(--line);
 }
 footer .qr:hover img { border-color: var(--accent); }
+/* ★NOT ON THE DESKTOP VIEWER.  The code hands the SITE to somebody else's
+   phone; in the single-file viewer that reader already has the thing, offline,
+   and the address encoded here is one their machine may not even be able to
+   reach.  `assets/host.js` decides which host this is — by asking whether a
+   request face answers, not by reading the hostname — and publishes it here. */
+:root[data-fy-host="desktop"] footer .qr { display: none; }
 @media (max-width: 620px) { footer .qr img { width: 72px; height: 72px; } }

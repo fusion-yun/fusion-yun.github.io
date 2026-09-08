@@ -3,7 +3,8 @@
 // ★This page has NO kernel and NO worker.  Every other page in `app/` runs
 // fylite in wasm and its controller is mostly about feeding a kernel; this one
 // computes nothing.  What it does is ask a same-origin gateway
-// (`app/server/gateway.mjs`) four questions and draw the answers, because
+// (`fylite`, whose request face is `rust/fylite/src/bin/app/api.rs`)
+// four questions and draw the answers, because
 // FYL-DESIGN-06 §1 closed the only alternative: mdsip is raw TCP, a page has
 // no socket, and wasm does not give it one.
 //
@@ -71,14 +72,25 @@
    * top.  It is the right thing to LOOK at first and the wrong thing to fit to.
    */
   /**
-   * ★The vacuum toroidal field, at the ONE path this repository has actually
-   * read it from: the gateway's measurement-slice endpoint takes it from
-   * `\\EFIT_EAST::TOP.RESULTS.GEQDSK:BCENTR` and has been run against a live
-   * server on two shots.  It is spelled out in full rather than as a tag
-   * because that is the form that was measured; a shorter tag might resolve
-   * and might not, and this page does not guess node names.
+   * ★The vacuum toroidal field.
+   *
+   * ★★2026-09-01, MEASURED: it is the TAG `\\BCENTR`, not the full path
+   * `\\EFIT_EAST::TOP.RESULTS.GEQDSK:BCENTR` this page used to name.  On the
+   * live server the full path answers **size 0, units "", `%TREE-E-NODATA`**
+   * on every shot tried (#100000 #137984 #137985 #140000 #150000 #165704);
+   * the tag answers **112 points, units `T`, `TIME_INSERTED`
+   * 2024-04-19** (#137985: −2.43 T across the shot).
+   *
+   * ★The old spelling came with the argument that a full path was what had
+   * been measured and "a shorter tag might resolve and might not".  The
+   * argument was sound and the fact inside it was wrong — and the way that
+   * showed was NOT a red gate: the field simply sat empty, and both hosts grew
+   * a comment saying "BCENTR is NODATA on some shots (#137985 among them)".
+   * ★★That comment recorded a false fact about the machine, in the voice of a
+   * measurement.  What was actually true is that nothing here had ever read
+   * this quantity.
    */
-  var BCENTR = '\\EFIT_EAST::TOP.RESULTS.GEQDSK:BCENTR';
+  var BCENTR = '\\BCENTR';
 
   /**
    * ★The TF COIL CURRENT, found on the live tree (2026-08-24, #165704).
@@ -145,18 +157,24 @@
   var ON_FRACTION = 0.1;
 
   /**
-   * ★THE EAST ADDRESSES, PRESET IN THE BOX.
+   * ★THE ONE ADDRESS THIS PAGE PRESETS, AND WHY IT IS ONLY ONE.
    *
-   * `202.127.204.12:8000` is the site's mdsip server and `127.0.0.1:8000` is
-   * the near end of the ssh tunnel that reaches it from a workstation — the two
-   * strings anyone using this page has typed before, and the pair FYL-DESIGN-06
-   * §1 and the gateway's own usage text already name.  They are SUGGESTIONS in
-   * the datalist, nothing more: the gateway decides what it will connect to
-   * (loopback bind only), and a gateway that names its own list has that list
-   * offered beside these.
+   * `127.0.0.1:8000` is the near end of the ssh tunnel that reaches a site's
+   * mdsip server from a workstation — the same string for everybody, and the
+   * one FYL-DESIGN-06 §1 and the gateway's own usage text already name.
+   *
+   * ★★The SITE server used to be preset beside it.  It is gone (2026-09-02):
+   * it is an address on an operator's internal network, and a published page
+   * is not the place to write one down.  Nothing is lost for the reader who
+   * has one — `renderServers` offers whatever the GATEWAY names first
+   * (`fy --mdsip <addr>`), so an operator's own address arrives from
+   * the host that is actually pointed at it, which is also the only place that
+   * knows it is still right.
+   *
+   * These are SUGGESTIONS in the datalist, nothing more: the gateway decides
+   * what it will connect to (loopback bind only).
    */
   var SERVERS = [
-    { addr: '202.127.204.12:8000', label: 'mds.server.east' },
     { addr: '127.0.0.1:8000', label: 'mds.server.tunnel' },
   ];
 
@@ -235,8 +253,23 @@
     });
   }
   /** Which clock a trace is on: two traces share a window only if they agree.
-   *  A node with no time base is on the sample-index axis, which is its own. */
-  function unitKey(tr) { return tr.time ? ('t:' + (tr.timeUnits || 's')) : 'i'; }
+   *  A node with no time base is on the sample-index axis, which is its own.
+   *
+   *  ★★THE NAME IS NORMALISED (lower-cased, trimmed) —— 2026-09-01, measured on
+   *  the live tree: `east` writes its time units as **`"S"`** (`\VP1`,
+   *  `\TOP.T2:TFP`) while `pcs_east` and `efit_east` write **`"s"`**
+   *  (`\PCRL01`, `\DFSDEV`, `\WMHD`, `\BCENTR`).  Compared literally, the
+   *  loop-voltage trace was on a clock of its own: it stayed out of every
+   *  shared window, the drag never reached it, and its caption said so in a
+   *  sentence that read like a property of the signal ("这一路的时钟是 S").
+   *  Two spellings of the second are one clock.
+   *
+   *  ★It is only case and spacing that are normalised.  `ms` stays a different
+   *  clock from `s` —— those really are different, and guessing a conversion
+   *  here would put a factor of 1000 where nobody would look for it. */
+  function unitKey(tr) {
+    return tr.time ? ('t:' + String(tr.timeUnits || 's').trim().toLowerCase()) : 'i';
+  }
 
   // ------------------------------------------------------------------
   // talking to the gateway
@@ -245,6 +278,9 @@
   /**
    * ★Every request is SAME-ORIGIN and relative.  The gateway serves `app/`
    * itself, so the page never needs a cross-origin fetch and never needs CORS.
+   * ★The gateway is one directory UP: this page is `pages/data.html` and
+   * the request face is mounted at the root of what the gateway serves — the
+   * same `../` `mds-source.js` prefixes on the analysis page.
    *
    * ★The `server` the page names is the MDSIP target, not the gateway: it says
    * which device server that one gateway should connect to, and the gateway
@@ -256,7 +292,7 @@
     var q = new URLSearchParams(params || {});
     if (state.server && state.gw && state.server !== state.gw.mdsip) q.set('server', state.server);
     var s = q.toString();
-    return fetch(path + (s ? '?' + s : ''), { headers: { accept: 'application/json' } })
+    return fetch('../' + path + (s ? '?' + s : ''), { headers: { accept: 'application/json' } })
       .then(function (r) {
         return r.json().then(function (j) {
           if (!r.ok) throw new Error(j && j.error || ('HTTP ' + r.status));
@@ -290,7 +326,10 @@
         o.value = name; o.textContent = name;
         sel.appendChild(o);
       });
-      $('mds-server').value = h.mdsip;
+      //: ★只在宿主真有一台时覆盖：宿主没预设服务器时，标记里那个隧道口地址
+      //: （`127.0.0.1:8000`）正是读者最可能要的起点，用一个空串把它抹掉是把
+      //: 「你来填」变成「从零打」。
+      if (h.mdsip) $('mds-server').value = h.mdsip;
       renderServers();
       //: ★the box is greyed by what the GATEWAY says, not by what the page
       //: would prefer: off a loopback bind the set is closed there, and a box
@@ -937,6 +976,15 @@
     return Math.max(64, Math.min(max, Math.round(w)));
   }
 
+  /** ★WHICH WINDOW A REQUEST IS FOR, as one comparable string — `''` is the
+   *  whole shot.  A trace remembers the tag it came back under, and that is
+   *  what tells a trace already following the window from one still on the
+   *  whole shot (T-S8): stride cannot say it, because two shots of different
+   *  length have different strides for the same window. */
+  function winTag() {
+    return state.win ? state.win.u + ':' + state.win.x0 + ':' + state.win.x1 : '';
+  }
+
   /**
    * Where in the node's samples the shared window falls, for one trace.
    *
@@ -944,10 +992,16 @@
    * thing that knows which sample index carries which time, because the page
    * never sees the samples in between.  `first + i * stride` is the index of
    * the i-th point the gateway returned, and the gateway echoes both.
+   *
+   * ★AND IT IS PER SHOT.  The window is in seconds and shared; the sample
+   * indices it lands on are not — a pinned shot is a different discharge with
+   * its own length and its own stride, so it is mapped through ITS OWN trace.
+   * Mapping every shot through the current one's samples would ask the server
+   * for the right seconds of the wrong pulse.
    */
-  function planFor(p) {
+  function planFor(p, shot) {
     if (!state.win) return { win: null };
-    var tr = traceOf(p, state.shot);
+    var tr = traceOf(p, shot);
     if (!tr || tr.error || !tr.x) return { win: null, why: 'nomap' };
     if (unitKey(tr) !== state.win.u) return { win: null, why: 'clock' };
     var x = tr.x, k0 = -1, k1 = -1;
@@ -962,15 +1016,19 @@
                     last: tr.first + (k1 + 1) * tr.stride } };
   }
 
-  /** One request for one node at one point count, under generation `gen`. */
-  function pull(p, points, gen) {
+  /** One request for one node on one shot at one point count, under
+   *  generation `gen`. */
+  function pull(p, points, gen, shot) {
     var stale = function () { return gen !== state.gen; };
-    //: ★the shot is captured HERE, not read back when the answer lands.  A
-    //: reply that arrives after the reader has moved on must not be filed
-    //: under the shot they moved to — `gen` already drops those, and keying
-    //: by the shot it was asked for means even a kept one cannot be misfiled.
-    var shot = state.shot;
-    var plan = planFor(p);
+    //: ★the shot is PASSED IN, captured by the caller at call time and never
+    //: read back when the answer lands.  A reply that arrives after the reader
+    //: has moved on must not be filed under the shot they moved to — `gen`
+    //: already drops those, and keying by the shot it was asked for means even
+    //: a kept one cannot be misfiled.  ★It is a parameter and not `state.shot`
+    //: because the pinned pass (T-S8) asks for a shot the page is not on.
+    var plan = planFor(p, shot);
+    //: which window this request is for, remembered on the answer below
+    var tag = winTag();
     if (plan.skip) {
       var old = traceOf(p, shot);
       if (old) old.why = plan.why;
@@ -983,6 +1041,7 @@
       if (stale()) return null;
       s.x = s.time || s.data.map(function (_, i) { return s.first + i * s.stride; });
       s.why = plan.why || '';
+      s.winTag = tag;
       state.traces[key(p, shot)] = s;
       draw();
       return s;
@@ -1005,9 +1064,64 @@
       return chain.then(function () {
         if (gen !== state.gen) return null;
         note('mds-fetch-note', msg, { node: p.tree + ':' + p.node });
-        return pull(p, points, gen);
+        return pull(p, points, gen, state.shot);
       });
     }, Promise.resolve());
+  }
+
+  /**
+   * ★THE PINNED SHOTS FOLLOW THE WINDOW TOO (T-S8).
+   *
+   * Until this existed, zooming refined only the shot the page was ON: the
+   * pinned curve beside it stayed at the whole shot's stride, so one figure
+   * carried two curves sampled differently and "zooming really does sharpen
+   * it" was paid out to one of the two.  The captions did say so — but a
+   * reader had to infer it from two stride numbers, and the whole reason this
+   * page overlays shots is that the comparison should be like for like.
+   *
+   * ★ONE PASS, NOT TWO.  The current shot gets a coarse pass first because
+   * its figures would otherwise be empty while the wire fills; a pinned shot
+   * already HAS a curve on screen, so a coarse pass would only replace a good
+   * curve with a worse one on the way to the same place.  So: one request per
+   * (pinned shot × pick), straight at the figure's resolution, after the
+   * current shot's two passes have landed.
+   *
+   * ★AND ONLY WHAT IS ALREADY ON SCREEN.  A pinned shot that never had this
+   * node fetched stays absent: pinning KEEPS what came back, it does not go
+   * and get more, and a window change is not the moment to change that.
+   * ★A trace whose `winTag` already matches is skipped, so the pass costs
+   * nothing when nothing moved, and clearing the window (`winTag` back to
+   * `''`) puts the pinned curves back on the whole shot rather than leaving
+   * them zoomed under a caption that says the whole shot is on screen.
+   */
+  function passPinned(want, gen) {
+    var tag = winTag(), tgt = target();
+    var jobs = [];
+    state.pinned.forEach(function (sh) {
+      if (sh === state.shot) return;
+      want.forEach(function (p) {
+        var t = traceOf(p, sh);
+        if (!t || t.error) return;
+        //: ★the window is not the only thing that can put the two shots on
+        //: different strides: raising the sampling (or widening the figures)
+        //: refines the current shot on the next fetch, and a pinned trace left
+        //: behind would be the same defect one control over.  So the second
+        //: half of this test is the REFINE PASS'S OWN rule, asked about a
+        //: pinned trace — anything already at the figure's resolution has
+        //: nothing to gain from a round trip, and is skipped.
+        if (t.winTag === tag && !(t.stride > 1 && tgt > t.returned + 8)) return;
+        jobs.push({ p: p, shot: sh });
+      });
+    });
+    if (!jobs.length) return Promise.resolve(0);
+    return jobs.reduce(function (chain, j) {
+      return chain.then(function () {
+        if (gen !== state.gen) return null;
+        note('mds-fetch-note', 'mds.repinning',
+             { node: j.p.tree + ':' + j.p.node, shot: j.shot });
+        return pull(j.p, tgt, gen, j.shot);
+      });
+    }, Promise.resolve()).then(function () { return jobs.length; });
   }
 
   function fetchAll() {
@@ -1041,7 +1155,12 @@
         if (!more.length) return null;
         return pass(more, tgt, 'mds.refining', gen).then(function () { return more.length; });
       })
+      //: the pinned shots follow, once, after the current one has landed
       .then(function (n) {
+        return passPinned(want, gen).then(function (pins) { return { n: n, pins: pins }; });
+      })
+      .then(function (r) {
+        var n = r.n, pins = r.pins;
         state.busy = false;
         $('mds-fetch').disabled = !state.gw;
         //: the question moved while this was in flight: whatever came back
@@ -1061,6 +1180,16 @@
                        { shot: state.shot, n: want.length }, 'warn');
         else if (n) note('mds-fetch-note', 'mds.got.refined', { n: got, refined: n, points: target() });
         else note('mds-fetch-note', 'mds.got', { n: got });
+        //: ★and the round trips the pinned shots cost are SAID.  Nobody
+        //: pressed anything to spend them; a page that spent them silently
+        //: would be the same page that let the two strides differ silently,
+        //: one level down.
+        if (pins) {
+          var el = $('mds-fetch-note');
+          if (el) el.innerHTML += ' ' + T('mds.got.pinned',
+            { pins: pins, shots: state.pinned.filter(function (x) { return x !== state.shot; })
+                .map(function (x) { return '#' + x; }).join(' ') });
+        }
         loadWritten();
       });
   }
@@ -1441,7 +1570,7 @@
       //: with the wrong discharge — the one mistake this file format can make
       //: that nobody reading it later could detect.
       shots: shots,
-      taken_by: 'app/server/gateway.mjs (fylite)',
+      taken_by: 'fylite (fylite)',
       note: 'every `stride`-th sample of [first, last]; not a mean and not a min/max envelope',
       signals: got.map(function (e) {
         var s = e.s;
@@ -1469,7 +1598,7 @@
   function exportWorkspace() {
     var doc = {
       '@type': 'fylite:MdsWorkspace/1',
-      saved_by: 'app/mdsplus.html (fylite)',
+      saved_by: 'app/pages/data.html (fylite)',
       note: 'controls only — no samples: this page is not a data repository',
       server: state.server,
       tree: $('mds-tree').value || state.tree,

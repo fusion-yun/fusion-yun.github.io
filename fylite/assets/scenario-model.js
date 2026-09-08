@@ -26,8 +26,13 @@
 // WITHDRAWN with its markup, its catalogue and its gate.  It answered a
 // different question on a different magnetic surface, and it was never a stage
 // of this scenario: nothing here fed it and it fed nothing.  The kernel entry
-// is untouched (`fylite.scenario.model.tglf`, and the turbulence closure this
-// page's 1.5-D bar can switch on still runs through the same module).
+// is untouched — the TGLF port runs in the extension binary and the turbulence
+// closure this page's 1.5-D bar can switch on still reaches it.  ★What went
+// with the demo, on 2026-09-07, is the DECK FACE on the Python side
+// (`fylite.scenario.model.tglf`): a deck is an external serialisation format,
+// the kernel does not parse one, so that face could not sink into a door and
+// was retired rather than kept as a second way in.  The door is
+// `code/turbulence`.
 
 
 // ==========================================================================
@@ -92,209 +97,48 @@ FyScenario.whenDevices(function () {
   /** The same grid as a fraction of the minor radius, for prescriptions. */
   function rhoBar(x, i) { return x[x.length - 1] > 0 ? x[i] / x[x.length - 1] : 0; }
 
-  /**
-   * dV/dr on every grid point, from the kernel's own surface solver.
-   *
-   * ★One call per surface, and the axis is handled by EXTRAPOLATION rather
-   * than by evaluating at r = 0: the surface degenerates there and `geo_do`
-   * is not asked a question it cannot answer.  V' -> 0 linearly on axis, so
-   * the first interval is where the transcription's half-cell rule does its
-   * work — faking a value there would quietly change the axis boundary.
-   */
-  function metrics(x) {
-    var q0 = 1.0, qa = +$('q95').value, a = +$('amin').value;
-    var rmaj = +$('rmaj').value * a;
-    var vp = new Float64Array(x.length), gr = new Float64Array(x.length);
-    var shear = new Float64Array(x.length);
-    for (var i = 1; i < x.length; i++) {
-      var rb = rhoBar(x, i);
-      //: a plain parabolic q(r) — this page prescribes the profile rather
-      //: than solving current diffusion for it, and says so.  The 含时演化
-      //: bar is where q is a RESULT.
-      var q = q0 + (qa - q0) * rb * rb;
-      var dq = 2 * (qa - q0) * rb;
-      shear[i] = rb * dq / q;
-      //: metres in, metres out: `geo_do` is scale-covariant, so a surface
-      //: given in metres returns dV/dr in m^2 and a dimensionless <|grad
-      //: r|^2>.  Handing it r/a is what made chi's own metre disappear.
-      var g = fy.geoSurface({
-        rmin: x[i], rmaj: rmaj, q: q, shear: shear[i],
-        kappa: +$('kappa').value, sKappa: 0, delta: +$('delta').value,
-        sDelta: 0, nTheta: 201 });
-      vp[i] = g.volumePrime;
-      gr[i] = g.fsaGradR2;
-    }
-    vp[0] = 0; gr[0] = gr.length > 1 ? gr[1] : 1;
-    return { vprime: vp, gradR2: gr, qEdge: qa };
-  }
-
-  //: ★SI, because that is what the surface block means.  This page used to
-  //: convert to the TGYRO port's CGS here — `CM_PER_M`, `G_PER_T`, a
-  //: density unit of 1e13 and a deuteron in grams — and every page that
-  //: filled the block had to know to do the same.  The conversion is behind
-  //: the ABI now (`c_api.rs::surface_from_block`), once, for every entry
-  //: that takes the layout.
-  var EV_PER_KEV = 1e3;
-  //: the `ne0` field is in 1e19 m^-3, and m^-3 is what the block takes
-  var NE_UNIT = 1e19;
-  //: deuterium mass, kg
-  var MD = 3.3435837724e-27;
-
-  /**
-   * The physical surface at every grid point, for the neoclassical closure.
-   *
-   * ★What this page owns and what the kernel owns.  Everything NEO-side —
-   * the ion temperature norm, the electron density norm, the deuterium mass
-   * norm, `nu_1`, the gyro-Bohm de-normalisation — is the kernel's.  This
-   * function supplies PHYSICAL quantities and one unit per point, and that
-   * is the whole of its responsibility.
-   *
-   * ★★The density profile is PRESCRIBED, not solved: this page has one
-   * channel and it is the temperature.  Saying so matters because a
-   * neoclassical chi depends on density, so a reader could otherwise take
-   * the density here for a result.
-   */
-  function neoBlocks(x, m) {
-    var a = +$('amin').value, b = +$('bunit').value, ne0 = +$('ne0').value;
-    //: ★the peaking is a CONTROL now.  It was 0.4, written twice, and a
-    //: neoclassical chi depends on the density it was hard-coded into.
-    var cpk = +$('nepeak').value;
-    var n = x.length;
-    var surf = new Float64Array(20 * n), ion = new Float64Array(6 * n);
-    var chigb = new Float64Array(n);
-    var rmaj = +$('rmaj').value * a, kap = +$('kappa').value,
-        del = +$('delta').value, q0 = 1.0, qa = +$('q95').value;
-    for (var k = 0; k < n; k++) {
-      var r = Math.max(rhoBar(x, k), 1e-6);
-      var q = q0 + (qa - q0) * r * r;
-      var shear = r * (2 * (qa - q0) * r) / q;
-      //: prescribed, and said to be so on the page
-      var ne = ne0 * (1 - cpk * r * r) * NE_UNIT;
-      var dlnnedr = (2 * cpk * r / Math.max(1 - cpk * r * r, 1e-6)) / a; // 1/m
-      //: the temperature the block carries is the STARTING one; the kernel
-      //: overwrites the first ion's from the iterate at every Picard step,
-      //: and the other temperature stays at this profile — this bar solves
-      //: ONE channel
-      var te = tStart(x, k) * EV_PER_KEV;
-      var o = 20 * k;
-      surf[o] = a; surf[o + 1] = r * a; surf[o + 2] = rmaj;
-      surf[o + 3] = 0; surf[o + 4] = 0; surf[o + 5] = 0;
-      surf[o + 6] = q; surf[o + 7] = shear;
-      surf[o + 8] = kap; surf[o + 9] = 0;
-      surf[o + 10] = del; surf[o + 11] = 0;
-      surf[o + 12] = 0; surf[o + 13] = 0;
-      surf[o + 14] = b; surf[o + 15] = te; surf[o + 16] = ne;
-      surf[o + 17] = dlnnedr; surf[o + 18] = dlnnedr; surf[o + 19] = 0;
-      var i6 = 6 * k;
-      ion[i6] = 1.0; ion[i6 + 1] = MD;
-      ion[i6 + 2] = ne; ion[i6 + 3] = te;
-      ion[i6 + 4] = dlnnedr; ion[i6 + 5] = dlnnedr;
-      chigb[k] = chiGyroBohm(te, b, a);
-    }
-    return { surf: surf, ion: ion, nion: 1, signb: -1, signq: 1,
-             rhoStar: 0.001, nTheta: 17, tToEv: EV_PER_KEV, chigb: chigb };
-  }
-
-  /**
-   * The gyro-Bohm diffusivity rho_s^2 c_s / a, in m^2/s.
-   *
-   * ★The ONE unit this side supplies.  SI throughout, on the deuterium mass
-   * — the same mass the kernel normalises to, which is why the two halves
-   * compose instead of differing by a mass ratio nobody would notice.
-   */
-  function chiGyroBohm(teEv, bT, aM) {
-    var MD = 3.3435837724e-27, QE = 1.602176634e-19;
-    var cs = Math.sqrt(teEv * QE / MD);
-    var rhos = MD * cs / (QE * bT);
-    return rhos * rhos * cs / aM;
-  }
-
-  /** The starting profile, in keV — also what the passive channel is pinned to. */
-  function tStart(x, k) {
-    var rb = rhoBar(x, k);
-    return +$('edge').value + 2 * (1 - rb * rb);
-  }
-
   function solve() {
-    var x = rhoGrid(), m = metrics(x);
+    var x = rhoGrid();
     var chi0 = +$('chi0').value;
     var closure = +$('closure').value | 0;
-    var stiff = closure === 1;
-    var p0 = +$('power').value, w = +$('width').value;
-    var src = new Float64Array(x.length);
-    for (var i = 0; i < x.length; i++)
-      src[i] = p0 * Math.exp(-Math.pow(rhoBar(x, i) / w, 2));
-    var chiOf = stiff
-      ? function (xx, y) {
-          var d = new Float64Array(xx.length);
-          for (var k = 0; k < xx.length; k++) {
-            var k0 = Math.min(k, y.length - 2);
-            var g = Math.abs((y[k0 + 1] - y[k0]) / (xx[k0 + 1] - xx[k0]));
-            //: a critical-gradient-like stiffening, prescribed here rather
-            //: than taken from a closure — the page says which it is
-            d[k] = chi0 * (0.25 + 1.75 * g / (1 + g));
-          }
-          return d;
-        }
-      : function () { return chi0; };
     var t0 = (self.performance || Date).now();
-    var y0 = new Float64Array(x.length);
-    for (var j = 0; j < x.length; j++) y0[j] = tStart(x, j);
-    var neo = closure === 2 ? neoBlocks(x, m) : null;
-    //: the kernel's own solver (FYL-DESIGN-07 D-4).  The closure is chosen
-    //: by index rather than passed as a function: a callback cannot cross the
-    //: ABI, and splitting the Picard loop across it would put the stiff
-    //: iteration back on this side — which is the arrangement D-4 exists to
-    //: prevent, and which cost this page a 3e-2 discrepancy when the
-    //: discretisation lived here.
-    var r = fy.transportStep({
-      x: x, yOld: y0,
-      vprime: m.vprime,
-      //: the flux weight carries <|grad r|^2>; the capacity does not.  They
-      //: are different weights in the equation and defaulting both to V'
-      //: would be a modelling choice made by omission.
-      metric: (function () {
-        var mm = new Float64Array(x.length);
-        for (var q = 0; q < x.length; q++) mm[q] = m.vprime[q] * m.gradR2[q];
-        return mm;
-      })(),
-      velocity: (function () {
-        var vv = new Float64Array(x.length);
-        vv.fill(+$('pinch').value);
-        return vv;
-      })(),
-      source: src,
-      model: closure, p0: chi0, p1: 0.25, p2: 1.75, neo: neo,
-      //: ★Pereverzev-Corrigan, which the kernel has had all along and this
-      //: page used to say was "not ported".  It is a control now: the stiff
-      //: and turbulent tiers are where a Picard loop needs it, and a
-      //: NEGATIVE coefficient is refused by the kernel rather than clamped.
-      dPc: +$('dpc').value,
-      dt: Infinity, theta: 1, edgeValue: +$('edge').value,
-      tol: 1e-10, maxInner: 200,
-    });
-    //: chi is redrawn here from the SAME formula the kernel selected, purely
-    //: for the plot — the solve did not use this array
-    var chiArr;
+    //: ★★the bar is `case.rs::transport_case` (FYL-DESIGN-16 K-3, 2026-09-05):
+    //: the Miller metric from these controls, the Gaussian source, the start
+    //: profile, the closure by name — constant · stiff · neoclassical (whose
+    //: per-surface blocks the kernel builds from the same seven numbers) —
+    //: one steady solve.  What stays here is the grid (bound, so the page's
+    //: own `a·i/(n-1)` spacing is the one solved on) and the reading back.
+    //: ★第二十五刀: the turbulent run beside this (`turbRun`) sank the same
+    //: way — its blocks and metric are the two doors' now.
+    var settings = { closure: String(closure), chi0: chi0, p1: 0.25, p2: 1.75,
+                     power: +$('power').value, width: +$('width').value,
+                     edge: +$('edge').value, pinch: +$('pinch').value, dpc: +$('dpc').value,
+                     theta: 1, tol: 1e-10, max_inner: 200,
+                     amin: +$('amin').value, rmaj: +$('rmaj').value,
+                     kappa: +$('kappa').value, delta: +$('delta').value, q95: +$('q95').value };
     if (closure === 2) {
-      //: ★the kernel does not hand the profile back, so it is recomputed
-      //: here from the CONVERGED temperature purely for the plot.  At
-      //: convergence the two agree by construction; mid-iteration they
-      //: would not, and drawing a mid-iteration chi beside a converged T
-      //: would be a picture of neither.
-      //: the same floor the solve used, so the curve and the solve
-      //: agree at the axis where the gradient vanishes
-      chiArr = fy.neoChi(x, r.y, neo, chi0);
-    } else {
-      chiArr = chiOf(x, r.y);
-      if (typeof chiArr === 'number') {
-        var c2 = new Float64Array(x.length); c2.fill(chiArr); chiArr = c2;
-      }
+      settings.bunit = +$('bunit').value;
+      settings.ne0 = +$('ne0').value;
+      settings.nepeak = +$('nepeak').value;
     }
-    return { x: x, y: r.y, chi: chiArr, metrics: m, src: src,
-             closure: closure, neo: neo,
-             iterations: r.innerIterations, converged: r.converged,
-             residual: r.residual, ms: Math.round((self.performance || Date).now() - t0) };
+    var rec = fy.complete('code/transport', {
+      settings: settings, inputs: { transport: { 'fylite:rho': Array.from(x) } } });
+    var flat = function (node) {
+      var out = [];
+      (function walk(v) { if (Array.isArray(v)) v.forEach(walk); else out.push(v); })(node.data);
+      return Float64Array.from(out);
+    };
+    var lad = rec.fields.equilibrium.time_slice.profiles_1d;
+    var m = { vprime: flat(lad.dvolume_drho_tor), gradR2: flat(lad.gm3), qEdge: +$('q95').value };
+    return { x: x, y: flat(rec.fields.y),
+             chi: flat(rec.fields.core_transport.model['0'].profiles_1d.electrons.energy.d),
+             metrics: m, src: flat(rec.fields.source),
+             closure: closure, neo: null,
+             chiGb: rec.fields.chi_gb ? flat(rec.fields.chi_gb) : null,
+             iterations: rec.facts.inner_iterations.value,
+             converged: rec.facts.converged.value !== 0,
+             residual: rec.facts.residual.value,
+             ms: Math.round((self.performance || Date).now() - t0) };
   }
 
   //: ★★The 1.5D page runs on the main thread ON PURPOSE — 41 points is
@@ -307,6 +151,8 @@ FyScenario.whenDevices(function () {
   //: tiers must not pay a second wasm instantiation for a tier they never
   //: use.
   var turbWorker = null;
+  //: 模块先行那条消息的 promise，见 `turbWorker` 创建处。
+  var turbWasm = null;
 
   //: ★the turbulence pass runs in a SECOND worker (the page's own), so the
   //: page's `settle` — which listens to the scenario worker — cannot see it
@@ -321,34 +167,30 @@ FyScenario.whenDevices(function () {
   }
 
   function turbRun() {
-    var x = rhoGrid(), m = metrics(x);
-    var chi0 = +$('chi0').value;
-    var p0 = +$('power').value, w = +$('width').value;
-    var src = new Float64Array(x.length), y0 = new Float64Array(x.length);
-    for (var i = 0; i < x.length; i++) {
-      src[i] = p0 * Math.exp(-Math.pow(rhoBar(x, i) / w, 2));
-      y0[i] = tStart(x, i);
-    }
-    var metric = new Float64Array(x.length);
-    for (var q = 0; q < x.length; q++) metric[q] = m.vprime[q] * m.gradR2[q];
-    var vel = new Float64Array(x.length); vel.fill(+$('pinch').value);
-    var neo = neoBlocks(x, m);
-
-    //: ★the radial SUBSET and the ky count are controls, because they are
-    //: the two numbers that decide whether this tier is a wait or a walk
-    //: away.  Cost is linear in their product; the page states the estimate
-    //: before the run rather than after it.
+    var x = rhoGrid();
+    //: ★第二十五刀: the bar's scalars go as they are; the surface blocks, the
+    //: metric, the source and the start profile are the kernel's (both doors
+    //: build them from the same prescription the transport solve uses)
     var nRad = +$('turb-nrad').value | 0, nKy = +$('turb-nky').value | 0;
-    var radii = [];
-    for (var j = 0; j < nRad; j++)
-      radii.push(Math.round(1 + (x.length - 3) * (j / Math.max(1, nRad - 1))));
-    var ky = [], lo = 0.05, hi = 0.8;
-    for (var kk = 0; kk < nKy; kk++)
-      ky.push(+(lo * Math.pow(hi / lo, kk / Math.max(1, nKy - 1))).toFixed(6));
-
+    var bar = { n: x.length, amin: +$('amin').value, rmaj: +$('rmaj').value, kappa: +$('kappa').value,
+                delta: +$('delta').value, q95: +$('q95').value, bunit: +$('bunit').value,
+                ne0: +$('ne0').value, nepeak: +$('nepeak').value, chi0: +$('chi0').value,
+                power: +$('power').value, width: +$('width').value, edge: +$('edge').value,
+                pinch: +$('pinch').value, dpc: +$('dpc').value, nrad: nRad, nky: nKy,
+                outer: +$('turb-outer').value | 0, relax: 0.5, tol: 1e-4 };
     var t0 = (self.performance || Date).now();
     if (!turbWorker) {
       turbWorker = new Worker(self.FySite.url('assets/worker.js'));
+      //: ★★这一页有**第二个** worker，于是同一份 `fylite_rs.wasm` 曾被取第三遍
+      //: （实测首屏 7.43 MB，5.0 MB 是同一个模块的三份）。把页面已经编译好的那一份
+      //: 交给它——`transport_turb` 在它到达之后才发（下面那句排在 `then` 里）。
+      turbWasm = (self.FyLite && self.FyLite.moduleFor)
+        ? self.FyLite.moduleFor(self.FySite.url('assets/fylite_rs.wasm')).then(function (rec) {
+            if (turbWorker) turbWorker.postMessage({ cmd: 'wasm', url: 'fylite_rs.wasm',
+                                                     module: rec.module, sha256: rec.sha256,
+                                                     bytes: rec.bytes });
+          })['catch'](function () { /* 它自己取，只是多一次下载 */ })
+        : Promise.resolve();
       //: the stop button kills the scenario's worker; this one is the page's
       //: own and would otherwise keep running with nobody listening
       S.onAbort(function () {
@@ -371,7 +213,10 @@ FyScenario.whenDevices(function () {
                  chiNeo: Float64Array.from(d.chiNeo),
                  chiTurb: Float64Array.from(d.chiTurb),
                  subX: d.subX, subChi: d.subChi,
-                 metrics: m, src: src, closure: 3, neo: neo,
+                 metrics: { vprime: Float64Array.from(d.vprime), gradR2: Float64Array.from(d.gradR2),
+                            qEdge: bar.q95 },
+                 src: Float64Array.from(d.source), closure: 3, neo: null,
+                 chiGb: Float64Array.from(d.chiGb),
                  outer: d.outer, settled: d.settled,
                  iterations: d.iterations, converged: d.converged,
                  residual: d.residual,
@@ -392,15 +237,12 @@ FyScenario.whenDevices(function () {
         setBusy(false, T('x.fail', { why: String(e && e.message || e) }), 'err');
       };
     }
-    setBusy(true, T('x.turb.running', { n: radii.length * ky.length }));
+    setBusy(true, T('x.turb.running', { n: nRad * nKy }));
     S.progress(0.2);
-    turbWorker.postMessage({
-      cmd: 'transport_turb', neo: neo,
-      spec: { x: x, y0: y0, vprime: m.vprime, metric: metric, velocity: vel,
-              source: src, edge: +$('edge').value, chi0: chi0,
-              dPc: +$('dpc').value,
-              radii: radii, ky: ky, satRule: 1, width: 1.65,
-              outer: +$('turb-outer').value | 0, relax: 0.5, tol: 1e-4 } });
+    //: ★等模块那条消息发完再发命令：命令一到，worker 就 attach 了。
+    (turbWasm || Promise.resolve()).then(function () {
+      if (turbWorker) turbWorker.postMessage({ cmd: 'transport_turb', bar: bar });
+    });
     return turbSettle();
   }
 
@@ -465,7 +307,7 @@ FyScenario.whenDevices(function () {
    * That is a real loss of convenience and it is written here rather than
    * quietly absorbed: passing a solved equilibrium — not merely seven scalars
    * — from `design` or `analysis` into this page is an open question, assessed
-   * in `docs/reference/notes/equilibrium-handoff.md`.
+   * in `docs/note/equilibrium-handoff.md`.
    */
 
   function run() {
@@ -618,7 +460,7 @@ FyScenario.whenDevices(function () {
     //:
     //: ★It is still a MILLER FIT of that boundary: this bar builds its metric
     //: from R/a, kappa, delta.  Carrying the traced metric instead is the
-    //: assessment in `docs/reference/notes/equilibrium-handoff.md` — the point
+    //: assessment in `docs/note/equilibrium-handoff.md` — the point
     //: of this entry is that the numbers now come from a solved boundary
     //: rather than from a shape somebody typed.
     gfile: {
@@ -694,11 +536,11 @@ FyScenario.whenDevices(function () {
         'fylite:inner_iterations': last.iterations,
         'fylite:residual': last.residual,
       };
-      if (last.closure === 2)
+      if (last.chiGb)
         //: the gyro-Bohm unit is what makes the exported chi a number in
         //: m^2/s rather than a dimensionless one — it has to travel
         doc['fylite:profile']['fylite:chi_gyrobohm'] =
-          FySession.sig(last.neo.chigb);
+          FySession.sig(last.chiGb);
       return JSON.stringify(doc, null, 1);
     },
     apply: function (text, name) {
@@ -784,24 +626,6 @@ FyScenario.whenDevices(function () {
   });
   $('closure').addEventListener('change', syncClosure);
 
-  // --- the worked cases ----------------------------------------------------
-  //
-  // ★★THIS BAR RE-RUNS, and that is not a contradiction of 「算例不开算」.
-  // That rule's reason is COST: the 含时演化 bar takes seconds, and starting
-  // seconds of work because a menu changed is what an offline-tier bar must
-  // not do.  This bar's contract is the opposite one — 拖控件即重算, a steady
-  // solve on 41 points is microseconds — so a case that set the controls and
-  // left the figure showing the PREVIOUS solve would put the bar in a state
-  // it never otherwise shows.  Every one of its own controls already runs it
-  // on `change`; a case is not a weaker kind of control.
-  //: ★the kernel loads asynchronously and this bar does NOT auto-run on
-  //: ready, so the INITIAL case waits for the wasm: applied before it lands,
-  //: it would set the controls and leave the figures empty.
-  var ready;
-  var whenReady = new Promise(function (res) { ready = res; });
-  S.cases({ when: whenReady,
-            after: function () { syncClosure(); syncLabels(); run(); } });
-
   S.onRun(run);
 
   S.onRefresh(function () {
@@ -816,10 +640,9 @@ FyScenario.whenDevices(function () {
   //: the core kernel, on the page rather than in a worker: a steady solve on
   //: 41 points is microseconds, and a Worker round-trip would cost more than
   //: the arithmetic it carries
-  self.FyLite.load(self.FySite.url('assets/fylite_rs.wasm')).then(function (inst) {
+  self.FyLite.attach(self.FySite.url('assets/fylite_rs.wasm')).then(function (inst) {
     fy = inst;
     setBusy(false, T('x.ready'));
-    ready();
   }).catch(function (e) {
     setBusy(false, T('x.fail', { why: String(e && e.message || e) }), 'err');
   });
@@ -973,13 +796,32 @@ FyScenario.whenDevices(function () {
                q95: 1, bunit: 1,
                waveramp: 2, waveflat: 2, waveend: 2, wavestart: 2, waveend2: 2,
                turbevery: 0, turbnrad: 0, turbnky: 0, turbrelax: 2,
+               //: T-C13 — the matcher's four.  The tolerance carries three
+               //: decimals because its grid is 0.002 and a label rounding
+               //: 0.002 to「0.00」 would be a control the reader cannot read.
+               fmiter: 0, fmtol: 3, fmdx: 2, fmdxmax: 1, fmrhomin: 2,
+               //: T-C14 的两个：轮数是整数，外环判据的格点是 0.005
+               fmouter: 0, fmotol: 3, fmorlx: 2,
+               //: T-C20 的三个：两个输运数与杂质加料速率
+               dchiz: 2, pinchz: 2, zfuel: 2,
+               //: T-C16 的两个增益
+               ipkp: 1, ipki: 2,
                degp: 0, degf: 0, torque: 1, prandtl: 2,
                //: the launchers' six, so the band the machine declared is
                //: READABLE and not only in effect (T-M15)
                lhpower1: 1, lhpower2: 1, lhnpar1lo: 2, lhnpar1hi: 2,
                lhnpar2lo: 2, lhnpar2hi: 2 },
     on: { ready: onReady, error: onError, evolve_geometry: onGeometry,
-          evolve_step: onStep, evolve_couple: onCouple, evolve: onDone },
+          evolve_step: onStep, evolve_couple: onCouple, evolve: onDone,
+          //: T-C13 — the matcher's iteration boundaries, so a solve whose
+          //:每一轮 costs a full TGLF sweep says where it is rather than
+          //: looking hung
+          evolve_match: onMatch,
+          //: T-C14 — and one line per OUTER round, for the same reason: a
+          //: run that wraps eight full matches must say which of the eight
+          //: it is in, or the only honest reading of the state line is
+          //: 「不知道还要多久」.
+          evolve_round: onRound },
   });
   var $ = S.$, syncLabels = S.sync, setBusy = S.setBusy;
 
@@ -1144,6 +986,33 @@ FyScenario.whenDevices(function () {
       turbEvery: +$('turbevery').value | 0,
       turbNrad: +$('turbnrad').value | 0, turbNky: +$('turbnky').value | 0,
       turbRelax: +$('turbrelax').value,
+      //: ★★T-C13 — the flux matcher's own four.  `fmTol` is a RELATIVE flux
+      //: difference here and is squared in the worker, where the kernel's
+      //: `(f-g)^2` residual is; the match radii are not among them because
+      //: they are `turbNrad` — matching where the closure was never
+      //: evaluated would be matching an interpolation.
+      fmIter: +$('fmiter').value | 0, fmTol: +$('fmtol').value,
+      fmDx: +$('fmdx').value, fmDxMax: +$('fmdxmax').value,
+      //: ★the inner boundary of the matched region — measured, not chosen:
+      //: matching from the node next to the axis DIVERGED on the ITER case
+      //: (a/L_Ti driven to −3.6, i.e. a hollow profile), while the outer
+      //: three radii were already matched to 0.4 %
+      fmRhoMin: +$('fmrhomin').value,
+      //: ★★T-C14 —— 外环。`fmOuter = 1` 就是「只匹配，不交替」，即 T-C13 落地
+      //: 时的行为；大于 1 时每一轮在匹配之后再走稳态电流 → 锯齿 → 平衡，
+      //: 收敛判据用的是上游那一条的原样（压强与电流剖面的相对变化）。
+      fmOuter: Math.max(1, +$('fmouter').value | 0),
+      //: ★T-C20：第二种离子自己的输运与源。缺省与主离子相同（源缺省 0），
+      //: 所以打开第二种离子本身不改变任何东西。
+      dOverChiZ: +$('dchiz').value, pinchZ: +$('pinchz').value,
+      fuelZ: +$('zfuel').value,
+      fmOTol: +$('fmotol').value,
+      //: ★外环的欠松弛因子，作用在稳态电流那一步的 q 与 ψ 上。1 = 不阻尼。
+      fmORelax: +$('fmorlx').value,
+      //: ★★T-C16 —— I_p 反馈。误差是**相对**的（回路自己在第一步上标定），
+      //: 因为从 ψ 读出的 I_p 在梯子上系统性低约 3 %，而那 3 % 不随分辨率收敛：
+      //: 闭在绝对值上的回路会稳稳驱到一个差 3 % 的 I_p 上。
+      ipCtl: on('ipctl'), ipKp: +$('ipkp').value, ipKi: +$('ipki').value,
       chiRatio: +$('chiratio').value, dOverChi: +$('dchi').value,
       pinch: +$('pinch').value, dPc: +$('dpc').value,
       //: ★`k` has no default in the kernel and does not get one here: the
@@ -1240,7 +1109,7 @@ FyScenario.whenDevices(function () {
       waveEnd: +$('waveend').value,
       waveStart: +$('wavestart').value, waveEnd2: +$('waveend2').value,
       wavePower: on('wavepower'), waveVloop: on('wavevloop'),
-      waveFuel: on('wavefuel'),
+      waveFuel: on('wavefuel'), waveIp: on('waveip'),
     };
   }
 
@@ -1269,6 +1138,10 @@ FyScenario.whenDevices(function () {
       //: interpolates them on
       qTable: Array.from(g.qpsi), fTable: Array.from(g.fpol),
       b0: Math.abs(g.bcentr), a: sm.a, rmaj: sm.r0,
+      //: ★the outline itself rides along (2026-09-05): the kernel's g-file
+      //: tier measures the minor radius from it with the SAME shape metric,
+      //: rather than trusting a number the page measured
+      bndR: Array.from(g.rbbbs), bndZ: Array.from(g.zbbbs),
     };
   }
 
@@ -1285,6 +1158,18 @@ FyScenario.whenDevices(function () {
       return setBusy(false, T('e.err.nogfile'), 'warn');
     if (sp.couple > 0 && sp.geometry !== 'device')
       return setBusy(false, T('e.err.nocouple'), 'warn');
+    //: ★T-C13 — said here as well as in the worker, and that is on purpose:
+    //: the controls above are disabled on this tier, but an IMPORTED session
+    //: can carry any of them, and a refusal the reader meets after the wire
+    //: rather than before it reads like a crash.
+    if (sp.closure === 4) {
+      if (!sp.chHeat) return setBusy(false, T('e.err.fm_needheat'), 'warn');
+      if (sp.chDensity || sp.chCurrent || sp.chMomentum)
+        return setBusy(false, T('e.err.fm_channels'), 'warn');
+      if (sp.wave || on('resume'))
+        return setBusy(false, T('e.err.fm_notime'), 'warn');
+      if (sp.couple > 0) return setBusy(false, T('e.err.fm_couple'), 'warn');
+    }
     //: ★the beam needs a psi map, and a run that asked for one on the
     //: analytic tier is refused here rather than falling back to the
     //: Gaussian it was switched on to replace
@@ -1337,8 +1222,18 @@ FyScenario.whenDevices(function () {
 
   // --- drawing -------------------------------------------------------------
 
-  function f(v, d) { return isFinite(v) ? v.toFixed(d) : '—'; }
-  function e2(v) { return isFinite(v) ? v.toExponential(2) : '—'; }
+  //: ★★`isFinite(null)` is TRUE — `Number(null)` is 0 — so a guard written
+  //: as `isFinite(v) ? v.toFixed(...)` lets null straight through and then
+  //: dereferences it.  Both of these read「不是数就画破折号」and neither did
+  //: for the one value that most often is not a number: a reading the march
+  //: declined to state.  Caught when a march that states no exchange time
+  //: took the whole page down with it.
+  function f(v, d) {
+    return (v !== null && isFinite(v)) ? v.toFixed(d) : '—';
+  }
+  function e2(v) {
+    return (v !== null && isFinite(v)) ? v.toExponential(2) : '—';
+  }
   //: a signed percentage, so a row that reads "+0.21 %" cannot be mistaken
   //: for one that reads "0.21 % low"
   function pct(v) {
@@ -1715,6 +1610,34 @@ FyScenario.whenDevices(function () {
           rows.push([T('e.row.tped_extrap'),
                      f(100 * r.pedExtrap, 1) + ' %']);
       }
+      //: ★★T-C16 的反馈量：ψ 剖面**实际携带**的等离子体电流，与滑杆上请求的
+      //: 那个并排报出。★两个数一起报是有意的：这支式子在梯子上系统性低约 3 %
+      //: （梯子自己的求积精度，实测不随分辨率也不随边界位置收敛），所以**能拿去
+      //: 当反馈的是比值，不是绝对值**——把比值写在旁边，读者与将来那条回路都
+      //: 照着比值走。解析几何上没有 gm2，这一行整条不出现。
+      //: ★T-C14：外环走了几轮、收没收敛、最后一轮的两个变化量。
+      if (last && last.stationary) {
+        var so2 = last.stationary, lastR = (so2.rounds || []).slice(-1)[0];
+        rows.push([T('e.row.stationary'),
+                   (so2.rounds || []).length + ' / ' + so2.maxRounds + ' 轮 · '
+                   + (so2.converged ? '收敛' : '未收敛')
+                   + (lastR ? '（Δp ' + f(100 * lastR.dPressure, 2) + ' % · Δq '
+                       + (isFinite(lastR.dQ) ? f(100 * lastR.dQ, 2) + ' %' : '—')
+                       + '）' : '')]);
+      }
+      //: ★T-C16：回路在做什么——它落到的电压、它按住的相对误差，以及它在
+      //: 第一步上取的标定比。标定**报出来而不是折进去**。
+      if (r.ipCtl) {
+        rows.push([T('e.row.ipctl'),
+                   f(r.ipCtl.vLoop, 3) + ' V / ' + f(100 * r.ipCtl.err, 2)
+                   + ' %（标定比 ' + f(r.ipCtl.ratio0, 3) + '）']);
+      }
+      if (r.ipPsi != null && isFinite(r.ipPsi)) {
+        var ipAsk = +$('ip').value * 1e3;
+        rows.push([T('e.row.ip_psi'),
+                   f(r.ipPsi / 1e3, 1) + ' kA / ' + f(ipAsk / 1e3, 1) + ' kA'
+                   + (ipAsk > 0 ? '（比 ' + f(r.ipPsi / ipAsk, 3) + '）' : '')]);
+      }
       //: ★what the named impurity IMPLIES, next to what the run actually
       //: used.  Quasi-neutrality with one impurity gives Z_eff = 1 + c Z(Z-1)
       //: and n_i/n_e = 1 - Z c; this tier runs on the Z_eff CONTROL and an
@@ -1873,6 +1796,51 @@ FyScenario.whenDevices(function () {
         refNote.hidden = true;
       }
     }
+    //: ★★T-C13 — the match's own two tables, drawn only when this run WAS a
+    //: match.  〔上〕the residual per iteration: 「收敛了」 is a claim about
+    //: a sequence, and a single final number cannot support it.  〔下〕both
+    //: fluxes against both targets at every match radius: a max residual
+    //: that passed hides which radius was carrying it, and the flux columns
+    //: are what makes the residual column re-derivable rather than believed.
+    var fmOut = $('fm-out');
+    if (fmOut) {
+      var fmr = last && last.fluxMatch;
+      fmOut.hidden = !fmr;
+      //: the time-trace panel goes the other way: this tier has no time
+      //: axis, and two figures drawn from a single point would be a plot of
+      //: nothing
+      var tbox = $('traces-box');
+      if (tbox) tbox.hidden = !!fmr;
+      if (fmr) {
+        $('fm-hist').innerHTML = (fmr.history || []).map(function (h) {
+          return '<tr><td>' + h.iteration + '</td><td class="num">' +
+                 (100 * h.worst).toFixed(3) + ' %</td><td class="num">' +
+                 (isFinite(h.tPed) && h.tPed !== null
+                    ? (h.tPed / 1e3).toFixed(3) : '—') + '</td></tr>';
+        }).join('');
+        $('fm-radii').innerHTML = (fmr.rhoN || []).map(function (x, i) {
+          return '<tr><td>' + f(x, 3) + '</td><td class="num">' +
+                 f(fmr.alte[i], 2) + ' · ' + f(fmr.alti[i], 2) +
+                 '</td><td class="num">' +
+                 f(fmr.fluxE[i] / 1e3, 1) + ' / ' + f(fmr.targetE[i] / 1e3, 1) +
+                 ' (' + (100 * fmr.relE[i]).toFixed(2) + ' %)' +
+                 '</td><td class="num">' +
+                 f(fmr.fluxI[i] / 1e3, 1) + ' / ' + f(fmr.targetI[i] / 1e3, 1) +
+                 ' (' + (100 * fmr.relI[i]).toFixed(2) + ' %)' +
+                 '</td></tr>';
+        }).join('');
+        var fv = $('fm-verdict');
+        if (fv)
+          fv.innerHTML = T('e.fm.summary', {
+            m: fmr.nRadii, ch: fmr.channels, ev: fmr.evaluations,
+            dx: f(fmr.dx, 2), dxmax: f(fmr.dxMax, 1),
+            ref: e2(fmr.weightRef / 1e3), floor: e2(fmr.weightFloor / 1e3),
+            rhomin: f(fmr.rhoMin, 2) })
+            + (fmr.burnFrozen
+                 ? ' ' + T('e.fm.burn', { d: (100 * fmr.burnCheck).toFixed(2) })
+                 : '');
+      }
+    }
     $('rounds').innerHTML = rounds.map(function (q) {
       return '<tr><td>' + q.block + '</td><td class="num">' + f(q.beta0, 3) +
              '</td><td class="num">' + f(q.bpTarget, 3) + ' / ' +
@@ -1913,13 +1881,9 @@ FyScenario.whenDevices(function () {
   }
   var speciesReady = false;
 
-  var evolveReady;
-  var whenEvolveReady = new Promise(function (res) { evolveReady = res; });
-
   function onReady(m) {
     if (m && m.species) fillSpecies(m.species);
     setBusy(false, T('e.ready'));
-    evolveReady();
   }
 
   function onStep(m) {
@@ -1934,6 +1898,42 @@ FyScenario.whenDevices(function () {
     setBusy(true, T('e.step', { it: m.step, n: m.nSteps,
                                 t: m.reading.t.toFixed(3),
                                 t0: (m.reading.te0 / 1e3).toFixed(2) }));
+  }
+
+  //: ★T-C13 — one line per Newton iteration while it runs.  The residual is
+  //: already a relative flux difference when it gets here (the worker takes
+  //: the square root of the kernel's `(f-g)^2`), so what the reader watches
+  //: is「模型通量与目标差百分之几」 and not a number in W^2/m^4.
+  function onMatch(m) {
+    //: ★with an outer loop the progress bar is TWO nested counts, and
+    //: showing only the inner one would run 0 -> 1 eight times over.  The
+    //: round is the coarse hand, the iteration the fine one.
+    var many = m.rounds > 1;
+    var frac = Math.min(0.98, m.iteration / Math.max(1, m.iterations));
+    S.progress(many ? Math.min(0.98, ((m.round - 1) + frac) / m.rounds)
+                    : frac);
+    var arg = { it: m.iteration, n: m.iterations,
+                res: (100 * m.worst).toFixed(2),
+                tol: (100 * m.tol).toFixed(2),
+                r: m.round, R: m.rounds };
+    setBusy(true, T(many ? 'e.fm.at_r' : 'e.fm.at', arg));
+  }
+
+  //: ★T-C14 — a round has ENDED and here is what it changed.  The two
+  //: numbers are the loop's own convergence test (the relative change of
+  //: the pressure and of q between rounds), so a reader watching this line
+  //: sees the alternation settle — or sees it not settle, which is the
+  //: case the criterion exists for.  ★The first round prints 「—」 for both:
+  //: it has no previous round to differ from, and printing a number there
+  //: would invite reading it as convergence.
+  function onRound(m) {
+    S.progress(Math.min(0.99, m.round / Math.max(1, m.rounds)));
+    var pc = function (v) {
+      return isFinite(v) ? (100 * v).toFixed(2) + ' %' : '—';
+    };
+    setBusy(true, T('e.fm.round_at',
+                    { r: m.round, R: m.rounds,
+                      dp: pc(m.dPressure), dq: pc(m.dQ) }));
   }
 
   function onCouple(m) {
@@ -1963,6 +1963,12 @@ FyScenario.whenDevices(function () {
              alpha: m.alpha, rad: m.rad, line: m.line, impurity: m.impurity,
              ni: m.ni, nz: m.nz,
              psi: m.psi, vprime: m.vprime,
+             ipCtlLog: m.ipCtlLog || null, ipCtlRatio0: m.ipCtlRatio0,
+             //: ★★T-C20：闭包实际用的 Z_eff 与它是不是解出来的
+             zeffProfile: m.zeffProfile || null, zeffSolved: !!m.zeffSolved,
+             stationary: m.stationary || null,
+             //: T-C14〔五〕：稳态电流那一步的入参与出参，进会话文件
+             steady: m.steady || null,
              gm3: m.gm3, gm2: m.gm2, fpol: m.fpol, geoSource: m.geoSource,
              b0: m.b0, aMinor: m.aMinor, rMajor: m.rMajor,
              steps: m.steps, tEnd: m.tEnd, rounds: m.rounds, ms: m.ms,
@@ -1990,6 +1996,8 @@ FyScenario.whenDevices(function () {
              //: whole run is traced from, the rest are the alternation's
              freeSolves: m.freeSolves || null,
              freeUnconverged: m.freeUnconverged | 0,
+             //: ★T-C13 — the match's whole record, when this run was one
+             fluxMatch: m.fluxMatch || null,
              refinedField: m.refinedField || null };
     resumeNote();
     if (m.rounds && m.rounds.length > 1)
@@ -2019,6 +2027,72 @@ FyScenario.whenDevices(function () {
         nbad: fbad.length, n: (m.freeSolves || []).length,
         blk: fbad[0].block, it: fbad[0].iterations, max: fbad[0].maxIter,
         res: e2(fbad[0].residual), tol: e2(fbad[0].tol) }));
+    //: ★★T-C13 — the flux-match tier has no time axis, so「跑满 N 步」 and
+    //: 「到达稳态」 are both the wrong sentence: what it reached, or failed
+    //: to reach, is a TOLERANCE on a residual, and the verdict says which of
+    //: the two and by how much.  ★A match that did not converge is reported
+    //: AS a failure — the state line goes red — because the whole point of
+    //: this tier is that the bar could otherwise only run a prescribed chi,
+    //: and quietly presenting an unconverged answer would put it back there.
+    //: ★★T-C14 — AND WHEN THERE IS AN OUTER LOOP, IT SPEAKS BEFORE THE
+    //: MATCH, for the same reason the free boundary speaks before both: a
+    //: converged match inside a loop that never settled is a converged
+    //: answer to the LAST round's question, not to the loop's.  Without
+    //: this line the reader of an eight-round run was handed a verdict
+    //: about one match and no way to tell which round it came from.
+    var so = m.stationary || null;
+    if (so) {
+      var soLast = (so.rounds || []).slice(-1)[0] || null;
+      var soArg = { n: (so.rounds || []).length, max: so.maxRounds,
+                    tol: (100 * so.tolerance).toFixed(2),
+                    dp: soLast && isFinite(soLast.dPressure)
+                      ? (100 * soLast.dPressure).toFixed(2) + ' %' : '—',
+                    dq: soLast && isFinite(soLast.dQ)
+                      ? (100 * soLast.dQ).toFixed(2) + ' %' : '—',
+                    neq: so.equilibriumRounds,
+                    why: outerWhyText(so) };
+      vparts.push(T(so.converged ? 'e.fm.outer.ok' : 'e.fm.outer.bad', soArg));
+    }
+    var fm = m.fluxMatch || null;
+    if (fm) {
+      vparts.push(fm.converged
+        ? T('e.fm.verdict.ok', { it: fm.iterations,
+                                 res: (100 * fm.worst).toFixed(2),
+                                 tol: (100 * fm.tol).toFixed(2),
+                                 ev: fm.evaluations })
+        : T('e.fm.verdict.bad', { it: fm.iterations,
+                                  res: (100 * fm.worst).toFixed(2),
+                                  tol: (100 * fm.tol).toFixed(2),
+                                  where: worstRadius(fm) }));
+      $('verdict').innerHTML = vparts.join(' ');
+      //: ★the state line answers「这次跑成了没有」, and with an outer loop
+      //: the answer is the LOOP's, not the last match's: a run whose eighth
+      //: round matched beautifully and whose pressure still moved 24 % between
+      //: rounds did not reach a self-consistent stationary state.  ★Both
+      //: numbers stay on the line, because「哪一层没收」 is the first thing
+      //: the reader needs.
+      var okAll = fm.converged && (!so || so.converged);
+      setBusy(false,
+              so
+                ? T(okAll ? 'e.fm.outer_done' : 'e.fm.outer_failed',
+                    { n: (so.rounds || []).length, max: so.maxRounds,
+                      it: fm.iterations, ms: m.ms,
+                      dp: (so.rounds || []).length
+                        && isFinite((so.rounds).slice(-1)[0].dPressure)
+                        ? (100 * (so.rounds).slice(-1)[0].dPressure).toFixed(2)
+                          + ' %' : '—',
+                      res: (100 * fm.worst).toFixed(2),
+                      tol: (100 * fm.tol).toFixed(2),
+                      t0: r ? (r.te0 / 1e3).toFixed(2) : '—' })
+                : (fm.converged
+                    ? T('e.fm.done', { it: fm.iterations, ms: m.ms,
+                                       t0: r ? (r.te0 / 1e3).toFixed(2) : '—' })
+                    : T('e.fm.failed', { it: fm.iterations,
+                                         res: (100 * fm.worst).toFixed(2),
+                                         tol: (100 * fm.tol).toFixed(2) })),
+              okAll ? undefined : 'err');
+      return;
+    }
     vparts.push(settled
       ? T('e.verdict.steady', { t: f(m.tEnd, 3),
                                 d: e2(m.rounds[m.rounds.length - 1].delta) })
@@ -2027,6 +2101,42 @@ FyScenario.whenDevices(function () {
     setBusy(false, T('e.done', { n: m.steps, t: f(m.tEnd, 3),
                                  ms: m.ms,
                                  t0: r ? (r.te0 / 1e3).toFixed(2) : '—' }));
+  }
+
+  /**
+   * ★WHY the outer loop stopped, in the reader's words rather than the
+   * worker's tag.  `why` is empty when the loop simply ran out of rounds —
+   * and that is a DIFFERENT statement from「里层解不动了」, which is why the
+   * two are not collapsed into one sentence.
+   */
+  function outerWhyText(so) {
+    if (!so.why) return T('e.fm.why.rounds');
+    if (so.why === 'match') return T('e.fm.why.match');
+    if (so.why === 'current') return T('e.fm.why.current');
+    //: anything else is the equilibrium half's own failure string, which is
+    //: already a sentence — passed through rather than re-worded
+    return so.why;
+  }
+
+  /**
+   * Which match radius carries the worst residual, and in which channel.
+   *
+   * ★A max residual that failed says only「有一个地方没匹配上」, and the
+   * three things a reader would then do — move the radii, drop a channel,
+   * widen the probe — are three different answers depending on WHICH place
+   * it was.  So the verdict names it.
+   */
+  function worstRadius(fm) {
+    var best = -1, bw = -1, ch = '';
+    (fm.relE || []).forEach(function (v, i) {
+      if (Math.abs(v) > bw) { bw = Math.abs(v); best = i; ch = 'e'; }
+    });
+    (fm.relI || []).forEach(function (v, i) {
+      if (Math.abs(v) > bw) { bw = Math.abs(v); best = i; ch = 'i'; }
+    });
+    if (best < 0) return '—';
+    return T(ch === 'e' ? 'e.fm.where.e' : 'e.fm.where.i',
+             { rho: f(fm.rhoN[best], 3), res: (100 * bw).toFixed(2) });
   }
 
   function onError(m) {
@@ -2134,6 +2244,21 @@ FyScenario.whenDevices(function () {
                   //: the turbulent tier's budget: the same controls at a
                   //: different subset are a different run
                   'turbevery', 'turbnrad', 'turbnky', 'turbrelax',
+                  //: ★T-C13 — the matcher's four.  Each one changes the
+                  //: ANSWER and not only the cost: the tolerance is what
+                  //: 「收敛」 means, the probe step is the finite difference
+                  //: the Jacobian is built from, and the clamp decides
+                  //: whether a Newton step may leap out of the region where
+                  //: the turbulent model has an unstable mode at all.
+                  'fmiter', 'fmtol', 'fmdx', 'fmdxmax', 'fmrhomin',
+                  //: T-C14：外环的两个。一轮与五轮是**两次不同的运行**，
+                  //: 所以它们和其余控件一样进会话文件
+                  'fmouter', 'fmotol', 'fmorlx',
+                  //: T-C20：杂质输运与杂质加料。冻住的杂质与会动的杂质是
+                  //: 两次不同的运行
+                  'dchiz', 'pinchz', 'zfuel',
+                  //: T-C16：开关与两个增益。开着与关着是两次不同的运行
+                  'ipctl', 'ipkp', 'ipki',
                   'degp', 'degf',
                   //: the momentum channel's two numbers: a run with a torque
                   //: and one without are different runs, and chi_phi is
@@ -2158,7 +2283,7 @@ FyScenario.whenDevices(function () {
   var CHECKS = ['ch-heat', 'ch-density', 'ch-current', 'ch-momentum',
                 'alpha', 'brem',
                 'ohmic', 'bootstrap', 'sawtooth', 'useref',
-                'wave', 'wavepower', 'wavevloop', 'wavefuel', 'quasi',
+                'wave', 'wavepower', 'wavevloop', 'wavefuel', 'waveip', 'quasi',
                 'couplefixed', 'beam', 'beamorbit', 'lh',
                 //: T-M4 — a run whose edge was solved and one whose edge
                 //: was a slider are different runs
@@ -2345,6 +2470,13 @@ FyScenario.whenDevices(function () {
             //: ran on in one case and an arithmetic aside in the other.
             'fylite:applied': !!last.impurity.applied,
             'fylite:n_z': last.nz ? sig(last.nz) : null,
+            //: ★★T-C20：成分在演化时 Z_eff 是**结果**，而且是逐面的——两种
+            //: 离子扩散得不一样，一条平的 Z_eff 就是在报告没人解过的成分。
+            //: `solved` 分开写，因为「滑杆那个数铺平」与「解出来的剖面」是
+            //: 两句话，而它们的数组长得一模一样。
+            'fylite:z_eff_solved': !!last.zeffSolved,
+            'fylite:z_eff_profile': last.zeffProfile
+              ? sig(last.zeffProfile, 12) : null,
             'fylite:dt_fraction': last.impurity.dtFraction === undefined
               ? null : +last.impurity.dtFraction.toPrecision(7),
           };
@@ -2586,7 +2718,12 @@ FyScenario.whenDevices(function () {
             'fylite:j_nbi': sig(bm.jNbi, 12),
             'fylite:power_injected': bm.pInjected,
             'fylite:power_absorbed': bm.pAbsorbed,
-            'fylite:shinethrough_fraction': bm.shinethrough,
+            //: ★`shinethrough`, not `shinethrough_fraction`.  This block
+            //: wrote the second spelling while the per-component block six
+            //: lines down wrote the first, and `fyo.py`'s beam globals wrote
+            //: the first too — one quantity, two names, and a reader of
+            //: either document looking for the other simply found nothing.
+            'fylite:shinethrough': bm.shinethrough,
             'fylite:orbit_loss_fraction': bm.orbitLossFraction,
             'fylite:i_nbi': bm.iNbi,
             'fylite:fast_energy': bm.fastEnergy,
@@ -2700,6 +2837,144 @@ FyScenario.whenDevices(function () {
             },
           };
         }
+        //: ★★T-C14: the stationary outer loop's own record — every round's
+        //: two convergence numbers, the axis q it reached, the current the
+        //: steady solve produced beside the one that was asked for, and
+        //: whether a sawtooth fired.  ★`equilibrium_rounds: 0` is written
+        //: out rather than omitted: the geometry did NOT take part, and a
+        //: reader must not have to infer that from a missing key.
+        if (last.stationary) {
+          var so = last.stationary;
+          doc['fylite:stationary'] = {
+            'fylite:converged': so.converged,
+            'fylite:why': so.why || null,
+            'fylite:tolerance': so.tolerance,
+            'fylite:max_rounds': so.maxRounds,
+            'fylite:equilibrium_rounds': so.equilibriumRounds,
+            'fylite:equilibrium_why': so.equilibriumWhy,
+            'fylite:rounds': (so.rounds || []).map(function (r) {
+              return { 'fylite:round': r.round,
+                       'fylite:d_pressure': r.dPressure,
+                       'fylite:d_q': isFinite(r.dQ) ? r.dQ : null,
+                       'fylite:q_axis': r.q0,
+                       'fylite:i_p': r.ip,
+                       'fylite:i_p_requested': r.ipRequested,
+                       //: ★步 4 解出来的环电压与它有没有被读者的量程截断
+                       'fylite:v_loop': r.vLoop === undefined ? null : r.vLoop,
+                       'fylite:v_loop_clamped': !!r.vLoopClamped,
+                       'fylite:match_iterations': r.matchIterations,
+                       'fylite:match_worst': r.matchWorst,
+                       //: ★步 6 的账；跳过时写理由而不是省掉这个键
+                       'fylite:equilibrium': r.equilibrium
+                         ? { 'fylite:a_before': r.equilibrium.aOld,
+                             'fylite:a_after': r.equilibrium.aNew,
+                             'fylite:beta0': r.equilibrium.beta0,
+                             'fylite:beta_p_target': r.equilibrium.bpTarget,
+                             'fylite:beta_p_equilibrium': r.equilibrium.bpEq,
+                             //: ★★哪一个电流：这一步解的是**梯子携带的**那个，
+                             //: 不是滑杆上的（两者不同就是极限环）
+                             'fylite:i_p_used': r.equilibrium.ipUsed }
+                         : null,
+                       'fylite:equilibrium_skipped':
+                         r.equilibriumSkipped || null,
+                       'fylite:sawtooth': r.sawtooth
+                         ? { 'fylite:r_1': r.sawtooth.r1,
+                             'fylite:r_mix': r.sawtooth.rMix,
+                             'fylite:refused': r.sawtooth.refused || null }
+                         : null };
+            }),
+          };
+          //: ★★T-C14〔五〕 — AND THE STEADY-CURRENT STEP'S OWN INPUTS, on
+          //: the same terms as the beam's and the wave's: everything
+          //: `solve_core(dt = inf, channels = {current})` was handed, at 12
+          //: significant digits, so the assembly layer can redo the SAME
+          //: solve and the two hosts can be held against each other.  A file
+          //: carrying only the answer could not be held to〔五〕 at all.
+          //: ★The two coefficients are the closure's OWN last pass; the
+          //: other host is asked to solve with THOSE, not to recompute
+          //: them, because「同一个解」 and「同一条闭包」 are two different
+          //: claims and this block makes the first one.
+          if (last.steady) {
+            var sc = last.steady;
+            doc['fylite:stationary']['fylite:steady_current'] = {
+              'fylite:source': 'fylite.scenario.model.stationary.steady_current',
+              'fylite:rho_tor': sig(sc.rho, 12),
+              'fylite:vprime': sig(sc.vprime, 12),
+              'fylite:gm3': sig(sc.gm3, 12),
+              'fylite:gm2': sig(sc.gm2, 12),
+              'fylite:f_pol': sig(sc.fpol, 12),
+              'fylite:b0': sc.b0,
+              'fylite:t_e': sig(sc.te, 12), 'fylite:t_i': sig(sc.ti, 12),
+              'fylite:n_i': sig(sc.ni, 12),
+              'fylite:z': Array.from(sc.z),
+              'fylite:edge_n_i': Array.from(sc.edgeNi),
+              'fylite:psi_in': sig(sc.psiIn, 12),
+              'fylite:edge_psi': sc.edgePsi,
+              'fylite:edge_psi_rate': sc.edgePsiRate,
+              //: ★步长本身也进文件：这一支马**不是** `dt = inf`（那一档欧姆项
+              //: 恒为零），另一宿主要拿同一个步长才谈得上同一个解
+              'fylite:dt': sc.dt,
+              //: ★null rather than a block of zeros when the closure never
+              //: produced one — the two are different statements
+              'fylite:sigma_par': sc.sigmaPar ? sig(sc.sigmaPar, 12) : null,
+              'fylite:j_ni': sc.jNi ? sig(sc.jNi, 12) : null,
+              'fylite:tol_steady': sc.tolSteady,
+              'fylite:n_coupling': sc.nCoupling,
+              //: ★★这一条是**冻结系数的伴随解**：推进档每一趟耦合都会重跑闭包，
+              //: 所以上面记的 σ/j_ni 是它**最后一趟**的值，另一宿主拿它们去解会
+              //: 落在一个皮卡步之外（实测 ψ 差 1.3 %、I_p 差 0.94 %）。那不是两个
+              //: 求解器不一致，是**两个问题**——所以文件里给的是另一宿主真正被问到
+              //: 的那个问题的答案。★运行自己用的那一条并排放着，两者的距离就是
+              //: 「内层的耦合收敛了没有」。
+              'fylite:psi_out': sig(sc.psiOut, 12),
+              'fylite:psi_out_frozen': !!sc.frozen,
+              'fylite:psi_out_run': sc.psiOutRun ? sig(sc.psiOutRun, 12) : null,
+              'fylite:psi_out_frozen_gap': sc.frozenGap,
+              'fylite:q': sc.q ? sig(sc.q, 12) : null,
+            };
+          }
+        }
+        //: ★★T-C16: THE I_p THE psi PROFILE CARRIES — with the three rows
+        //: it was computed from, so the claim is re-derivable rather than
+        //: asserted.  `I = V' gm2 (dpsi/drho) / (2 pi mu0)`; the ratio to
+        //: the requested I_p is the number a feedback loop may use (the
+        //: absolute one reads ~3 % low on this ladder's own quadrature and
+        //: that gap does not close with resolution).
+        //: ★Absent whole when the metric has no `gm2` — the analytic tier
+        //: cannot state it, and a block of nulls would read as「算了但是零」.
+        (function () {
+          var lastRow = trace.length ? trace[trace.length - 1] : null;
+          if (!lastRow || lastRow.ipPsi == null || !isFinite(lastRow.ipPsi)
+              || !last.gm2) return;
+          var ask = +$('ip').value * 1e3;
+          doc['fylite:ip_from_psi'] = {
+            'fylite:i_p': lastRow.ipPsi,
+            'fylite:i_p_requested': ask,
+            'fylite:ratio': ask > 0 ? lastRow.ipPsi / ask : null,
+            'fylite:formula': "V' * gm2 * dpsi/drho / (4 pi^2 mu0)  "
+              + "(this host's psi is TOTAL flux; the per-radian form is "
+              + "/(2 pi mu0))",
+            //: ★the three rows and psi, at the same 12 significant digits
+            //: the rest of this file uses — a gate re-takes the derivative
+            //: with its own tools and must land on the same number
+            'fylite:rho_tor': sig(last.rho, 12),
+            'fylite:vprime': sig(last.vprime, 12),
+            'fylite:gm2': sig(last.gm2, 12),
+            'fylite:psi': sig(last.psi || [], 12),
+            //: ★T-C16 的回路：开着时把标定比、增益与逐步记录一起写进来。
+            //: 关着时是 null——一段填了零的记录会读成「回路跑了但没动」。
+            'fylite:ip_control': last.ipCtlLog && last.ipCtlLog.length
+              ? { 'fylite:calibration_ratio': last.ipCtlRatio0,
+                  'fylite:kp': +$('ipkp').value, 'fylite:ki': +$('ipki').value,
+                  'fylite:steps': last.ipCtlLog.map(function (e) {
+                    return { 'fylite:t': e.t, 'fylite:i_p': e.ip,
+                             'fylite:target': e.want,
+                             'fylite:relative_error': e.err,
+                             'fylite:v_loop': e.vLoop };
+                  }) }
+              : null,
+          };
+        }());
         //: ★★T-M11: THE TWO QUADRATURES, IN THE FILE AND NOT NORMALISED.
         //: `shell` is `shell_sum(p_dep, dV)` over the whole plasma,
         //: `ladder` is what the march itself integrated on its own metric
@@ -2732,6 +3007,55 @@ FyScenario.whenDevices(function () {
                 ? sig(last.lh.onLadder, 12) : null };
           if (last.beam || last.lh) doc['fylite:quadrature'] = q;
         })();
+        //: ★★T-C13 — THE MATCH, WHOLE, when this run was one.  Everything
+        //: needed to re-derive the verdict from the file alone: which radii
+        //: were matched, the `a/L_T` solved for at each, BOTH fluxes against
+        //: BOTH targets in W/m^2, the per-iteration residual history, and
+        //: the yardstick that made those residuals dimensionless.  ★A
+        //: residual column without the weight that scaled it is a number
+        //: nobody can check, which is why `weight_ref` and `weight_floor`
+        //: travel beside it.
+        if (last.fluxMatch) {
+          var fmr = last.fluxMatch;
+          doc['fylite:flux_match'] = {
+            'fylite:converged': !!fmr.converged,
+            'fylite:iterations': fmr.iterations,
+            'fylite:max_iterations': +$('fmiter').value | 0,
+            'fylite:flux_evaluations': fmr.evaluations,
+            'fylite:worst_relative': fmr.worst,
+            'fylite:tolerance_relative': fmr.tol,
+            'fylite:channels': fmr.channels,
+            'fylite:probe_dx': fmr.dx, 'fylite:step_clamp': fmr.dxMax,
+            'fylite:weight_ref': fmr.weightRef,
+            'fylite:weight_floor': fmr.weightFloor,
+            'fylite:inner_boundary_rho_norm': fmr.rhoMin,
+            //: ★T-C13 — the Picard split in the burn, and what it cost: the
+            //: same residual re-taken at the matched point with the alpha
+            //: power LIVE instead of frozen.  A split nobody quantified is
+            //: indistinguishable from a modelling error, so the number
+            //: travels with the answer.
+            'fylite:burn_frozen': !!fmr.burnFrozen,
+            'fylite:burn_self_consistency': fmr.burnCheck,
+            'fylite:radii': (fmr.rhoN || []).map(function (x, i) {
+              return { 'fylite:rho_tor_norm': x,
+                       'fylite:rho_tor': fmr.radii[i],
+                       'fylite:psi_norm': fmr.psin[i],
+                       'fylite:a_over_lt_e': fmr.alte[i],
+                       'fylite:a_over_lt_i': fmr.alti[i],
+                       'fylite:q_e_model': fmr.fluxE[i],
+                       'fylite:q_e_target': fmr.targetE[i],
+                       'fylite:q_i_model': fmr.fluxI[i],
+                       'fylite:q_i_target': fmr.targetI[i],
+                       'fylite:residual_e': fmr.relE[i],
+                       'fylite:residual_i': fmr.relI[i] };
+            }),
+            'fylite:history': (fmr.history || []).map(function (h) {
+              return { 'fylite:iteration': h.iteration,
+                       'fylite:worst_relative': h.worst,
+                       'fylite:t_ped': h.tPed };
+            }),
+          };
+        }
         //: ★★EVERY FREE-BOUNDARY SOLVE THIS MARCH STOOD ON, with the
         //: verdict each one reached.  It is a list and not a flag because
         //: a coupled run solves one per block: a file that carried only
@@ -2845,43 +3169,53 @@ FyScenario.whenDevices(function () {
     return y[lo] + t * (y[hi] - y[lo]);
   }
 
-  //: ★HANDING THE PREDICTION TO THE ANALYSIS SCENARIO, without a round trip
-  //: through the file picker.  What travels is the SAME document the export
-  //: menu writes, and the far side applies it with its own `apply` — so the
-  //: two carriers are one code path, as they are in the other direction.
-  (function handOver() {
-    var el = document.getElementById('model-handover');
-    if (!el) return;
-    el.addEventListener('click', function () {
-      var txt = buildPressure();
-      if (typeof txt !== 'string')
-        return S.report(T('handoff.nothing'), 'warn');
-      var why = FyHandoff.put({ kind: 'profile', from: 'model', bar: 'evolve',
-                                name: 'fylite_model_pressure.json',
-                                text: txt });
-      if (why) return S.report(T(why), 'warn');
-      S.report(T('handoff.gave', { what: T('handoff.kind.profile') }));
-    });
-  })();
+  //: ★★2026-09-01 撤下「交给反演场景」那个按钮，连同它的接线。剖面**没有变得
+  //: 到不了反演页**：导出菜单里的 `profile` 与反演栏导入的是同一份文档、走同一个
+  //: `apply`，撤掉的只是那一次点击。★接线一并删而不是留着空跑——`if (!el) return`
+  //: 那种守着一个不存在的按钮的代码，是改坏了也没人会红的那一类。
 
   // --- wiring --------------------------------------------------------------
 
   function syncGeometry() {
     var g = $('geometry').value;
+    //: ★★T-C13 — the flux-match tier answers a question with no time in it,
+    //: so everything that is ABOUT time is disabled on it, in the same
+    //: places the other tiers' own conditions live rather than in a block of
+    //: its own: the density and current channels would each need their own
+    //: matched channel and their own model flux (and this build has no
+    //: particle closure — D/chi is a prescribed ratio), the momentum channel
+    //: is advanced beside a march there is none of, the waveform and the
+    //: continuation are functions of a clock, and the sawtooth is an event
+    //: between two steps.  ★Every one of them is refused AGAIN in the
+    //: worker: the page's job is to say so before the press, not instead of
+    //: it.
+    var fmOn = (+$('closure').value | 0) === 4;
+    ['ch-density', 'ch-momentum', 'wave'].forEach(function (id) {
+      var e = $(id);
+      if (!e) return;
+      e.disabled = fmOn;
+      if (fmOn) e.checked = false;
+    });
     //: ★the current channel needs <|grad rho|^2/R^2>, which four scalars do
     //: not determine.  The control is DISABLED rather than silently ignored
     //: on Miller geometry, and the note says why.
     var cur = $('ch-current');
     if (cur) {
-      cur.disabled = g === 'miller';
+      cur.disabled = g === 'miller' || fmOn;
       if (cur.disabled) cur.checked = false;
     }
     //: ★the sawtooth needs the CURRENT channel: with q prescribed, the
     //: trigger would fire on a profile nothing in the march can move.
     //: Disabled rather than ignored, like the current channel on Miller.
+    //: ★★T-C14: **on the flux-match tier that stopped being true.** With the
+    //: outer loop running (`fmouter > 1`) each round solves the steady psi
+    //: and hands the crash a q profile it can actually rebuild — so the
+    //: switch is live there, and only there, on this tier.  Measured: q(0)
+    //: fell 0.788 → 0.683 over two rounds with nothing allowed to crash it.
     var saw = $('sawtooth');
     if (saw) {
-      saw.disabled = !on('ch-current');
+      var fmOuterOn = fmOn && (+$('fmouter').value | 0) > 1;
+      saw.disabled = fmOn ? !fmOuterOn : !on('ch-current');
       if (saw.disabled) saw.checked = false;
     }
     //: ★★WHO STILL READS THE SHAPE SLIDERS.  Six of the shared controls
@@ -2910,14 +3244,34 @@ FyScenario.whenDevices(function () {
     var q = $('quasi'), qn = $('quasi-note');
     var name = $('species') ? $('species').value : '';
     var zImp = name ? (self.FyLite.ADAS_Z || {})[name] : 0;
+    //: ★★★T-C20 — THE PARTICLE CHANNEL NO LONGER LOCKS THIS BOX.  It used
+    //: to, and the reason given was「n_e 在演化而 Z_eff 被钉死，那是两套成分，
+    //: 而这一版没有杂质输运」——which was a statement about the WIRING wearing
+    //: a physics statement's clothes.  The kernel's density channel has
+    //: always been per-ion; what was missing was a closure that filled the
+    //: second species' D/v and a source that filled its block, and both
+    //: exist now.  ★With both ions evolving the reason itself dissolves:
+    //: `n_e = sum_s Z_s n_s` is quasi-neutrality's answer and **Z_eff is a
+    //: RESULT**, so there are no longer two compositions to decide between.
     if (q) {
-      q.disabled = !name || !(zImp > 1) || on('ch-density');
+      q.disabled = !name || !(zImp > 1);
       if (q.disabled) q.checked = false;
     }
     var qOn = on('quasi');
     ['cimp', 'dtfrac'].forEach(function (id) {
       var e = $(id);
       if (e) e.disabled = qOn;
+    });
+    //: ★★AND Z_eff STOPS BEING AN INPUT when the composition is being solved
+    //: for — it sets the STARTING mix and nothing after that.  It stays live
+    //: (that starting mix is still the reader's) and the note beside the box
+    //: says which of the two jobs it is doing, because a slider whose meaning
+    //: changed under the reader is worse than one that is disabled.
+    var zSolved = qOn && on('ch-density');
+    //: T-C20：杂质自己的输运与源只有在它真的是一条道时才有意义
+    ['dchiz', 'pinchz', 'zfuel'].forEach(function (id) {
+      var e = $(id);
+      if (e) e.disabled = !zSolved;
     });
     if (qn) {
       qn.hidden = !q || (!qOn && !q.disabled);
@@ -2926,10 +3280,11 @@ FyScenario.whenDevices(function () {
           var ze = +$('zeff').value;
           var fD = (zImp - ze) / (zImp - 1);
           qn.innerHTML = fD > 0
-            ? T('m.quasi.on', { name: name, z: zImp,
-                                fd: fD.toFixed(3),
-                                c: (100 * (1 - fD) / zImp).toFixed(3),
-                                f: (fD / 2).toFixed(3) })
+            ? T(zSolved ? 'm.quasi.solved' : 'm.quasi.on',
+                { name: name, z: zImp,
+                  fd: fD.toFixed(3),
+                  c: (100 * (1 - fD) / zImp).toFixed(3),
+                  f: (fD / 2).toFixed(3) })
             : T('m.quasi.bad', { zeff: ze, z: zImp, name: name });
         } else {
           qn.innerHTML = on('ch-density') ? T('m.quasi.nodensity')
@@ -2952,9 +3307,37 @@ FyScenario.whenDevices(function () {
       pedNote.hidden = !pedOn;
       if (pedOn) pedNote.innerHTML = T('e.ped.note');
     }
-    //: the turbulent budget is shown only on the tier that spends it
+    //: the turbulent budget is shown only on the tiers that spend it — and
+    //: the flux-match tier spends MORE of it than the marching one, because
+    //: every Newton probe is a full TGLF sweep.  ★Its two march-only rows
+    //: (the cadence and the under-relaxation) are withdrawn there rather
+    //: than shown and ignored: the matcher has no steps to count and no
+    //: previous chi to relax towards.
+    var clNow = +$('closure').value | 0;
     var turb = $('turb');
-    if (turb) turb.hidden = (+$('closure').value | 0) !== 3;
+    if (turb) turb.hidden = clNow !== 3 && clNow !== 4;
+    ['turbmarch', 'turbmarch2'].forEach(function (id) {
+      var e = $(id);
+      if (e) e.hidden = clNow !== 3;
+    });
+    var fmBox = $('fmbox');
+    if (fmBox) fmBox.hidden = clNow !== 4;
+    //: ★★T-C13 — WHAT THE FLUX-MATCH TIER TAKES OVER.  The three controls
+    //: below are the TIME AXIS, and this tier has none: it is a root find
+    //: for the steady state, not a march to it.  Disabled rather than
+    //: quietly ignored, exactly like the beam's four above.
+    ['dt', 'nsteps', 'dttarget'].forEach(function (id) {
+      var e = $(id);
+      if (e) e.disabled = fmOn;
+    });
+    //: the heat channel is the one thing this tier requires, so it is
+    //: forced on here rather than left for the run to refuse
+    if (fmOn && $('ch-heat')) $('ch-heat').checked = true;
+    var fmNote = $('fm-off');
+    if (fmNote) {
+      fmNote.hidden = !fmOn;
+      if (fmOn) fmNote.innerHTML = T('e.fm.replaces');
+    }
     //: ★the free-boundary budget, shown on the one tier that SOLVES one.
     //: A Miller shape and an imported g-file are given, not converged to,
     //: so an iteration cap beside them would be a control over nothing.
@@ -3018,7 +3401,10 @@ FyScenario.whenDevices(function () {
                         : lhOn ? T('e.lh.replaces') : T('e.lh.needs_psi');
     }
     var cpl = $('couple');
-    if (cpl) cpl.disabled = g !== 'device';
+    //: ★and the alternation itself: iterating the EQUILIBRIUM around a flux
+    //: match is the stationary outer loop, which is its own item and not
+    //: this one — so it is disabled here rather than half-built
+    if (cpl) cpl.disabled = g !== 'device' || fmOn;
     if (cpl && cpl.disabled) cpl.value = 0;
     //: the fixed-boundary refinement is a refinement OF the alternation, so
     //: it is available exactly where the alternation is
@@ -3042,7 +3428,12 @@ FyScenario.whenDevices(function () {
     var host = $('resume-note');
     if (!host) return;
     var box = $('resume');
-    if (box) box.disabled = !resumeState;
+    //: ★T-C13: and never on the flux-match tier — continuing is a statement
+    //: about a clock, and a root find for the steady state has none
+    if (box) {
+      box.disabled = !resumeState || (+$('closure').value | 0) === 4;
+      if (box.disabled) box.checked = false;
+    }
     host.innerHTML = resumeState
       ? T('e.resume.have', { t: resumeAt.toFixed(3),
                              n: resumeState.te.length,
@@ -3071,23 +3462,29 @@ FyScenario.whenDevices(function () {
       turb = Math.ceil(n / every) * (+$('turbnrad').value | 0)
              * (+$('turbnky').value | 0) * 0.021;
     }
+    //: ★★T-C13 — the matcher's bill is a DIFFERENT arithmetic, so it gets a
+    //: different sentence rather than a step count that means nothing here.
+    //: One Newton iteration costs `n_evolve + 2` flux evaluations (two
+    //: Jacobian probes, the trial and, when the backoff bites, one more) and
+    //: each of those is a full TGLF sweep over the match radii — which is
+    //: why the cost is quoted per ITERATION and not per step.
+    if (cl === 4) {
+      var it = +$('fmiter').value | 0;
+      var sweep = (+$('turbnrad').value | 0) * (+$('turbnky').value | 0)
+                  * 0.021;
+      //: ★外环把这个代价乘上轮数：每一轮都是一次完整的匹配（外加一次
+      //: 稳态电流与一次自由边界解，两者都比一遍 TGLF 便宜得多），所以报的
+      //: 是「轮数 × 一次匹配」而不是一次匹配。
+      var outer = Math.max(1, +$('fmouter').value | 0);
+      host.innerHTML = T('e.fm.cost_note', {
+        it: it, m: +$('turbnrad').value | 0, outer: outer,
+        per: sweep.toFixed(1), s: (outer * it * 4 * sweep).toFixed(0) });
+      return;
+    }
     host.innerHTML = T('e.cost_note', { n: n,
                                         s: (n * per + eq + turb).toFixed(1),
                                         k: k > 0 ? k : '—' });
   }
-
-  // --- the worked cases ----------------------------------------------------
-  //
-  // ★★The machinery is `scenario.js`'s (`S.cases`), not this bar's.  It used
-  // to live here with the bar it served written into it as the string
-  // `'evolve'` — ten bars, one of which could be handed a worked starting
-  // point, and the other nine could not because the code was in the wrong
-  // file.  What stays here is what is this bar's own: the three things that
-  // have to be re-derived once the controls have been written.
-  //: ★the INITIAL case waits for the worker's `ready`: the ADAS species menu
-  //: is filled from it, and 「Be」 applied before it arrives is 「」 after.
-  S.cases({ when: whenEvolveReady,
-            after: function () { syncLabels(); syncGeometry(); costNote(); } });
 
   CONTROLS.forEach(function (id) {
     var e = $(id);

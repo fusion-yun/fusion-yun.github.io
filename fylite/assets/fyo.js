@@ -142,6 +142,16 @@
           buf.fill(v, at, at + n);
           continue;
         }
+        //: ★a row that is PRESENT but undefined is named, not dereferenced:
+        //: `v.length` on it throws「Cannot read properties of undefined」
+        //: with no key in the message, and a caller assembling a
+        //: twenty-row block is then told only that one of them is wrong.
+        if (v == null) {
+          throw new Error('fyo: ' + entry + ' ' + role + '/' + k +
+                          ' is ' + v + ' — a declared row must be a number '
+                          + 'or an array, and a caller that has none should '
+                          + 'send zeros rather than nothing');
+        }
         if (v.length !== n) {
           throw new Error('fyo: ' + entry + ' ' + role + '/' + k +
                           ' is declared ' + n + ' long and got ' + v.length);
@@ -153,10 +163,23 @@
 
     /** Split one entry's flat result into its named rows. */
     unpack: function (entry, flat, dims) {
+      //: ★★A row comes back as a scalar because its DECLARATION says `"1"`,
+      //: never because its length happened to be one.  This read `n === 1`,
+      //: which made the SHAPE OF THE RESULT DEPEND ON THE DATA: an entry run
+      //: at `nt = 1` handed its per-step traces back as bare numbers, and a
+      //: caller reading `out.p_rad[0]` got `undefined` — which then travels
+      //: as NaN through every arithmetic downstream and shows up, if at all,
+      //: as a blank cell three layers away.  A declared shape is a contract;
+      //: a contract that changes with the numbers is not one.
+      //: ★The same defect was in Python's `kernel.scenario` and was fixed
+      //: there first; this is the other host's half of it.
       var rows = layout(entry, dims).out, got = {};
+      var shape = {}, blk = N.BLOCKS[N.ENTRY_BLOCKS[entry].out];
+      for (var j = 0; j < blk.length; j++) shape[blk[j].key] = blk[j].shape;
       for (var k in rows) {
         var at = rows[k][0], n = rows[k][1];
-        got[k] = n === 1 ? flat[at] : flat.slice(at, at + n);
+        got[k] = String(shape[k]).trim() === '1'
+          ? flat[at] : flat.slice(at, at + n);
       }
       return got;
     },

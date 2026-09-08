@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>怎么开始 (Getting Started) · fylite 用户指南</title>
+<link rel="icon" href="../assets/fy_mark.svg">
+<meta name="description" content="本篇讲怎么用与结果怎么读。fylite 是什么、本书分几部分，见封面。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="guide.css">
+<script src="../assets/theme.js"></script>
+</head>
+<body data-page="guide">
+
+<header class="top">
+  <a class="brand" href="../index.html"><img src="../assets/fy_mark.svg" alt="" width="32" height="32"></a>
+  <div class="titles">
+  <h1>怎么开始 (Getting Started)</h1>
+  <span class="sub">fylite 用户指南</span>
+  </div>
+  <nav>
+    <a href="../index.html">演示首页</a>
+    <a href="../features.html">功能与边界</a>
+    <button id="theme-toggle" class="iconbtn" type="button"></button>
+  </nav>
+</header>
+
+<div class="guide-wrap">
+<aside class="guide-toc" aria-label="目录">
+    <span class="here">怎么开始 (Getting Started)</span>
+    <a href="browser.html">浏览器用法 (Using the Browser Pages)</a>
+    <a href="python.html">Python 用法 (Using the Python Package)</a>
+    <a href="reading-results.html">结果怎么读 (Reading a Result)</a>
+    <a href="limits.html">能力与边界 (What It Does, and Where It Stops)</a>
+</aside>
+
+<main class="doc guide-body">
+
+<p>本篇讲<strong>怎么用</strong>与<strong>结果怎么读</strong>。fylite 是什么、本书分几部分，见<a href="../INDEX.md">封面</a>。</p>
+<h2>三种发布形态，装哪一种取决于你手边有什么</h2>
+<figure class="numbered"><table>
+<thead>
+<tr>
+<th><p>形态</p></th>
+<th><p>要装什么</p></th>
+<th><p>适合</p></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><p><a href="browser.html">浏览器站点</a></p></td>
+<td><p>什么都不用装</p></td>
+<td><p>上手、教学、快速试算、把一次运行分享给别人</p></td>
+</tr>
+<tr>
+<td><p><a href="browser.html">单一可执行文件</a> <code>fy</code></p></td>
+<td><p>一个文件，双击即用；不装任何运行时</p></td>
+<td><p>离线、没有 Python 的机器（尤其 Windows）、要从 MDSplus 取数</p></td>
+</tr>
+<tr>
+<td><p><a href="python.html">Python 包</a></p></td>
+<td><p>自仓库打轮再装（alpha 期<strong>尚未上 PyPI</strong>，仅 Linux x86-64）</p></td>
+<td><p>脚本化、批量、把结果接进自己的分析流程</p></td>
+</tr>
+</tbody>
+</table></figure>
+<p>三者装的是<strong>同一份页面</strong>与<strong>同一版内核制品</strong>，命令行也由同一个定义文件建出——
+所以三条路上同名的命令是同一条命令（见<a href="install.html">安装与环境</a>的分发面一节）。</p>
+<p>★<strong>两条路径调用的是同一个内核</strong>：同一份 <code>c_api</code> 导出面，原生库与 WebAssembly
+模块出自同一次编译配置。所以浏览器里得到的数与脚本里得到的数是同一个数——这一点由
+自动门在每次改动时校验，不靠承诺。</p>
+<h2>往下读</h2>
+<ul>
+<li>
+<p>先跑起来：<a href="quickstart.html">快速上手</a> → <a href="browser.html">浏览器用法</a> 或
+<a href="python.html">Python 用法</a>。</p>
+</li>
+<li>
+<p>想知道一个结果该怎么信：<a href="reading-results.html">结果怎么读</a>、
+<a href="limits.html">能力与边界</a>。</p>
+</li>
+<li>
+<p>要一条能照抄的完整路径：<a href="../examples/index.md">算例语料</a>以及它下面的五族典型算例——
+每章的命令与数字都是在本仓实测的。</p>
+</li>
+</ul>
+</main>
+</div>
+
+<footer>
+  <a class="mark" href="../index.html" tabindex="-1" aria-hidden="true"><img src="../assets/fy_mark.svg" alt="" width="24" height="24"></a>
+  <a href="../index.html">fylite 首页</a>
+  <a href="index.html">指南目录</a>
+  <span class="copy">© 2026 中国科学院等离子体物理研究所（ASIPP）与 fylite 贡献者 · Apache-2.0 · alpha 版</span>
+  <span class="ver" title="kernel 0.0.1 · interface 152 · app 0.0.1-alpha">内核 0.0.1 · 接口 152 · 前端 0.0.1-alpha</span>
+</footer>
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-// Chinese catalogue for the device-data page (`mdsplus.html`) only.
+// Chinese catalogue for the device-data page (`pages/data.html`) only.
 //
 // ★The boundary lines are not decoration.  This page draws a curve that is
 // EVERY Nth SAMPLE of a signal, not a reduction of it, and a reader has no
@@ -10,7 +10,7 @@ self.FyI18n.register('zh', {
   'mds.h1': '装置数据',
   'mds.sub': 'MDSplus 树浏览 · 指定炮号 · 取回选定信号',
   'mds.lead': '这一页把一台 <strong>MDSplus 服务器</strong>当成可以走进去的目录：选一棵树、给一个炮号，逐层展开到具体节点，挑几路信号取回来画出来。它<strong>只读</strong>——没有一个入口能写、能删、能求值任意表达式。',
-  'mds.bound': '<strong>浏览器够不着 MDSplus。</strong>mdsip 是裸 TCP，页面开不了套接字，wasm 也开不了（FYL-DESIGN-06 §1）；所以这一页必须由本机的一个网关伺服，装置在网关的网络可达范围内、不在你的浏览器的。<strong>画出来的是每隔 N 个取一个样点</strong>，不是均值、不是 min/max 包络——比步长更窄的尖峰<strong>不在这条曲线里</strong>，图注里的「抽稀」二字就是这个意思。这一页<strong>不是数据仓库</strong>：样点不留存，每次都回服务器取；要把一炮的<strong>归约</strong>连同配方与清单存下来，那是 <code>tools/mds-shot-to-fyo.py</code> 的事。数据本身能不能外传是<strong>治理问题</strong>，不是这一页能回答的。',
+  'mds.bound': '<strong>浏览器够不着 MDSplus。</strong>mdsip 是裸 TCP，页面开不了套接字，把计算搬进浏览器也开不了（FYL-DESIGN-06 §1）；所以这一页必须由本机的一个网关伺服，装置在网关的网络可达范围内、不在你的浏览器的。<strong>画出来的是每隔 N 个取一个样点</strong>，不是均值、不是 min/max 包络——比步长更窄的尖峰<strong>不在这条曲线里</strong>，图注里的「抽稀」二字就是这个意思。这一页<strong>不是数据仓库</strong>：样点不留存，每次都回服务器取；要把一炮的<strong>归约</strong>连同配方与清单存下来，那是 <code>tools/mds-shot-to-fyo.py</code> 的事。数据本身能不能外传是<strong>治理问题</strong>，不是这一页能回答的。',
 
   // --- the gateway ---------------------------------------------------
   'mds.server': '数据网关',
@@ -18,17 +18,21 @@ self.FyI18n.register('zh', {
   'mds.gw.checking': '正在探网关…',
   'mds.gw.up': '网关在。mdsip 目标 <code>{server}</code>，用户名 <code>{user}</code>。',
   'mds.gw.down': '<strong>没有网关。</strong>这一页当作静态文件打开时不会有数据——它需要一个能开套接字的进程。',
-  'mds.gw.howto': '在仓根起一台，然后从它给的地址打开本页：',
-  'mds.gw.tunnel': 'EAST 服务器在所内网段（<code>202.127.204.12:8000</code>）。从工作站要先搭隧道，再让网关指向隧道口：',
+  'mds.gw.howto': '用单文件查看器起一台——它把这一页连同整个站点编在自己里面，加上 <code>--mdsip</code> 就同时有了页面与请求面。起好后从它给的地址打开本页：',
+  'mds.gw.tunnel': '装置的 mdsip 服务器通常在所内网段，工作站直接够不着（它的地址由运行方给，不写在这个页面里）。够不着时先搭隧道，再让 <code>--mdsip</code> 指向隧道口：',
   'mds.server.addr': 'mdsip 服务器',
   'mds.server.ph': '主机[:端口]',
   'mds.server.use': '切过去',
-  'mds.server.east': 'EAST 所内直连',
   'mds.server.tunnel': 'ssh 隧道这一端',
   'mds.server.bad': '写成 <code>主机</code> 或 <code>主机:端口</code>；这一格只认地址，别的一律不发出去。',
   'mds.server.set': '目标已改为 <code>{server}</code>。树、炮号与曲线都已清空——重新「打开」再取，<strong>同一个炮号在另一台装置上不是同一炮</strong>。',
   'mds.server.free': '网关绑在回环地址上，所以这一格是开的：可以指到任何一台<strong>网关那边</strong>连得通的 mdsip 服务器（用户名不在这里改——mdsip 不做认证，页面自报的用户名什么也证明不了）。',
-  'mds.server.locked': '这台网关<strong>没有绑在回环地址</strong>上，只接受启动时点名的服务器：<code>{list}</code>。换别的要重起网关。',
+  //: ★这句只说**事实**，不再断言原因。原文写「没有绑在回环地址上，所以……」，
+  //: 那是 Node 网关锁住的唯一理由；单文件查看器 `fylite` 也报 locked，
+  //: 而它一律绑回环——原因不同，事实相同。把不成立的那半句说给读者，
+  //: 比不解释更糟。
+  //: ★单文件查看器那条路：同一组端点的第二个宿主。
+  'mds.server.locked': '这台网关<strong>只接受启动时点名的服务器</strong>：<code>{list}</code>。换别的要重起它。（站点那侧的 Node 网关在非回环绑定时如此；单文件查看器 <code>fylite</code> 一律如此。）',
 
   // --- shot ----------------------------------------------------------
   'mds.pick.shot': '树与炮号',
@@ -152,6 +156,8 @@ self.FyI18n.register('zh', {
   'mds.refining': '正在按图幅细化 {node} …',
   'mds.got': '已取回 {n} 路。',
   'mds.got.refined': '已取回 {n} 路，其中 {refined} 路细化到约 {points} 点/路。',
+  'mds.repinning': '正在按同一时间窗重取钉住的 #{shot}：{node} …',
+  'mds.got.pinned': '钉住的 {shots} 也按同一时间窗重取了 {pins} 路——同一幅图上两炮的步长因此是同一口径。',
   'mds.cols': '列数',
   'mds.cols.auto': '自适应',
   'mds.cols.n': '{n} 列',
@@ -160,7 +166,7 @@ self.FyI18n.register('zh', {
   'mds.rate': '采样',
   'mds.rate.auto': '自适应（按图幅）',
   'mds.rate.n': '{n} 点/路',
-  'mds.rate.what': '<strong>两遍取。</strong>第一遍每路最多 <strong>256 点</strong>，几秒钟把整炮的形状铺开；第二遍再按图的<strong>像素宽度</strong>补到一条线画得下的点数。<strong>在图上横拖选一段</strong>就把这两遍放进那个时间窗里重跑：点数几乎不变、<strong>步长塌下去</strong>——采样率跟着窗口走，不跟着整炮走。双击回到整炮。步长永远写在图注里。',
+  'mds.rate.what': '<strong>两遍取。</strong>第一遍每路最多 <strong>256 点</strong>，几秒钟把整炮的形状铺开；第二遍再按图的<strong>像素宽度</strong>补到一条线画得下的点数。<strong>在图上横拖选一段</strong>就把这两遍放进那个时间窗里重跑：点数几乎不变、<strong>步长塌下去</strong>——采样率跟着窗口走，不跟着整炮走。双击回到整炮。步长永远写在图注里。★<strong>钉住的那几炮跟着走</strong>：窗口一变，它们在屏上的每一路按同一个窗口<strong>再取一遍</strong>（只取一遍，不走 256 点那一遍——它们本来就有曲线在屏上），所以同一幅图上两炮的步长是同一口径；代价是每炮每路一次往返，取回后状态行会说取了几路。',
   'mds.win.all': '整炮',
   'mds.win.none': '时间窗：整炮。在任一图上横拖选一段放大，双击回到整炮。',
   'mds.win.on': '时间窗：{t0} … {t1} {u}（双击任一图回到整炮）。',
@@ -205,5 +211,6 @@ self.FyI18n.register('zh', {
   'mds.cat.filtered': '按你找的词只列了 {n} / {all} 路；清空「找」看全部。',
   'mds.cat.pattern': '另有一组按名字模式记录的信号（上游标为<strong>近似分组</strong>，故不展开成可点的行）：{pat}',
   'mds.cat.loading': '正在读诊断目录…',
+  'mds.cat.absent': '本分发不带诊断目录——它采自 EAST 所内 Wiki，随装置方的数据走，不在公开发行物里。这一页仍然能用：节点浏览与直接给路径都不受影响，只是没法按诊断挑；手上有那份目录的话，把它放到 <code>devices/east-signals.json</code> 这一栏就回来了。',
   'mds.cat.failed': '诊断目录没读到：{why}。这一页仍然能用——节点浏览与直接给路径都不受影响，只是没法按诊断挑。',
 });

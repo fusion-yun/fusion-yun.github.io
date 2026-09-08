@@ -105,16 +105,68 @@ header.top h1 {
   line-height: 1.25;
 }
 header.top .sub { color: var(--muted); font-size: 12.5px; line-height: 1.3; }
-header.top nav {
+
+/* the warning band, in the middle of the header strip ----------------------
+ *
+ * ★★TWO PILLS, NOT ONE SENTENCE (2026-09-05, 用户裁定).  `.warn-alpha` says how
+ * mature this build is and holds for every flavour; `.warn-io` says who may
+ * see this copy and holds for the internal one only, so the public build
+ * DELETES that element (`tools/app-flavour.mjs`).  Two elements rather than
+ * one longer sentence is what makes that deletion a deletion instead of a
+ * string edit — and it is why the class on the <p> is no longer `warn-internal`:
+ * the band outlives the notice it used to be named after.
+ *
+ * ★It takes the space BETWEEN the titles and the nav (`flex: 1`) and centres
+ * itself in it, rather than being pinned to the header's geometric centre:
+ * the strip already wraps at 620px, and a centred-by-absolute-position notice
+ * is the one element that would then sit on top of the nav instead of moving
+ * with it.
+ *
+ * ★`min-width: 0` so a long notice shrinks and wraps rather than pushing the
+ * nav off the strip — this text must never be the reason a control is
+ * unreachable.  With two pills the wrap happens BETWEEN them (`flex-wrap`),
+ * so neither sentence is ever broken across lines while the other keeps a
+ * whole one to itself.
+ *
+ * Colour is `--warn` and not `--err`: the notice is a standing condition of
+ * this build, not a failure the reader has just caused.  ★`--warn` is also the
+ * one of the two whose contrast is tuned per theme in this file (see its
+ * comment at `:root`), and a warning nobody can read is not a warning.
+ * ★Both pills take that same colour: ranking them by tint would say one of
+ * the two conditions is the softer one, and neither is.
+ */
+header.top .warn-band {
+  margin: 0;                    /* it is a <p>: the UA's 1em would break the strip */
+  flex: 1 1 auto; min-width: 0;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px;
+}
+/* ★★THE TINT IS ON THE TEXT, NOT ON THE GAP.  The <p> takes the whole space
+   between the titles and the nav so that the notice lands in the middle of the
+   strip; painting THAT box gives a wide filled rectangle sitting in a row of
+   controls, which reads as a disabled text input — measured on the 1440 header,
+   which is why the box is on the inner <span> and hugs the sentence. */
+header.top .warn-band span {
+  display: inline-block;
+  font-size: 12.5px; font-weight: 700; line-height: 1.35;
+  padding: 4px 12px; border-radius: 6px;
+  color: var(--warn);
+  background: color-mix(in srgb, var(--warn) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--warn) 35%, transparent);
+}
+@media (max-width: 620px) {
+  /* on a wrapped strip it is a full-width band of its own, under the title */
+  header.top .warn-band { flex-basis: 100%; }
+}
+:is(header.top, header.shell) nav {
   margin-left: auto; display: flex; gap: 4px; font-size: 13.5px;
   align-items: center; flex-wrap: wrap;
 }
 /* the links are targets, so they get a target's padding */
-header.top nav a {
+:is(header.top, header.shell) nav a {
   padding: 5px 10px; border-radius: 6px; text-decoration: none;
   color: var(--muted); white-space: nowrap;
 }
-header.top nav a:hover { color: var(--accent); background: var(--bg); }
+:is(header.top, header.shell) nav a:hover { color: var(--accent); background: var(--bg); }
 
 main { padding: 18px 20px 40px; max-width: 1500px; margin: 0 auto; }
 
@@ -229,6 +281,9 @@ canvas.strip {
 /* ★an author `display` beats the UA rule for `[hidden]`, so the strip has to
    say so itself — otherwise it is on screen, blank, before the first read */
 canvas.strip[hidden] { display: none; }
+/* ★可拖、可用键盘：给出焦点环与「这是控件」的手感，否则它看着像一张图 */
+canvas.strip { cursor: pointer; touch-action: none; }
+canvas.strip:focus-visible { outline: 2px solid var(--accent, #2a7); outline-offset: 2px; }
 
 /* tables */
 table { border-collapse: collapse; width: 100%; font-size: 13px; }
@@ -321,7 +376,7 @@ footer a.qr { order: 99; margin-left: auto; }
   width: 21px; height: 14px; display: block; border-radius: 2px;
   border: 1px solid var(--line);
 }
-header.top nav { align-items: center; }
+:is(header.top, header.shell) nav { align-items: center; }
 
 /* legend rendered outside the plot ---------------------------------------- */
 .legend-row {
@@ -379,12 +434,6 @@ header.top nav { align-items: center; }
 .link-btn {
   background: none; border: none; color: var(--accent); padding: 0 0 0 6px;
   font: inherit; font-size: 12.5px; cursor: pointer; text-decoration: underline;
-}
-
-.panel.toolbar .io-fmt {
-  flex: 0 0 auto; width: auto; padding: 6px 8px; font-size: 13px;
-  background: var(--bg); color: var(--fg);
-  border: 1px solid var(--grid); border-radius: 6px; align-self: center;
 }
 
 /* A channel sitting on its limit.  It is the ANSWER to "what is blocking
@@ -631,3 +680,50 @@ button.note-more:hover { text-decoration: underline; }
 .kfhead label { flex: 0 0 5.6em; }
 button.kfdel { padding: 2px 8px; font-size: 12px; line-height: 1.5; }
 /* ===== 结束：脉冲栏的多时刻目标位形 ==================================== */
+
+/* --------------------------------------------------------------------------
+   工作台 (the workbench, `FYL-DESIGN-18` U-14 · U-17)
+   ★A 12-column grid because that is what `fylite:layout` counts in; the row
+   height is fixed so a layout means the same thing on two screen widths.  The
+   header carries the one thing a reader cannot otherwise know — whether what
+   they are looking at will be in the export (「未钉住」).
+   -------------------------------------------------------------------------- */
+.wb-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: 90px;
+  gap: 10px;
+}
+.wb-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  overflow: hidden;
+}
+.wb-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  background: var(--head);
+  border-bottom: 1px solid var(--line);
+  cursor: move;
+  touch-action: none;
+}
+.wb-title { font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wb-flag { margin-left: auto; font-size: 12px; color: var(--warn); }
+.wb-pin { font-size: 12px; padding: 1px 8px; border: 1px solid var(--accent); border-radius: 5px;
+          background: none; color: var(--accent); cursor: pointer; }
+.wb-body { flex: 1 1 auto; min-height: 0; padding: 6px 8px; }
+.wb-body canvas { width: 100%; height: 100%; display: block; touch-action: none; }
+.wb-body table { width: 100%; font-size: 12px; }
+.wb-grip {
+  position: absolute; right: 0; bottom: 0; width: 14px; height: 14px;
+  cursor: nwse-resize; touch-action: none;
+  background: linear-gradient(135deg, transparent 50%, var(--grid) 50%);
+}

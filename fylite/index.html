@@ -17,6 +17,11 @@
      what is left, and since the switches went wordless it no longer needs the
      catalogues either. -->
 <script src="assets/theme.js"></script>
+<!-- ★which host is serving this? the desktop viewer and the website get
+     the SAME BYTES, so anything that must differ is decided at runtime.
+     Publishes `data-fy-host` on <html>; today one CSS rule reads it, to
+     drop the footer QR in the viewer. -->
+<script src="assets/host.js"></script>
 </head>
 <body data-page="index">
 
@@ -26,10 +31,13 @@
   <h1>fylite 在线演示</h1>
   <span class="sub">托卡马克集成建模，浏览器内即时求解</span>
   </div>
+  <p class="warn-band" role="note"><span class="warn-alpha">alpha 版，用于概念验证</span></p>
   <nav>
-    <a href="scenario/design.html">放电设计</a>
-    <a href="scenario/model.html">物理建模</a>
-    <a href="scenario/analysis.html">实验分析</a>
+    <a href="pages/pulse_design.html" class="navic" title="放电设计" aria-label="放电设计"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12.5h2.5L6 3.5h4l2.5 9H15"/></svg></a>
+    <a href="pages/model.html" class="navic" title="物理建模" aria-label="物理建模"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 1.8v11.7H15"/><path d="M3.2 4.4c3.6 0 4.6 2.7 5.1 5.2.4 2 1.3 3 3.2 3.6"/></svg></a>
+    <a href="pages/analysis.html" class="navic" title="实验分析" aria-label="实验分析"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="1.6" d="M4.2 2.4C9.2 2.4 13.2 4.8 13.2 8C13.2 11.2 9.2 13.6 4.2 13.6Z"/><path stroke-width="1.1" d="M1.3 5.2h13.4M1.3 8h13.4M1.3 10.8h13.4"/></svg></a>
+    <a href="pages/data.html" class="navic" title="装置数据" aria-label="装置数据"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="3.7" rx="5.2" ry="2.1"/><path d="M2.8 3.7v8.6c0 1.16 2.33 2.1 5.2 2.1s5.2-.94 5.2-2.1V3.7"/><path d="M2.8 8c0 1.16 2.33 2.1 5.2 2.1s5.2-.94 5.2-2.1"/></svg></a>
+    <a href="pages/report.html" class="navic" title="算例报告" aria-label="算例报告"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="1.5" d="M9.2 1.8H4.3c-.55 0-1 .45-1 1v10.4c0 .55.45 1 1 1h7.4c.55 0 1-.45 1-1V5.3z"/><path stroke-width="1.5" d="M9.2 1.8v3.5h3.5"/><path stroke-width="1.1" d="M5.7 8.7h4.6M5.7 11.2h4.6"/></svg></a>
     <button id="theme-toggle" class="iconbtn" type="button"></button>
   </nav>
 </header>
@@ -38,13 +46,13 @@
 
 <p class="hero"><img src="assets/fylite_logo.svg" alt="fylite — FUYUN TOKAMAK SIMULATOR - LITE" width="240" height="100"></p>
 
-<p class="lead">三个可交互的托卡马克建模场景，按一台装置被完整过一遍的次序排列：<strong>设计</strong>一炮放电、<strong>建模</strong>其剖面演化、由测量<strong>反演</strong>其位形。全部计算在本机浏览器内完成，无需安装、无需服务端；多数控件即拖即得（零维毫秒量级，平衡类一至二秒），仅建模场景的自洽平衡—输运一栏属<strong>离线档</strong>（秒量级），须显式启动。</p>
+<p class="lead">四个页面：三个可交互的托卡马克建模场景，按一台装置被完整过一遍的次序排列——<strong>设计</strong>一炮放电、<strong>建模</strong>其剖面演化、由测量<strong>反演</strong>其位形；外加一页<strong>装置数据</strong>，它不算，只把装置自己存下来的数取到你面前（四个里唯一要服务端的一个）。★这三个场景的计算全部在本机浏览器内完成，无需安装、无需服务端；多数控件即拖即得（零维毫秒量级，平衡类一至二秒），仅建模场景的自洽平衡—输运一栏属<strong>离线档</strong>（秒量级），须显式启动。</p>
 
 <p class="alpha"><strong>本站为 alpha 版。</strong>功能与数值口径仍在变动，接口、页面与结果格式都可能在没有迁移路径的情况下改变；每一项能力的验证依据与已知边界见<a href="features.html">物理功能与边界</a>。</p>
 
-<h2>三个场景</h2>
+<h2>四个页面</h2>
 
-<p>演示按<strong>用途</strong>分成三个场景，顺序就是一台机器被过一遍的顺序：<strong>设计 → 建模 → 反演</strong>。一个场景一页，也是一个界面：一个计算内核、一条工具条；页面由若干<strong>功能栏</strong>组成，<strong>每条栏有自己的计算键与折叠钮</strong>——按哪条算哪条，折叠只收显示。栏与栏之间按声明的依赖排序，上游还没算过时下游会在标题条上说明。</p>
+<p>演示是<strong>四个页面</strong>。前三个按<strong>用途</strong>分场景，顺序就是一台机器被过一遍的顺序：<strong>设计 → 建模 → 反演</strong>。一个场景一页，也是一个界面：一个计算内核、一条工具条；页面由若干<strong>功能栏</strong>组成，<strong>每条栏有自己的计算键与折叠钮</strong>——按哪条算哪条，折叠只收显示。栏与栏之间按声明的依赖排序，上游还没算过时下游会在标题条上说明。★第四个页面<strong>装置数据</strong>不是场景，也<strong>什么都不算</strong>：它没有计算内核、没有计算键，把装置自己存下来的数取到你面前——因此它是四个里唯一需要一台够得着的 mdsip 服务器的。</p>
 
 <!-- The scenario cards are written by tools/make-app-pages.mjs out of the one
      table in assets/site.js that the navigation is built from, so the entrance
@@ -58,23 +66,31 @@
      four things twice — and the copy that had to be maintained by hand was
      the one saying them second. -->
 <div class="cards">
-  <a class="card panel" href="scenario/design.html">
-    <h3>放电设计 →</h3>
-    <p>要哪个工况、位形解不解得出、电源出不出得起。0D 放电分析定工况（I<sub>p</sub>、环电压、聚变功率与 Q），位形与线圈电流反解并正算校验，脉冲轨迹给出逐通道电流与电压。</p>
+  <a class="card panel" href="pages/pulse_design.html">
+    <h3><span class="card-ic"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12.5h2.5L6 3.5h4l2.5 9H15"/></svg></span><span>放电设计 →</span></h3>
+    <p>一份脚本，三种时间观：配置（一个时刻一个解：工况、位形反解、击穿）· 设计（整条脉冲 → 逐通道电流与电压波形，播放头选片，已解片与插值片分得清）· 仿真（合开关起放电，磁面与剖面随时间演化，滑块改的是未来）。</p>
   </a>
-  <a class="card panel" href="scenario/model.html">
-    <h3>物理建模 / 预测 →</h3>
+  <a class="card panel" href="pages/model.html">
+    <h3><span class="card-ic"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 1.8v11.7H15"/><path d="M3.2 4.4c3.6 0 4.6 2.7 5.1 5.2.4 2 1.3 3 3.2 3.6"/></svg></span><span>物理建模 / 预测 →</span></h3>
     <p>一炮的剖面怎么演化：固定几何的 1.5D 芯部输运，以及把压强回灌给自由边界平衡的自洽外环。</p>
   </a>
-  <a class="card panel" href="scenario/analysis.html">
-    <h3>实验分析 / 反演 →</h3>
+  <a class="card panel" href="pages/analysis.html">
+    <h3><span class="card-ic"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="1.6" d="M4.2 2.4C9.2 2.4 13.2 4.8 13.2 8C13.2 11.2 9.2 13.6 4.2 13.6Z"/><path stroke-width="1.1" d="M1.3 5.2h13.4M1.3 8h13.4M1.3 10.8h13.4"/></svg></span><span>实验分析 / 反演 →</span></h3>
     <p>由磁通环、磁探针、POINT 与 Thomson 反推平衡状态，压强剖面作动理学约束，误差棒由后验采样给出。</p>
+  </a>
+  <a class="card panel" href="pages/data.html">
+    <h3><span class="card-ic"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="3.7" rx="5.2" ry="2.1"/><path d="M2.8 3.7v8.6c0 1.16 2.33 2.1 5.2 2.1s5.2-.94 5.2-2.1V3.7"/><path d="M2.8 8c0 1.16 2.33 2.1 5.2 2.1s5.2-.94 5.2-2.1"/></svg></span><span>装置数据 →</span></h3>
+    <p>直接看装置自己的档案：浏览 MDSplus 树、指定炮号、取回选定信号。★这一页<strong>不算任何东西</strong>——它显示的是装置存下来的数，不是本站算出来的结果；也因此它需要一台够得着的 mdsip 服务器：用单文件查看器打开（<code>fy --mdsip 主机:端口</code>），或在页面上填一台。</p>
+  </a>
+  <a class="card panel" href="pages/report.html">
+    <h3><span class="card-ic"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="1.5" d="M9.2 1.8H4.3c-.55 0-1 .45-1 1v10.4c0 .55.45 1 1 1h7.4c.55 0 1-.45 1-1V5.3z"/><path stroke-width="1.5" d="M9.2 1.8v3.5h3.5"/><path stroke-width="1.1" d="M5.7 8.7h4.6M5.7 11.2h4.6"/></svg></span><span>算例报告 →</span></h3>
+    <p>把一次算例的记录（fyo 计划 + spo 记录，产出内联在端口上）渲染成一份报告：参数表、端口表、读数、按量自身坐标画的折线图、带边界轮廓时的极向截面。★这一页<strong>不算任何东西</strong>——画什么由一份呈现规格说了算，没带规格就按规则推一份，与 <code>fylite cases --report</code> 写在报告旁的那份相同。</p>
   </a>
 </div>
 
 <h2>fylite 与 FyTok：一份契约的两级实现</h2>
 
-<p>fylite 不是一个独立的程序，而是<strong>本体层 fyo 语义契约</strong>的<strong>轻型实现</strong>。同一份契约还有一个重型实现——<a href="https://github.com/fusion-yun/fytok">FyTok</a>，Python 写的完整集成建模框架。契约以 IMAS 数据字典（DD v4）语义为底，物理量按语义路径寻址，因此两边说的是同一套话。</p>
+<p>fylite 不是一个独立的程序，而是 <strong>fyo 语义契约</strong>的<strong>轻型实现</strong>。同一份契约还有一个重型实现——<a href="https://fusion-yun.github.io/">FyTok</a>，一套完整的集成建模框架。契约以 IMAS 数据字典（DD v4）语义为底，物理量按语义路径寻址，因此两边说的是同一套话。</p>
 
 <div class="table-scroll">
 <table>
@@ -87,9 +103,9 @@
     <tr><th>是什么</th>
         <td>自足的平衡—输运—湍流内核：Grad-Shafranov 正解与反解、1.5D 芯部输运、新经典（NEO）与回旋朗道流体（TGLF）、0D 集成、磁测量重构</td><td>完整的集成建模与分析框架：插件机制、工作流调度、异构执行、可追溯，兼容新旧代码</td></tr>
     <tr><th>怎么装</th>
-        <td>无插件机制，物理项<strong>内建</strong>；Rust 内核 + 一层 Python 装配；依赖只有 numpy</td><td>平衡 / 输运 / 源项等按<strong>插件</strong>注册，原生实现、外部程序封装与 NN 代理可无缝互换</td></tr>
+        <td>无插件机制，物理项<strong>内建</strong>：一份自足的计算内核，外加一层很薄的装配；对外几乎不依赖第三方组件</td><td>平衡 / 输运 / 源项等按<strong>插件</strong>注册，原生实现、外部程序封装与 NN 代理可无缝互换</td></tr>
     <tr><th>在哪跑</th>
-        <td>单机，或<strong>直接在浏览器里</strong>——同一份内核编译成 WebAssembly，免安装，数据不出本机</td><td>超算 / 云计算</td></tr>
+        <td>单机，或<strong>直接在浏览器里</strong>——同一份内核两处通用，免安装，数据不出本机</td><td>超算 / 云计算</td></tr>
     <tr><th>一次多久</th>
         <td>亚秒级（单次自由边界正解约 0.05 s），拖着滑块就出结果</td><td>十分钟到数小时</td></tr>
   </tbody>
@@ -112,7 +128,7 @@
 
 <h2>运行方式与数据</h2>
 
-<p>全部计算在访问者本机的浏览器内执行。页面不向任何服务器提交数据：所设参数与所得结果均不离开本机，关闭页面即消失。首次访问需下载一份计算内核（WebAssembly），其后每次求解均为本地执行。</p>
+<p>全部计算在访问者本机的浏览器内执行。页面不向任何服务器提交数据：所设参数与所得结果均不离开本机，关闭页面即消失。首次访问需下载一份计算内核，其后每次求解均为本地执行。</p>
 
 </main>
 
@@ -120,10 +136,11 @@
   <a class="mark" href="index.html" tabindex="-1" aria-hidden="true"><img src="assets/fy_mark.svg" alt="" width="24" height="24"></a>
   <a href="features.html">物理功能</a>
   <a href="credits.html">版权与致谢</a>
+  <a href="guide/index.html">用户指南</a>
   <a class="iconbtn" href="index.en.html" hreflang="en" title="切换到 English" aria-label="切换到 English"><img class="flag" src="assets/flag-zh.svg" alt="" width="24" height="16"></a>
   <span class="copy">© 2026 中国科学院等离子体物理研究所（ASIPP）与 fylite 贡献者 · Apache-2.0 · alpha 版</span>
-  <span class="ver" title="kernel 0.0.1 · ABI 112 · app 0.0.1-alpha">内核 0.0.1 · ABI 112 · 前端 0.0.1-alpha</span>
-  <a class="qr" href="https://fusion-yun.github.io/fylite/index.html" title="https://fusion-yun.github.io/fylite/index.html"><img src="assets/qr-index.svg" alt="QR" width="37" height="37"></a>
+  <span class="ver" title="kernel 0.0.1 · interface 152 · app 0.0.1-alpha">内核 0.0.1 · 接口 152 · 前端 0.0.1-alpha</span>
+  <a class="qr" href="https://fusion-yun.github.io/fylite" title="https://fusion-yun.github.io/fylite"><img src="assets/qr-site.svg" alt="QR" width="37" height="37"></a>
 </footer>
 
 </body>

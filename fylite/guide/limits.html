@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>能力与边界 (What It Does, and Where It Stops) · fylite 用户指南</title>
+<link rel="icon" href="../assets/fy_mark.svg">
+<meta name="description" content="平衡：固定边界与自由边界的正解、逆解（由位形反求线圈电流）、磁面几何量。">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="guide.css">
+<script src="../assets/theme.js"></script>
+</head>
+<body data-page="guide">
+
+<header class="top">
+  <a class="brand" href="../index.html"><img src="../assets/fy_mark.svg" alt="" width="32" height="32"></a>
+  <div class="titles">
+  <h1>能力与边界 (What It Does, and Where It Stops)</h1>
+  <span class="sub">fylite 用户指南</span>
+  </div>
+  <nav>
+    <a href="../index.html">演示首页</a>
+    <a href="../features.html">功能与边界</a>
+    <button id="theme-toggle" class="iconbtn" type="button"></button>
+  </nav>
+</header>
+
+<div class="guide-wrap">
+<aside class="guide-toc" aria-label="目录">
+    <a href="index.html">怎么开始 (Getting Started)</a>
+    <a href="browser.html">浏览器用法 (Using the Browser Pages)</a>
+    <a href="python.html">Python 用法 (Using the Python Package)</a>
+    <a href="reading-results.html">结果怎么读 (Reading a Result)</a>
+    <span class="here">能力与边界 (What It Does, and Where It Stops)</span>
+</aside>
+
+<main class="doc guide-body">
+
+<h2>现在能算什么</h2>
+<ul>
+<li>
+<p><strong>平衡</strong>：固定边界与自由边界的正解、逆解（由位形反求线圈电流）、磁面几何量。</p>
+</li>
+<li>
+<p><strong>输运</strong>：一步 1.5 维芯部输运；0 维集总放电演化；电流扩散道。</p>
+</li>
+<li>
+<p><strong>闭包</strong>：常数扩散率、给定剖面、以及拟线性湍流闭包——同一个功能的多个物理模型
+以<strong>参数档位</strong>并存，不是几条并行的代码路径。</p>
+</li>
+<li>
+<p><strong>重构</strong>：磁测量加动理约束的平衡重构、剖面标定与拟合。</p>
+</li>
+<li>
+<p><strong>稳定性与控制</strong>：垂直位移稳定性、回路模型、击穿与位置控制的轻量闭环。</p>
+</li>
+</ul>
+<h2>现在不算什么</h2>
+<ul>
+<li>
+<p><strong>第一性原理的高保真物理</strong>：非线性回旋动理学、全波加热、三维动理 MHD。
+这类是 HPC 尺度的计算，本内核<strong>消费它们的产物</strong>（饱和规则、代理模型），
+不移植它们的本体。</p>
+</li>
+<li>
+<p><strong>集群与分布式</strong>：全部功能面向<strong>单机</strong>——一台工作站或笔记本，无必需的服务端组件。</p>
+</li>
+<li>
+<p><strong>异位形</strong>：位形边界是轴对称托卡马克（环向轴对称、闭合嵌套磁面）。</p>
+</li>
+</ul>
+<h2>alpha 期的承诺与不承诺</h2>
+<p><strong>承诺</strong>：算出来的数带溯源；超范围返回错误而不是伪答案；缺口列在目录里；
+同一输入跨宿主一致。</p>
+<p><strong>不承诺</strong>：入口名、页面布局与结果格式的稳定性。alpha 期它们可能变化，
+<strong>且不保证迁移路径</strong>。要把结果长期留存，请连同版本与 ABI 号一起存
+（导出的会话文件里已经带着）。</p>
+<h2>报告问题</h2>
+<p>请把导出的<strong>会话文件</strong>一并附上——它包含输入、结果与版本信息，
+是让一个现象可复现的最短路径。</p>
+</main>
+</div>
+
+<footer>
+  <a class="mark" href="../index.html" tabindex="-1" aria-hidden="true"><img src="../assets/fy_mark.svg" alt="" width="24" height="24"></a>
+  <a href="../index.html">fylite 首页</a>
+  <a href="index.html">指南目录</a>
+  <span class="copy">© 2026 中国科学院等离子体物理研究所（ASIPP）与 fylite 贡献者 · Apache-2.0 · alpha 版</span>
+  <span class="ver" title="kernel 0.0.1 · interface 152 · app 0.0.1-alpha">内核 0.0.1 · 接口 152 · 前端 0.0.1-alpha</span>
+</footer>
+
+</body>
+</html>

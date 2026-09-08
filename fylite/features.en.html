@@ -17,6 +17,11 @@
      what is left, and since the switches went wordless it no longer needs the
      catalogues either. -->
 <script src="assets/theme.js"></script>
+<!-- ★which host is serving this? the desktop viewer and the website get
+     the SAME BYTES, so anything that must differ is decided at runtime.
+     Publishes `data-fy-host` on <html>; today one CSS rule reads it, to
+     drop the footer QR in the viewer. -->
+<script src="assets/host.js"></script>
 </head>
 <body data-page="features">
 
@@ -26,10 +31,13 @@
   <h1>Physics capability and boundary</h1>
   <span class="sub">What it computes · what it does not · what each claim rests on</span>
   </div>
+  <p class="warn-band" role="note"><span class="warn-alpha">ALPHA — PROOF OF CONCEPT</span></p>
   <nav>
-    <a href="scenario/design.html">Discharge design</a>
-    <a href="scenario/model.html">Physics modelling</a>
-    <a href="scenario/analysis.html">Experiment analysis</a>
+    <a href="pages/pulse_design.html" class="navic" title="Pulse design" aria-label="Pulse design"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12.5h2.5L6 3.5h4l2.5 9H15"/></svg></a>
+    <a href="pages/model.html" class="navic" title="Physics modelling" aria-label="Physics modelling"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 1.8v11.7H15"/><path d="M3.2 4.4c3.6 0 4.6 2.7 5.1 5.2.4 2 1.3 3 3.2 3.6"/></svg></a>
+    <a href="pages/analysis.html" class="navic" title="Experiment analysis" aria-label="Experiment analysis"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="1.6" d="M4.2 2.4C9.2 2.4 13.2 4.8 13.2 8C13.2 11.2 9.2 13.6 4.2 13.6Z"/><path stroke-width="1.1" d="M1.3 5.2h13.4M1.3 8h13.4M1.3 10.8h13.4"/></svg></a>
+    <a href="pages/data.html" class="navic" title="Device data" aria-label="Device data"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="3.7" rx="5.2" ry="2.1"/><path d="M2.8 3.7v8.6c0 1.16 2.33 2.1 5.2 2.1s5.2-.94 5.2-2.1V3.7"/><path d="M2.8 8c0 1.16 2.33 2.1 5.2 2.1s5.2-.94 5.2-2.1"/></svg></a>
+    <a href="pages/report.html" class="navic" title="Case report" aria-label="Case report"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="1.5" d="M9.2 1.8H4.3c-.55 0-1 .45-1 1v10.4c0 .55.45 1 1 1h7.4c.55 0 1-.45 1-1V5.3z"/><path stroke-width="1.5" d="M9.2 1.8v3.5h3.5"/><path stroke-width="1.1" d="M5.7 8.7h4.6M5.7 11.2h4.6"/></svg></a>
     <button id="theme-toggle" class="iconbtn" type="button"></button>
   </nav>
 </header>
@@ -185,7 +193,7 @@
     <th>Criterion</th>
   </tr></thead>
   <tbody>
-    <tr><td>Host wiring for ion cyclotron (C exports, assembly layer, wasm)</td><td>Kernel landed and checked; the wiring is not built</td><td>Available: cross-host bit-for-bit comparison, plus the kernel's own seven criteria</td></tr>
+    <tr><td>Host wiring for ion cyclotron (kernel exports, assembly layer, browser side)</td><td>Kernel landed and checked; the wiring is not built</td><td>Available: cross-host bit-for-bit comparison, plus the kernel's own seven criteria</td></tr>
     <tr><td>Host wiring for electron cyclotron</td><td>The whole kernel path landed and checked; the wiring is not built</td><td>Cross-host, bit for bit</td></tr>
     <tr><td>Helium-ash profile</td><td>Only the ash particle source exists</td><td>Available: the thermal-helium column of the same ASTRA case; a helium diffusivity on the density channel is still needed</td></tr>
     <tr><td>Turbulent toroidal-stress drive (momentum channel)</td><td>Refuses; the prerequisite (width search) has landed</td><td>Strong: 11 recorded answers carry momentum flux. ★Until two located discrepancies are settled, a stress weight could be written but not judged</td></tr>
@@ -201,11 +209,13 @@
 <p>This page is a summary; the authoritative wording and the quantitative limits are in the repository:</p>
 
 <ul>
-  <li><a href="https://github.com/fusion-yun/fylite/blob/main/FEATURE.md">FEATURE.md</a>
-      — <span>the authoritative statement of capability and gaps (this page is drawn from it)</span></li>
-  <li><a href="https://github.com/fusion-yun/fylite/blob/main/docs/reference/fidelity.md">docs/reference/fidelity.md</a>
+  <!-- ★`FEATURE.md` 曾列在这里，`095374f` 把它移出了公开仓（2026-09-08 起不再
+       链接）。它答的那个问题现在由下面两份分着答：定量边界看 fidelity，未落地的
+       缺口看 TODO.md。链一个已经不在的文件，读者拿到的是 404 —— 而 GitHub 的 404
+       是一张 200 之外的页面，构建与闸子都看不见，只有点下去的人看得见。 -->
+  <li><a href="https://github.com/fusion-yun/fylite/blob/develop/docs/reference/fidelity.md">docs/reference/fidelity.md</a>
       — <span>the measured, <strong>quantitative</strong> limits — whether a capability may be used quantitatively is decided there</span></li>
-  <li><a href="https://github.com/fusion-yun/fylite/blob/main/docs/reference/api.md">docs/reference/api.md</a>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/develop/docs/reference/api.md">docs/reference/api.md</a>
       — <span>interfaces and call signatures</span></li>
   <li><a href="credits.en.html">Copyright and credits</a>
       — <span>upstream provenance, licences and acknowledgements</span></li>
@@ -219,8 +229,8 @@
   <a href="credits.en.html">Copyright and credits</a>
   <a class="iconbtn" href="features.html" hreflang="zh" title="Switch to 中文" aria-label="Switch to 中文"><img class="flag" src="assets/flag-en.svg" alt="" width="24" height="16"></a>
   <span class="copy">© 2026 Institute of Plasma Physics, Chinese Academy of Sciences (ASIPP) and the fylite contributors · Apache-2.0 · alpha release</span>
-  <span class="ver" title="kernel 0.0.1 · ABI 112 · app 0.0.1-alpha">kernel 0.0.1 · ABI 112 · front end 0.0.1-alpha</span>
-  <a class="qr" href="https://fusion-yun.github.io/fylite/features.en.html" title="https://fusion-yun.github.io/fylite/features.en.html"><img src="assets/qr-features-en.svg" alt="QR" width="37" height="37"></a>
+  <span class="ver" title="kernel 0.0.1 · interface 152 · app 0.0.1-alpha">kernel 0.0.1 · interface 152 · front end 0.0.1-alpha</span>
+  <a class="qr" href="https://fusion-yun.github.io/fylite" title="https://fusion-yun.github.io/fylite"><img src="assets/qr-site.svg" alt="QR" width="37" height="37"></a>
 </footer>
 
 </body>

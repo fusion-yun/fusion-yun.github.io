@@ -17,6 +17,11 @@
      what is left, and since the switches went wordless it no longer needs the
      catalogues either. -->
 <script src="assets/theme.js"></script>
+<!-- ★which host is serving this? the desktop viewer and the website get
+     the SAME BYTES, so anything that must differ is decided at runtime.
+     Publishes `data-fy-host` on <html>; today one CSS rule reads it, to
+     drop the footer QR in the viewer. -->
+<script src="assets/host.js"></script>
 </head>
 <body data-page="features">
 
@@ -26,10 +31,13 @@
   <h1>物理功能与边界</h1>
   <span class="sub">能算什么 · 算不了什么 · 凭什么信</span>
   </div>
+  <p class="warn-band" role="note"><span class="warn-alpha">alpha 版，用于概念验证</span></p>
   <nav>
-    <a href="scenario/design.html">放电设计</a>
-    <a href="scenario/model.html">物理建模</a>
-    <a href="scenario/analysis.html">实验分析</a>
+    <a href="pages/pulse_design.html" class="navic" title="放电设计" aria-label="放电设计"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12.5h2.5L6 3.5h4l2.5 9H15"/></svg></a>
+    <a href="pages/model.html" class="navic" title="物理建模" aria-label="物理建模"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 1.8v11.7H15"/><path d="M3.2 4.4c3.6 0 4.6 2.7 5.1 5.2.4 2 1.3 3 3.2 3.6"/></svg></a>
+    <a href="pages/analysis.html" class="navic" title="实验分析" aria-label="实验分析"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="1.6" d="M4.2 2.4C9.2 2.4 13.2 4.8 13.2 8C13.2 11.2 9.2 13.6 4.2 13.6Z"/><path stroke-width="1.1" d="M1.3 5.2h13.4M1.3 8h13.4M1.3 10.8h13.4"/></svg></a>
+    <a href="pages/data.html" class="navic" title="装置数据" aria-label="装置数据"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="3.7" rx="5.2" ry="2.1"/><path d="M2.8 3.7v8.6c0 1.16 2.33 2.1 5.2 2.1s5.2-.94 5.2-2.1V3.7"/><path d="M2.8 8c0 1.16 2.33 2.1 5.2 2.1s5.2-.94 5.2-2.1"/></svg></a>
+    <a href="pages/report.html" class="navic" title="算例报告" aria-label="算例报告"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="1.5" d="M9.2 1.8H4.3c-.55 0-1 .45-1 1v10.4c0 .55.45 1 1 1h7.4c.55 0 1-.45 1-1V5.3z"/><path stroke-width="1.5" d="M9.2 1.8v3.5h3.5"/><path stroke-width="1.1" d="M5.7 8.7h4.6M5.7 11.2h4.6"/></svg></a>
     <button id="theme-toggle" class="iconbtn" type="button"></button>
   </nav>
 </header>
@@ -185,7 +193,7 @@
     <th>判据来源</th>
   </tr></thead>
   <tbody>
-    <tr><td>离子回旋的宿主接线（C 导出 + 装配层 + wasm）</td><td>内核已落地并核过，接线未做</td><td>已有：跨宿主逐位对照，与内核那七条判据</td></tr>
+    <tr><td>离子回旋的宿主接线（内核导出 + 装配层 + 浏览器端）</td><td>内核已落地并核过，接线未做</td><td>已有：跨宿主逐位对照，与内核那七条判据</td></tr>
     <tr><td>电子回旋的宿主接线</td><td>内核整条已落地并核过，接线未做</td><td>跨宿主逐位</td></tr>
     <tr><td>氦灰剖面</td><td>只有灰的粒子源</td><td>已有同一 ASTRA 算例的热氦柱；还需密度通道配一个氦扩散率</td></tr>
     <tr><td>湍流的环向应力驱动（动量通道）</td><td>拒绝作答；前置件（模宽搜索）已落地</td><td>强：录下的 11 条答案带动量通量；★两处已定位的差异结清前，权重即使写出来也无从判</td></tr>
@@ -201,11 +209,13 @@
 <p>本页是摘要，逐条的口径与定量边界在仓库里：</p>
 
 <ul>
-  <li><a href="https://github.com/fusion-yun/fylite/blob/main/FEATURE.md">FEATURE.md</a>
-      — <span>功能与缺口的权威口径（本页由它摘出）</span></li>
-  <li><a href="https://github.com/fusion-yun/fylite/blob/main/docs/reference/fidelity.md">docs/reference/fidelity.md</a>
+  <!-- ★`FEATURE.md` 曾列在这里，`095374f` 把它移出了公开仓（2026-09-08 起不再
+       链接）。它答的那个问题现在由下面两份分着答：定量边界看 fidelity，未落地的
+       缺口看 TODO.md。链一个已经不在的文件，读者拿到的是 404 —— 而 GitHub 的 404
+       是一张 200 之外的页面，构建与闸子都看不见，只有点下去的人看得见。 -->
+  <li><a href="https://github.com/fusion-yun/fylite/blob/develop/docs/reference/fidelity.md">docs/reference/fidelity.md</a>
       — <span>逐条实测的<strong>定量</strong>适用边界——一项功能「能不能定量使用」以它为准</span></li>
-  <li><a href="https://github.com/fusion-yun/fylite/blob/main/docs/reference/api.md">docs/reference/api.md</a>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/develop/docs/reference/api.md">docs/reference/api.md</a>
       — <span>接口与调用方式</span></li>
   <li><a href="credits.html">版权与致谢</a>
       — <span>上游出处、许可与致谢</span></li>
@@ -217,10 +227,11 @@
   <a class="mark" href="index.html" tabindex="-1" aria-hidden="true"><img src="assets/fy_mark.svg" alt="" width="24" height="24"></a>
   <a href="index.html">fylite 首页</a>
   <a href="credits.html">版权与致谢</a>
+  <a href="guide/index.html">用户指南</a>
   <a class="iconbtn" href="features.en.html" hreflang="en" title="切换到 English" aria-label="切换到 English"><img class="flag" src="assets/flag-zh.svg" alt="" width="24" height="16"></a>
   <span class="copy">© 2026 中国科学院等离子体物理研究所（ASIPP）与 fylite 贡献者 · Apache-2.0 · alpha 版</span>
-  <span class="ver" title="kernel 0.0.1 · ABI 112 · app 0.0.1-alpha">内核 0.0.1 · ABI 112 · 前端 0.0.1-alpha</span>
-  <a class="qr" href="https://fusion-yun.github.io/fylite/features.html" title="https://fusion-yun.github.io/fylite/features.html"><img src="assets/qr-features.svg" alt="QR" width="37" height="37"></a>
+  <span class="ver" title="kernel 0.0.1 · interface 152 · app 0.0.1-alpha">内核 0.0.1 · 接口 152 · 前端 0.0.1-alpha</span>
+  <a class="qr" href="https://fusion-yun.github.io/fylite" title="https://fusion-yun.github.io/fylite"><img src="assets/qr-site.svg" alt="QR" width="37" height="37"></a>
 </footer>
 
 </body>

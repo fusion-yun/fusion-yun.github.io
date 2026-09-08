@@ -17,6 +17,11 @@
      what is left, and since the switches went wordless it no longer needs the
      catalogues either. -->
 <script src="assets/theme.js"></script>
+<!-- ★which host is serving this? the desktop viewer and the website get
+     the SAME BYTES, so anything that must differ is decided at runtime.
+     Publishes `data-fy-host` on <html>; today one CSS rule reads it, to
+     drop the footer QR in the viewer. -->
+<script src="assets/host.js"></script>
 </head>
 <body data-page="credits">
 
@@ -26,10 +31,13 @@
   <h1>版权与致谢</h1>
   <span class="sub">许可 · 出处 · 致谢 · 参考文献</span>
   </div>
+  <p class="warn-band" role="note"><span class="warn-alpha">alpha 版，用于概念验证</span></p>
   <nav>
-    <a href="scenario/design.html">放电设计</a>
-    <a href="scenario/model.html">物理建模</a>
-    <a href="scenario/analysis.html">实验分析</a>
+    <a href="pages/pulse_design.html" class="navic" title="放电设计" aria-label="放电设计"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12.5h2.5L6 3.5h4l2.5 9H15"/></svg></a>
+    <a href="pages/model.html" class="navic" title="物理建模" aria-label="物理建模"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 1.8v11.7H15"/><path d="M3.2 4.4c3.6 0 4.6 2.7 5.1 5.2.4 2 1.3 3 3.2 3.6"/></svg></a>
+    <a href="pages/analysis.html" class="navic" title="实验分析" aria-label="实验分析"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="1.6" d="M4.2 2.4C9.2 2.4 13.2 4.8 13.2 8C13.2 11.2 9.2 13.6 4.2 13.6Z"/><path stroke-width="1.1" d="M1.3 5.2h13.4M1.3 8h13.4M1.3 10.8h13.4"/></svg></a>
+    <a href="pages/data.html" class="navic" title="装置数据" aria-label="装置数据"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="3.7" rx="5.2" ry="2.1"/><path d="M2.8 3.7v8.6c0 1.16 2.33 2.1 5.2 2.1s5.2-.94 5.2-2.1V3.7"/><path d="M2.8 8c0 1.16 2.33 2.1 5.2 2.1s5.2-.94 5.2-2.1"/></svg></a>
+    <a href="pages/report.html" class="navic" title="算例报告" aria-label="算例报告"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="1.5" d="M9.2 1.8H4.3c-.55 0-1 .45-1 1v10.4c0 .55.45 1 1 1h7.4c.55 0 1-.45 1-1V5.3z"/><path stroke-width="1.5" d="M9.2 1.8v3.5h3.5"/><path stroke-width="1.1" d="M5.7 8.7h4.6M5.7 11.2h4.6"/></svg></a>
     <button id="theme-toggle" class="iconbtn" type="button"></button>
   </nav>
 </header>
@@ -40,27 +48,13 @@
 
 <h2>版权与许可</h2>
 
-<p>fylite 由中国科学院等离子体物理研究所（ASIPP）开发，按 <strong>Apache License 2.0</strong> 发布。允许自由使用、修改与再分发（含商业用途），条件为保留版权声明与 <code>NOTICE</code>，并对所作修改予以说明。</p>
+<p>fylite 的开发是中国科学院等离子体物理研究所（ASIPP）<strong>「集成建模讨论组」</strong>工作的一部分，版权归 ASIPP 与 fylite 贡献者所有，按 <strong>Apache License 2.0</strong> 发布：允许自由使用、修改与再分发（含商业用途），条件为保留版权声明与 <code>NOTICE</code>，并对所作修改予以说明。许可全文见仓库的 <code>LICENSE</code>。</p>
 
-<pre class="licence">fylite
-Copyright 2026 Institute of Plasma Physics, Chinese Academy of Sciences (ASIPP)
-and the fylite contributors
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</pre>
-
-<p>★本页面（<code>app/</code> 下的浏览器演示）与它加载的 <code>.wasm</code> 计算内核同属该许可：内核由本仓 Rust 源码编译，制品的 sha256 与出处记录在仓库文档里，可逐位核对。</p>
+<p>★本页面（<code>app/</code> 下的浏览器演示）与它加载的计算内核制品同属该许可：内核由本仓源码构建，制品的 sha256 与出处记录在仓库文档里，可逐位核对。</p>
 
 <h2>上级项目：FyTok</h2>
 
-<p>fylite 是 <a href="https://github.com/fusion-yun/fytok">FyTok</a> 的<strong>轻量版</strong>——FyTok 是<strong>上级项目</strong>（同为 <strong>Apache-2.0</strong>，中国科学院等离子体物理研究所）：Python 写的完整托卡马克集成建模框架，插件机制、工作流调度、异构执行与可追溯，面向超算 / 云计算。两者同为本体层 <strong>fyo 语义契约</strong>的实现，fylite 取轻型一端：关键求解器以 Rust 重写、经 WebAssembly 在浏览器内免安装运行，并<strong>充当 FyTok 的最小功能验证</strong>——两级实现独立编码、答对同一份契约，因此实现间对拍是<strong>交叉检验</strong>而不是自证。芯部输运的通道声明语法直接取自 FyTok 的 <code>fytrans</code>（见下表），逐位对拍也以它为基准。</p>
+<p>fylite 是 <a href="https://fusion-yun.github.io/">FyTok</a> 的<strong>轻量版</strong>——FyTok 是<strong>上级项目</strong>（同为 <strong>Apache-2.0</strong>，中国科学院等离子体物理研究所）：一套完整的托卡马克集成建模框架，插件机制、工作流调度、异构执行与可追溯，面向超算 / 云计算。两者同为 <strong>fyo 语义契约</strong>的实现，fylite 取轻型一端：关键求解器另行重写，可在浏览器内免安装运行，并<strong>充当 FyTok 的最小功能验证</strong>——两级实现独立编码、答对同一份契约，因此实现间对拍是<strong>交叉检验</strong>而不是自证。芯部输运的通道声明语法直接取自 FyTok 的 <code>fytrans</code>（见下表），逐位对拍也以它为基准。</p>
 
 <h2>移植与出处</h2>
 
@@ -106,6 +100,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</pre>
   <li><strong>跨程序基准</strong>：0D 对 METIS（CEA/IRFM）、ITER 情景对 FUSE、电磁与垂直稳定性对 TokSys（General Atomics）——这些程序均未在此再分发。</li>
 </ul>
 
+<h2>刻意未取的东西</h2>
+
+<p>一份只列取用的致谢是不完整的。下面几项是<strong>有意不取</strong>的，理由各不相同，但都属于同一份记录：</p>
+
+<ul>
+  <li><strong>EFIT 一脉</strong>：任何形式的 EFIT 族源码、格林表生成器或录得输出都不在仓内；平衡与反演求解器属清净室实现。</li>
+  <li><strong>GRAY</strong>：EC 射线追踪的移植已停止；其许可不容直接翻译，fylite 未读过任何 GRAY 物理源码。</li>
+  <li><strong>UMFPACK</strong>：未移植——本仓的稀疏 LU 从零写起。</li>
+</ul>
+
 <h2>这些代码是怎么写出来的</h2>
 
 <p>fylite 的物理模块依据上列公开文献与开源代码构建，<strong>并有 AI 辅助</strong>（Anthropic Claude）。正确性不由作者身份主张，而由对上游实现的<strong>金标夹具</strong>逐模块确立：比对录得答案，并写明容差及其误差来源。此外，fylite 亦向 AI 宿主暴露自身接口（MCP / JSON-RPC）——此为产品功能，与构建方式属两事。</p>
@@ -115,16 +119,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</pre>
 <p>本项目建立在他人公开的物理、代码与数据之上。谨此逐项致谢：</p>
 
 <ul>
+  <li><strong>集成建模讨论组</strong>（ASIPP）：孙有文、任启龙、简祥、夏天阳、于治、刘晓娟、胡也民、肖小涛等。</li>
   <li><strong>General Atomics 与 GACODE 贡献者</strong>（J. Candy、E. Belli、G. M. Staebler 等）——新经典、湍流与磁面几何三条实现线的上游；<strong>W. A. Houlberg</strong>（NCLASS，随 NEO 携带）。</li>
   <li><strong>CEA/IRFM 与 METIS 作者</strong>（J. F. Artaud 等）——快中性束模型与 0D 口径的出处，也是 0D 对拍的基准。</li>
   <li><strong>P. B. Snyder、O. Meneghini 与 EPED / EPED1-NN 的作者</strong>（General Atomics）——台基模型的出处：EPED1 的两条约束（Phys. Plasmas 16 056118 (2009)）经 EPED1-NN 代理（Nucl. Fusion 57 086034 (2017)）进入本项目，网络权重取自开源 EPEDNN.jl（ProjectTorreyPines，Apache-2.0，本仓随附许可与校验和）。</li>
   <li><strong>TokSys 的作者</strong>（General Atomics）——电磁与垂直稳定性的跨程序锚点。</li>
   <li><strong>ASIPP EAST 团队</strong>——放电数据、运行态 EFIT 工作流与逐道诊断几何。</li>
-  <li><strong>李国强、任启龙、钱金平、L. L. Lao 等</strong>——将 EFIT 移植至 EAST 并建立动理学重构（KEFIT），本仓重构线的上游参照基线。</li>
+  <li><strong>钱金平、李国强、任启龙、L. L. Lao 等</strong>——将 EFIT 移植至 EAST 并建立动理学重构（KEFIT），本仓重构线的上游参照基线。</li>
   <li><strong>孙有文</strong>——HT-7 软 X 射线层析工作（相机几何参数化与弦-格林/加权伪逆方法骨架）。</li>
   <li><strong>兰婷</strong>——整理 EAST 实验数据语料，逐道诊断几何经 fydata 到达本项目。</li>
   <li><strong>黄耀与 EAST PCS 组</strong>——等离子体控制系统接口说明（磁探针几何与平衡↔PCS 变量的交叉核对）。</li>
-  <li><strong>私人通讯</strong>：夏天阳（边界与集成）、胡也民（平衡）、肖小涛（输运）。</li>
+  <li><strong>吴学民、盛回</strong>——KEFIT 运行流程的梳理与指导，并提供 benchmark 算例。</li>
   <li><strong>ITER 组织</strong>——IMAS 数据字典与 ITER 装置描述，经 fyo / fydata 到达本项目；演示内置的 ITER 位形即出自此。</li>
   <li><strong>下节参考文献的作者</strong>——本项目所用的每一条公式均注明出处，无一为此处首创。</li>
 </ul>
@@ -205,13 +210,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</pre>
 <p>本页为摘要。具约束力的、逐文件的声明见仓库：</p>
 
 <ul>
-  <li><a href="https://github.com/fusion-yun/fylite/blob/main/LICENSE">LICENSE</a>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/develop/LICENSE">LICENSE</a>
       — <span>Apache License 2.0 全文</span></li>
-  <li><a href="https://github.com/fusion-yun/fylite/blob/main/NOTICE">NOTICE</a>
-      — <span>逐文件的移植出处、修改说明，以及「不含什么」</span></li>
-  <li><a href="https://github.com/fusion-yun/fylite/blob/main/ACKNOWLEDGEMENTS.md">ACKNOWLEDGEMENTS.md</a>
+  <!-- ★★NOTICE 是**站点自己带的一份**，不是仓库里的一份（2026-09-08）。仓根没有
+       NOTICE：`095374f` 裁定它描述内核源码、随源码留在 fylite_kernel，而 Apache-2.0
+       §4(d) 的义务附着在**分发件**上，由分发的构建当场装入——轮子由
+       `tools/build-wheel.sh` 装，站点由 `tools/build-site.sh` 装。所以这条链接指向
+       本站根目录，而不是一个 404 的仓库路径。★在**未经构建的 `app/` 源树**里
+       预览时它取不到——那棵树不是分发件，别把这条改回仓库链接。 -->
+  <li><a href="NOTICE">NOTICE</a>
+      — <span>逐文件的移植出处、修改说明，以及「不含什么」——它随发行件同行，这一份就在本站根目录</span></li>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/develop/docs/ACKNOWLEDGEMENTS.md">docs/ACKNOWLEDGEMENTS.md</a>
       — <span>可读的致谢全表：上游代码、转写的公式、数据与夹具、刻意未取的东西</span></li>
-  <li><a href="https://github.com/fusion-yun/fylite/blob/main/CONTRIBUTORS.md">CONTRIBUTORS.md</a>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/develop/CONTRIBUTORS.md">CONTRIBUTORS.md</a>
       — <span>维护者与版权归属</span></li>
 </ul>
 
@@ -223,10 +234,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</pre>
   <a class="mark" href="index.html" tabindex="-1" aria-hidden="true"><img src="assets/fy_mark.svg" alt="" width="24" height="24"></a>
   <a href="index.html">fylite 首页</a>
   <a href="features.html">物理功能</a>
+  <a href="guide/index.html">用户指南</a>
   <a class="iconbtn" href="credits.en.html" hreflang="en" title="切换到 English" aria-label="切换到 English"><img class="flag" src="assets/flag-zh.svg" alt="" width="24" height="16"></a>
   <span class="copy">© 2026 中国科学院等离子体物理研究所（ASIPP）与 fylite 贡献者 · Apache-2.0 · alpha 版</span>
-  <span class="ver" title="kernel 0.0.1 · ABI 112 · app 0.0.1-alpha">内核 0.0.1 · ABI 112 · 前端 0.0.1-alpha</span>
-  <a class="qr" href="https://fusion-yun.github.io/fylite/credits.html" title="https://fusion-yun.github.io/fylite/credits.html"><img src="assets/qr-credits.svg" alt="QR" width="37" height="37"></a>
+  <span class="ver" title="kernel 0.0.1 · interface 152 · app 0.0.1-alpha">内核 0.0.1 · 接口 152 · 前端 0.0.1-alpha</span>
+  <a class="qr" href="https://fusion-yun.github.io/fylite" title="https://fusion-yun.github.io/fylite"><img src="assets/qr-site.svg" alt="QR" width="37" height="37"></a>
 </footer>
 
 </body>

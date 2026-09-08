@@ -1,11 +1,11 @@
-// English catalogue for the device-data page (`mdsplus.html`) only.
+// English catalogue for the device-data page (`pages/data.html`) only.
 
 self.FyI18n.register('en', {
   'mds.title': 'Device data · fylite',
   'mds.h1': 'Device data',
   'mds.sub': 'Browse an MDSplus tree · name a shot · pull the signals you pick',
   'mds.lead': 'This page treats an <strong>MDSplus server</strong> as a directory you can walk into: choose a tree, give a shot number, descend to the nodes, pick a few signals and draw them. It is <strong>read-only</strong> — no entry point here writes, deletes, or evaluates an arbitrary expression.',
-  'mds.bound': '<strong>The browser cannot reach MDSplus.</strong> mdsip is raw TCP, a page has no socket, and wasm does not change that (FYL-DESIGN-06 §1); so this page is served by a gateway on your own machine, and it is the GATEWAY that has to be able to reach the device, not your browser. <strong>What is drawn is every Nth sample</strong> — not a mean, not a min/max envelope. A spike narrower than the stride <strong>is not in this curve</strong>, which is what the word "decimated" in each caption means. This page is <strong>not a data repository</strong>: samples are not kept, every draw goes back to the server. To keep a shot\'s <strong>reduction</strong> together with its recipe and manifest, that is what <code>tools/mds-shot-to-fyo.py</code> is for. Whether the data itself may travel is a <strong>governance</strong> question and not one this page can answer.',
+  'mds.bound': '<strong>The browser cannot reach MDSplus.</strong> mdsip is raw TCP, a page has no socket, and moving the computation into the browser does not change that (FYL-DESIGN-06 §1); so this page is served by a gateway on your own machine, and it is the GATEWAY that has to be able to reach the device, not your browser. <strong>What is drawn is every Nth sample</strong> — not a mean, not a min/max envelope. A spike narrower than the stride <strong>is not in this curve</strong>, which is what the word "decimated" in each caption means. This page is <strong>not a data repository</strong>: samples are not kept, every draw goes back to the server. To keep a shot\'s <strong>reduction</strong> together with its recipe and manifest, that is what <code>tools/mds-shot-to-fyo.py</code> is for. Whether the data itself may travel is a <strong>governance</strong> question and not one this page can answer.',
 
   // --- the gateway ---------------------------------------------------
   'mds.server': 'Data gateway',
@@ -13,17 +13,22 @@ self.FyI18n.register('en', {
   'mds.gw.checking': 'Looking for the gateway…',
   'mds.gw.up': 'Gateway up. mdsip target <code>{server}</code>, username <code>{user}</code>.',
   'mds.gw.down': '<strong>No gateway.</strong> Opened as a static file this page has no data — it needs a process that can open a socket.',
-  'mds.gw.howto': 'Start one at the repository root, then open this page at the address it prints:',
-  'mds.gw.tunnel': 'The EAST server sits on the site network (<code>202.127.204.12:8000</code>). From a workstation, tunnel first and point the gateway at the near end:',
+  'mds.gw.howto': 'Start the single-file viewer — it carries this page and the whole site inside itself, and <code>--mdsip</code> gives it the request face to go with them. Open this page at the address it prints:',
+  'mds.gw.tunnel': 'A device\u2019s mdsip server normally sits on the site network, out of reach of a workstation (its address comes from whoever runs it \u2014 it is not written down in this page). Tunnel first, then point <code>--mdsip</code> at the near end:',
   'mds.server.addr': 'mdsip server',
   'mds.server.ph': 'host[:port]',
   'mds.server.use': 'Switch to it',
-  'mds.server.east': 'EAST, on the site network',
   'mds.server.tunnel': 'the near end of an ssh tunnel',
   'mds.server.bad': 'Write it as <code>host</code> or <code>host:port</code>. This box takes an address and nothing else is sent.',
   'mds.server.set': 'Target is now <code>{server}</code>. The tree, the shot and the traces are cleared — open again before fetching, because <strong>the same shot number on another device is not the same shot</strong>.',
   'mds.server.free': 'The gateway is bound to loopback, so this box is open: it can be pointed at any mdsip server <strong>the gateway</strong> can reach. (The username is not set here — mdsip does not authenticate, so a username the page chose would prove nothing.)',
-  'mds.server.locked': 'This gateway is <strong>not bound to loopback</strong>, so it only accepts the servers named when it was started: <code>{list}</code>. Anything else needs the gateway restarted.',
+  //: ★States the FACT, not the reason.  It used to say "is not bound to
+  //: loopback, so …", which is the Node gateway's only reason for
+  //: locking; the single-file viewer `fylite` reports locked too and
+  //: is always on loopback.  Same fact, different reason — and telling a
+  //: reader the half that does not hold is worse than not explaining.
+  //: ★The single-file route: a second host for the same endpoints.
+  'mds.server.locked': 'This gateway <strong>only accepts the servers named when it was started</strong>: <code>{list}</code>. Anything else needs it restarted. (The Node gateway locks when it is bound off loopback; the single-file viewer <code>fylite</code> always does.)',
 
   // --- shot ----------------------------------------------------------
   'mds.pick.shot': 'Tree and shot',
@@ -147,6 +152,8 @@ self.FyI18n.register('en', {
   'mds.refining': 'Refining {node} to the figure width …',
   'mds.got': '{n} traces fetched.',
   'mds.got.refined': '{n} traces fetched; {refined} of them refined to about {points} points each.',
+  'mds.repinning': 'Re-fetching pinned #{shot} on the same window: {node} …',
+  'mds.got.pinned': 'The pinned {shots} followed the same window: {pins} traces re-fetched — which is why both shots in one figure are on the same stride.',
   'mds.cols': 'Columns',
   'mds.cols.auto': 'adaptive',
   'mds.cols.n': '{n} columns',
@@ -155,7 +162,7 @@ self.FyI18n.register('en', {
   'mds.rate': 'Sampling',
   'mds.rate.auto': 'adaptive (figure width)',
   'mds.rate.n': '{n} points/trace',
-  'mds.rate.what': '<strong>Two passes.</strong> The first asks for at most <strong>256 points</strong> per trace and lays out the whole shot in seconds; the second refines each trace to the figure\'s own <strong>pixel width</strong>, which is as much as a line can show. <strong>Drag across a figure</strong> and both passes run again inside that window: the point count barely changes, the <strong>stride collapses</strong> — the sampling rate follows the window instead of the shot. Double-click to go back to the whole shot. The stride is always in the caption.',
+  'mds.rate.what': '<strong>Two passes.</strong> The first asks for at most <strong>256 points</strong> per trace and lays out the whole shot in seconds; the second refines each trace to the figure\'s own <strong>pixel width</strong>, which is as much as a line can show. <strong>Drag across a figure</strong> and both passes run again inside that window: the point count barely changes, the <strong>stride collapses</strong> — the sampling rate follows the window instead of the shot. Double-click to go back to the whole shot. The stride is always in the caption. ★<strong>Pinned shots follow</strong>: when the window moves, every trace they have on screen is fetched <strong>once</strong> more for that window (once, not the 256-point pass — they already have a curve on screen), so both shots in one figure are on the same stride. The cost is one round trip per pinned trace, and the status line says how many were spent.',
   'mds.win.all': 'Whole shot',
   'mds.win.none': 'Window: the whole shot. Drag across any figure to zoom into a stretch of time; double-click to come back.',
   'mds.win.on': 'Window: {t0} … {t1} {u} (double-click any figure for the whole shot).',
@@ -200,5 +207,6 @@ self.FyI18n.register('en', {
   'mds.cat.filtered': 'Showing {n} of {all} signals that match what you typed; clear "Find" for all of them.',
   'mds.cat.pattern': 'This instrument also records signals given only as a name pattern (the upstream marks it an <strong>approximate grouping</strong>, so it is not expanded into clickable rows): {pat}',
   'mds.cat.loading': 'Reading the diagnostic catalogue…',
+  'mds.cat.absent': 'This distribution ships no diagnostic catalogue — it is an EAST site-network harvest and travels with the operator\u2019s data, not with a public release. The page still works: the tree browser and the typed path are unaffected, you just cannot pick by instrument. If you hold that catalogue, drop it at <code>devices/east-signals.json</code> and this panel comes back.',
   'mds.cat.failed': 'The diagnostic catalogue did not load: {why}. The page still works — the tree browser and the typed path are unaffected; you just cannot pick by instrument.',
 });

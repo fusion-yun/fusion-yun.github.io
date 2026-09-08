@@ -17,6 +17,11 @@
      what is left, and since the switches went wordless it no longer needs the
      catalogues either. -->
 <script src="assets/theme.js"></script>
+<!-- ★which host is serving this? the desktop viewer and the website get
+     the SAME BYTES, so anything that must differ is decided at runtime.
+     Publishes `data-fy-host` on <html>; today one CSS rule reads it, to
+     drop the footer QR in the viewer. -->
+<script src="assets/host.js"></script>
 </head>
 <body data-page="credits">
 
@@ -26,41 +31,30 @@
   <h1>Copyright and credits</h1>
   <span class="sub">Licence · provenance · acknowledgements · references</span>
   </div>
+  <p class="warn-band" role="note"><span class="warn-alpha">ALPHA — PROOF OF CONCEPT</span></p>
   <nav>
-    <a href="scenario/design.html">Discharge design</a>
-    <a href="scenario/model.html">Physics modelling</a>
-    <a href="scenario/analysis.html">Experiment analysis</a>
+    <a href="pages/pulse_design.html" class="navic" title="Pulse design" aria-label="Pulse design"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12.5h2.5L6 3.5h4l2.5 9H15"/></svg></a>
+    <a href="pages/model.html" class="navic" title="Physics modelling" aria-label="Physics modelling"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 1.8v11.7H15"/><path d="M3.2 4.4c3.6 0 4.6 2.7 5.1 5.2.4 2 1.3 3 3.2 3.6"/></svg></a>
+    <a href="pages/analysis.html" class="navic" title="Experiment analysis" aria-label="Experiment analysis"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="1.6" d="M4.2 2.4C9.2 2.4 13.2 4.8 13.2 8C13.2 11.2 9.2 13.6 4.2 13.6Z"/><path stroke-width="1.1" d="M1.3 5.2h13.4M1.3 8h13.4M1.3 10.8h13.4"/></svg></a>
+    <a href="pages/data.html" class="navic" title="Device data" aria-label="Device data"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="3.7" rx="5.2" ry="2.1"/><path d="M2.8 3.7v8.6c0 1.16 2.33 2.1 5.2 2.1s5.2-.94 5.2-2.1V3.7"/><path d="M2.8 8c0 1.16 2.33 2.1 5.2 2.1s5.2-.94 5.2-2.1"/></svg></a>
+    <a href="pages/report.html" class="navic" title="Case report" aria-label="Case report"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="1.5" d="M9.2 1.8H4.3c-.55 0-1 .45-1 1v10.4c0 .55.45 1 1 1h7.4c.55 0 1-.45 1-1V5.3z"/><path stroke-width="1.5" d="M9.2 1.8v3.5h3.5"/><path stroke-width="1.1" d="M5.7 8.7h4.6M5.7 11.2h4.6"/></svg></a>
     <button id="theme-toggle" class="iconbtn" type="button"></button>
   </nav>
 </header>
 
 <main class="doc">
 
-<p class="lead">This page states three things: the <strong>copyright and licence</strong> of this project, the <strong>provenance</strong> of each physics module, and the work that is owed acknowledgement. The per-file attribution of record is the repository NOTICE; this page is its readable summary, and every statement made here should be traceable to <code>NOTICE</code> or <code>ACKNOWLEDGEMENTS.md</code>.</p>
+<p class="lead">This page states three things: the <strong>copyright and licence</strong> of this project, the <strong>provenance</strong> of each physics module, and the work that is owed acknowledgement. The per-file attribution of record is the repository NOTICE; this page is its readable summary, and every statement made here should be traceable to <code>NOTICE</code> or <code>ACKNOWLEDGEMENTS.en.md</code>.</p>
 
 <h2>Copyright and licence</h2>
 
-<p>fylite is developed at the Institute of Plasma Physics, Chinese Academy of Sciences (ASIPP) and released under the <strong>Apache License 2.0</strong>. Use, modification and redistribution are permitted, commercial use included, provided the copyright notice and <code>NOTICE</code> are retained and the changes made are stated.</p>
+<p>fylite is developed as part of the work of the <strong>Integrated Modelling Discussion Group</strong> at the Institute of Plasma Physics, Chinese Academy of Sciences (ASIPP). Copyright is held by ASIPP and the fylite contributors, and it is released under the <strong>Apache License 2.0</strong>: free use, modification and redistribution (including commercially) are permitted, provided the copyright notice and <code>NOTICE</code> are retained and modifications are stated. The full licence text is in the repository <code>LICENSE</code>.</p>
 
-<pre class="licence">fylite
-Copyright 2026 Institute of Plasma Physics, Chinese Academy of Sciences (ASIPP)
-and the fylite contributors
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</pre>
-
-<p>★This page — the browser demos under <code>app/</code> — and the <code>.wasm</code> kernels it loads are under the same licence: the kernels are compiled from this repository's Rust sources, and each artifact's sha256 and provenance are recorded in the repository documentation, so they can be checked byte for byte.</p>
+<p>★This page — the browser demos under <code>app/</code> — and the compute kernels it loads are under the same licence: the kernels are built from this repository's own sources, and each artifact's sha256 and provenance are recorded in the repository documentation, so they can be checked byte for byte.</p>
 
 <h2>The parent project: FyTok</h2>
 
-<p>fylite is the <strong>lightweight edition</strong> of <a href="https://github.com/fusion-yun/fytok">FyTok</a>, its <strong>parent project</strong> (also <strong>Apache-2.0</strong>, Institute of Plasma Physics, Chinese Academy of Sciences): a full tokamak integrated-modelling framework in Python, with plugins, workflow scheduling, heterogeneous execution and provenance, aimed at HPC and the cloud. Both implement the <strong>fyo semantic contract</strong>; fylite takes the light end — the key solvers rewritten in Rust and run in the browser through WebAssembly with nothing to install — and <strong>doubles as FyTok's minimal functional verification</strong>: the two are coded independently against the same contract, so comparing them is a <strong>cross-check</strong> rather than a code confirming itself. The core-transport channel grammar is taken from FyTok's <code>fytrans</code> (see the table below), which is also the bit-for-bit anchor of the transport step.</p>
+<p>fylite is the <strong>lightweight edition</strong> of <a href="https://fusion-yun.github.io/">FyTok</a>, its <strong>parent project</strong> (also <strong>Apache-2.0</strong>, Institute of Plasma Physics, Chinese Academy of Sciences): a full tokamak integrated-modelling framework, with plugins, workflow scheduling, heterogeneous execution and provenance, aimed at HPC and the cloud. Both implement the <strong>fyo semantic contract</strong>; fylite takes the light end — the key solvers written afresh so they run in the browser with nothing to install — and <strong>doubles as FyTok's minimal functional verification</strong>: the two are coded independently against the same contract, so comparing them is a <strong>cross-check</strong> rather than a code confirming itself. The core-transport channel grammar is taken from FyTok's <code>fytrans</code> (see the table below), which is also the bit-for-bit anchor of the transport step.</p>
 
 <h2>Ports and provenance</h2>
 
@@ -106,6 +100,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</pre>
   <li><strong>Cross-code anchors</strong>: 0-D against METIS (CEA/IRFM), ITER scenarios against FUSE, electromagnetics and vertical stability against TokSys (General Atomics). None of those codes is redistributed here.</li>
 </ul>
 
+<h2>What was deliberately not taken</h2>
+
+<p>An acknowledgement that lists only what was taken is incomplete. The items below were <strong>deliberately not taken</strong>, for differing reasons, but they belong to the same record:</p>
+
+<ul>
+  <li><strong>EFIT lineage</strong>: no EFIT-family source, Green&rsquo;s-table generator or recorded output is present in any form; the equilibrium and inverse solvers are clean-room.</li>
+  <li><strong>GRAY</strong>: the EC ray-tracing port was stopped; its licence does not permit direct translation, and no GRAY physics source was read for fylite.</li>
+  <li><strong>UMFPACK</strong>: not ported &mdash; the sparse LU is written from scratch.</li>
+</ul>
+
 <h2>How this code was built</h2>
 
 <p>The physics modules of fylite were constructed from the public literature and open-source code listed above, <strong>with AI assistance</strong> (Anthropic Claude). Correctness is not claimed from authorship: it is established module by module against <strong>gold fixtures</strong> from the upstream implementations, with the tolerance and its error budget stated. fylite additionally exposes its own interfaces to AI hosts (MCP / JSON-RPC); that is a product feature and a separate matter from how it was written.</p>
@@ -115,16 +119,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</pre>
 <p>This project rests on physics, code and data that others made public. The debts are acknowledged item by item:</p>
 
 <ul>
+  <li><strong>The Integrated Modelling Discussion Group</strong> (ASIPP): Youwen SUN, Qilong REN, Xiang JIAN, Tianyang XIA, Zhi YU, Xiaojuan LIU, Yemin HU, Xiaotao XIAO and others.</li>
   <li><strong>General Atomics and the GACODE contributors</strong> (J. Candy, E. Belli, G. M. Staebler and colleagues) — upstream of the neoclassical, turbulence and flux-surface-geometry lines; <strong>W. A. Houlberg</strong> (NCLASS, as carried by NEO).</li>
   <li><strong>CEA/IRFM and the METIS authors</strong> (J. F. Artaud et al.) — source of the fast neutral-beam model and of the 0-D conventions, and the reference for the 0-D comparison.</li>
   <li><strong>P. B. Snyder, O. Meneghini and the EPED / EPED1-NN authors</strong> (General Atomics) — source of the pedestal model: EPED1's two constraints (Phys. Plasmas 16 056118 (2009)) reach this project through the EPED1-NN surrogate (Nucl. Fusion 57 086034 (2017)), with the network weights taken from the open-source EPEDNN.jl (ProjectTorreyPines, Apache-2.0; license and checksum vendored in this repository).</li>
   <li><strong>The authors of TokSys</strong> (General Atomics) — cross-code anchor for the electromagnetics and vertical stability.</li>
   <li><strong>The EAST team at ASIPP</strong> — discharge data, the operational EFIT workflow and per-channel diagnostic geometry.</li>
-  <li><strong>G. Q. Li, Q. L. Ren, J. P. Qian, L. L. Lao et al.</strong> — for porting EFIT to EAST and building its kinetic reconstruction (KEFIT), the upstream reference baseline of the reconstruction line here.</li>
+  <li><strong>J. P. Qian, G. Q. Li, Q. L. Ren, L. L. Lao et al.</strong> — for porting EFIT to EAST and building its kinetic reconstruction (KEFIT), the upstream reference baseline of the reconstruction line here.</li>
   <li><strong>Youwen Sun</strong> — the HT-7 soft-X-ray tomography work (camera-geometry parameterisation and the chord-Green / weighted pseudo-inverse method skeleton).</li>
   <li><strong>Ting Lan</strong> — for curating the EAST experimental data corpus; its per-channel diagnostic geometry reaches this project through fydata.</li>
   <li><strong>Yao Huang and the EAST PCS group</strong> — the plasma-control-system interface note (magnetic-probe geometry and the equilibrium↔PCS variables).</li>
-  <li><strong>Private communications</strong>: Tianyang Xia (edge and integration), Yemin Hu (equilibrium), Xiaotao Xiao (transport).</li>
+  <li><strong>Xuemin WU, Hui SHENG</strong> — guidance on and clarification of the KEFIT operating procedure, and the benchmark cases they provided.</li>
   <li><strong>The ITER Organization</strong> — the IMAS Data Dictionary and the ITER machine description, reaching this project through fyo and fydata; the ITER configuration built into the demos comes from there.</li>
   <li><strong>The authors of the works listed in the following section</strong> — every formula used here names its source; none originates in this project.</li>
 </ul>
@@ -205,13 +210,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</pre>
 <p>This page is a summary. The binding, per-file statements are in the repository:</p>
 
 <ul>
-  <li><a href="https://github.com/fusion-yun/fylite/blob/main/LICENSE">LICENSE</a>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/develop/LICENSE">LICENSE</a>
       — <span>the full Apache License 2.0</span></li>
-  <li><a href="https://github.com/fusion-yun/fylite/blob/main/NOTICE">NOTICE</a>
-      — <span>per-file provenance, the statement of changes, and what is not included</span></li>
-  <li><a href="https://github.com/fusion-yun/fylite/blob/main/ACKNOWLEDGEMENTS.md">ACKNOWLEDGEMENTS.md</a>
+  <!-- ★★NOTICE 是**站点自己带的一份**，不是仓库里的一份（2026-09-08）。仓根没有
+       NOTICE：`095374f` 裁定它描述内核源码、随源码留在 fylite_kernel，而 Apache-2.0
+       §4(d) 的义务附着在**分发件**上，由分发的构建当场装入——轮子由
+       `tools/build-wheel.sh` 装，站点由 `tools/build-site.sh` 装。所以这条链接指向
+       本站根目录，而不是一个 404 的仓库路径。★在**未经构建的 `app/` 源树**里
+       预览时它取不到——那棵树不是分发件，别把这条改回仓库链接。 -->
+  <li><a href="NOTICE">NOTICE</a>
+      — <span>per-file provenance, the statement of changes, and what is not included — it travels with the distribution, and this copy sits at the root of this site</span></li>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/develop/docs/ACKNOWLEDGEMENTS.md">docs/ACKNOWLEDGEMENTS.md</a>
       — <span>the readable acknowledgement list: upstream code, transcribed formulae, data and fixtures, and what was deliberately not taken</span></li>
-  <li><a href="https://github.com/fusion-yun/fylite/blob/main/CONTRIBUTORS.md">CONTRIBUTORS.md</a>
+  <li><a href="https://github.com/fusion-yun/fylite/blob/develop/CONTRIBUTORS.md">CONTRIBUTORS.md</a>
       — <span>maintainers and copyright</span></li>
 </ul>
 
@@ -225,8 +236,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</pre>
   <a href="features.en.html">Capability</a>
   <a class="iconbtn" href="credits.html" hreflang="zh" title="Switch to 中文" aria-label="Switch to 中文"><img class="flag" src="assets/flag-en.svg" alt="" width="24" height="16"></a>
   <span class="copy">© 2026 Institute of Plasma Physics, Chinese Academy of Sciences (ASIPP) and the fylite contributors · Apache-2.0 · alpha release</span>
-  <span class="ver" title="kernel 0.0.1 · ABI 112 · app 0.0.1-alpha">kernel 0.0.1 · ABI 112 · front end 0.0.1-alpha</span>
-  <a class="qr" href="https://fusion-yun.github.io/fylite/credits.en.html" title="https://fusion-yun.github.io/fylite/credits.en.html"><img src="assets/qr-credits-en.svg" alt="QR" width="37" height="37"></a>
+  <span class="ver" title="kernel 0.0.1 · interface 152 · app 0.0.1-alpha">kernel 0.0.1 · interface 152 · front end 0.0.1-alpha</span>
+  <a class="qr" href="https://fusion-yun.github.io/fylite" title="https://fusion-yun.github.io/fylite"><img src="assets/qr-site.svg" alt="QR" width="37" height="37"></a>
 </footer>
 
 </body>

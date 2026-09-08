@@ -8,8 +8,13 @@
 // on both `analysis` and `ts_east`, and asking `east` for `\PCRL01` returns
 // `%TREE-W-NNF`: not empty data, *absent*.  The site's own UDA client is
 // pleasant to use for exactly one reason — somebody wrote that mapping down.
-// `app/devices/east-signals.json` is that mapping (73 diagnostics, 376
+// `app/facts/device/east-signals.json` is that mapping (73 diagnostics, 376
 // signals, harvested from the EAST Wiki); this panel is how it is read.
+//
+// ★★IT IS NOT IN A PUBLIC RELEASE.  The harvest is an operator's internal
+// document and travels with their data (2026-09-02), so in a published copy of
+// this page the fetch below 404s and the panel says so — see `mds.cat.absent`.
+// Whoever holds the catalogue puts it back at that path and the panel returns.
 //
 // ★IT IS A SEPARATE FILE ON PURPOSE.  The page's own controller is about
 // talking to the gateway; this is about a static document that happens to be
@@ -39,7 +44,7 @@
   // the panel, injected rather than written into the page
   // ------------------------------------------------------------------
   //
-  // ★Injected because this file is optional.  Markup in `mdsplus.html` for a
+  // ★Injected because this file is optional.  Markup in `pages/data.html` for a
   // panel whose script may not be loaded is markup that renders as an empty
   // box — the page would look broken in exactly the configuration where it is
   // merely reduced.
@@ -67,8 +72,16 @@
   function load() {
     if (state.doc) return Promise.resolve(state.doc);
     // Same-origin and relative, like every other request this page makes.
-    return fetch('devices/east-signals.json', { headers: { accept: 'application/json' } })
-      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    return fetch('facts/device/east-signals.json', { headers: { accept: 'application/json' } })
+      .then(function (r) {
+        // ★404 与「读失败」是两件事，说成一件是这一栏最容易骗人的地方。
+        // 目录采自 EAST 内网 Wiki，2026-09-02 随实验数据一起移出公开分发；
+        // 于是**没有它才是缺省状态**，而不是出了故障。持有那份文件的人把它放
+        // 回 `facts/device/east-signals.json`，这一栏自己就回来了。
+        if (r.status === 404) { var e = new Error('absent'); e.absent = true; throw e; }
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
       .then(function (d) { state.doc = d; return d; });
   }
 
@@ -270,7 +283,10 @@
       // the tree browser and the typed path still work, and saying which is
       // which is the difference between a reader retrying and a reader
       // concluding the server is down.
-      note('mds.cat.failed', { why: e.message }, 'warn');
+      // ★★And "not shipped" is not a failure at all — a reader who is told
+      // the fetch failed will retry it forever.
+      if (e && e.absent) note('mds.cat.absent');
+      else note('mds.cat.failed', { why: e.message }, 'warn');
     });
   }
 

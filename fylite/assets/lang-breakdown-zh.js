@@ -8,7 +8,6 @@
 
 self.FyI18n.register('zh', {
   'nav.breakdown': '击穿场零',
-  'b.fmt.json': 'JSON 会话 (fyo)',
 
   'b.target': '场零位置与判据',
   'b.radius': '判据半径 [m]',

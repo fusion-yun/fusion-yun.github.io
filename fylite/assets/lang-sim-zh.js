@@ -1,0 +1,96 @@
+// Chinese catalogue for the INTERACTIVE-SIMULATION scenario
+// (FYL-DESIGN-09 仿真模式).
+//
+// ★The words here carry the two distinctions the page is built on: 目标 vs
+// 实现（Ip 是被跟随的，不是被规定的）, and 定态 vs 磁通余量（模型能一直平顶，
+// 机器不能）.
+
+self.FyI18n.register('zh', {
+  'nav.sim': '交互仿真（推进中）',
+  's.run': '启动',
+  's.power': '启动（断开 → 受控下降沿）',
+  's.ph.idle': '待机',
+  's.ph.up': '上升',
+  's.ph.flat': '平顶',
+  's.ph.down': '下降',
+  's.ph.end': '结束',
+  's.pause': '暂停',
+  's.step': '单步',
+  's.reset': '重置',
+  's.phase.note.idle': '★<strong>相位是开关的结果，不是时刻表</strong>：先把 LCFS 与 I<sub>p</sub> 目标摆好，再合开关起放电。断开关＝受控下降沿，不是急停。',
+  's.phase.note.up': '上升沿：I<sub>p</sub> 按声明的上升率走向目标（起于 t = {up} s）。',
+  's.phase.note.flat': '平顶：t = {flat} s 起。不动它，等离子体就在定态上维持——能维持多久由磁通预算说。',
+  's.phase.note.down': '下降沿：按声明的下降率退场；到零即结束。',
+  's.phase.note.end': '已结束（t = {t} s）。★放电结束不能「再开」续上——那是另一炮，按「重置」。',
+  's.ended': '这一炮已经结束了：等离子体没有了，续不上。按「重置」开新的一炮。',
+
+  's.clock': '时间步长与节律',
+  's.dt': '推进步长 Δt [s]',
+  's.rate': '画面节律 [步/s]',
+  's.eqevery': '每几步真解一次平衡',
+  's.clock.note': '实时倍率：仿真 {rt} s / 墙钟 1 s（Δt {dt} s × 节律）。★<strong>不承诺实时</strong>——一次自由边界正解在浏览器里约 1 s，所以平衡每 {n} 步（≈{eq} s 放电时间）才真解一次，其间画面上的边界是<strong>上一次真解</strong>的那一条。',
+
+  's.target': 'I<sub>p</sub> 目标',
+  's.rup': '上升率 [MA/s]',
+  's.rdn': '下降率 [MA/s]',
+
+  's.shape': 'LCFS 目标',
+  's.fb': '形状反馈：等 LCFS（电流随状态重解）',
+  's.shape.note': '★<strong>形状反馈开着时，位形不动而电流动</strong>：每个平衡节拍按当前状态重解「持住这条边界要多少电流」。关掉它，线圈就按第一次设计的电流走，你会看到边界随状态<strong>漂</strong>——那正是检验一份前馈设计的办法。这里求的是回路的<strong>稳态解</strong>，不含增益、时滞与噪声。',
+
+  's.drive': '加热与驱动',
+  's.drive.note': '★<strong>滑块改的是未来</strong>：推一下，从这一刻起的推进用新值，已经走过的时序<strong>一个点都不重算</strong>。所以走廊上改动点之前的那一段，就是旧设定下真实发生的那一段。',
+
+  's.flux': '磁通预算',
+  's.flux.ind': '电感磁通 Φ<sub>ind</sub>',
+  's.flux.res': '斜坡电阻磁通 Φ<sub>res</sub>',
+  's.flux.used': '已消耗磁通',
+  's.flux.vflat': '平顶平均环电压',
+  's.flux.left': '剩余摆幅',
+  's.flux.hold': '还能维持',
+  's.flux.unknown': '未知（未声明摆幅）',
+  's.flux.note': '★<strong>「不操作就不变」是模型的性质，不是机器的承诺</strong>：定态是 dW/dt = P − W/τ<sub>E</sub> 的不动点，而平顶能撑多久由摆幅除以平顶环电压定。未声明摆幅时这一行报<strong>未知</strong>，不拿缺省值代替。',
+
+  's.now': '当前状态',
+  's.eq.none': '★还没有解过平衡：合开关起放电，或把「每几步真解一次平衡」调小。图上只有<strong>目标</strong>边界。',
+  's.eq.solved': '★<strong>上次真解 t = {at} s</strong>（现在 t = {t} s，本次运行共 {n} 次）。这一帧的边界是那次求解的，不是这一步算出来的；形状反馈：{fb}。',
+  's.fb.on': '开（电流随状态重解）',
+  's.fb.off': '关（按首次设计的电流走）',
+  's.cross.cap': '解于 t = {at} s；压强参数 β₀ = {beta}',
+  's.cross.none': '尚无解出的截面',
+  's.leg.tshape': '目标 LCFS',
+  's.leg.gshape': '解出的 LCFS',
+  's.cap.ne': '密度剖面 n<sub>e</sub>（现在）',
+  's.cap.t': '温度剖面 T<sub>e</sub> / T<sub>i</sub>（现在）',
+  's.snap.t': '仿真时刻',
+  's.snap.ip': 'I<sub>p</sub>',
+  's.snap.w': '热储能 W<sub>th</sub>',
+  's.snap.tau': '能量约束时间 τ<sub>E</sub>',
+  's.snap.steady': '定态',
+  's.steady.yes': '是（近 10 步 W 变化 {rel} %）',
+  's.steady.no': '未到（近 10 步 W 变化 {rel} %）',
+
+  's.corridor': '滚动走廊（右缘＝现在）',
+  's.caveat': '★<strong>时间轴只有过去</strong>：右缘是现在，右侧留白是尚未算出的部分。★I<sub>p</sub> 的「实现」是<strong>受斜坡率限制地跟随目标</strong>，不是由 OH 电压驱动电流扩散得到的——这一层的缺口，写在这里而不是留给读者猜。',
+  's.cap.ip': 'I<sub>p</sub>：目标（虚线）与实现（实线）',
+  's.cap.w': '热储能与能量约束时间（能量平衡推进）',
+  's.cap.p': '功率：辅助加热与欧姆',
+  's.cap.coil': 'PF 通道电流：每个点是一次真做过的设计（不连线）',
+
+  's.record': '本次运行',
+  's.rec.steps': '已推进',
+  's.rec.dt': '当前步长',
+  's.rec.eq': '平衡真解',
+  's.rec.phase': '相位',
+  's.rec.kind': '产物类别',
+  's.rec.kind.run': '运行记录（不是设计）',
+  's.record.note': '★<strong>这一页产出的是一次运行，不是一份计划</strong>：手推滑块长出来的电流是这一次驾驶的结果，不能当作交给控制系统的参考波形。要一份计划，去「脉冲设计」场景。',
+
+  's.axis.t': 't [s]',
+  's.leg.target': '目标',
+  's.leg.got': '实现',
+  's.idle': '待机——摆好目标，合开关起放电。',
+  's.running': '运行中 · t = {t} s',
+  's.paused': '已暂停 · t = {t} s（再按「暂停」继续）',
+  's.finished': '放电结束 · t = {t} s，共 {n} 步。',
+});

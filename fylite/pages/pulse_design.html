@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="ln.pulse_design.title">fylite</title>
+<link rel="icon" href="../assets/fy_mark.svg">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+  /* --- 放电设计页 (pulse design) -----------------------------------------
+     One page, three modes, one script (FYL-DESIGN-09 D-18..D-21).  What the
+     mode switch changes is what the TIME AXIS MEANS: 配置 has no axis (one
+     instant, one solve), 设计 has the whole pulse already computed and a
+     play-head reading it, 仿真 has only the past and the right-hand edge is
+     now.  Everything below is the three former pages' own rules, kept scoped
+     by `data-part` exactly as they were — a merge that restyled them would
+     make the diff unreadable and the regression invisible.
+
+     ★切模式只换一块 (D-19): the mode blocks are hidden and shown, never
+     rebuilt.  A rebuilt DOM would drop every canvas, every folded state and
+     every value the reader had typed — which is precisely the thing three
+     separate pages were already doing wrong. */
+  .modebar { display: flex; gap: 8px; flex-wrap: wrap; }
+  .modebar button {
+    flex: 1 1 auto; min-width: 150px; padding: 7px 10px; cursor: pointer;
+    border: 1px solid var(--grid); border-radius: 6px;
+    background: transparent; color: var(--muted); font: inherit; }
+  .modebar button.on {
+    border-color: var(--accent); color: var(--fg);
+    background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .mode[hidden] { display: none; }
+  /* --- discharge --- */
+.mode[data-mode="configure"] canvas.drag {touch-action: none;}
+  .mode[data-mode="configure"] .fig-opts {display: flex; flex-wrap: wrap; gap: 6px 20px; justify-content: flex-end;}
+  .mode[data-mode="configure"] .fig-opts, .mode[data-mode="configure"] .fig-opts .check {margin: 0;}
+  /* cross-section and the coil-current table read together: the figure
+     encodes the currents as colour, the table carries the numbers */
+  .mode[data-mode="configure"] .cross-row {display: grid; grid-template-columns: minmax(0, 1fr) 236px; gap: 16px; align-items: start;}
+  .mode[data-mode="configure"] .cross-row, .mode[data-mode="configure"] .cross-row > div > h2 {margin-top: 0;}
+  @media (max-width: 900px) {
+  .mode[data-mode="configure"] .cross-row {grid-template-columns: 1fr;} }
+  .mode[data-mode="configure"] canvas.cscale {width: 100%; height: 34px; border: none; background: transparent; margin-top: 6px;}
+  #tool-pulse_design .toolbar .dev-ctl {max-width: 260px;}
+  /* --- pulse workspace ---------------------------------------------------
+     One time axis, four views on it.  The corridor is a stack of short
+     canvases sharing one x range; the slice row puts the cross-section
+     beside the profiles of the same instant. */
+  .mode[data-mode="design"] .corridor figure { margin: 0 0 10px; }
+  .mode[data-mode="design"] canvas.short { width: 100%; height: 108px; }
+  .mode[data-mode="design"] canvas.tall { width: 100%; height: 320px; }
+  .mode[data-mode="design"] .slice-row { display: flex; gap: 10px; align-items: center; }
+  .mode[data-mode="design"] .slice-row input[type="range"] { flex: 1; }
+  .mode[data-mode="design"] .slice-grid {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
+    gap: 16px; align-items: start; }
+  @media (max-width: 900px) {
+    .mode[data-mode="design"] .slice-grid { grid-template-columns: 1fr; } }
+  .mode[data-mode="design"] td.bad { color: var(--lcfs); }
+  .mode[data-mode="design"] td.unk { color: var(--warn); }
+  /* --- interactive simulation -------------------------------------------
+     The corridor's right edge is NOW: the future is not drawn, because it
+     has not been computed (FYL-DESIGN-09 D-11). */
+  .mode[data-mode="simulate"] canvas.short { width: 100%; height: 104px; }
+  .mode[data-mode="simulate"] canvas.tall { width: 100%; height: 320px; }
+  .mode[data-mode="simulate"] .phasebar { display: flex; gap: 4px; margin: 6px 0 4px; }
+  .mode[data-mode="simulate"] .phasebar span {
+    flex: 1; text-align: center; font-size: 12px; padding: 3px 0;
+    border: 1px solid var(--grid); border-radius: 4px; color: var(--muted); }
+  .mode[data-mode="simulate"] .phasebar span.on {
+    border-color: var(--accent); color: var(--fg);
+    background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .mode[data-mode="simulate"] .runrow { display: flex; gap: 8px; align-items: center; }
+  .mode[data-mode="simulate"] .runrow button { flex: 1; }
+  .mode[data-mode="simulate"] .slice-grid {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
+    gap: 16px; align-items: start; }
+  @media (max-width: 900px) {
+    .mode[data-mode="simulate"] .slice-grid { grid-template-columns: 1fr; } }
+  .mode[data-mode="simulate"] td.warn { color: var(--warn); }
+</style>
+<script src="../assets/i18n.js"></script>
+<script src="../assets/lang-zh.js"></script>
+<script src="../assets/lang-en.js"></script>
+<script src="../assets/lang-home-zh.js"></script>
+<script src="../assets/lang-home-en.js"></script>
+<script src="../assets/lang-site-zh.js"></script>
+<script src="../assets/lang-site-en.js"></script>
+<script src="../assets/lang-pd-zh.js"></script>
+<script src="../assets/lang-pd-en.js"></script>
+<script src="../assets/lang-zerod-zh.js"></script>
+<script src="../assets/lang-zerod-en.js"></script>
+<script src="../assets/lang-design-zh.js"></script>
+<script src="../assets/lang-design-en.js"></script>
+<script src="../assets/lang-breakdown-zh.js"></script>
+<script src="../assets/lang-breakdown-en.js"></script>
+<script src="../assets/lang-pulse-zh.js"></script>
+<script src="../assets/lang-pulse-en.js"></script>
+<script src="../assets/lang-sim-zh.js"></script>
+<script src="../assets/lang-sim-en.js"></script>
+<script src="../assets/theme.js"></script>
+<!-- which host is serving this (site vs desktop viewer); see assets/host.js -->
+<script src="../assets/host.js"></script>
+<!-- GENERATED by rust/build.sh: kernel / front-end release + ABI -->
+<script src="../assets/version.js"></script>
+<script src="../assets/site.js"></script>
+</head>
+<body data-page="pulse_design">
+
+<header class="top">
+  <a class="brand" href="../index.html"><img src="../assets/fy_mark.svg" alt="" width="32" height="32"></a>
+  <div class="titles">
+  <h1 data-line-h1>&nbsp;</h1>
+  <span class="sub" data-line-sub></span>
+  </div>
+  <p class="warn-band" role="note"><span class="warn-alpha" data-i18n="chrome.alpha">alpha 版，用于概念验证</span></p>
+  <nav>
+    <button id="theme-toggle" class="iconbtn" type="button"></button>
+  </nav>
+</header>
+
+<main>
+<div class="doc intro-host" id="line-doc"></div>
+
+<section class="tool" id="tool-pulse_design">
+<!-- ★Only what the PAGE has one of stays in the toolbar: the handoff gives
+     the page's product to another scenario. -->
+<div class="toolbar-host" data-status="status.loading"><button id="pulse_design-handoff" class="ghost" data-i18n="handoff.give" data-i18n-title="handoff.give.title">交给建模场景</button></div>
+
+<!-- ★这一炮，只有一组控件（FYL-DESIGN-09 D-20）。三个模式读的是它同一份，
+     不是三份各自漂移的副本：合并之前，相位时刻在「0-D 工况」与「PF 波形设计」
+     两条栏里各有一组输入框，两处填得不一样时页面不会说——而两条栏报的是同一
+     条放电。控件住在功能栏之外，因为栏一折就会把自己的面板收起来，共用控件
+     若住在里面，折起一条栏会连另外两个模式的输入一起看不见。 -->
+<div class="panel page-shared" id="pulse_design-shot">
+  <h2 data-i18n="pd.shot">这一炮（三个模式共用）</h2>
+  <div class="shared-grid">
+    <div class="ctl"><label><span data-i18n="pd.ip">平顶电流 I<sub>p</sub> [kA]</span> <span class="val" id="pulse_design-v-ip"></span></label>
+      <input type="range" id="pulse_design-ip" min="50" max="1000" step="5" value="400"></div>
+    <div class="ctl"><label for="pulse_design-r0" data-i18n="pd.r0">大半径 R<sub>0</sub> [m]</label>
+      <input type="number" id="pulse_design-r0" step="0.005" value="1.85"></div>
+    <div class="ctl"><label><span data-i18n="pd.a">平顶小半径 a [m]</span> <span class="val" id="pulse_design-v-a"></span></label>
+      <input type="range" id="pulse_design-a" min="0.30" max="0.50" step="0.005" value="0.45"></div>
+    <div class="ctl"><label><span data-i18n="pd.kappa">拉长比 κ</span> <span class="val" id="pulse_design-v-kappa"></span></label>
+      <input type="range" id="pulse_design-kappa" min="1.0" max="2.2" step="0.01" value="1.65"></div>
+    <div class="ctl"><label><span data-i18n="pd.du">上三角度 δ<sub>u</sub></span> <span class="val" id="pulse_design-v-du"></span></label>
+      <input type="range" id="pulse_design-du" min="-0.2" max="0.7" step="0.01" value="0.40"></div>
+    <div class="ctl"><label><span data-i18n="pd.dl">下三角度 δ<sub>l</sub></span> <span class="val" id="pulse_design-v-dl"></span></label>
+      <input type="range" id="pulse_design-dl" min="-0.2" max="0.7" step="0.01" value="0.50"></div>
+    <!-- ★Z₀ 曾经住在「位形与线圈电流」栏上，理由是「它是把边界放在哪里，不是
+         边界长什么形状」。合并之后 PF 波形那一栏也读它——一个量被两条栏读，
+         就不该住在其中一条栏里（D-20）。 -->
+    <div class="ctl"><label for="pulse_design-z0" data-i18n="pd.z0">磁轴高度 Z<sub>0</sub> [m]</label>
+      <input type="number" id="pulse_design-z0" min="-0.40" max="0.40" step="0.005" value="0"></div>
+  </div>
+  <!-- ★相位只有一处可改（D-3）：梯形与相位码都由内核的 `zerod_waveform` 给出，
+       页面不重写第二遍。★下降沿有自己的自变量（D-5），它不是上升沿取负。 -->
+  <div class="shared-grid">
+    <div class="ctl"><label for="pulse_design-t_bd" data-i18n="pd.t_bd">击穿 [s]</label>
+      <input type="number" id="pulse_design-t_bd" step="0.05" value="0"></div>
+    <div class="ctl"><label for="pulse_design-t_ru" data-i18n="pd.t_ru">斜坡结束 [s]</label>
+      <input type="number" id="pulse_design-t_ru" step="0.1" value="1.0"></div>
+    <div class="ctl"><label for="pulse_design-t_ft" data-i18n="pd.t_ft">平顶结束 [s]</label>
+      <input type="number" id="pulse_design-t_ft" step="0.1" value="8.0"></div>
+    <div class="ctl"><label for="pulse_design-t_end" data-i18n="pd.t_end">放电结束 [s]</label>
+      <input type="number" id="pulse_design-t_end" step="0.1" value="10.0"></div>
+    <div class="ctl"><label><span data-i18n="pd.a0">起始小半径比 a₀/a</span> <span class="val" id="pulse_design-v-a0"></span></label>
+      <input type="range" id="pulse_design-a0" min="0.2" max="1.0" step="0.05" value="0.45"></div>
+    <div class="ctl"><label><span data-i18n="pd.a1">收尾小半径比 a₁/a</span> <span class="val" id="pulse_design-v-a1"></span></label>
+      <input type="range" id="pulse_design-a1" min="0.2" max="1.0" step="0.05" value="0.55"></div>
+  </div>
+  <p class="note" data-i18n="pd.shot.note"></p>
+</div>
+
+<!-- ★加热、密度与限值同样只有一组：仿真模式里拖动它们改的是「从现在起」的
+     驱动（D-12），设计模式里改的是整条波形——同一个控件，两种语义，而不是
+     两个控件、两个答案。 -->
+<div class="panel page-shared" id="pulse_design-drive">
+  <h2 data-i18n="pd.drive">等离子体 · 加热 · 限值（三个模式共用）</h2>
+  <div class="shared-grid">
+    <div class="ctl"><label><span data-i18n="pd.ne">中心密度 n<sub>e0</sub> [10<sup>19</sup> m<sup>−3</sup>]</span> <span class="val" id="pulse_design-v-ne"></span></label>
+      <input type="range" id="pulse_design-ne" min="0.5" max="20" step="0.1" value="4.0"></div>
+    <div class="ctl"><label><span data-i18n="pd.te">中心温度 T<sub>e0</sub> [keV]</span> <span class="val" id="pulse_design-v-te"></span></label>
+      <input type="range" id="pulse_design-te" min="0.2" max="30" step="0.1" value="3.0"></div>
+    <div class="ctl"><label><span data-i18n="pd.paux">辅助加热 P<sub>aux</sub> [MW]</span> <span class="val" id="pulse_design-v-paux"></span></label>
+      <input type="range" id="pulse_design-paux" min="0" max="60" step="0.5" value="2.0"></div>
+    <div class="ctl"><label for="pulse_design-t_on" data-i18n="pd.t_on">加热开 [s]</label>
+      <input type="number" id="pulse_design-t_on" step="0.1" value="1.0"></div>
+    <div class="ctl"><label for="pulse_design-t_off" data-i18n="pd.t_off">加热关 [s]</label>
+      <input type="number" id="pulse_design-t_off" step="0.1" value="8.0"></div>
+    <div class="ctl"><label><span data-i18n="pd.hfac">H 因子</span> <span class="val" id="pulse_design-v-hfac"></span></label>
+      <input type="range" id="pulse_design-hfac" min="0.4" max="2.0" step="0.05" value="1.0"></div>
+    <div class="ctl"><label for="pulse_design-phiavail" data-i18n="pd.phiavail">可用磁通摆幅 [Wb]（0 = 未声明）</label>
+      <input type="number" id="pulse_design-phiavail" step="0.1" min="0" value="0"></div>
+    <div class="ctl"><label for="pulse_design-icap" data-i18n="pd.icap">通道电流上限 [kA·匝]（0 = 未声明）</label>
+      <input type="number" id="pulse_design-icap" step="10" min="0" value="0"></div>
+    <div class="ctl"><label for="pulse_design-vcap" data-i18n="pd.vcap">通道电压上限 [V/匝]（0 = 未声明）</label>
+      <input type="number" id="pulse_design-vcap" step="1" min="0" value="0"></div>
+  </div>
+  <p class="note" data-i18n="pd.drive.note"></p>
+</div>
+
+<!-- ★模式开关：它换的是时间轴的含义（D-18），不是三个工具。切模式只换下面
+     那一块（D-19）——上面这两块共用控件原地不动，它们的 DOM 不重建，所以
+     一个模式里填的数在另一个模式里就是同一个数。 -->
+<div class="panel page-shared" id="pulse_design-modes">
+  <h2 data-i18n="pd.mode">模式</h2>
+  <div class="modebar" id="pulse_design-modebar">
+    <button type="button" data-mode="configure" data-i18n="pd.mode.configure">配置 configure</button>
+    <button type="button" data-mode="design" class="on" data-i18n="pd.mode.design">设计 design</button>
+    <button type="button" data-mode="simulate" data-i18n="pd.mode.simulate">仿真 simulate</button>
+  </div>
+  <p class="note" id="pulse_design-mode-note"></p>
+</div>
+
+
+<div class="layout">
+
+<!-- ================= 模式 配置 configure ================= -->
+<div class="mode" data-mode="configure" id="part-configure" hidden>
+<section data-bar="zerod">
+<div class="funcbar-body">
+
+<div>
+    <div data-part="pulse_design" class="panel">
+      <h2 data-i18n="z.tier">档位</h2>
+      <div class="tabs">
+        <button id="pulse_design-zerod-tab-a" class="on" data-i18n="z.tier.a">分析</button>
+        <button id="pulse_design-zerod-tab-b" data-i18n="z.tier.b">预测（实验）</button>
+      </div>
+      <p class="note" id="pulse_design-zerod-tier-note"></p>
+      <div id="pulse_design-zerod-tierb-controls" hidden>
+        <div class="ctl"><label for="pulse_design-zerod-tau_law" data-i18n="z.tau_law">能量约束标度律</label>
+          <select id="pulse_design-zerod-tau_law">
+            <option value="0">IPB98(y,2) · H 模</option>
+            <option value="1">ITER89-P · L 模</option>
+          </select></div>
+        <div class="ctl"><label><span data-i18n="z.meff">等效质量 M [amu]</span> <span class="val" id="pulse_design-zerod-v-meff"></span></label>
+          <input type="range" id="pulse_design-zerod-meff" min="1.0" max="3.0" step="0.05" value="2.5"></div>
+        <div class="ctl"><label><span data-i18n="z.w0">初始储能 W<sub>0</sub> [MJ]</span> <span class="val" id="pulse_design-zerod-v-w0"></span></label>
+          <input type="range" id="pulse_design-zerod-w0" min="0" max="50" step="0.5" value="1.0"></div>
+      </div>
+    </div>
+
+    <div data-part="pulse_design" class="panel">
+      <h2 data-i18n="z.phases">相位时刻 [s]</h2>
+      <div class="row">
+      </div>
+    </div>
+
+    <div data-part="pulse_design" class="panel">
+      <h2 data-i18n="z.plasma">等离子体（平顶值）</h2>
+      <div class="ctl"><label><span data-i18n="z.tite">T<sub>i</sub> / T<sub>e</sub></span> <span class="val" id="pulse_design-zerod-v-tite"></span></label>
+        <input type="range" id="pulse_design-zerod-tite" min="0.3" max="1.5" step="0.05" value="0.9"></div>
+      <div class="ctl"><label><span data-i18n="z.pn">密度峰化 e<sub>n</sub></span> <span class="val" id="pulse_design-zerod-v-pn"></span></label>
+        <input type="range" id="pulse_design-zerod-pn" min="0.2" max="3.0" step="0.1" value="1.0"></div>
+      <div class="ctl"><label><span data-i18n="z.pt">温度峰化 e<sub>T</sub></span> <span class="val" id="pulse_design-zerod-v-pt"></span></label>
+        <input type="range" id="pulse_design-zerod-pt" min="0.2" max="4.0" step="0.1" value="1.5"></div>
+      <div class="ctl"><label><span data-i18n="z.zeff">Z<sub>eff</sub></span> <span class="val" id="pulse_design-zerod-v-zeff"></span></label>
+        <input type="range" id="pulse_design-zerod-zeff" min="1.0" max="5.0" step="0.1" value="1.8"></div>
+      <div class="ctl"><label><span data-i18n="z.dtf">D-T 份额 n<sub>D</sub>/n<sub>e</sub></span> <span class="val" id="pulse_design-zerod-v-dtf"></span></label>
+        <input type="range" id="pulse_design-zerod-dtf" min="0" max="0.5" step="0.01" value="0.5"></div>
+    </div>
+
+    <div data-part="pulse_design" class="panel">
+      <h2 data-i18n="z.equilpanel">逐片平衡</h2>
+      <div class="check"><input type="checkbox" id="pulse_design-zerod-eqauto" checked>
+        <label for="pulse_design-zerod-eqauto" data-i18n="z.eqauto">停在某一片时解该片的平衡</label></div>
+      <div class="ctl"><label><span data-i18n="z.pfscale">PF 电流缩放</span> <span class="val" id="pulse_design-zerod-v-pfscale"></span></label>
+        <input type="range" id="pulse_design-zerod-pfscale" min="0" max="1.5" step="0.05" value="1.0"></div>
+      <p class="note" data-i18n="z.eq_note"></p>
+    </div>
+
+    <div data-part="pulse_design" class="panel">
+      <h2 data-i18n="u.title">不确定度扫描</h2>
+      <div class="check"><input type="checkbox" id="pulse_design-zerod-uqon">
+        <label for="pulse_design-zerod-uqon" data-i18n="u.on">开启</label></div>
+      <div class="ctl"><label><span data-i18n="u.n">样本数</span> <span class="val" id="pulse_design-zerod-v-uqn"></span></label>
+        <input type="range" id="pulse_design-zerod-uqn" min="20" max="1000" step="20" value="200"></div>
+      <div class="ctl"><label><span data-i18n="u.sne">n<sub>e0</sub> 相对不确定度</span> <span class="val" id="pulse_design-zerod-v-uqsne"></span></label>
+        <input type="range" id="pulse_design-zerod-uqsne" min="0" max="0.4" step="0.01" value="0.10"></div>
+      <div class="ctl"><label><span data-i18n="u.ste">T<sub>e0</sub> 相对不确定度</span> <span class="val" id="pulse_design-zerod-v-uqste"></span></label>
+        <input type="range" id="pulse_design-zerod-uqste" min="0" max="0.4" step="0.01" value="0.10"></div>
+      <div class="ctl"><label><span data-i18n="u.sip">I<sub>p</sub> 相对不确定度</span> <span class="val" id="pulse_design-zerod-v-uqsip"></span></label>
+        <input type="range" id="pulse_design-zerod-uqsip" min="0" max="0.2" step="0.01" value="0.03"></div>
+      <div class="ctl"><label><span data-i18n="u.seed">随机种子</span> <span class="val" id="pulse_design-zerod-v-uqseed"></span></label>
+        <input type="range" id="pulse_design-zerod-uqseed" min="1" max="99" step="1" value="7"></div>
+      <p class="note" data-i18n="u.note"></p>
+    </div>
+
+    <div data-part="pulse_design" class="panel">
+      <h2 data-i18n="z.heating">辅助加热</h2>
+      <div class="row">
+      </div>
+    </div>
+</div>
+
+<div>
+    <div data-part="pulse_design" class="panel" data-result>
+      <p class="caveat" data-i18n="z.caveat"></p>
+      <div class="grid2">
+        <figure>
+          <canvas id="pulse_design-zerod-tr-ip" class="short"></canvas>
+          <figcaption data-i18n="z.cap.ip"></figcaption>
+        </figure>
+        <figure>
+          <canvas id="pulse_design-zerod-tr-vloop" class="short"></canvas>
+          <figcaption data-i18n="z.cap.vloop"></figcaption>
+        </figure>
+        <figure>
+          <canvas id="pulse_design-zerod-tr-pfus" class="short"></canvas>
+          <figcaption data-i18n="z.cap.pfus"></figcaption>
+        </figure>
+        <figure>
+          <canvas id="pulse_design-zerod-tr-q" class="short"></canvas>
+          <figcaption data-i18n="z.cap.q"></figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div data-part="pulse_design" class="panel" id="pulse_design-zerod-tierb-figs" hidden>
+      <p class="tierb-banner" id="pulse_design-zerod-tierb-banner"></p>
+      <div class="grid2">
+        <figure>
+          <canvas id="pulse_design-zerod-tr-w" class="short"></canvas>
+          <figcaption data-i18n="z.cap.w"></figcaption>
+        </figure>
+        <figure>
+          <canvas id="pulse_design-zerod-tr-tau" class="short"></canvas>
+          <figcaption data-i18n="z.cap.tau"></figcaption>
+        </figure>
+        <figure>
+          <canvas id="pulse_design-zerod-tr-heat" class="short"></canvas>
+          <figcaption data-i18n="z.cap.heat"></figcaption>
+        </figure>
+        <figure>
+          <canvas id="pulse_design-zerod-tr-bal" class="short"></canvas>
+          <figcaption data-i18n="z.cap.bal"></figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div data-part="pulse_design" class="panel" data-result>
+      <h2 data-i18n="z.slice">选定时刻的剖面</h2>
+      <div class="slice-row">
+        <label for="pulse_design-zerod-slice" id="pulse_design-zerod-slice-label"></label>
+        <input type="range" id="pulse_design-zerod-slice" min="0" max="119" step="1" value="60">
+      </div>
+      <div class="slice-grid">
+        <figure>
+          <canvas id="pulse_design-zerod-cross" class="tall"></canvas>
+          <div class="legend-row" id="pulse_design-zerod-cross-legend"></div>
+          <figcaption id="pulse_design-zerod-cross-cap"></figcaption>
+        </figure>
+        <figure>
+          <canvas id="pulse_design-zerod-pr-ne" class="short"></canvas>
+          <figcaption data-i18n="z.cap.ne"></figcaption>
+        </figure>
+        <figure>
+          <canvas id="pulse_design-zerod-pr-t" class="short"></canvas>
+          <figcaption data-i18n="z.cap.t"></figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div data-part="pulse_design" class="panel" id="pulse_design-zerod-uq-panel" hidden>
+      <h2 data-i18n="u.result">该时刻的不确定度</h2>
+      <table><thead><tr><th data-i18n="u.col.qty">量</th>
+        <th data-i18n="u.col.p50">中位</th>
+        <th data-i18n="u.col.band">5–95 %</th>
+        <th data-i18n="u.col.rel">相对宽度</th></tr></thead>
+        <tbody id="pulse_design-zerod-uq-table"></tbody></table>
+      <p class="note" data-i18n="u.band_note"></p>
+    </div>
+
+    <div data-part="pulse_design" class="panel" data-result>
+      <h2 data-i18n="z.limits.h2">运行域判据</h2>
+      <!-- ★T-D1: the block says WHICH GEOMETRY it is pinned to, and shouts
+           when that geometry is not the one this shot's equilibrium found. -->
+      <p class="geo-banner" id="pulse_design-zerod-limits-geo" hidden></p>
+      <div class="grid2">
+        <table><thead><tr><th data-i18n="z.col.qty">量</th>
+          <th data-i18n="z.col.value">值</th>
+          <th data-i18n="z.limits.col.mark">对照</th>
+          <th data-i18n="z.limits.col.geom">几何</th></tr></thead>
+          <tbody id="pulse_design-zerod-limits"></tbody></table>
+        <div>
+          <h3 data-i18n="z.flux.h3">磁通预算</h3>
+          <table><tbody id="pulse_design-zerod-flux"></tbody></table>
+          <!-- ★T-D10: the assumption stays an assumption; the solved l_i(3)
+               sits beside it and the account is recomputed, not replaced. -->
+          <p class="note" data-i18n="z.flux.li_note"></p>
+        </div>
+      </div>
+      <!-- ★T-D2: the page carries more than one q95 and they can disagree by
+           a factor of two.  This says which is which. -->
+      <p class="note" id="pulse_design-zerod-q95-note"></p>
+      <p class="note" data-i18n="z.limits.note"></p>
+    </div>
+
+    <div data-part="pulse_design" class="panel" data-result>
+      <h2 data-i18n="z.scalars">该时刻的 0D 量</h2>
+      <div class="grid2">
+        <table><thead><tr><th data-i18n="z.col.qty">量</th><th data-i18n="z.col.value">值</th></tr></thead>
+          <tbody id="pulse_design-zerod-scalars"></tbody></table>
+        <div>
+          <h3 data-i18n="z.volume">体积口径</h3>
+          <table class="vol-row"><tbody id="pulse_design-zerod-volumes"></tbody></table>
+          <p class="note" data-i18n="z.volume_note"></p>
+        </div>
+      </div>
+    </div>
+</div>
+
+</div>
+</section>
+
+
+<!-- 功能栏 discharge.  ★No `needs`: what the two bars on this page share is
+     a CONTROL, not a product — the flat-top current is one slider, read by the
+     0-D bar as the waveform's plateau and by this one as the current the coils
+     must hold.  Sharing a control needs no bus, and declaring a dependency
+     that does not exist would make the run order look like physics. -->
+<section data-bar="discharge">
+<!-- adopted into the bar strip by scenario.js (FUNCTION BARS) -->
+<button id="pulse_design-discharge-solve" data-bar-action class="ghost" data-i18n="design.solve" data-i18n-title="design.solve.title">正解</button>
+<button id="pulse_design-discharge-reset" data-bar-action class="ghost" data-i18n="design.reset">回到参考放电</button>
+<div class="funcbar-body">
+
+<!-- ONE control column for the whole scenario -->
+<div>
+    <div data-part="pulse_design" class="panel">
+      <h2 data-i18n="design.target">目标位形</h2>
+      <p class="note" data-i18n="design.shape_moved"></p>
+      <!-- ★T-D6: 位形类别 is an INPUT, not something read off the answer.
+           It owns the X-point rows below: 限制器 asks for no field null at
+           all, 单零 asks for one.  ★T-D18: 双零 asks for TWO and is now
+           selectable — the kernel entry it goes through takes a SET of field
+           nulls (`fylite_rs_start_currents_multi`), which is the whole of
+           that item.  The second null gets its own pair of fields, shown
+           only when the class asks for it. -->
+      <div class="ctl"><label for="pulse_design-discharge-class" data-i18n="design.class">位形类别</label>
+        <select id="pulse_design-discharge-class">
+          <option value="limiter" data-i18n="design.class.limiter">限制器</option>
+          <option value="lsn" data-i18n="design.class.lsn">下单零（偏滤器）</option>
+          <option value="usn" data-i18n="design.class.usn">上单零（偏滤器）</option>
+          <option value="dn" data-i18n="design.class.dn">双零（偏滤器）</option>
+        </select></div>
+      <p class="note" data-i18n="design.class_note"></p>
+      <h3 data-i18n="design.opoint">O 点位置（磁轴）[m]</h3>
+      <div class="check"><input type="checkbox" id="pulse_design-discharge-usex"><label for="pulse_design-discharge-usex" data-i18n="design.usex">加 X 点场约束 (B<sub>r</sub>=B<sub>z</sub>=0)</label></div>
+      <div class="row">
+        <div class="ctl"><label>X<sub>R</sub> [m]</label><input type="number" id="pulse_design-discharge-xr" value="1.62" step="0.01"></div>
+        <div class="ctl"><label>X<sub>Z</sub> [m]</label><input type="number" id="pulse_design-discharge-xz" value="-1.00" step="0.01"></div>
+      </div>
+      <!-- ★T-D18: the SECOND field null.  Present only under 双零 — a page
+           that showed two X-point rows while designing one would be the same
+           lie the disabled menu item existed to avoid. -->
+      <div class="row" id="pulse_design-discharge-x2row" hidden>
+        <div class="ctl"><label>X<sub>R</sub>′ [m]</label><input type="number" id="pulse_design-discharge-xr2" value="1.62" step="0.01"></div>
+        <div class="ctl"><label>X<sub>Z</sub>′ [m]</label><input type="number" id="pulse_design-discharge-xz2" value="1.00" step="0.01"></div>
+      </div>
+      <p class="note" data-i18n="design.drag_note">截面图上的 <strong>O</strong> 可拖动，同时改 R<sub>0</sub> 与 Z<sub>0</sub>；勾选 X 点约束后，<strong>×</strong> 也可拖动改 X 点位置。</p>
+    </div>
+
+    <!-- ★T-D7: the rows real shape control targets.  The page could REPORT
+         「最小壁间隙 0.062 m」 and where the legs landed, and could not ask
+         for either; these rows are isoflux rows at points the WALL defines,
+         and they go into both sides of the inverse solve. -->
+    <div data-part="pulse_design" class="panel">
+      <h2 data-i18n="design.ctl">形状控制行</h2>
+      <p class="note" data-i18n="design.ctl_note"></p>
+      <div class="kflist" id="pulse_design-discharge-ctlrows"></div>
+      <p class="note" id="pulse_design-discharge-ctl-note"></p>
+      <div class="row">
+        <button type="button" class="ghost" id="pulse_design-discharge-ctladd-gap" data-i18n="design.ctl.add_gap">加一行间隙</button>
+        <button type="button" class="ghost" id="pulse_design-discharge-ctladd-strike" data-i18n="design.ctl.add_strike">加一行打击点</button>
+      </div>
+    </div>
+
+    <div data-part="pulse_design" class="panel">
+      <h2 data-i18n="design.plasma">等离子体</h2>
+      <div class="ctl"><label for="pulse_design-discharge-profsrc" data-i18n="design.profsrc">电流剖面来源</label>
+        <select id="pulse_design-discharge-profsrc">
+          <option value="analytic" data-i18n="design.profsrc.analytic">解析族 β₀ / e_mp / e_np</option>
+          <option value="delivered" data-i18n="design.profsrc.delivered">交付 p′/FF′（参考放电，按 I_p 归一）</option>
+        </select></div>
+      <div class="ctl"><label><span data-i18n="design.beta0">压强/极向电流配比 β<sub>0</sub></span> <span class="val" id="pulse_design-discharge-v-beta0"></span></label>
+        <input type="range" id="pulse_design-discharge-beta0" min="0.1" max="0.95" step="0.01" value="0.55"></div>
+      <div class="ctl"><label><span data-i18n="design.emp">剖面指数 e<sub>mp</sub></span> <span class="val" id="pulse_design-discharge-v-emp"></span></label>
+        <input type="range" id="pulse_design-discharge-emp" min="0.6" max="3.0" step="0.05" value="1.0"></div>
+      <div class="ctl"><label><span data-i18n="design.enp">剖面指数 e<sub>np</sub></span> <span class="val" id="pulse_design-discharge-v-enp"></span></label>
+        <input type="range" id="pulse_design-discharge-enp" min="0.6" max="3.0" step="0.05" value="1.0"></div>
+      <p class="note" data-i18n="design.prof_note">电流剖面取 fylite 的解析形式 j<sub>φ</sub> ∝ (β<sub>0</sub>R/R<sub>0</sub> + (1−β<sub>0</sub>)R<sub>0</sub>/R)(1−ψ̄<sup>e<sub>mp</sub></sup>)<sup>e<sub>np</sub></sup>，并按 I<sub>p</sub> 归一。</p>
+      <p class="note" data-i18n="design.prof_note_tab">「交付 p′/FF′」档把参考放电重构交付的两条剖面当形状用、每轮按 I<sub>p</sub> 归一——规范（每弧度/全磁通、总体符号）在归一中约去，只剩径向结构。EAST 的交付剖面在 ψ<sub>N</sub> ≈ 0.82 变号，解析族任何取值都表达不了（全族最佳拟合相对 RMS 11.5%）；无参考放电的装置此档不可选。</p>
+    </div>
+
+    <div data-part="pulse_design" class="panel">
+      <h2 data-i18n="design.solver">求解器</h2>
+      <div class="ctl"><label for="pulse_design-discharge-startmode" data-i18n="design.startmode">反解起始状态</label>
+        <select id="pulse_design-discharge-startmode">
+          <option value="auto" data-i18n="design.startmode.auto">自动（有参考放电用它，否则场设计起始）</option>
+          <option value="start" data-i18n="design.startmode.start">场设计起始（按目标位形线性反解一次）</option>
+          <option value="keep" data-i18n="design.startmode.keep">保持当前线圈电流</option>
+        </select></div>
+      <div class="ctl"><label><span data-i18n="design.gamma">迭代步长 γ</span> <span class="val" id="pulse_design-discharge-v-gamma"></span></label>
+        <input type="range" id="pulse_design-discharge-gamma" min="0.15" max="0.7" step="0.05" value="0.4"></div>
+      <div class="ctl"><label><span data-i18n="design.passes">退火趟数</span> <span class="val" id="pulse_design-discharge-v-passes"></span></label>
+        <input type="range" id="pulse_design-discharge-passes" min="3" max="10" step="1" value="8"></div>
+      <p class="note" data-i18n="design.start_note"></p>
+    </div>
+
+</div>
+
+<!-- ONE figure column, in the order the scenario runs -->
+<div>
+    <div data-part="pulse_design" class="panel">
+      <div class="fig-opts">
+        <div class="check">
+          <input type="checkbox" id="pulse_design-discharge-showref" checked>
+          <label for="pulse_design-discharge-showref" data-i18n="design.showref">显示参考放电边界</label>
+        </div>
+        <div class="check">
+          <input type="checkbox" id="pulse_design-discharge-wide" checked>
+          <label for="pulse_design-discharge-wide" data-i18n="design.wide">视野含全部 PF 线圈（点线框为计算网格盒）</label>
+        </div>
+      </div>
+      <div class="cross-row">
+        <figure>
+          <canvas id="pulse_design-discharge-cross" class="tall drag"></canvas>
+          <canvas id="pulse_design-discharge-cscale" class="cscale"></canvas>
+          <div class="legend-row" id="pulse_design-discharge-cross-legend"></div>
+        </figure>
+        <div>
+          <h2 data-i18n="design.coils">PF 通道电流 [kA·匝]</h2>
+          <table class="coil-table"><tbody id="pulse_design-discharge-coils"></tbody></table>
+          <p class="note" data-i18n="design.coils_note">可直接改数值；改完用顶部的「正解」按这组电流重算一次平衡。表中每一行对应图中同名线圈的填色。</p>
+        </div>
+      </div>
+      <figcaption data-i18n="design.cross_cap">极向截面：矩形为 PF 线圈，其填色表示该路通道电流——红为正、蓝为负，深浅正比于电流大小（数值见右侧电流表）；灰框为真空室元件，粗线为限制器，细线是磁通面。该装置的部分 PF 线圈在计算网格盒之外，取消勾选可放大到网格盒。</figcaption>
+    </div>
+
+    <div data-part="pulse_design" class="panel" data-result>
+      <h2 data-i18n="design.vs">目标 vs 实现</h2>
+      <div class="grid2">
+        <table><thead><tr><th data-i18n="design.col.qty">量</th><th data-i18n="design.col.target">目标</th><th data-i18n="design.col.got">实现</th><th data-i18n="design.col.diff">偏差</th></tr></thead>
+          <tbody id="pulse_design-discharge-shape"></tbody></table>
+        <table><thead><tr><th data-i18n="design.col.equil">平衡</th><th data-i18n="design.col.value">值</th></tr></thead>
+          <tbody id="pulse_design-discharge-scalars"></tbody></table>
+      </div>
+    </div>
+
+    <div data-part="pulse_design" class="panel" data-result>
+      <h2 data-i18n="design.criteria">位形判据</h2>
+      <div class="grid2">
+        <table><thead><tr><th data-i18n="design.col.qty">量</th>
+          <th data-i18n="design.col.value">值</th>
+          <th data-i18n="design.col.mark">对照</th></tr></thead>
+          <tbody id="pulse_design-discharge-criteria"></tbody></table>
+        <div>
+          <h3 data-i18n="design.strike">打击点</h3>
+          <table><tbody id="pulse_design-discharge-strike"></tbody></table>
+          <!-- ★T-D6: what the declared 位形类别 asks of these points, and
+               whether it got it — the strike points are a criterion now,
+               not a list printed after the fact. -->
+          <p class="note" id="pulse_design-discharge-strike-verdict"></p>
+          <p class="note" data-i18n="design.strike_note"></p>
+        </div>
+      </div>
+    </div>
+
+    <div data-part="pulse_design" class="panel grid2">
+      <figure>
+        <canvas id="pulse_design-discharge-pprime" class="short"></canvas>
+        <figcaption data-i18n="design.pprime_cap">p′(ψ̄)：由「剖面指数」一栏设定的解析剖面形状，按 I<sub>p</sub> 归一后定出绝对幅值。</figcaption>
+      </figure>
+      <figure>
+        <canvas id="pulse_design-discharge-ffprime" class="short"></canvas>
+        <figcaption data-i18n="design.ffprime_cap">FF′(ψ̄)：同一解析剖面的极向电流通道。β<sub>0</sub> 决定两者的配比。</figcaption>
+      </figure>
+    </div>
+
+    <div data-part="pulse_design" class="panel grid2" data-result>
+      <figure>
+        <canvas id="pulse_design-discharge-hist" class="short"></canvas>
+        <figcaption data-i18n="design.hist_cap">退火迭代的位形误差（各形状量的归一化 RMS）。</figcaption>
+      </figure>
+      <figure>
+        <canvas id="pulse_design-discharge-curr" class="short"></canvas>
+        <figcaption data-i18n="design.curr_cap">各 PF 通道电流：反解前（灰）与反解后（蓝）。</figcaption>
+      </figure>
+    </div>
+
+</div>
+
+</div>
+</section>
+
+
+<!-- 功能栏 pulse.  ★It DOES declare a `needs`: unlike the two above, this bar
+     consumes a product — the target configuration the design bar reached —
+     and building a trajectory toward a shape nobody has shown to be
+     reachable would be a waveform with no configuration behind it. -->
+<section data-bar="pfwave">
+<div class="funcbar-body">
+
+<div>
+    <div data-part="pulse_design" class="panel">
+      <p class="caveat" data-i18n="pulse.caveat"></p>
+      <h2 data-i18n="pulse.grid">轨迹</h2>
+      <div class="row">
+      </div>
+      <div class="row">
+      </div>
+      <div class="ctl"><label><span data-i18n="pulse.npts">波点数</span> <span class="val" id="pulse_design-pfwave-v-npts"></span></label>
+        <input type="range" id="pulse_design-pfwave-npts" min="10" max="60" step="1" value="21"></div>
+      <!-- ★T-D15: how the waypoints are actually spread.  The default grid
+           used to put ONE of its 21 points inside the 1 s ramp; this is the
+           line that says so before the run rather than after it. -->
+      <p class="note" id="pulse_design-pfwave-gridsplit"></p>
+      <p class="note" data-i18n="pulse.grid_note"></p>
+      <p class="note" data-i18n="pulse.shape_note"></p>
+      <!-- ★T-D16: what an imported session file was taken to be, and what it
+           could NOT carry — the solved 位形 belongs to the bar above.  Empty
+           until a file arrives, and cleared by the next run. -->
+      <p class="note" id="pulse_design-pfwave-imported" hidden></p>
+      <p class="note" data-i18n="pulse.j.note_hint"></p>
+    </div>
+
+    <!-- ★T-D13: target shapes at several instants.  With no rows the bar
+         behaves exactly as it did — one flat-top target, scaled by phase. -->
+    <div data-part="pulse_design" class="panel">
+      <h2 data-i18n="pulse.keys">多时刻目标位形</h2>
+      <p class="note" data-i18n="pulse.keys_note"></p>
+      <div class="kflist" id="pulse_design-pfwave-keys"></div>
+      <p class="note" id="pulse_design-pfwave-keys-note"></p>
+      <button type="button" class="ghost" id="pulse_design-pfwave-keyadd" data-i18n="pulse.key.add">加一个时刻</button>
+    </div>
+
+    <div data-part="pulse_design" class="panel">
+      <h2 data-i18n="pulse.check">校验</h2>
+      <div class="ctl"><label><span data-i18n="pulse.nverify">正解校验的波点数</span> <span class="val" id="pulse_design-pfwave-v-nverify"></span></label>
+        <input type="range" id="pulse_design-pfwave-nverify" min="0" max="8" step="1" value="4"></div>
+      <p class="note" data-i18n="pulse.verify_note"></p>
+      <h3 data-i18n="pulse.limits">限值</h3>
+      <p class="note" data-i18n="pulse.limits_note"></p>
+    </div>
+</div>
+
+<div>
+    <div data-part="pulse_design" class="panel" data-result>
+      <div class="grid2">
+        <figure>
+          <canvas id="pulse_design-pfwave-icur" class="short"></canvas>
+          <figcaption data-i18n="pulse.cap.i"></figcaption>
+        </figure>
+        <figure>
+          <canvas id="pulse_design-pfwave-volt" class="short"></canvas>
+          <figcaption data-i18n="pulse.cap.v"></figcaption>
+        </figure>
+      </div>
+      <div class="grid2">
+        <figure>
+          <canvas id="pulse_design-pfwave-passive" class="short"></canvas>
+          <figcaption data-i18n="pulse.cap.y"></figcaption>
+        </figure>
+        <figure>
+          <canvas id="pulse_design-pfwave-resid" class="short"></canvas>
+          <figcaption data-i18n="pulse.cap.r"></figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div data-part="pulse_design" class="panel" data-result>
+      <h2 data-i18n="pulse.table">逐通道用量</h2>
+      <!-- ★T-D4: whose 位形 this trajectory was designed for, and whether
+           that 位形 reached what it was asked for. -->
+      <p class="note" id="pulse_design-pfwave-source"></p>
+      <table><thead><tr><th data-i18n="pulse.col.ch">通道</th>
+        <th data-i18n="pulse.col.imax">|I|<sub>max</sub> [kA·匝]</th>
+        <th data-i18n="pulse.col.vmax">|V|<sub>max</sub> [V/匝]</th>
+        <th data-i18n="pulse.col.cap">所声明的限值 I · V · F</th>
+        <th data-i18n="pulse.col.mark">对照</th></tr></thead>
+        <tbody id="pulse_design-pfwave-channels"></tbody></table>
+      <!-- ★T-D5: where the limits came from, or that there are none. -->
+      <p class="note" id="pulse_design-pfwave-limits-src"></p>
+    </div>
+
+    <div data-part="pulse_design" class="panel" data-result>
+      <h2 data-i18n="pulse.verify">正解校验</h2>
+      <table><thead><tr><th data-i18n="pulse.col.t">t [s]</th>
+        <th data-i18n="pulse.col.phase">相位</th>
+        <th data-i18n="pulse.col.target">目标位形 (R₀, a, κ, δ)</th>
+        <th data-i18n="pulse.col.shape">实现位形 (R₀, a, κ, δ)</th>
+        <th data-i18n="pulse.col.kind">边界</th>
+        <th data-i18n="pulse.col.gap">壁间隙 [m]</th></tr></thead>
+        <tbody id="pulse_design-pfwave-checks"></tbody></table>
+      <p class="note" data-i18n="pulse.check_note"></p>
+    </div>
+</div>
+
+</div>
+</section>
+
+
+<!-- 功能栏 breakdown.  ★Reconnected (T-D14) after the page restructure
+     dropped it, back on the page the discharge starts on.  It declares NO
+     `needs`: the field null is designed in pure vacuum, before any plasma
+     exists, so nothing another bar produces can feed it — which is also why
+     it sits last without breaking the chain the bars above already form. -->
+<section data-bar="breakdown">
+<div class="funcbar-body">
+
+<div>
+    <div data-part="pulse_design" class="panel">
+      <h2 data-i18n="b.target">场零位置与判据</h2>
+      <div class="row">
+        <div class="ctl"><label for="pulse_design-breakdown-nullr">R<sub>null</sub> [m]</label>
+          <input type="number" id="pulse_design-breakdown-nullr" step="0.005" value="1.85"></div>
+        <div class="ctl"><label for="pulse_design-breakdown-nullz">Z<sub>null</sub> [m]</label>
+          <input type="number" id="pulse_design-breakdown-nullz" step="0.005" value="0"></div>
+      </div>
+      <div class="ctl"><label><span data-i18n="b.radius">判据半径 [m]</span> <span class="val" id="pulse_design-breakdown-v-radius"></span></label>
+        <input type="range" id="pulse_design-breakdown-radius" min="0.05" max="1.0" step="0.01" value="0.30"></div>
+      <div class="ctl"><label><span data-i18n="b.btol">|B<sub>pol</sub>| 容差 [mT]</span> <span class="val" id="pulse_design-breakdown-v-btol"></span></label>
+        <input type="range" id="pulse_design-breakdown-btol" min="0.5" max="10" step="0.1" value="2.0"></div>
+      <p class="note" data-i18n="b.crit_note"></p>
+    </div>
+
+    <div data-part="pulse_design" class="panel">
+      <h2 data-i18n="b.flux">磁通预算</h2>
+      <div class="check"><input type="checkbox" id="pulse_design-breakdown-usefluxTarget" checked>
+        <label for="pulse_design-breakdown-usefluxTarget" data-i18n="b.useflux">要求场零处的极向磁通</label></div>
+      <div class="ctl"><label><span data-i18n="b.fluxt">目标磁通 [Wb]</span> <span class="val" id="pulse_design-breakdown-v-flux"></span></label>
+        <input type="range" id="pulse_design-breakdown-flux" min="-3" max="3" step="0.05" value="0.50"></div>
+      <p class="note" data-i18n="b.flux_note"></p>
+    </div>
+
+    <div data-part="pulse_design" class="panel">
+      <h2 data-i18n="b.tradeoff">权衡与约束</h2>
+      <div class="ctl"><label><span data-i18n="b.wnull">场零权重</span> <span class="val" id="pulse_design-breakdown-v-wnull"></span></label>
+        <input type="range" id="pulse_design-breakdown-wnull" min="0.1" max="5" step="0.1" value="1.0"></div>
+      <div class="ctl"><label><span data-i18n="b.wflux">磁通权重</span> <span class="val" id="pulse_design-breakdown-v-wflux"></span></label>
+        <input type="range" id="pulse_design-breakdown-wflux" min="0.1" max="5" step="0.1" value="1.0"></div>
+      <div class="check"><input type="checkbox" id="pulse_design-breakdown-uselimits" checked>
+        <label for="pulse_design-breakdown-uselimits" data-i18n="b.uselimits">加电流上限</label></div>
+      <div class="ctl"><label><span data-i18n="b.imax">上限 [kA·匝]</span> <span class="val" id="pulse_design-breakdown-v-imax"></span></label>
+        <input type="range" id="pulse_design-breakdown-imax" min="100" max="30000" step="100" value="2000"></div>
+      <div class="check"><input type="checkbox" id="pulse_design-breakdown-usexref" checked>
+        <label for="pulse_design-breakdown-usexref" data-i18n="b.usexref">偏向参考放电的电流</label></div>
+      <p class="note" data-i18n="b.limit_note"></p>
+    </div>
+</div>
+
+<div>
+    <div data-part="pulse_design" class="panel" data-result>
+      <p class="caveat" data-i18n="b.caveat"></p>
+      <div class="cross-row">
+        <figure>
+          <canvas id="pulse_design-breakdown-cross" class="tall"></canvas>
+          <div class="legend-row" id="pulse_design-breakdown-cross-legend"></div>
+        </figure>
+        <div>
+          <h2 data-i18n="b.result">设计结果</h2>
+          <table><tbody id="pulse_design-breakdown-scalars"></tbody></table>
+          <p class="note" id="pulse_design-breakdown-verdict"></p>
+          <h3 data-i18n="b.coils">PF 通道电流与上限 [kA·匝]</h3>
+          <table class="coil-table"><thead><tr>
+            <th data-i18n="b.col.ch">通道</th>
+            <th class="num" data-i18n="b.col.i">电流</th>
+            <th class="num" data-i18n="b.col.lim">上限</th>
+            <th class="num"></th></tr></thead>
+            <tbody id="pulse_design-breakdown-coils"></tbody></table>
+          <div class="buttons">
+            <button id="pulse_design-breakdown-limreset" class="ghost" data-i18n="b.lim.reset">上限复位</button>
+          </div>
+          <p class="note" data-i18n="b.lim_source"></p>
+        </div>
+      </div>
+      <figcaption data-i18n="b.cross_cap"></figcaption>
+    </div>
+
+    <div data-part="pulse_design" class="panel" data-result>
+      <figure>
+        <canvas id="pulse_design-breakdown-bprof" class="short"></canvas>
+        <figcaption data-i18n="b.prof_cap"></figcaption>
+      </figure>
+    </div>
+</div>
+
+</div>
+</section>
+</div>
+
+<!-- ================= 模式 设计 design ================= -->
+<div class="mode" data-mode="design" id="part-design">
+<section data-bar="pulse">
+<div class="funcbar-body">
+
+<div>
+  <div data-part="pulse_design" class="panel">
+    <h2 data-i18n="p.phases">相位与 I<sub>p</sub></h2>
+    <div class="row">
+    </div>
+    <div class="row">
+    </div>
+    <p class="note" id="pulse_design-pulse-rate-note"></p>
+  </div>
+
+  <div data-part="pulse_design" class="panel">
+    <h2 data-i18n="p.shape">LCFS 位形轨迹</h2>
+    <!-- ★下降沿有自己的自变量（FYL-DESIGN-09 D-5）：它不是上升沿取负。 -->
+    <p class="note" data-i18n="p.shape.note"></p>
+  </div>
+
+  <div data-part="pulse_design" class="panel">
+    <h2 data-i18n="p.heat">辅助加热与剖面（0-D）</h2>
+    <div class="row">
+    </div>
+  </div>
+
+  <div data-part="pulse_design" class="panel">
+    <h2 data-i18n="p.solver">波点与校验</h2>
+    <div class="ctl"><label><span data-i18n="p.npts">波点数</span> <span class="val" id="pulse_design-pulse-v-npts"></span></label>
+      <input type="range" id="pulse_design-pulse-npts" min="10" max="40" step="1" value="17"></div>
+    <div class="ctl"><label><span data-i18n="p.nverify">正解校验的波点数</span> <span class="val" id="pulse_design-pulse-v-nverify"></span></label>
+      <input type="range" id="pulse_design-pulse-nverify" min="0" max="6" step="1" value="3"></div>
+    <p class="note" data-i18n="p.solver.note"></p>
+  </div>
+</div>
+
+<div>
+  <div data-part="pulse_design" class="panel corridor" data-result>
+    <h2 data-i18n="p.corridor">0-D 时序走廊</h2>
+    <p class="caveat" data-i18n="p.caveat"></p>
+    <div class="slice-row">
+      <label for="pulse_design-pulse-slice" id="pulse_design-pulse-slice-label"></label>
+      <input type="range" id="pulse_design-pulse-slice" min="0" max="119" step="1" value="60">
+    </div>
+    <figure>
+      <canvas id="pulse_design-pulse-tr-ip" class="short"></canvas>
+      <figcaption data-i18n="p.cap.ip"></figcaption>
+    </figure>
+    <figure>
+      <canvas id="pulse_design-pulse-tr-vloop" class="short"></canvas>
+      <figcaption data-i18n="p.cap.vloop"></figcaption>
+    </figure>
+    <figure>
+      <canvas id="pulse_design-pulse-tr-heat" class="short"></canvas>
+      <figcaption data-i18n="p.cap.heat"></figcaption>
+    </figure>
+    <figure>
+      <canvas id="pulse_design-pulse-tr-q" class="short"></canvas>
+      <figcaption data-i18n="p.cap.q"></figcaption>
+    </figure>
+  </div>
+
+  <div data-part="pulse_design" class="panel" data-result>
+    <h2 data-i18n="p.slice">当前时间片</h2>
+    <p class="note" id="pulse_design-pulse-slice-note"></p>
+    <div class="slice-grid">
+      <figure>
+        <canvas id="pulse_design-pulse-cross" class="tall"></canvas>
+        <div class="legend-row" id="pulse_design-pulse-cross-legend"></div>
+        <figcaption id="pulse_design-pulse-cross-cap"></figcaption>
+      </figure>
+      <div>
+        <figure>
+          <canvas id="pulse_design-pulse-pr-ne" class="short"></canvas>
+          <figcaption data-i18n="p.cap.ne"></figcaption>
+        </figure>
+        <figure>
+          <canvas id="pulse_design-pulse-pr-t" class="short"></canvas>
+          <figcaption data-i18n="p.cap.t"></figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+
+  <div data-part="pulse_design" class="panel" data-result>
+    <h2 data-i18n="p.pf">PF 通道波形</h2>
+    <div class="grid2">
+      <figure>
+        <canvas id="pulse_design-pulse-icur" class="short"></canvas>
+        <figcaption data-i18n="p.cap.i"></figcaption>
+      </figure>
+      <figure>
+        <canvas id="pulse_design-pulse-volt" class="short"></canvas>
+        <figcaption data-i18n="p.cap.v"></figcaption>
+      </figure>
+    </div>
+    <p class="note" id="pulse_design-pulse-pf-note"></p>
+  </div>
+
+  <div data-part="pulse_design" class="panel" data-result>
+    <h2 data-i18n="p.table">逐通道用量与判定</h2>
+    <table><thead><tr><th data-i18n="p.col.ch">通道</th>
+      <th data-i18n="p.col.imax">|I|<sub>max</sub> [kA·匝]</th>
+      <th data-i18n="p.col.vmax">|V|<sub>max</sub> [V/匝]</th>
+      <th data-i18n="p.col.cap">所声明的限值</th>
+      <th data-i18n="p.col.mark">判定</th></tr></thead>
+      <tbody id="pulse_design-pulse-channels"></tbody></table>
+    <p class="note" id="pulse_design-pulse-limits-src"></p>
+  </div>
+
+  <div data-part="pulse_design" class="panel" data-result>
+    <h2 data-i18n="p.verify">正解校验（已解片）</h2>
+    <table><thead><tr><th data-i18n="p.col.t">t [s]</th>
+      <th data-i18n="p.col.target">目标位形 (R₀, a, κ)</th>
+      <th data-i18n="p.col.shape">实现位形 (R₀, a, κ)</th>
+      <th data-i18n="p.col.kind">边界</th>
+      <th data-i18n="p.col.err">形状误差</th></tr></thead>
+      <tbody id="pulse_design-pulse-checks"></tbody></table>
+    <p class="note" data-i18n="p.verify.note"></p>
+  </div>
+</div>
+
+</div>
+</section>
+</div>
+
+<!-- ================= 模式 仿真 simulate ================= -->
+<div class="mode" data-mode="simulate" id="part-simulate" hidden>
+<section data-bar="sim">
+<div class="funcbar-body">
+
+<div>
+  <!-- ★启动开关：合＝起放电，断＝进入受控下降沿。相位因此是开关与斜坡率的
+       结果，不是预先给定的时刻（FYL-DESIGN-09 D-16）。 -->
+  <div data-part="pulse_design" class="panel">
+    <h2 data-i18n="s.run">启动</h2>
+    <div class="check"><input type="checkbox" id="pulse_design-sim-power">
+      <label for="pulse_design-sim-power" data-i18n="s.power">启动（断开 → 受控下降沿）</label></div>
+    <div class="phasebar" id="pulse_design-sim-phasebar">
+      <span data-i18n="s.ph.idle" data-phase="idle">待机</span>
+      <span data-i18n="s.ph.up" data-phase="up">上升</span>
+      <span data-i18n="s.ph.flat" data-phase="flat">平顶</span>
+      <span data-i18n="s.ph.down" data-phase="down">下降</span>
+      <span data-i18n="s.ph.end" data-phase="end">结束</span>
+    </div>
+    <p class="note" id="pulse_design-sim-phase-note"></p>
+    <div class="runrow">
+      <button type="button" class="ghost" id="pulse_design-sim-pause" data-i18n="s.pause">暂停</button>
+      <button type="button" class="ghost" id="pulse_design-sim-step" data-i18n="s.step">单步</button>
+      <button type="button" class="ghost" id="pulse_design-sim-reset" data-i18n="s.reset">重置</button>
+    </div>
+  </div>
+
+  <!-- ★时间步长是一个控件，不是一个常数：推进一步代表多少放电时间，与画面
+       多久走一步，是两件事，各有各的滑块。 -->
+  <div data-part="pulse_design" class="panel">
+    <h2 data-i18n="s.clock">时间步长与节律</h2>
+    <div class="ctl"><label><span data-i18n="s.dt">推进步长 Δt [s]</span> <span class="val" id="pulse_design-sim-v-dt"></span></label>
+      <input type="range" id="pulse_design-sim-dt" min="0.01" max="0.5" step="0.01" value="0.05"></div>
+    <div class="ctl"><label><span data-i18n="s.rate">画面节律 [步/s]</span> <span class="val" id="pulse_design-sim-v-rate"></span></label>
+      <input type="range" id="pulse_design-sim-rate" min="1" max="20" step="1" value="5"></div>
+    <div class="ctl"><label><span data-i18n="s.eqevery">每几步真解一次平衡</span> <span class="val" id="pulse_design-sim-v-eqevery"></span></label>
+      <input type="range" id="pulse_design-sim-eqevery" min="2" max="40" step="1" value="10"></div>
+    <p class="note" id="pulse_design-sim-clock-note"></p>
+  </div>
+
+  <div data-part="pulse_design" class="panel">
+    <h2 data-i18n="s.target">I<sub>p</sub> 目标</h2>
+    <div class="row">
+      <div class="ctl"><label for="pulse_design-sim-rup" data-i18n="s.rup">上升率 [MA/s]</label>
+        <input type="number" id="pulse_design-sim-rup" step="0.05" min="0.05" value="0.4"></div>
+      <div class="ctl"><label for="pulse_design-sim-rdn" data-i18n="s.rdn">下降率 [MA/s]</label>
+        <input type="number" id="pulse_design-sim-rdn" step="0.05" min="0.05" value="0.2"></div>
+    </div>
+  </div>
+
+  <div data-part="pulse_design" class="panel">
+    <h2 data-i18n="s.shape">LCFS 目标</h2>
+    <div class="check"><input type="checkbox" id="pulse_design-sim-fb" checked>
+      <label for="pulse_design-sim-fb" data-i18n="s.fb">形状反馈：等 LCFS（电流随状态重解）</label></div>
+    <p class="note" data-i18n="s.shape.note"></p>
+  </div>
+
+  <div data-part="pulse_design" class="panel">
+    <h2 data-i18n="s.drive">加热与驱动</h2>
+    <p class="note" data-i18n="s.drive.note"></p>
+  </div>
+
+  <div data-part="pulse_design" class="panel">
+    <h2 data-i18n="s.flux">磁通预算</h2>
+    <table><tbody id="pulse_design-sim-fluxtab"></tbody></table>
+    <p class="note" data-i18n="s.flux.note"></p>
+  </div>
+</div>
+
+<div>
+  <div data-part="pulse_design" class="panel" data-result>
+    <h2 data-i18n="s.now">当前状态</h2>
+    <p class="note" id="pulse_design-sim-eq-note"></p>
+    <div class="slice-grid">
+      <figure>
+        <canvas id="pulse_design-sim-cross" class="tall"></canvas>
+        <div class="legend-row" id="pulse_design-sim-cross-legend"></div>
+        <figcaption id="pulse_design-sim-cross-cap"></figcaption>
+      </figure>
+      <div>
+        <table><tbody id="pulse_design-sim-snap"></tbody></table>
+        <figure>
+          <canvas id="pulse_design-sim-pr-ne" class="short"></canvas>
+          <figcaption data-i18n="s.cap.ne"></figcaption>
+        </figure>
+        <figure>
+          <canvas id="pulse_design-sim-pr-t" class="short"></canvas>
+          <figcaption data-i18n="s.cap.t"></figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+
+  <div data-part="pulse_design" class="panel" data-result>
+    <h2 data-i18n="s.corridor">滚动走廊（右缘＝现在）</h2>
+    <p class="caveat" data-i18n="s.caveat"></p>
+    <figure>
+      <canvas id="pulse_design-sim-tr-ip" class="short"></canvas>
+      <figcaption data-i18n="s.cap.ip"></figcaption>
+    </figure>
+    <figure>
+      <canvas id="pulse_design-sim-tr-w" class="short"></canvas>
+      <figcaption data-i18n="s.cap.w"></figcaption>
+    </figure>
+    <figure>
+      <canvas id="pulse_design-sim-tr-p" class="short"></canvas>
+      <figcaption data-i18n="s.cap.p"></figcaption>
+    </figure>
+    <figure>
+      <canvas id="pulse_design-sim-tr-coil" class="short"></canvas>
+      <figcaption data-i18n="s.cap.coil"></figcaption>
+    </figure>
+  </div>
+
+  <div data-part="pulse_design" class="panel" data-result>
+    <h2 data-i18n="s.record">本次运行</h2>
+    <table><tbody id="pulse_design-sim-record"></tbody></table>
+    <p class="note" data-i18n="s.record.note"></p>
+  </div>
+</div>
+
+</div>
+</section>
+</div>
+
+</div>
+</section>
+</main>
+
+<footer></footer>
+
+<script src="../assets/device.js"></script>
+<script src="../assets/runtime-version.js"></script>
+<!-- 中间层在浏览器里的载入器：装置信息与 g-file 两扇门都经它
+     （2026-09-05，FYL-DESIGN-16 H-4 第一块） -->
+<script src="../assets/runtimeweb.js"></script>
+<script src="../assets/factsdb.js"></script>
+<script src="../assets/fyodev.js"></script>
+<script src="../assets/devices.js"></script>
+<script src="../assets/deck-names.js"></script>
+<!-- ★★算力：桌面宿主（fy app）里内核是本进程的，页面把调用交给
+     /api/kernel；静态站点没有那条路，仍然实例化 wasm。参数种类表
+     kernel-abi.js 由内核仓生成，两侧同源（2026-09-05 用户裁定）。 -->
+<script src="../assets/kernel-abi.js"></script>
+<script src="../assets/kernelapi.js"></script>
+<script src="../assets/fylite.js"></script>
+<script>
+// ★One kernel on the PAGE thread, so `physics.js` has no reason left to keep
+// a JavaScript copy of anything (FYL-DESIGN-07 D-4).  The price was measured
+// before it was paid (`docs/note/app-provenance.md`): the artifact is not
+// downloaded again — the worker already fetched it and the browser caches
+// the compile — so this costs 0.06 ms and about 1 MB of linear memory per
+// open page, not a second 294 KB.
+//
+// It is attached as early as the scripts allow and never awaited by a
+// caller: the two consumers (shape metrics, enclosed volume) are drawing-time
+// helpers, and a page that has not finished loading its kernel simply has not
+// drawn yet.
+self.FyLite.attach('../assets/fylite_rs.wasm')
+  .then(function (fy) {
+    self.FyPhys.useKernel(fy);
+    //: ★★内核到了就**再画一次**（2026-09-05）。取内核是异步的，而画图的助手是
+    //: 内核的（`FYL-DESIGN-07` D-4），所以启动时总有一小段「已经画了、还没有内核」
+    //: 的窗口——那一拍画不出来是对的，画不出来之后没人再叫一次才是缺陷：读者看到
+    //: 的是一张永远空着的截面，直到他自己动一下控件。
+    if (self.FyScenario && self.FyScenario.redraw) self.FyScenario.redraw();
+  })
+  .catch(function (e) { console.error('page kernel: ' + e.message); });
+</script>
+<script src="../assets/geqdsk.js"></script>
+<script src="../assets/appio.js"></script>
+<script src="../assets/scenario.js"></script>
+<!-- the GENERATED fyo interface (paths + terms) and the walker over it -->
+<script src="../assets/fyo-interface.js"></script>
+<script src="../assets/fyo.js"></script>
+<script src="../assets/session.js"></script>
+<script src="../assets/handoff.js"></script>
+<script src="../assets/plot.js"></script>
+<!-- ★一个场景一个控制器文件，按页面运行它们的顺序分节（模式开关 · 配置 ·
+     设计 · 仿真）——三条入口合并的是页面，不是三份各说各话的装配 -->
+<script src="../assets/scenario-pulse_design.js"></script>
+</body>
+</html>

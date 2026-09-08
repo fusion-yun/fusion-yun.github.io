@@ -7,7 +7,7 @@ self.FyI18n.register('en', {
   'home.title': 'fylite online demos',
   'home.h1': 'fylite online demos',
   'home.sub': 'Tokamak integrated modelling, solved in the browser',
-  'home.lead': 'Three interactive tokamak modelling scenarios, ordered as a device is actually worked through: <strong>design</strong> a discharge, <strong>model</strong> the evolution of its profiles, and <strong>infer</strong> its configuration back from measurements. Every computation runs locally in the browser — nothing to install, no server involved. Most controls answer while being dragged (milliseconds for 0-D, one to two seconds for equilibria); only the self-consistent equilibrium–transport bar of the modelling scenario belongs to the <strong>offline tier</strong> (seconds) and must be started explicitly.',
+  'home.lead': 'Four pages: three interactive tokamak modelling scenarios, ordered as a device is actually worked through — <strong>design</strong> a discharge, <strong>model</strong> the evolution of its profiles, <strong>infer</strong> its configuration back from measurements — and one <strong>device data</strong> page, which computes nothing and brings you what the machine itself recorded (the one of the four that needs a server). \u2605Every computation of the three scenarios runs locally in the browser — nothing to install, no server involved. Most controls answer while being dragged (milliseconds for 0-D, one to two seconds for equilibria); only the self-consistent equilibrium–transport bar of the modelling scenario belongs to the <strong>offline tier</strong> (seconds) and must be started explicitly.',
 
 
   'home.alpha': '<strong>This is an alpha release.</strong> Capabilities and numerical '
@@ -25,19 +25,19 @@ self.FyI18n.register('en', {
 
 
   'home.run.h2': 'Execution and data',
-  'home.run.p': 'All computation is executed in the visitor own browser. No data is submitted to any server: the parameters set and the results obtained never leave the machine, and are discarded when the page is closed. A single compute kernel (WebAssembly) is downloaded on the first visit; every solve thereafter is local.',
+  'home.run.p': 'All computation is executed in the visitor own browser. No data is submitted to any server: the parameters set and the results obtained never leave the machine, and are discarded when the page is closed. A single compute kernel is downloaded on the first visit; every solve thereafter is local.',
   'home.two.h2': 'fylite and FyTok: one contract, two implementations',
-  'home.two.p1': 'fylite is not a standalone program but the <strong>light implementation</strong> of the <strong>fyo semantic contract</strong>. The same contract has a heavy implementation — <a href="https://github.com/fusion-yun/fytok">FyTok</a>, a full integrated-modelling framework in Python. The contract sits on the semantics of the IMAS Data Dictionary (DD v4) and addresses physical quantities by semantic path, so the two speak the same language.',
+  'home.two.p1': 'fylite is not a standalone program but the <strong>light implementation</strong> of the <strong>fyo semantic contract</strong>. The same contract has a heavy implementation — <a href="https://fusion-yun.github.io/">FyTok</a>, a full integrated-modelling framework. The contract sits on the semantics of the IMAS Data Dictionary (DD v4) and addresses physical quantities by semantic path, so the two speak the same language.',
   'home.two.col.lite': 'fylite (the light end — this site)',
   'home.two.col.tok': 'FyTok (the heavy end)',
   'home.two.row.what': 'What it is',
   'home.two.lite.what': 'A self-contained equilibrium–transport–turbulence kernel: Grad-Shafranov forward and inverse, the 1.5-D core transport step, neoclassical (NEO) and gyro-Landau-fluid (TGLF) models, 0-D integration, magnetic reconstruction',
   'home.two.tok.what': 'A full integrated modelling and analysis framework: plugins, workflow scheduling, heterogeneous execution, provenance, and interoperation with existing codes',
   'home.two.row.how': 'How it is assembled',
-  'home.two.lite.how': 'No plugin machinery — the physics is <strong>built in</strong>; a Rust kernel with a thin Python assembly layer; numpy is the only dependency',
+  'home.two.lite.how': 'No plugin machinery — the physics is <strong>built in</strong>: one self-contained compute kernel under a very thin assembly layer, with next to nothing pulled in from outside',
   'home.two.tok.how': 'Equilibrium / transport / sources register as <strong>plugins</strong>: native implementations, wrapped external codes and NN surrogates are interchangeable',
   'home.two.row.where': 'Where it runs',
-  'home.two.lite.where': 'One machine — or <strong>the browser itself</strong>: the same kernel compiled to WebAssembly, nothing to install, nothing leaves your computer',
+  'home.two.lite.where': 'One machine — or <strong>the browser itself</strong>: one and the same kernel serves both, nothing to install, nothing leaves your computer',
   'home.two.tok.where': 'HPC clusters and the cloud',
   'home.two.row.cost': 'One run',
   'home.two.lite.cost': 'Sub-second (a free-boundary forward solve is about 0.05 s) — answers while you drag the slider',

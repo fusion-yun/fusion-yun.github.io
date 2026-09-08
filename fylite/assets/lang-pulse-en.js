@@ -1,0 +1,73 @@
+// English catalogue for the PULSE-DESIGN scenario (FYL-DESIGN-09, design mode).
+
+self.FyI18n.register('en', {
+  'nav.pulse': 'Pulse design (whole pulse)',
+  'p.phases': 'Phases and I<sub>p</sub>',
+  'p.rate': 'Ramp rates: up {up} MA/s · down {down} MA/s. The phase boundaries come from the kernel\'s own trapezoid — this shape is not written twice.',
+
+  'p.shape': 'LCFS boundary trajectory',
+  'p.shape.note': '★<strong>The ramp-down is not the ramp-up negated</strong>: it has its own shrink ratio a₁/a, because handing the boundary back to the limiter is not the reverse of growing into it. κ and δ arrive with the size — a column that has just come up is not an elongated one.',
+
+  'p.heat': 'Auxiliary heating and profiles (0-D)',
+
+  'p.solver': 'Waypoints and verification',
+  'p.npts': 'waypoints',
+  'p.nverify': 'waypoints verified by a forward solve',
+  'p.solver.note': 'The waypoints are where the DESIGN happens; the 121 points of the corridor are only the picture. Only the verified ones carry a solved equilibrium — about a second each.',
+
+  'p.corridor': '0-D corridor',
+  'p.caveat': 'This page puts one discharge on <strong>one time axis</strong>: the 0-D scalars scroll, the equilibrium and the profiles show the instant under the play-head, and the PF waveforms share that same axis. ★<strong>In this tier the density and temperature are yours</strong>, so the Q here is not a prediction: it answers whether an operating point is self-consistent, not what the machine could reach.',
+  'p.cap.ip': 'I<sub>p</sub> (bands: ramp-up / flat top / ramp-down; the line is the play-head)',
+  'p.cap.vloop': 'loop voltage V<sub>loop</sub>',
+  'p.cap.heat': 'power: auxiliary heating and fusion power',
+  'p.cap.q': 'gain Q (= P<sub>fus</sub> / P<sub>aux</sub>)',
+
+  'p.slice': 'The instant under the play-head',
+  'p.slice.at': 'play-head t = {t} s',
+  'p.slice.cap': 'cross-section at t = {t} s',
+  'p.slice.solved': '★<strong>Solved slice</strong>: the free-boundary solve was really run at t = {t} s — <strong>minor-radius error {err}</strong>, boundary {kind}. The red curve is the shape that solve reported (rebuilt from its metrics); the dashed one is the target.',
+  'p.kind.unreported': 'not reported (the check carries no profile block)',
+  'p.slice.interp': '★<strong>Interpolated slice (not solved)</strong>: no equilibrium was solved at t = {t} s, so only the <strong>target</strong> boundary is drawn. The nearest solved slice is t = {near} s; raise "waypoints verified" for more of them.',
+  'p.slice.nosolve': '★<strong>Interpolated slice (not solved)</strong>: nothing was verified in this run — what you see is the target boundary, not the one obtained.',
+  'p.leg.target': 'target LCFS',
+  'p.leg.got': 'achieved LCFS (verified)',
+  'p.cap.ne': 'density profile n<sub>e</sub> (this instant)',
+  'p.cap.t': 'temperature profiles T<sub>e</sub> / T<sub>i</sub> (this instant)',
+
+  'p.pf': 'PF channel waveforms',
+  'p.cap.i': 'per-channel current [kA·turn]',
+  'p.cap.v': 'per-channel voltage [V/turn]',
+  'p.pf.note': 'The voltages are the <strong>exact inverse</strong> of the circuit integrator this repository already ships, not a second discretisation. ★This bar is <strong>feed-forward</strong>: on the flat top the real coil currents are set by shape feedback and move with β<sub>p</sub> and l<sub>i</sub> — that tier is the interactive-simulation scenario.',
+
+  'p.table': 'Per-channel usage and verdict',
+  'p.col.ch': 'channel',
+  'p.col.imax': '|I|<sub>max</sub> [kA·turn]',
+  'p.col.vmax': '|V|<sub>max</sub> [V/turn]',
+  'p.col.cap': 'declared limit',
+  'p.col.mark': 'verdict',
+  'p.cap.none': 'undeclared',
+  'p.mark.ok': 'within',
+  'p.mark.over': '★over',
+  'p.mark.undeclared': 'no limit declared',
+  'p.limits.none': '★<strong>The device description carries no per-supply voltage ceiling</strong>, so this column is empty: no limit, no verdict — the page will not pass a default off as machine data. Type your own single value on the left to get one.',
+  'p.limits.yours': '★The ceiling {v} V/turn is <strong>a single value you supplied</strong>, not machine data — violations are reported per channel and the design is never silently clipped.',
+
+  'p.verify': 'Forward verification (solved slices)',
+  'p.col.t': 't [s]',
+  'p.col.target': 'target (R₀, a, κ)',
+  'p.col.shape': 'achieved (R₀, a, κ)',
+  'p.col.kind': 'boundary',
+  'p.col.err': 'minor-radius error',
+  'p.verify.note': '★<strong>"Actually obtained" is kept apart from "asked for"</strong>: on the left the shape this instant requested, on the right the shape a free-boundary solve with the designed currents really produced. The gap between them is how honest the trajectory is at that instant.',
+
+  'p.ph.up': 'ramp-up',
+  'p.ph.flat': 'flat top',
+  'p.ph.down': 'ramp-down',
+  'p.axis.t': 't [s]',
+  'p.ready': 'Kernel ready — press Run to design the whole pulse.',
+  'p.no_kernel': 'The page kernel has not landed yet (the wasm is still downloading); try again in a moment.',
+  'p.running': 'integrating the whole discharge (0-D)…',
+  'p.designing': 'designing waypoint by waypoint ({n} of them)…',
+  'p.done': 'trajectory designed over {n} waypoints; the verified slices are solved.',
+  'p.done.over': 'trajectory designed — ★{n} channel(s) exceed the declared limit; see the table below. Nothing was clipped.',
+});

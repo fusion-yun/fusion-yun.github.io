@@ -15,20 +15,25 @@ The path a file is served from determines which part governs it.
   B      /spo/... and /fyo/... — the SpO and FyO     CC BY-ND 4.0
          ontology artifacts (compiled serialisations
          and the LinkML module sources)
-  C      /fylite/... — fylite binary artifacts       Binary redistribution,
-         (WebAssembly modules, loader scripts)       free of charge;
-                                                     source not published
+  C      /fylite/... — the fylite demo: pages,       Apache-2.0
+         loader scripts, and the compiled
+         WebAssembly modules they load
   ---------------------------------------------------------------------
 
 The published tree also carries its own copy of the applicable terms, so that the
-licence travels with the material: `/fylite/LICENSE`.  That copy restates Part C;
-this file remains the authoritative notice.
+licence travels with the material: `/fylite/LICENSE` (the Apache-2.0 text) and
+`/fylite/NOTICE` (the per-component provenance Apache-2.0 section 4(d) requires).
+Both are installed by the upstream build (`tools/build-site.sh`), which refuses to
+produce a site without them; this file remains the authoritative notice for the
+site as a whole.
 
 Part B (the SpO and FyO ontology artifacts, served from /spo/ and /fyo/) was WITHDRAWN
 on 2026-08-23 and was RESTORED on 2026-08-31 under CC BY-ND 4.0 — see the historical
 note below for what changed and what did not.
-The part labels A and C are kept as they were, so that references to "Part C" in
-`/fylite/LICENSE` remain accurate.
+The part labels A, B and C are kept as they were, so that references to them made
+elsewhere stay resolvable — but note that Part C's TERMS changed on 2026-09-08
+(see that section): `/fylite/LICENSE` is now the Apache-2.0 text itself and no
+longer a restatement of this notice.
 
 
 PART A — THE SITE (CC BY-ND 4.0)
@@ -45,42 +50,46 @@ not distribute a modified version of it.  The complete legal code is
 reproduced at the end of this file.
 
 
-PART C — fylite BINARY ARTIFACTS (binary redistribution, source not published)
-=============================================================================
+PART C — THE fylite DEMO (Apache-2.0)
+=====================================
 
-The material served under /fylite/ consists of compiled binary artifacts
-(WebAssembly modules and the loader scripts distributed with them).  It is
-NOT under a Creative Commons licence.
+SPDX-License-Identifier: Apache-2.0
 
-GRANT.  Permission is granted, free of charge, to any person obtaining a copy
-of these artifacts to use, run, and redistribute them VERBATIM, for any
-purpose, including commercially, provided that this notice is reproduced with
-any redistribution and attribution is given to YU Zhi / ASIPP and the
-SimPLA-Fusion project.
+The material served under /fylite/ — the pages, the loader and plotting scripts,
+and the compiled WebAssembly modules they load — is licensed under the Apache
+License, Version 2.0.  It is NOT under a Creative Commons licence.  The full text
+is at /fylite/LICENSE and at https://www.apache.org/licenses/LICENSE-2.0.
 
-SOURCE.  No licence to fylite source code is granted.  The source repository
-is not public, and nothing here obliges the copyright holder to publish,
-disclose, or deliver source code or build scripts.
+CHANGED 2026-09-08.  Part C previously read "binary redistribution, source not
+published", a bare-artifact grant that also forbade modified redistribution.  That
+was written when fylite had no public repository.  It has one now —
+https://github.com/fusion-yun/fylite carries the pages, the loader scripts and the
+Python layer under Apache-2.0 — so the old wording was both narrower than the terms
+the same files carry upstream and inconsistent with the footer of every page served
+here, which prints Apache-2.0.
 
-RESTRICTIONS.  Without prior written permission you may not distribute a
-modified artifact or any work derived from one; may not decompile,
-disassemble, or otherwise reverse engineer an artifact, except to the extent
-such an act cannot lawfully be prohibited; and may not remove or alter this
-notice.
+SOURCE.  Apache-2.0 does not oblige anyone to publish source, and the source of the
+COMPUTE KERNEL (the `fylite_rs` and `fylite_kernel_ext` WebAssembly modules) is not
+published: it lives in a private repository.  The artifacts are nonetheless
+distributed under Apache-2.0, and nothing in this notice adds to them a restriction
+that Apache-2.0 does not impose.
 
-SCOPE.  Artifacts published here are built from the derived distribution
-`fusion-yun/fylite`, from which the restricted vendored components (EFIT
-lineage, GRAY, PENCIL / JINTRAC) and every build artifact derived from them
-have been removed.  This grant extends ONLY to such artifacts.  Any artifact
-built from, linked against, or embedding a restricted component is NOT
-covered and MUST NOT be redistributed.
+ATTRIBUTION AND NOTICE.  Apache-2.0 section 4(d) requires the NOTICE file to travel
+with any distribution of this material.  It is published at /fylite/NOTICE and names
+the upstream works, the revisions taken, and the ways the translations deliberately
+differ.  A redistribution of these artifacts must carry it.
+
+SCOPE.  Artifacts published here are built from the public distribution
+`fusion-yun/fylite`, from which the restricted vendored components (EFIT lineage,
+GRAY, PENCIL / JINTRAC) and every build artifact derived from them have been
+removed.  Any artifact built from, linked against, or embedding a restricted
+component is NOT published here and MUST NOT be redistributed.
 
 RETAINED UPSTREAM OBLIGATIONS.  Where an artifact carries GACODE-derived
-components or clean-room reimplementations of them (Apache-2.0), the
-attribution and NOTICE obligations of Apache-2.0 apply and must be satisfied
-by any redistribution.  Where terms differ, the most restrictive applicable
-term governs.  The full per-component provenance record is maintained with
-the fylite source distribution (`LICENSE` and `LICENSE.binary`).
+components or clean-room reimplementations of them (Apache-2.0), the attribution
+and NOTICE obligations of Apache-2.0 apply and must be satisfied by any
+redistribution.  Where terms differ, the most restrictive applicable term governs.
+The full per-component provenance record is /fylite/NOTICE.
 
 
 HISTORICAL NOTE

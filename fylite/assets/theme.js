@@ -66,6 +66,20 @@
     else root.removeAttribute('data-theme');
   }
 
+  //: ★`theme` is a LAUNCH PARAMETER — one of the four `hosts.app.params` in
+  //: `python/fylite/_cli.json`, the file every host's command line is built
+  //: from; `fylite app --theme dark` writes it here.  `light` / `dark` are
+  //: stored like a button press; `system` clears a stored choice (the third
+  //: state of the button, which has no word of its own on the URL otherwise).
+  (function fromUrl() {
+    var q = null;
+    try {
+      q = new URLSearchParams(window.location.search).get('theme');
+    } catch (e) { /* no location */ }
+    if (q === 'light' || q === 'dark') store(q);
+    else if (q === 'system') store(null);
+  })();
+
   apply(stored());
 
   /** What the page is actually showing right now. */

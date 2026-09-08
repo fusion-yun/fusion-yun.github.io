@@ -50,6 +50,20 @@
       '<div data-part="reconstruction" class="panel">' +
       '<h2 data-i18n="mdssrc">直接从 MDSplus 读</h2>' +
       '<p class="note" data-i18n="mdssrc.what"></p>' +
+      //: ★★服务器地址：画出来，宿主锁住时禁用并写明原因。规则不是这一页新
+      //: 立的——它就是 `pages/data.html` 那一条：网关绑回环时开放、非回环时只
+      //: 认启动时点名的那几台；单文件查看器一律锁（它从不接受 `server=`）。
+      //: 一个消失的控件什么也没教给读者，而「为什么不能改」正是读者要知道的。
+      '<div class="mds-row">' +
+      '<div class="ctl" style="flex:1 1 190px">' +
+      '<label for="reconstruction-mds-server" data-i18n="mdssrc.server">mdsip 服务器</label>' +
+      //: ★预填隧道口地址：站点自己的 mdsip 地址在装置内网上，不写进公开页面
+      //: （2026-09-02）；这一格本来就是**锁着的**，真值由宿主启动时给
+      //: （`fy --mdsip <地址>`），这里只是让读者看见它长什么样。
+      '<input type="text" id="reconstruction-mds-server" size="18"' +
+      ' value="127.0.0.1:8000" disabled></div>' +
+      '</div>' +
+      '<p class="note" id="reconstruction-mds-server-note"></p>' +
       '<div class="mds-row">' +
       '<div class="ctl"><label for="reconstruction-mds-shot" data-i18n="mdssrc.shot">炮号</label>' +
       '<input type="text" id="reconstruction-mds-shot" inputmode="numeric" size="9"></div>' +
@@ -214,7 +228,7 @@
   }
 
   /**
-   * The gateway is one directory up: this page is `scenario/analysis.html` and
+   * The gateway is one directory up: this page is `pages/analysis.html` and
    * the gateway serves the whole of `app/`.  Relative and same-origin, like
    * every other request the site makes — there is no box to type a gateway
    * address into, which is the shape of hole that would be.
@@ -244,7 +258,22 @@
     state.busy = true;
     enable(false);
     note('mdssrc.reading', { shot: shot, t: time });
-    api('api/measurements', { shot: shot, time: time }).then(function (m) {
+    //: ★only when the host said it would accept one — otherwise the
+    //: parameter is refused before a socket is opened and the reader gets a
+    //: 400 for having typed in a box this page drew.
+    var q = { shot: shot, time: time };
+    var box = $('reconstruction-mds-server');
+    //: ★宿主开着这一格时就把它送过去——包括宿主启动时**根本没给**服务器的
+    //: 情形，那正是读者填这一格的理由。相同则不送，省得答复里的出处看起来
+    //: 像是页面挑的。
+    if (box && !box.disabled && box.value.trim() && state.gw && !state.gw.locked
+        && box.value.trim() !== state.gw.mdsip) q.server = box.value.trim();
+    if (box && !box.disabled && !box.value.trim() && state.gw && !state.gw.mdsip) {
+      note('mdssrc.server.need', null, 'warn');
+      state.busy = false; enable(true);
+      return;
+    }
+    api('api/measurements', q).then(function (m) {
       var got;
       try { got = api_.useMeasurements(m); }
       catch (e) { note('mdssrc.refused', { why: e.message }, 'warn'); return; }
@@ -292,6 +321,56 @@
       strip.addEventListener('mouseleave', function () {
         state.hover = -1; hoverAt(-1);
       });
+      //: ★★DRAG, and it SNAPS.  A slider is what a reader reaches for on a
+      //: time axis, and this one can be dragged — but only onto the instants
+      //: the server actually stored.  A continuous slider would say the
+      //: record can be asked for any time between them, and it cannot:
+      //: `/api/measurements` answers with the NEAREST stored slice and says
+      //: so, and 112 of them across ten seconds is not a curve.
+      //: ★It reads on release rather than on every move: one drag across the
+      //: strip would otherwise be a hundred reads through a tunnel.
+      var dragging = false;
+      strip.addEventListener('pointerdown', function (e) {
+        dragging = true;
+        strip.setPointerCapture && strip.setPointerCapture(e.pointerId);
+        var i = pickAtX(e.clientX);
+        if (i !== state.hover) { state.hover = i; hoverAt(i); }
+      });
+      strip.addEventListener('pointermove', function (e) {
+        if (!dragging) return;
+        var i = pickAtX(e.clientX);
+        if (i !== state.hover) { state.hover = i; hoverAt(i); }
+      });
+      strip.addEventListener('pointerup', function (e) {
+        if (!dragging) return;
+        dragging = false;
+        var i = pickAtX(e.clientX);
+        if (i >= 0) read(state.times[i]);
+      });
+      //: ★★and the KEYBOARD, because a strip that only answers to a mouse is
+      //: a control half the readers cannot use.  Arrow keys step one stored
+      //: slice; Home/End go to the ends.  Stepping MOVES the cursor and
+      //: reading is Enter — so holding an arrow does not fire a read per
+      //: slice down a tunnel.
+      strip.tabIndex = 0;
+      strip.addEventListener('keydown', function (e) {
+        var n = state.times.length;
+        if (!n) return;
+        var at = state.hover >= 0 ? state.hover
+               : (state.at >= 0 ? state.at : 0);
+        var to = at;
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') to = at - 1;
+        else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') to = at + 1;
+        else if (e.key === 'Home') to = 0;
+        else if (e.key === 'End') to = n - 1;
+        else if (e.key === 'Enter' || e.key === ' ') {
+          if (at >= 0 && at < n) { e.preventDefault(); read(state.times[at]); }
+          return;
+        } else return;
+        e.preventDefault();
+        to = Math.max(0, Math.min(n - 1, to));
+        if (to !== state.hover) { state.hover = to; hoverAt(to); }
+      });
       //: the strip is sized in CSS, so it has to be redrawn when the box
       //: changes width — otherwise the marks stay where they were laid out
       root.addEventListener('resize', drawSlices);
@@ -331,6 +410,7 @@
     api('api/health').then(function (h) {
       state.gw = h;
       enable(true);
+      showServer(h);
       note('mdssrc.ready', { server: h.mdsip });
     }, function () {
       //: ★A missing gateway is a REDUCED page, not a broken one: the bundled
@@ -340,6 +420,35 @@
       enable(false);
       note('mdssrc.nogateway', null, 'warn');
     });
+  }
+
+  /**
+   * The server box, filled from what the HOST says about itself.
+   *
+   * ★It is `h.locked` that decides, not this page's preference: off a
+   * loopback bind the gateway closes the set there, and the single-file
+   * viewer never accepts `server=` at all.  A box that let a reader type an
+   * address only to collect a 400 would be describing a permission the page
+   * does not have — the same rule `pages/data.html` already follows.
+   */
+  function showServer(h) {
+    var box = $('reconstruction-mds-server');
+    if (!box) return;
+    //: 同 `pages/data.html`：宿主有就照宿主的，没有就留标记里的起点
+    if (h && h.mdsip) box.value = h.mdsip;
+    //: ★只由宿主的 `locked` 决定，不再要求它已经有一台：宿主开着这一格而
+    //: 自己没配服务器，是「你来填」，不是「不能用」。
+    box.disabled = !h || !!h.locked;
+    var el = $('reconstruction-mds-server-note');
+    if (!el) return;
+    if (!h || !h.mdsip) {
+      el.innerHTML = T(h && !h.locked ? 'mdssrc.server.need'
+                                      : 'mdssrc.server.none');
+      return;
+    }
+    el.innerHTML = h.locked
+      ? T('mdssrc.server.locked', { list: (h.servers || [h.mdsip]).join(', ') })
+      : T('mdssrc.server.free');
   }
 
   //: ★Queued on the machines, not on the document.  `FyRecon` is created

@@ -7,6 +7,7 @@
 self.FyI18n.register('zh', {
   'm.shared': '这台机器（两条栏共读）',
   'm.quasi.on': '★<strong>成分已由 Z<sub>eff</sub> 与 {name}（Z = {z}）定死</strong>：主离子稀释 n<sub>i</sub>/n<sub>e</sub> = {fd}，杂质浓度 n<sub>z</sub>/n<sub>e</sub> = {c}%，燃料占比 f = {f}（n<sub>D</sub> = n<sub>T</sub> = n<sub>i</sub>/2）。下面那两个控件<strong>已禁用</strong>——一套成分有三个说法、而求解器只听其中一个，那不叫可配置。',
+  'm.quasi.solved': '★★<strong>成分在演化，Z<sub>eff</sub> 是结果</strong>（T-C20）：两种离子各自是一条密度道，n<sub>e</sub> = Σ Z<sub>s</sub>n<sub>s</sub> 由准中性给出，逐面的 Z<sub>eff</sub> 由解出来的成分算出、并写进会话文件。★上面那个 Z<sub>eff</sub> 滑杆此时只定<strong>起始</strong>成分（稀释 n<sub>i</sub>/n<sub>e</sub> = {fd}，杂质浓度 {c}%，起始燃料占比 f = {f}），此后不再钉住任何东西。★杂质自己的 D<sub>z</sub>/χ<sub>e</sub>、箍缩与加料速率因此可用——两种离子输运得一样时，有两条道与有一条道没有区别。',
   'm.quasi.bad': '★Z<sub>eff</sub> = {zeff} 用 {name}（Z = {z}）配不出来（主离子密度会变成负的）。把 Z<sub>eff</sub> 调到 1 与 {z} 之间，或换个物种。',
   'm.quasi.nodensity': '★粒子道开着时不可用：n<sub>e</sub> 在演化而 Z<sub>eff</sub> 被钉死是两套成分，这一版没有杂质输运来裁决。',
   'm.quasi.nospecies': '★先点一个 Z > 1 的杂质物种，这一档才有意义。',

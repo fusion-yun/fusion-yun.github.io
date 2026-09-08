@@ -325,6 +325,8 @@
     // --- compute backend ------------------------------------------------------
 
     var worker = null, kernel = null, initMsg = null, aborted = false;
+    //: 模块先行用的两格状态，见 `send` / `shipWasm`。
+    var wasmShipped = false, outbox = [];
     var aborters = [], waiting = [];
 
     function dispatch(m) {
@@ -349,13 +351,24 @@
       //: the url is site-root-relative (`assets/worker.js`); a scenario page
       //: sits one directory below that, so it is resolved through FySite
       worker = new Worker(root.FySite.url('assets/worker.js'));
+      //: ★每次重建 worker 都要重来一遍：被 kill 掉的那个带走了它的模块。
+      wasmShipped = false; outbox = [];
+      shipWasm();
       worker.onmessage = function (ev) {
         var m = ev.data;
         // the kernel handshake is the same on every page, so it is answered
         // here; a part that wants to react registers 'ready' as well
-        if (m.type === 'ready')
+        if (m.type === 'ready') {
           kernel = { abi: m.abi, sha256: m.sha256, bytes: m.bytes,
                      timing: m.timing, grid: m.grid };
+          //: ★★**一个留得住的信号**（2026-09-05）。「内核就绪」此前只在状态行上
+          //: 出现一瞬——各栏的初始状态紧接着就把它盖掉（实测：0.49 s 时状态已是
+          //: 「待机」，而 `status.kernel_ready` 一次也没在 MutationObserver 里留下
+          //: 痕迹）。于是所有等这句话的浏览器闸子都只能超时，而**页面本身是好的**。
+          //: 状态行是给读者看的，会改词、会被覆盖、还随语言变；判据不该挂在它上面。
+          //: 这一格是同一件事的持久形：内核到了就一直在，谁都能同步问一次。
+          root.FYLITE_KERNEL = kernel;
+        }
         if (m.type === 'ready') parts.forEach(function (p) {
           if (p.on.ready) p.on.ready(m);
         });
@@ -392,8 +405,32 @@
       //: ★the init message is REMEMBERED, because stopping a run means killing
       //: the worker, and a killed worker has to be told the machine again
       if (msg.cmd === 'init') initMsg = msg;
+      //: ★★**模块先行**（2026-09-08）：页面已经在编译同一份 wasm，worker 收下它就
+      //: 不必自己再取一遍（实测建模页首屏因此少 3.4 MB）。而 `init` 一旦到达 worker
+      //: 就会 `attach`，所以在模块发出去之前，其余命令**在这里排队**——顺序不变，
+      //: 只是整体推后到那条消息之后。取不到模块就直接放行：多一次下载，不是错。
+      if (!wasmShipped) { outbox.push(msg); return true; }
       worker.postMessage(msg);
       return true;
+    }
+
+    /** 把页面编译好的核心模块交给这个 worker，然后放行排队的命令。 */
+    function shipWasm() {
+      var flush = function () {
+        wasmShipped = true;
+        var q = outbox; outbox = [];
+        q.forEach(function (m) { if (worker) worker.postMessage(m); });
+      };
+      var L = root.FyLite;
+      if (!L || !L.moduleFor) return flush();
+      //: ★页面在 `pages/` 下，所以要走 `FySite.url` 拿站点根相对的那一份——
+      //: 写成裸名会解析成 `pages/fylite_rs.wasm…`（404），而 worker 的基址是
+      //: `assets/`，它那边裸名恰好是对的。两边解析到同一个绝对地址才算同一份。
+      L.moduleFor(root.FySite.url('assets/fylite_rs.wasm')).then(function (rec) {
+        if (worker) worker.postMessage({ cmd: 'wasm', url: 'fylite_rs.wasm',
+                                         module: rec.module, sha256: rec.sha256,
+                                         bytes: rec.bytes });
+      })['catch'](function () { /* worker 自己取 */ }).then(flush, flush);
     }
 
     /**
@@ -1059,8 +1096,14 @@
           p._foldKey = key;
           p._paint = paint;
           var saved = recall('panel:' + key);
-          p._folded = saved === null ? p.hasAttribute('data-result')
-                                     : saved === '1';
+          //: ★★`data-advanced` is the second reason a panel starts folded, and
+          //: it is a different one from `data-result`: not "there is nothing
+          //: in it yet" but "this is not part of the flow most readers came
+          //: for".  Same rule for the reader's own choice — once they fold or
+          //: unfold it by hand, that is what they get.
+          p._folded = saved === null
+            ? (p.hasAttribute('data-result') || p.hasAttribute('data-advanced'))
+            : saved === '1';
           paint();
         });
     }
@@ -1248,170 +1291,26 @@
      *              — the kernel handshake belongs to all of them.
      */
     /**
-     * The worked cases a bar offers from a menu.
+     * ★★THE WORKED-CASE MENU WAS HERE, and it is gone (2026-09-01).
      *
-     * ★★A CASE IS A SESSION DOCUMENT, listed by `cases/catalogue.jsonld` and
-     * applied through the same `FySession.apply` an imported file goes
-     * through.  That is the whole design: what the menu offers and what
-     * 「导出 → 会话文件」 writes are one format, so a reader can save a run and
-     * hand it back as a case, and a case cannot drift into a shape only this
-     * menu can read.
+     * A case is a SESSION DOCUMENT — page-control values, the same shape
+     * 「导出 → 会话文件」 writes and 「导入」 reads.  That much is unchanged:
+     * a reader can still save a run and hand the file back.  What is gone is
+     * the app SHIPPING a corpus of them and offering it from a menu.
      *
-     * ★★THIS USED TO BE THE 含时演化 BAR'S PRIVATE CODE, with the bar it
-     * served written into it as the string `'evolve'`.  Ten bars, one of
-     * which could be handed a worked starting point — and the other nine
-     * could not, because the machinery was in the wrong file.  It is here
-     * now and takes the bar from the bar; the catalogue's `fylite:bar` was
-     * always in the documents waiting for a reader that honoured it.
+     * ★WHY: the corpus is documentation data.  It sits at `cases/` and
+     * is read by `fylite cases`, by `fylite.engine.cases`, and by the
+     * book — one corpus, one reader set.  Carrying a second copy inside
+     * `app/` meant a symlink into the repo root, a subset rule in the
+     * publish pipeline (nine device cases stripped and the catalogue
+     * rewritten to match), and the same documents embedded a third time in
+     * the desktop binary.  Three copies of one corpus, each able to drift.
      *
-     * ★A case carries INPUTS and never a result — it does not run the bar.
-     * ★A catalogue that will not load is REPORTED and the menu stays empty:
-     * a bar works without cases (that is how every one of them worked before
-     * there were any), and a page that cannot open because a data file is
-     * missing is a worse failure than a menu with nothing in it.
-     *
-     *   S.cases({ after: function () { ... }, when: readyPromise })
-     *
-     * `after` runs once the controls are written, for whatever the bar has
-     * to re-derive from them (labels, cost notes, a redrawn cross-section).
-     *
-     * ★`when` is a promise for THIS BAR BEING READY, and only the INITIAL
-     * case waits on it.  It is not ceremony: a menu built from a file that
-     * arrives in milliseconds can be applied before the bar's own async
-     * setup has landed, and a control that is not there yet is a control a
-     * case cannot write.  It was real — the ADAS species menu is filled from
-     * the worker's `ready` message, so 「Be」 applied before that message
-     * became the empty selection, and the ITER case quietly ran with no
-     * impurity radiation (T_e(0) 24.14 keV instead of 22.53).  A case the
-     * READER picks needs no such wait: by then everything has arrived.
+     * ★WHAT A READER LOSES: the menus, and the INITIAL case a bar applied on
+     * a first visit.  Every bar now opens on its factory settings — which is
+     * how every one of them worked before 2026-08-24, and what 「缺省」 in
+     * the old menu meant.  Import a session file to start from a worked one.
      */
-    function installCases(api, barId, opts) {
-      var T = root.FyI18n.t;
-      var sel = api.$('case');
-      var cases = {};
-      var initialId = null;
-      if (!sel || typeof fetch !== 'function') return { cases: cases };
-
-      function caseName(doc) {
-        var c = doc['fylite:case'] || {};
-        return (root.FyI18n.current() === 'en' ? c['fylite:name_en']
-                                               : c['fylite:name'])
-               || c['fylite:name'] || doc['@id'];
-      }
-
-      /**
-       * Apply one case: the controls, then whatever reads them.
-       *
-       * ★What a case may NOT do is change the machine.  It DECLARES which
-       * one it was written for, and a mismatch is said out loud rather than
-       * acted on — switching the device rebuilds the worker and throws away
-       * whatever the reader had imported, which is not something a menu
-       * should do behind their back.
-       */
-      function applyCase(id, quiet) {
-        var rec = cases[id];
-        if (!rec) return;
-        var doc = rec.doc, c = doc['fylite:case'] || {};
-        if (doc['fylite:page'] !== barId)
-          return api.report(T('case.wrong_bar', { bar: doc['fylite:page'],
-                                                  here: barId }), 'err');
-        var r = root.FySession.apply(doc['fylite:config'], api.scope);
-        api.sync();
-        if (opts.after) opts.after();
-        var en = root.FyI18n.current() === 'en';
-        var note = api.$('case-note');
-        if (note) {
-          var bits = [(en ? c['fylite:note_en'] : c['fylite:note'])
-                      || c['fylite:note'] || ''];
-          var needs = (en ? c['fylite:needs_en'] : c['fylite:needs'])
-                      || c['fylite:needs'];
-          if (needs && needs.length)
-            bits.push(T('case.needs', {
-              list: needs.map(function (n) { return '<li>' + n + '</li>'; })
-                         .join('') }));
-          var want = rec.entry['fylite:device'] || c['fylite:device'];
-          var act = root.FyDevices ? root.FyDevices.active() : null;
-          var have = act ? act.id : null;
-          if (want && have && want !== have)
-            bits.push(T('case.device', { want: want, have: have }));
-          note.innerHTML = bits.filter(Boolean).join(' ');
-          note.hidden = !note.innerHTML;
-        }
-        api.report(T(quiet ? 'case.initial' : 'case.applied',
-                     { name: caseName(doc), n: r.applied.length }));
-      }
-
-      //: ★THE INITIAL CASE is the catalogue's `fylite:initial`, applied ONCE
-      //: — on a first visit, when this bar has no trace of the reader in
-      //: `localStorage`.  It is NOT the factory settings: the 「缺省」 case is
-      //: still the one step back to those, and it is still in the menu.
-      //: ★NEVER over a session the reader already has: a menu may be pressed,
-      //: a starting point may not be imposed on work in progress.
-      var seenKey = 'fylite:seen:' + pageId + ':' + barId;
-      function firstVisit() {
-        try {
-          if (root.localStorage.getItem(seenKey)) return false;
-          root.localStorage.setItem(seenKey, '1');
-          return true;
-        } catch (e) {
-          //: a private window, a browser that blocks site data, a thumbnailer
-          //: — every one throws here, and none of them is a reason to impose
-          //: a starting point on every load
-          return false;
-        }
-      }
-
-      var dir = (location.pathname.indexOf('/scenario/') >= 0 ? '../' : '')
-                + 'cases/';
-      fetch(dir + 'catalogue.jsonld')
-        .then(function (r) {
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          return r.json();
-        })
-        .then(function (cat) {
-          var want = ((cat && cat['fylite:cases']) || []).filter(function (e) {
-            return e['fylite:bar'] === barId;
-          }).sort(function (a, b) {
-            return (a['fylite:order'] | 0) - (b['fylite:order'] | 0);
-          });
-          return Promise.all(want.map(function (e) {
-            return fetch(dir + e['fylite:document'])
-              .then(function (r) {
-                if (!r.ok) throw new Error('HTTP ' + r.status);
-                return r.json();
-              })
-              .then(function (doc) {
-                var id = e['fylite:case_id'];
-                cases[id] = { entry: e, doc: doc };
-                if (e['fylite:initial']) initialId = id;
-                var o = document.createElement('option');
-                o.value = id;
-                o.textContent = caseName(doc);
-                sel.appendChild(o);
-              })
-              .catch(function (err) {
-                api.report(T('case.failed', { id: e['fylite:case_id'],
-                                              why: err.message }), 'err');
-              });
-          }));
-        })
-        .then(function () {
-          if (!(initialId && firstVisit())) return null;
-          //: ★wait for the bar, then apply — see `when` above
-          return Promise.resolve(opts.when).then(function () {
-            sel.value = initialId;
-            applyCase(initialId, true);
-          });
-        })
-        .catch(function (err) {
-          api.report(T('case.nocat', { why: err.message }), 'err');
-        });
-
-      sel.addEventListener('change', function () {
-        if (this.value) applyCase(this.value);
-      });
-      return { cases: cases, apply: applyCase };
-    }
 
     function addBar(part, p, barId, spec) {
       spec = spec || {};
@@ -1441,8 +1340,6 @@
       api.page = barId;
       api.bar = barId;
       api.sync = sync;
-      /** The worked cases this bar offers — see `installCases`. */
-      api.cases = function (o) { return installCases(api, barId, o || {}); };
       //: ★`state` is the fourth argument and the only one a bar has to think
       //: about: without it the marker is derived from the class, which is
       //: right for every bar that reports 「失败」 with `err` and 「未达」 with
@@ -1563,6 +1460,10 @@
     P.runAll = runAll;
     P.addPart = addPart;
     P.finalize = finalize;
+    //: ★页面级的重画口。每个部件的 api 上一直有 `refresh`，但**页面**没有——于是
+    //: 「内核到了，把画过的再画一次」这件事没有地方可叫。`FyScenario.redraw()`
+    //: （下面）就是叫它的那一处。
+    P.refresh = refresh;
     return P;
   }
 
@@ -1594,7 +1495,7 @@
   /**
    * The machines, fetched once per page.
    *
-   * ★The preset devices are fyo/JSON-LD documents fetched from `app/devices/`
+   * ★The preset devices are fyo/JSON-LD documents fetched from `app/facts/device/`
    * (they were a script that pushed a global), so `FYLITE_MACHINE` is null
    * until they arrive — and a controller that reads it while its own file is
    * being evaluated reads that null.  That is not a bug in the controller:
@@ -1635,6 +1536,21 @@
     else setTimeout(bootWithDevices, 0);
   }
 
+  /**
+   * 把每一页都重画一遍。
+   *
+   * ★★为什么需要它（2026-09-05 真浏览器实测）：页面线程的内核是**取回来的**，
+   * 而画图的助手是内核的（`FYL-DESIGN-07` D-4：页面不留第二份闭式）。启动时因此
+   * 总有一小段「已经画了、还没有内核」的窗口——那一拍画不出来是对的，画不出来
+   * **之后没人再叫一次**才是缺陷：读者看到的是一张永远空着的截面，直到他自己动
+   * 一下控件。页面在 `useKernel` 之后叫这一处。
+   */
+  function redraw() {
+    Object.keys(pages).forEach(function (k) {
+      if (pages[k] && pages[k].refresh) pages[k].refresh();
+    });
+  }
+
   root.FyScenario = { part: part, boot: boot, pages: pages,
-                      whenDevices: whenDevices };
+                      whenDevices: whenDevices, redraw: redraw };
 })(typeof self !== 'undefined' ? self : globalThis);

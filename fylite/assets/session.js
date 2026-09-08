@@ -22,7 +22,7 @@
   var TYPE = 'fylite:AppSession/1';
 
   var CONTEXT = {
-    fyo: 'https://fusion-yun.github.io/fyo/v0.draft/',
+    fyo: 'https://fusion-yun.github.io/fyo/latest/',
     fylite: 'urn:fylite:',
   };
 
@@ -182,7 +182,7 @@
   /** PF channel currents in IMAS pf_active shape. */
   function pfActive(machine, chan) {
     return {
-      '@type': 'fyo:pf_active',
+      '@type': self.FyFyo.type('PF_ACTIVE'),
       coil: machine.channels.map(function (combo, c) {
         return {
           name: machine.coils[combo[0][0]].name,
@@ -196,7 +196,7 @@
   /** Flux-loop measurements and the fit's forward model, in magnetics shape. */
   function magnetics(machine, meas, model, wts) {
     return {
-      '@type': 'fyo:magnetics',
+      '@type': self.FyFyo.type('MAGNETICS'),
       'fylite:flux_units': 'Wb/rad',
       flux_loop: machine.loops.map(function (l, i) {
         return {

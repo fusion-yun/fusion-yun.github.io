@@ -1,0 +1,374 @@
+fylite
+Copyright 2026 Institute of Plasma Physics, Chinese Academy of Sciences (ASIPP)
+and the fylite contributors
+
+This product includes software developed at the Institute of Plasma Physics,
+Chinese Academy of Sciences (ASIPP). Contributors are listed in CONTRIBUTORS.md.
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+--------------------------------------------------------------------------------
+"LICENSE 3.1" / "LICENSE 3.2" — what the phrase in the sources means
+--------------------------------------------------------------------------------
+
+Twenty-seven comments in this tree explain a removal with "left with LICENSE
+3.1" or "LICENSE 3.2".  They cite a numbered document that is not in this
+distribution and never was: the LICENSE file beside this one is plain
+Apache-2.0 and has no such sections.  Rather than rewrite the history those
+comments record, the term is defined here, once, so the citations resolve:
+
+    3.1  the EFIT lineage — libefit.so, the EFIT forward/inverse driver, the
+         Green-table generator (efund) and its tables, and every recorded
+         output of them.  Removed outright; the replacement is this project's
+         own Grad-Shafranov solve in rust/fylite/src/{equilibrium,inverse}.rs.
+
+    3.2  the GACODE-binding shared libraries — libneo.so, libgeo.so,
+         libtglf.so — and the ctypes bindings written around them.  The CODE
+         they bound is Apache-2.0 and its translations are attributed below;
+         what left was the vendored binaries, not the right to derive.
+
+Both removals kept the recorded answers (tests/data/FYDOC-CASE-03-frozen-libs/corpus/), because a fixture is
+not the code that produced it.  ★If you are adding a comment, say what left
+and why in your own words — a phrase whose referent has to be looked up in a
+licence file is not an explanation.
+
+--------------------------------------------------------------------------------
+DERIVED WORK — GACODE (Apache-2.0)
+--------------------------------------------------------------------------------
+
+Parts of the Rust kernel are WHITE-BOX TRANSLATIONS of GACODE, not independent
+reimplementations, and this notice travels with them under Apache-2.0 section 4.
+
+    Upstream:  gafusion/gacode, https://github.com/gafusion/gacode
+               ★TWO revisions, which is deliberate and not a mistake to be
+               tidied away: GEO / NEO / TGYRO derive from revision 5efddfdf1
+               and TGLF from 6357db306, matching the two vendored libraries
+               the ports were checked against.  This notice named only the
+               first until 2026-08-21, which under-stated the provenance of
+               every TGLF file below.  See tests/data/FYDOC-CASE-15-tgyro/corpus/treg01/
+               README.md for what the split cost in the cross-checks.
+    Terms:     Apache License 2.0 (per the LICENSE of those revisions)
+    Authors:   General Atomics and the GACODE contributors
+               (GEO: J. Candy; NEO: E. Belli and J. Candy;
+                TGLF: G. Staebler et al.)
+
+Files in this distribution that derive from it:
+
+    rust/fylite/src/geometry.rs        <- GEO, local flux-surface geometry
+    rust/fylite/src/neoclassical.rs    <- NEO, analytic neoclassical models
+    rust/fylite_ext/src/dke.rs            <- NEO, the drift-kinetic solve
+    rust/fylite_ext/src/gyrofluid.rs      <- TGLF, the gyro-Landau-fluid model
+    rust/fylite_ext/src/flr_tables.rs     <- TGLF, FLR fit tables (generated)
+    rust/fylite_ext/src/closure_tables.rs <- TGLF, trapped closure tables (generated)
+    rust/fylite/src/mapping.rs         <- tgyro_tglf_map.f90 / tgyro_neo_map.f90
+    rust/fylite/src/sources.rs         <- tgyro_source.f90 / tgyro_rad.f90 /
+                                          tgyro_volume_int.f90
+    rust/fylite/src/bundle.rs          <- expro_util.f90 (expro_compute_derived)
+    rust/fylite/src/transport.rs       <- in part: tgyro_residual and the
+                                          relaxation backoff of
+                                          tgyro_iteration_standard.  The
+                                          finite-volume core around them is not
+                                          GACODE's (see the fytrans notice below)
+    python/fylite/scenario/model/mapping.py
+                                       <- the host side of the TGYRO maps
+    python/fylite/scenario/model/sources.py
+                                       <- the host side of the TGYRO source layer
+    python/fylite/scenario/model/gyrofluid.py
+                                       <- the input.tglf name/value grammar
+    python/fylite/scenario/model/neoclassical.py
+                                       <- the NEO assembly layer
+    python/fylite/io/gacode.py         <- the input.gacode format reader and
+                                          NEO's neo_dump_local namelist grammar
+    tests/oracles/{geo,neo,tglf}.py
+                                       <- the replay shims for those three
+                                          codes.  ★TGLF's was the last to
+                                          leave gyrofluid.py: the production
+                                          turbulence path called it until the
+                                          port took the channel over
+    tests/data/FYDOC-CASE-14-tglf/corpus/ga-std/     <- GACODE regression input decks
+    tests/data/FYDOC-CASE-15-tgyro/corpus/treg01/    <- GACODE regression input decks
+    tests/data/FYDOC-CASE-03-frozen-libs/corpus/{geo,neo,neo_analytic,neo_analytic_rust,tglf,dke_*}*
+                                       <- recorded outputs of the above, kept as
+                                          porting references
+
+★2026-09-04: the four TGLF / DKE files above moved from rust/fylite/src/ to
+rust/fylite_ext/src/ with the split into two packages, and this list did not move
+with them — the same silent decay described below, in the four days between the
+split and the correction.  The gate that used to catch it (python/tests/) went to
+the public repository with the release surface and cannot see these paths; the
+kernel's own gate on them is tests/test_fyo_kernel_graph.py, which fails on a
+rust/ path here that does not exist.
+
+★These paths are checked.  Every one of them was WRONG before 2026-08-21 —
+eleven of eighteen entries named files that no longer existed, because the code
+moved (into Rust, or into the scenario/ and io/ subpackages) and the notice did
+not move with it, while three Rust files that had become derived works were
+missing from it entirely.  An attribution list is a licence obligation, not a
+comment, and one that decays silently is the failure mode to design against:
+python/tests/test_notice_paths.py fails on a path here that does not exist and
+on a source file that declares upstream provenance without appearing here.
+
+STATEMENT OF CHANGES (Apache-2.0 section 4b).  The ports are translations into
+Rust and Python, not copies: they replace Fortran module state with explicit
+arguments, replace LAPACK/UMFPACK with in-tree dense and sparse routines, return
+error codes where the originals call STOP, and are re-entrant.  Several of them
+deliberately DIFFER from the upstream behaviour where the upstream silently
+overrides its own inputs; each such point is marked in the source and the
+divergence is stated there rather than hidden.
+
+Sub-components vendored inside GACODE and reflected in the ports: NCLASS
+(W. A. Houlberg) and, historically, UMFPACK v2.2 — the latter is NOT translated
+here (the sparse factorisation in this distribution is written from scratch).
+
+--------------------------------------------------------------------------------
+DERIVED WORK — METIS (CeCILL-C)
+--------------------------------------------------------------------------------
+
+The fast neutral-beam model is a TRANSCRIPTION of METIS, not an independent
+implementation from the literature, and it is not covered by the GACODE notice
+above: METIS is a different code under a different licence.
+
+    Upstream:  METIS, the fast integrated tokamak simulator of CEA/IRFM
+    Terms:     CeCILL-C (the French LGPL-compatible licence)
+    Authors:   J.-F. Artaud and the METIS contributors
+
+Files in this distribution that derive from it:
+
+    rust/fylite/src/heating.rs            <- the TRANSCRIBED ARITHMETIC of all
+                                             of the below.  It moved here from
+                                             nbi.py with the single-host
+                                             convergence (FYL-SDD-01
+                                             DE-COMP-01); nbi.py keeps the
+                                             assembly and the statement of
+                                             changes, and calls this through
+                                             the C ABI.
+
+    python/fylite/scenario/model/nbi.py   <- zerod/z0nbipath.m (chord
+                                             attenuation), z0nbistop.m (Janev
+                                             stopping cross-section),
+                                             z0signbi.m (Riviere/Janev
+                                             e-impact + i-impact + CX),
+                                             zicd0.m (Stix critical energy,
+                                             slowing-down time, beam-driven
+                                             current), zfract0.m (Wesson
+                                             ion/electron power split),
+                                             zsupra0.m (effective slowing time)
+
+    rust/fylite/src/heating.rs            <- zerod/z0icrh.m (the minority ICRH
+                                             chain: resonance layer and
+                                             harmonic choice, Stix's analytic
+                                             minority distribution and its H
+                                             function, the fast-ion content
+                                             and the Eriksson electron share),
+                                             zerod/z0qp.m (the monotone q
+                                             profile the layer search runs on)
+
+STATEMENT OF CHANGES.  Six deliberate deviations from METIS, each stated at its
+use site in nbi.py: the chord is marched on a fine path grid with psi_N read by
+bilinear interpolation of the equilibrium's own psi(R,Z) rather than built from
+circle-line intersections against circular surfaces; the beam is a SUM over the
+full/half/third energy components an EAST positive-ion source records, not a
+single injected energy; the Larmor radius is exact rather than METIS's
+deuterium-calibrated constant; and the trapped fraction is Lin-Liu & Miller
+rather than METIS's 0.95*sqrt(x) fallback.
+
+The FAST-WAVE current-drive efficiency in the same file is a
+transcription of `zerod/zicd0.m`'s FWCD block (a linear fit in central
+electron temperature, regressed in `zerod/fitetafwcd.m` on published
+measurements).  ★The driven-current PROFILE that accompanies it upstream is
+NOT ported: no certification case exercises it.
+
+The EC current-drive efficiency in the same file is a transcription of
+`zerod/zicd0.m`'s efficiency block (the Giruzzi fit with Lin-Liu's Z_eff
+dependence).  ★What is NOT taken from METIS there: the EC deposition
+RADIUS.  Upstream takes it as an input (`cons.xece`) and lays a Gaussian on
+it; this distribution computes where a launched beam meets the cold
+resonance layer instead, from the launcher geometry and the field.  The
+LH/EC synergy factor upstream applies to that current is not ported.
+
+DELIBERATE DIVERGENCES IN THE ICRH CHAIN, each stated at its use site:
+the plasma at the resonance layer is the CALLER's (this distribution reads
+real profiles; METIS evaluates its own 0-D peaking forms there); only the
+STEADY branch is transcribed (upstream's `transitoire = 1` integrates an ODE
+over the discharge, which needs a time axis this function does not have); a
+machine with toroidal-field ripple is REFUSED rather than answered without
+the loss upstream subtracts from its own previous step; and a resonance that
+falls outside the machine is refused rather than pinned to the end of the
+search chord.
+
+★RABBIT is named in that module as the FIDELITY TIER the model belongs to
+(Weiland et al., Nucl. Fusion 58 (2018) 082032), not as a source: RABBIT's own
+source is MPCDF-licensed and is not obtainable, so nothing here derives from it.
+Saying so is the point — a reader who sees "RABBIT-class" should be able to find
+out immediately that no RABBIT code was seen, let alone copied.
+
+--------------------------------------------------------------------------------
+DERIVED WORK — fytrans (MIT)
+--------------------------------------------------------------------------------
+
+    Upstream:  fytrans, the core-transport package of the fytok tree,
+               revision 6b14d6ef
+    Terms:     MIT
+    Authors:   the fytok contributors (shared authorship with this project)
+
+Files in this distribution that derive from it:
+
+    python/fylite/scenario/model/assembly.py
+                                       <- fytrans/channels.py, the channel
+                                          declaration grammar, kept IDENTICAL so
+                                          a declaration round-trips between the
+                                          two hosts
+
+★``rust/fylite/src/transport.rs`` is NOT derived from fytrans.  fytrans is its
+ORACLE — tests/test_transport_core.py holds the finite-volume core
+bit-identical to it whenever that package is importable — and an oracle is a
+thing you are measured against, not a thing you copied.  The distinction is
+recorded here because the two relationships look alike from a test file.
+
+--------------------------------------------------------------------------------
+DERIVED WORK — TORAX (Apache-2.0)
+--------------------------------------------------------------------------------
+
+The scrape-off-layer module is a PORT of TORAX's edge implementation, not an
+independent implementation from the papers it cites.  What was taken is
+upstream's: the fitted coefficient tables, the initial guesses, the fixed
+iteration count and the ORDER of the fixed-point updates — each stated at its
+use site in the source, because each of them changes the answer.
+
+    Upstream:  google-deepmind/torax, revision b4d40633 (TORAX_VERSION 1.4.3)
+    Terms:     Apache License 2.0
+    Authors:   the TORAX contributors
+
+Files in this distribution that derive from it:
+
+    rust/fylite/src/edge_tables.rs <- the Mavrin-2017 non-coronal fit
+                                      coefficients for eight low-Z impurities
+                                      (mean charge state and cooling rate),
+                                      transcribed from upstream's own table
+                                      (collisional_radiative_models) through a
+                                      frozen record
+    rust/fylite/src/edge.rs        <- the evaluation of those fits, and the
+                                      extended Lengyel model: divertor_sol_1d
+                                      (the two-point state and its derived
+                                      properties), extended_lengyel_formulas
+                                      (the closed forms and calc_Z_eff),
+                                      extended_lengyel_solvers (the forward and
+                                      inverse fixed points) and
+                                      extended_lengyel_defaults (initial
+                                      guesses, the 25-pass iteration count, the
+                                      L_INT quadrature resolution)
+
+STATEMENT OF CHANGES (Apache-2.0 section 4b).  The port is a translation into
+Rust, not a copy: arrays become plain `&[f64]` with no array framework under
+them, the coefficient tables are generated into the source rather than read at
+runtime, and a model that cannot answer returns an explicit `PhysicsOutcome`
+rather than a NaN.  The PHYSICS of both halves is the cited literature — Mavrin,
+J Fusion Energ 36 (2017) 161; Body et al., Nucl. Fusion 65 (2025) 086002; Eich
+et al., Nucl. Fusion 60 (2020) 056016; Stangeby, PPCF 60 (2018) 044022 — quoted
+at each formula.  What is TORAX's is the implementation's own choices, listed
+above.
+
+★TORAX is ALSO an ORACLE for parts of this distribution that do NOT derive from
+it, and the two relationships look alike from a test file.  `zerod.rs`'s
+Bosch-Hale reactivity and `neoclassical.rs`'s Redl-2021 coefficients are
+independent implementations of the same PAPERS, measured against TORAX's
+(docs/cases/registry.jsonld, record V-08); the QLKNN flux-combination layer
+compared in V-08 / V-14 / B-05 lives in the public repository, not here.  An
+oracle is a thing you are measured against, not a thing you copied — the same
+distinction the fytrans notice above draws for `transport.rs`.
+
+--------------------------------------------------------------------------------
+DERIVED WORK — EPEDNN.jl (Apache-2.0)
+--------------------------------------------------------------------------------
+
+The H-mode pedestal surrogate is a TRANSCRIPTION of EPEDNN.jl's evaluation, and
+the numbers it evaluates are that model's own weights.
+
+    Upstream:  ProjectTorreyPines/EPEDNN.jl,
+               https://github.com/ProjectTorreyPines/EPEDNN.jl
+               model `delta_ne_sqrt_power` in `data/EPED1NNmodel.bson`
+    Terms:     Apache License 2.0 (a copy travels at
+               rust/tools/data/EPEDNN-LICENSE, beside the BSON it applies to)
+    Authors:   O. Meneghini / General Atomics and the EPEDNN.jl contributors
+
+Files in this distribution that derive from it:
+
+    rust/fylite/src/pedestal.rs        <- EPEDNN.jl::pedestal_array, line for
+                                          line: the ten inputs and their order,
+                                          `delta += 1` and the absolute values,
+                                          the per-output power law, the MLP
+                                          correction with its scaling, plus
+                                          ::extrapolation_distance and
+                                          ::effective_triangularity
+    rust/fylite/src/pedestal_tables.rs <- the model's numbers, extracted by
+                                          rust/tools/extract_epednn.py from the
+                                          vendored BSON (a 10->32->32->32->18
+                                          GELU MLP and the power-law
+                                          coefficients); the sha256 of the copy
+                                          is stamped into the generated header
+                                          and re-checked by the extractor
+
+STATEMENT OF CHANGES.  Julia to Rust; the weights are generated into the source
+rather than read from a BSON at runtime, so the shipped library has no model
+file to lose.  The out-of-box behaviour is upstream's and deliberately so —
+inputs outside the training box are answered WITH the extrapolation distance
+reported rather than refused.  What this port adds is a refusal for a machine
+that cannot be normalized at all (non-finite, or a non-positive
+size / field / current / density), where upstream would evaluate anyway.
+
+★The model is EPED1-NN (Meneghini et al., Nucl. Fusion 57 (2017) 086034), a
+neural-network surrogate of EPED (Snyder et al., Phys. Plasmas 16 (2009)
+056118).  The FULL EPED model is a stability-code scan (ELITE); nothing here
+derives from it or from ELITE.
+
+--------------------------------------------------------------------------------
+NOT INCLUDED
+--------------------------------------------------------------------------------
+
+This distribution deliberately contains no machine description, no experimental
+data, and no code or recorded output of the EFIT lineage.  See README.md
+("What this distribution does not contain").
+
+Nor does it contain the four Fortran shared libraries the ports were checked
+against — libefit.so, libneo.so, libgeo.so, libtglf.so — or any binding to them.
+What survives of them is a set of RECORDED answers under tests/data/FYDOC-CASE-03-frozen-libs/corpus/, captured
+at the Python API boundary before they left; tests/data/INDEX.md says what is in
+there and python/fylite/_oracle.py reads it.  A recorded answer is a fixture,
+not a licence to redistribute the code that produced it.
+
+
+--------------------------------------------------------------------------------
+NAMED BUT NOT DERIVED
+--------------------------------------------------------------------------------
+
+Three more third-party projects are named in this tree.  None of them is a
+source of code here, and saying so is the point — a reader who meets the name in
+a comment should be able to find out immediately what the relationship is.
+
+    TGLFNN.jl (Apache-2.0) and EPEDNN.jl
+        `rust/fylite/src/nn.rs` implements one ARCHITECTURE FAMILY — a dense
+        input layer, optional plain depth, optional residual blocks, a dense
+        output layer — whose shape was read off the SHIPPED MODEL FILES of those
+        two surrogates.  No code from either is translated into it and NO
+        WEIGHTS are compiled into the library or the wasm: the numbers arrive as
+        caller-supplied slices.  Both are ORACLES for it (registry record V-02:
+        this evaluator against upstream's own evaluation).  EPEDNN.jl is a
+        derived work HERE only through `pedestal.rs` / `pedestal_tables.rs`,
+        which the section above attributes.
+
+    ukaea/tglfnn-ukaea (LGPL)
+        `rust/tools/export_tglfnn_ukaea.py` calls it and deliberately does not
+        vendor it: upstream is copyleft (its LICENSE says 2.1, its
+        pyproject.toml says 3.0) and this project is not.  The ruling
+        (2026-08-30) is「call it, do not vendor it」— the weights stay in the
+        user's own checkout, the export lands OUTSIDE this repository, and
+        `$FYLITE_NN_DIR` points the host at it.  Nothing from that repository
+        enters this distribution, and that script enforces it.
+
+    google-deepmind/fusion_surrogates (software Apache-2.0, weights CC-BY-4.0)
+        `rust/tools/export_qlknn_7_11.py` exports the QLKNN_7_11 network for the
+        host to load.  The export is DATA under a different licence from the
+        code that reads it, so the upstream LICENSE and NOTICE travel beside the
+        exported file rather than being folded into this one; upstream asks that
+        doi:10.1063/1.5134126 be cited when a number it produces is quoted.  The
+        kernel itself is unchanged by that integration (registry record V-03).

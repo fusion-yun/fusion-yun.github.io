@@ -28,7 +28,7 @@ fusion-yun.github.io
 | `_includes/head-custom.html` | 主题头部注入：favicon 指向 `figures/fuyun_mark.svg`；首页插图（`figure` / `figcaption`）的图框与图注体例 | 本仓 |
 | `figures/` | 站点图形与首页插图，见下表 | 本仓 + fydoc |
 | `LICENSE` | 站点分路径许可通告（Part A/C；Part B 已撤）| 本仓 |
-| `fylite/` | fylite 在线演示：**十页**——首页 / 功能 / 版权各中英两份 + 三条场景页（`scenario/design·model·analysis.html`）+ 工具页 `mdsplus.html`；另有 `assets/`、`cases/`（**九份**，见下）、`devices/`、`LICENSE` | 私有仓 `fusion-yun/fylite` 的 `app/` |
+| `fylite/` | fylite 在线演示：首页 / 功能 / 版权各中英两份 + `pages/` 下五条场景页（放电设计 · 物理建模 · 实验分析 · 装置数据 · 算例报告，各另有一份 `page_*` 外壳）+ `guide/` 用户指南；另有 `assets/`、`cases/`（可导入的实例会话）、`LICENSE`、`NOTICE` | 公开仓 [`fusion-yun/fylite`](https://github.com/fusion-yun/fylite) 的 `app/` |
 
 ## 首页插图
 
@@ -58,24 +58,35 @@ fusion-yun.github.io
 
 `fylite/` 是**发布产物**，在本仓的修改会在下次发布时被覆盖。改内容请改真源仓，再重新发布：
 
-- **`fylite/`** —— 由私有仓 `fusion-yun/fylite` 的 `.github/workflows/publish-app.yml`
-  同步（手动触发，写权限 deploy key）。演示页只分发**二进制**：
-  `assets/fylite_rs.wasm` / `fylite_tglf.wasm` / `fylite_dke.wasm` 是 Rust 内核的
-  WebAssembly 构建，**不含源码**；`assets/*.js` 只做数据编排、绘图与 ABI 调用，求解全部
+- **`fylite/`** —— 由公开仓 [`fusion-yun/fylite`](https://github.com/fusion-yun/fylite)
+  的 `tools/publish-site.sh` 同步：它在本机构建**公开版**站点、跑闸子、把这个目录整个
+  换掉，然后**停下**——add / commit / push 由人来按。演示页分发的求解器是
+  `assets/fylite_rs.wasm` 等 WebAssembly 制品（Rust 内核的编译产物，内核源码在私有仓
+  `fusion-yun/fylite_kernel`）；`assets/*.js` 只做数据编排、绘图与 ABI 调用，求解全部
   在二进制内。
-- ★**上游 `app/` 的两个子目录不发布**：`app/tests/`（40 个闸子脚本，内含对照数字与私有仓
-  路径）与 `app/server/`（网关与 mdsip 客户端源码）。站点只承载**演示本身**——这与站点
-  `LICENSE` Part C 说的「编译二进制制品与随其分发的装载脚本」是同一条界。★因此工具页
-  `mdsplus.html` 在站点上**取不到数**（它要一个能开套接字的网关进程），页面自己会说这
-  句话；那不是故障。
-- ★**算例只撤下 `cases/evolve-fuse-*.jsonld` 那九份**，其余九份照发，菜单与初始算例都在。
-  发布出去的 `cases/catalogue.jsonld` 因此是上游那份的**子集**——工作流按名字前缀改写，
-  order 与 `fylite:initial` 全不动，正文一个字不改。**别在本仓手工改它**：下次发布会按
-  上游重新生成。（目录若还点着撤下的那九份，页面会连报九次 `case.failed`；工作流有自检
-  拦这一条，另拦「文件在但目录没点名」。）
-- ★`fylite/LICENSE`（Part C 的就地重述）**只存在于本仓**，上游 `app/` 里没有这个文件；
-  同步时要**保留**它。工作流已于 2026-08-25 改好（`fylite@27c734a`）：先取出、发布后放回，
-  取不到就拒绝发布；连同上面两条口径与逐字校验一起，都在 `publish-app.yml` 的 Sync 步骤里。
+- ★**为什么不是一条 GitHub Action**：wasm 不在公开仓里（`.gitignore`），它们由私有内核
+  仓的构建装进 `app/assets/`。一台只检出公开仓的托管 runner 构建不出站点，而要让它能，
+  就得把私有源码交给它——为发一个公开页面扩大私有源码的暴露面，方向反了。所以发布跑在
+  两个检出都已经在的那台机器上。（2026-09-02 分仓时旧的 `publish-app.yml` 留在了老仓，
+  此后一段时间**没有任何发布路径**；这条脚本是补回来的那一条。）
+- ★**上游 `app/` 的两个子目录不发布**：`app/tests/`（闸子脚本，内含对照数字与私有仓
+  路径）与 `app/server/`（已退役）。这与站点 `LICENSE` Part C 说的「编译二进制制品与随其
+  分发的装载脚本」是同一条界，且现在由 `build-site.sh` 自己的自检拦着，不再靠工作流记得。
+  ★因此 `pages/data.html`（原 `mdsplus.html`）在站点上**取不到数**——它要一个能开套接字
+  的网关进程；页面自己会说这句话，那不是故障。
+- ★**`fylite/LICENSE` 与 `fylite/NOTICE` 现在由构建装入**（2026-09-08），不再是本仓自留、
+  发布时要保住的两份文件——**上一版的规矩正好相反，别照着旧文字办**。理由是 Apache-2.0
+  §4(d)：署名义务附着在**分发件**上，而这个目录就是一次分发（它带着 GACODE 白盒移植的
+  编译产物）。`LICENSE` 取上游仓的 Apache-2.0 全文，`NOTICE` 由构建自内核检出借入；
+  两者缺一，`build-site.sh` 红着退出。★旧的 `fylite/LICENSE`（「Binary Redistribution
+  License · source not published」）与上游今天的 Apache-2.0 互相矛盾，下次同步会被替换。
+- ★**算例**（`cases/`）是给页面「导入」按钮的实例会话文档，真源在上游 `app/cases/`。
+  公开版按每份算例自报的 `fylite:device` 过滤：装置语料不带的机器（EAST），它的算例也
+  不发，目录条目一并撤掉。**别在本仓手工改它们**：下次同步会按上游重新装。
+- ★**URL 换过一次**（2026-09-08 起）：三条场景页从 `scenario/design·model·analysis.html`
+  变成 `pages/pulse_design·model·analysis.html`，工具页 `mdsplus.html` 变成
+  `pages/data.html`，另新增 `pages/report.html`。站内只链 `./fylite/`（入口不变），但
+  外部深链会断。
 
 ## 本地预览
 

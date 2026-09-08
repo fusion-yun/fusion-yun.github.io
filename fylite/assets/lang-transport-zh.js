@@ -1,13 +1,10 @@
 // zh catalogue for the 1.5D transport page only.
 
 self.FyI18n.register('zh', {
-  "x.fmt.json": "JSON 会话 (fyo)",
-  "x.geom": "几何（固定）",
   "x.rmaj": "R/a",
   "x.kappa": "拉长比 κ",
   "x.delta": "三角度 δ",
   "x.q95": "边界 q",
-  "x.geom_note": "磁面度规（V′、⟨|∇r|²⟩）逐面调用<strong>内核自己的 geo_do</strong>取得，不在这一段里另算一套。q(ρ) 在这一档是<strong>规定的</strong>抛物型剖面——这一段不解电流扩散，所以 q 是输入不是结果。",
   "x.model": "输运模型",
   "x.chi0": "χ₀ [m²/s]",
   "x.pinch": "箍缩速度 v [m/s]",
@@ -55,7 +52,7 @@ self.FyI18n.register('zh', {
   'x.turb_nrad': '求值半径数',
   'x.turb_nky': 'k<sub>y</sub> 点数',
   'x.turb_outer': '外迭代上限',
-  'x.turb_note': '★这一档跑在 worker 上，其余三档留在主线程。代价与「半径数 × k<sub>y</sub> 点数 × 外迭代数」成正比，一次求值约 25 ms——把三个滑块拉满是分钟量级，这是离线档不是交互档。★闭包在<b>环外</b>求值并按 χ 欠松弛：湍流 χ 随 a/L_T 陡升，不松弛的外环会在过输运与欠输运两个剖面之间来回而不收敛。',
+  'x.turb_note': '★这一档在后台执行，其余三档随页面即时算出。代价与「半径数 × k<sub>y</sub> 点数 × 外迭代数」成正比，一次求值约 25 ms——把三个滑块拉满是分钟量级，这是离线档不是交互档。★闭包在<b>环外</b>求值并按 χ 欠松弛：湍流 χ 随 a/L_T 陡升，不松弛的外环会在过输运与欠输运两个剖面之间来回而不收敛。',
   'x.ser.chineo': 'χ 中子（下限）',
   'x.ser.chiturb': 'χ 总（实际求值的半径）',
   'x.row.outer': '外迭代',

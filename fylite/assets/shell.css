@@ -1,0 +1,180 @@
+/* The v2 page shell — `FYL-DESIGN-11` V-11 / V-12, `FYL-DESIGN-10` P-25..P-27.
+ *
+ * ★Loaded ONLY by `pages/page_*.html`.  The four original pages keep the
+ * `header.top` strip and are not touched by anything in this file: every rule
+ * below is under `.shell`, `[data-fy-shell]` or a class this file introduces.
+ * That is the whole reason the new pages are new files rather than an edit —
+ * the old ones stay runnable while this is measured against them.
+ *
+ * The strip is TWO ROWS and it does not scroll away:
+ *
+ *   row 1   mark · page name / subtitle · 内部测试 · four page icons · theme
+ *   row 2   device or source · import / export · run state · exit
+ *   edge    a 3 px progress line, welded to the bottom
+ *
+ * ★Row 2 is not built here and not built by this file's script either: it is
+ * the page's OWN toolbar (`scenario.js buildToolbar`), MOVED.  Moving a node
+ * keeps its id, its listeners and its controller; rebuilding it would mean a
+ * second implementation of the same six controls, which is the thing every
+ * document in this family refuses.  So the layout below styles elements it
+ * did not create, by the class names they already have.
+ */
+
+:root { --shell-h: 84px; }
+
+header.shell {
+  position: sticky; top: 0; z-index: 40;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  /* the progress line is welded to the bottom edge, so the header is the
+     positioning context for it */
+  position: -webkit-sticky; position: sticky;
+}
+
+/* --- row 1: who you are looking at, and where else you can go ------------- */
+.shell-r1 {
+  display: flex; align-items: center; gap: 12px;
+  padding: 4px 18px; min-height: 40px;
+}
+.shell-r1 .brand { flex: 0 0 auto; display: block; line-height: 0; }
+.shell-r1 .titles { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+.shell-r1 h1 { font-size: 15px; margin: 0; white-space: nowrap; }
+.shell-r1 .sub {
+  color: var(--muted); font-size: 11.5px; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+/* ★the warning keeps its prominence and gives back its slack.  On the old
+   strip its wrapper measured 832–919 px to hold a 326 px pill; here it is
+   `flex: 0 0 auto` and centred by the two `1fr` spacers either side.
+   ★★THE BOX MOVED FROM THE <p> TO THE <span>s (2026-09-05): the band carries
+   two of them now — maturity and, on the internal build only, distribution —
+   and one border around both would draw a single pill whose right half
+   vanishes in the public build, leaving a box with a hole in it. */
+.shell-r1 .warn-band {
+  margin: 0 auto; flex: 0 0 auto;
+  display: flex; align-items: center; gap: 8px;
+}
+.shell-r1 .warn-band span {
+  border: 1px solid var(--warn); border-radius: 12px;
+  padding: 3px 14px; font-size: 11.5px; font-weight: 700; color: var(--warn);
+  background: color-mix(in srgb, var(--warn) 8%, transparent);
+  white-space: nowrap;
+}
+.shell-r1 nav { flex: 0 0 auto; display: flex; align-items: center; gap: 4px; }
+
+/* --- row 2: this page's work --------------------------------------------- */
+.shell-r2 {
+  display: flex; align-items: center; gap: 12px;
+  padding: 3px 18px; min-height: 41px;
+  border-top: 1px solid var(--line);
+}
+/* ★The page's own toolbar, moved in WRAPPER AND ALL.  `display: contents`
+   drops its panel box but keeps the element in the tree, which is the point:
+   its own rules are scoped `.panel.toolbar .dev-ctl { … }`, and the base
+   `.ctl label` is `display: block`.  Emptying the wrapper and dropping it
+   stacked every label above its control and made the row 103 px tall. */
+.shell-in > .panel.toolbar { display: contents; }
+.shell-in { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+/* the data page's source box is a plain `.ctl`, outside the toolbar's scope,
+   so it needs the same one-line treatment spelled here */
+.shell-in .ctl { margin: 0; display: flex; align-items: center; gap: 6px; }
+.shell-in .ctl label { display: block; margin: 0; white-space: nowrap;
+  font-size: 12px; color: var(--muted); }
+.shell-in .ctl input, .shell-in .ctl select { width: auto; min-width: 170px; }
+.shell-in .dev-ctl { max-width: 300px; }
+.shell-in .buttons { display: flex; gap: 6px; }
+.shell-in .io-menu { position: absolute; }
+
+/* ⑤ the run state.  It REPORTS; nothing here changes anything (V-11). */
+.shell-state {
+  flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--muted);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.shell-state .status { margin: 0; min-width: 0; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap; }
+.shell-state .status[hidden] { display: none; }
+/* a second status line the page authored into its toolbar host: it reports,
+   so it belongs here — truncated, with the full sentence on `title` */
+.shell-state p.note { margin: 0; min-width: 0; font-size: 11.5px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.shell-state p.note[hidden] { display: none; }
+/* ★the dot is never the only encoding — the sentence beside it says the same
+   thing in words (P-27).  Four states, four shapes as well as four colours. */
+.shell-dot {
+  flex: 0 0 auto; width: 9px; height: 9px; border-radius: 50%;
+  background: var(--muted); box-shadow: inset 0 0 0 9px var(--muted);
+}
+.shell-dot[data-state="idle"] { background: none; box-shadow: inset 0 0 0 1.4px var(--muted); }
+.shell-dot[data-state="busy"] { background: var(--accent); box-shadow: inset 0 0 0 9px var(--accent); }
+.shell-dot[data-state="done"] { background: var(--alt); box-shadow: inset 0 0 0 9px var(--alt); }
+.shell-dot[data-state="miss"] { background: var(--warn); box-shadow: inset 0 0 0 9px var(--warn); }
+.shell-dot[data-state="fail"] { background: var(--lcfs); box-shadow: inset 0 0 0 9px var(--lcfs); }
+.shell-dot[data-state="blocked"] { background: var(--warn); box-shadow: inset 0 0 0 9px var(--warn); }
+/* which bar the state belongs to — the page's run key is down in that bar,
+   and this is the only place the two are visible together */
+.shell-bar { flex: 0 0 auto; font-weight: 700; color: var(--fg); }
+.shell-bar[hidden] { display: none; }
+
+/* ⑥ the exit.  Absent pages leave NO empty cell (V-6's reason). */
+.shell-exit { flex: 0 0 auto; display: flex; gap: 6px; }
+.shell-exit:empty { display: none; }
+
+/* --- the progress line, on the bottom edge -------------------------------- */
+/* ★an empty strip shows NO line.  A permanently empty 3 px band is the same
+   mistake as a permanently empty cell (V-6): it reads as "nothing is running"
+   on a page that can never run anything. */
+.shell-prog { height: 3px; background: var(--line); }
+.shell-prog:empty { display: none; }
+.shell-prog .bar { height: 3px; background: none; border: 0; margin: 0;
+  border-radius: 0; overflow: hidden; }
+.shell-prog .bar > div { height: 3px; background: var(--accent);
+  transition: width .12s linear; }
+
+@media (max-width: 1100px) {
+  .shell-r1 .warn-band { display: none; }   /* the pills are the first to go */
+  .shell-r1 .sub { display: none; }
+}
+
+/* --- the mode strip, pinned directly under the shell ---------------------- */
+/* ★`FYL-DESIGN-09` D-23: the shell REPORTS which mode you are in; the keys
+   that CHANGE it are here, in the body — which is why this is a body element
+   with its own sticky offset rather than a fourth slot on the strip. */
+.shell-modes {
+  position: sticky; top: var(--shell-h); z-index: 30;
+  background: var(--panel); border-bottom: 1px solid var(--line);
+  margin: 0 0 14px; padding: 7px 18px;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.shell-modes h2 { display: none; }
+.shell-modes .note { margin: 0; font-size: 11.5px; }
+
+/* --- the intro, folded to one line (P-26) --------------------------------- */
+.shell-lead { margin: 0 0 14px; display: flex; align-items: baseline; gap: 12px; }
+.shell-lead > .intro { flex: 1 1 auto; min-width: 0; }
+.shell-lead.folded > .intro {
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.shell-lead.folded > .intro > * { display: inline; margin: 0; }
+.shell-lead.folded > .intro > .bound { display: none; }
+.shell-lead button {
+  flex: 0 0 auto; background: none; border: 0; padding: 0;
+  color: var(--accent); font: inherit; font-size: 12.5px; cursor: pointer;
+}
+.shell-lead button:hover { text-decoration: underline; }
+
+/* --- the two-column body: shared controls beside the bars (P-3 + P-26) ---- */
+/* ★NOT a fold.  P-3 says a shared control may not live inside a fold, so the
+   way to get an output above the fold is to put the controls BESIDE the bars,
+   not to hide them. */
+.shell-body { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 16px; }
+.shell-side { min-width: 0; }
+.shell-side > .panel { margin: 0 0 14px; }
+.shell-main { min-width: 0; }
+@media (max-width: 1180px) { .shell-body { grid-template-columns: 1fr; } }
+
+/* --- the empty state: a shape, not a blank (P-10 · P-30) ------------------ */
+.shell-empty { margin: 0 0 16px; }
+.shell-empty svg { width: 100%; height: 210px; display: block; }
+.shell-empty .k { font-weight: 700; }
+.shell-empty p { margin: 8px 0 0; font-size: 12.5px; color: var(--muted); }

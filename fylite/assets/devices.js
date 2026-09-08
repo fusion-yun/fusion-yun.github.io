@@ -6,8 +6,10 @@
 // machine, so this file is a registry, a resolution rule and a place to keep
 // imported descriptors.
 //
-// PRESET devices are fyo/JSON-LD documents under `app/devices/`, listed by
-// `app/devices/catalogue.jsonld`.  Imported ones live in localStorage and are
+// PRESET devices are fyo/JSON-LD documents under `app/facts/device/`, listed by
+// `app/facts/device/catalogue.jsonld`.  ★2026-09-04 `app/facts/device/` -> `app/facts/device/`:
+// `app/facts` is a symlink to the repository's `facts/` corpus, so the page fetches
+// the same bytes the build publishes, under one name everywhere.  Imported ones live in localStorage and are
 // merged in here, which is what lets an imported machine survive a reload.
 // The worker gets the resolved descriptor in its `init` message and never
 // reads a global — a Worker cannot see localStorage, so an imported device
@@ -19,7 +21,7 @@
 // That made the one machine this build ships the only machine in the app
 // that was not an fyo document — it could not be diffed against
 // `machine_desc/iter/`, could not be re-imported, and went through a
-// different reader than every other machine.  It is `devices/iter.jsonld`
+// different reader than every other machine.  It is `facts/device/iter.jsonld`
 // now, parsed by the same `FyoDevice.fromFyo` an imported file goes through,
 // so there is one reader and one shape.
 //
@@ -42,14 +44,14 @@
   var LS_NOTICE = 'fylite-device-notice';
 
   //: ★Resolved from THIS script's own URL, not from the page's: the pages
-  //: sit at two depths (`app/index.html` and `app/scenario/*.html`) and a
+  //: sit at two depths (`app/index.html` and `app/pages/*.html`) and a
   //: path relative to the document would have to be right for both.
   var HERE = (function () {
     try {
       var me = document.currentScript && document.currentScript.src;
-      if (me) return me.replace(/[^/]*$/, '') + '../devices/';
+      if (me) return me.replace(/[^/]*$/, '') + '../facts/device/';
     } catch (e) { /* no document, e.g. a worker or a test host */ }
-    return '../devices/';
+    return '../facts/device/';
   })();
 
   //: preset id -> descriptor, filled by load()
@@ -61,49 +63,50 @@
   function builtins() { return presets; }
 
   /**
-   * Read `devices/catalogue.jsonld` and every document it lists.
+   * Read the catalogue and every document it lists — **from the middle-layer
+   * wasm**, not over the network.
+   *
+   * ★★2026-09-05 用户裁定：**页面也走中间层 wasm，撤掉 `facts.jsonld`**。
+   * 此前这里是 1 + N 次 fetch（目录一次，逐台一次），取的是与命令行那张编进二进制
+   * 的表**平行的另一份字节**——同一批 432 KB 在一个制品里装两遍，且没有任何东西
+   * 保证两份描述同一批机器。今天两边读的是同一份 `facts.rs`。
    *
    * ★★A preset that fails to parse is REPORTED and skipped, never
    * substituted: a page that silently ran on a different machine than the
    * one it names would put a wrong provenance under every figure.  With no
-   * catalogue at all (a checkout served without `devices/`, an offline
-   * copy) the app still works — it simply has no preset, and every machine
-   * arrives by import, which is the path a user's own tokamak takes anyway.
+   * facts in the build at all (a page served without the runtime wasm, an
+   * offline copy) the app still works — it simply has no preset, and every
+   * machine arrives by import, which is the path a user's own tokamak takes
+   * anyway.
    *
    * Resolves to `{loaded: [id], failed: [{id, why}]}` and never rejects:
    * the caller is a page boot, and a boot that can be stopped by a missing
    * data file is a page that cannot be opened at all.
    */
   function load(base) {
-    var dir = base || HERE;
     var out = { loaded: [], failed: [] };
     //: the ids in the order the catalogue declares them, kept so the merge
-    //: below can restore that order after the fetches race
+    //: below can restore that order
     var order = [];
-    if (typeof fetch !== 'function') return Promise.resolve(out);
-    return fetch(dir + 'catalogue.jsonld')
-      .then(function (r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      })
+    if (!root.FyFactsDb) return Promise.resolve(out);
+    return root.FyFactsDb.doc('device', 'catalogue')
       .then(function (cat) {
+        if (!cat) throw new Error('this build carries no device catalogue');
         var want = (cat && cat['fylite:devices']) || [];
         want.forEach(function (e) {
           if (e && e['fylite:device_id']) order.push(e['fylite:device_id']);
         });
         return Promise.all(want.map(function (e) {
           var id = e['fylite:device_id'];
-          var file = e['fylite:document'];
-          if (!id || !file) {
-            out.failed.push({ id: id || '?', why: 'catalogue entry names no document' });
+          if (!id) {
+            out.failed.push({ id: '?', why: 'catalogue entry names no device' });
             return null;
           }
-          return fetch(dir + file)
-            .then(function (r) {
-              if (!r.ok) throw new Error('HTTP ' + r.status);
-              return r.json();
-            })
+          return root.FyFactsDb.doc('device', id)
             .then(function (doc) {
+              //: ★「这一版不带它」与「它坏了」分开说：前者是目录与制品不同步，
+              //: 后者是文档本身有问题。读者拿到的句子不一样。
+              if (!doc) throw new Error('the catalogue lists it, this build does not carry it');
               //: ★the SAME reader an imported file goes through.  A preset
               //: that took a shortcut past the validation would be the one
               //: machine nobody checked.
