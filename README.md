@@ -1,6 +1,6 @@
 # fusion-yun.github.io
 
-![FuYun](assets/brand/banner.svg)
+![FuYun](docs/assets/brand/banner.svg)
 
 **FuYun 的发布站点** —— <https://fusion-yun.github.io/>
 
@@ -98,7 +98,7 @@ jekyll serve                   # http://127.0.0.1:4000/
 
 ## 标识
 
-当前资源位于 `assets/brand/`：仓首页使用 `banner.svg`，页面使用 `logo.svg`，favicon 使用方形 `icon.svg` 与 `favicon.png`。配色为蓝 `#1F6FEB`、橙 `#EA580C`、灰 `#6E7681`；SVG 字形转为路径，不依赖浏览器字体。
+当前资源位于 `docs/assets/brand/`：仓首页使用 `banner.svg`，页面使用 `logo.svg`，favicon 使用方形 `icon.svg` 与 `favicon.png`。配色为蓝 `#1F6FEB`、橙 `#EA580C`、灰 `#6E7681`；SVG 字形转为路径，不依赖浏览器字体。
 
 ## 许可
 
