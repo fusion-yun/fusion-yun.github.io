@@ -1,0 +1,15 @@
+{
+  "canonical_directory": "docs/assets/brand",
+  "copies": [
+    {
+      "path": "figures/fuyun_mark.svg",
+      "source": "icon.svg",
+      "sha256": "7a07af49aeabbbabae19b3b4ec5a51ef1509ca5c8040fffb6329d1917f0f73a5"
+    },
+    {
+      "path": "figures/fuyun_logo.svg",
+      "source": "logo.svg",
+      "sha256": "ae543fbefac798462f2da227394011b6e5840ec1dc07594a6ccb65a4c87455f3"
+    }
+  ]
+}

@@ -4,7 +4,7 @@ title: FuYun —— 聚变集成建模与知识计算
 description: FyTok 托卡马克集成建模与分析框架：fyo 语义契约、全功能端与轻量端两级实现、EAST 与 ITER 算例，以及浏览器内运行的 FyLite 在线演示。
 ---
 
-<p align="center"><img src="./figures/fuyun_logo.svg" alt="FuYun" width="520"></p>
+<p align="center"><img src="./docs/assets/brand/logo.svg" alt="FuYun" width="520"></p>
 
 > 「"神马"都是"浮云"」
 

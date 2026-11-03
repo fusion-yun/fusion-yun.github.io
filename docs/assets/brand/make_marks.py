@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Regenerate local SVG assets; fonttools is build-only, cairosvg optional for PNG."""
 from pathlib import Path
-import argparse,html,json,xml.etree.ElementTree as ET
+import argparse,hashlib,html,json,xml.etree.ElementTree as ET
 from fontTools.ttLib import TTFont
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.transformPen import TransformPen
@@ -31,8 +31,17 @@ def generate(directory,c,body,fonts,png):
  sub,sw=lettering(c['subtitle'],fonts/'LiberationSans-Regular.ttf',10,x,94,palette['grey'],1.1)
  if sw>372:sub,_=lettering(c['subtitle'],fonts/'LiberationSans-Regular.ttf',10*372/sw,x,94,palette['grey'],0)
  artwork='<g transform="translate(8 10) scale(1.3125)">'+body+'</g>'+prefix+word+'<path d="M112 76H484" stroke="'+palette['grey']+'" stroke-width="0.8"/>'+sub
- assets={'icon.svg':svg(64,64,name+' icon',body),'logo.svg':svg(500,104,name,artwork),'banner.svg':svg(1200,250,name,'<g transform="translate(100 21) scale(2)">'+artwork+'</g>')}
+ description=c.get('symbol','Symbolic project identity; not a scientific result.')
+ assets={'icon.svg':svg(64,64,name+' icon',body,description),'logo.svg':svg(500,104,name,artwork,description),'banner.svg':svg(1200,250,name,'<g transform="translate(100 21) scale(2)">'+artwork+'</g>',description)}
  for filename,data in assets.items():(directory/filename).write_text(data)
+ # Preserve existing public asset URLs as derived copies of the canonical source.
+ figures=directory.parents[2]/'figures';copies=[]
+ for filename,source in [('fuyun_mark.svg','icon.svg'),('fuyun_logo.svg','logo.svg')]:
+  target=figures/filename
+  if target.exists():
+   data=assets[source].encode();target.write_bytes(data)
+   copies.append({'path':'figures/'+filename,'source':source,'sha256':hashlib.sha256(data).hexdigest()})
+ if copies:(directory/'derived-assets.json').write_text(json.dumps({'canonical_directory':'docs/assets/brand','copies':copies},indent=2)+'\n')
  if png:
   import cairosvg
   for filename,size in [('icon.png',512),('favicon.png',64)]:cairosvg.svg2png(bytestring=assets['icon.svg'].encode(),write_to=str(directory/filename),output_width=size,output_height=size)

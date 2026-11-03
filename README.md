@@ -24,7 +24,7 @@
 | :--- | :--- | :--- |
 | `index.md` | 首页（Jekyll 渲染）| 本仓 |
 | `_config.yml` | 站点标识：标题、描述、语言、主题（`jekyll-theme-primer`）| 本仓 |
-| `_includes/head-custom.html` | 主题头部注入：favicon 指向 `figures/fuyun_mark.svg`；首页插图（`figure` / `figcaption`）的图框与图注体例 | 本仓 |
+| `_includes/head-custom.html` | 主题头部注入：favicon 指向 `docs/assets/brand/icon.svg` 与 `favicon.png`；首页插图（`figure` / `figcaption`）的图框与图注体例 | 本仓 |
 | `figures/` | 站点图形与首页插图，见下表 | 本仓 + fydoc |
 | `LICENSE` | 站点分路径许可通告（Part A/C；Part B 已撤）| 本仓 |
 | `fylite/` | fylite 在线演示：首页 / 功能 / 版权各中英两份 + `pages/` 下五条场景页（放电设计 · 物理建模 · 实验分析 · 装置数据 · 算例报告，各另有一份 `page_*` 外壳）+ `guide/` 用户指南；另有 `assets/`、`cases/`（可导入的实例会话）、`LICENSE`、`NOTICE` | 公开仓 [`fusion-yun/fylite`](https://github.com/fusion-yun/fylite) 的 `app/` |
@@ -98,7 +98,7 @@ jekyll serve                   # http://127.0.0.1:4000/
 
 ## 标识
 
-当前资源位于 `docs/assets/brand/`：仓首页使用 `banner.svg`，页面使用 `logo.svg`，favicon 使用方形 `icon.svg` 与 `favicon.png`。配色为蓝 `#1F6FEB`、橙 `#EA580C`、灰 `#6E7681`；SVG 字形转为路径，不依赖浏览器字体。
+当前资源位于 `docs/assets/brand/`：仓首页使用 `banner.svg`，页面使用 `logo.svg`，favicon 使用方形 `icon.svg` 与 `favicon.png`。独立图标采用托卡马克 D 形极向小截面、嵌套闭合磁面与相连节点，不含字符，表达面向磁约束聚变大科学工程的知识系统、数据平台与智能平台。配色为蓝 `#1F6FEB`、橙 `#EA580C`、灰 `#6E7681`；SVG 字形转为路径，不依赖浏览器字体。
 
 ## 许可
 
