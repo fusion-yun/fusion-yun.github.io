@@ -1,15 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="fylite">
-  <!-- The square mark: the `Fy` of the fylite wordmark, on its own, on nothing.
-       ★WHY A SECOND FILE and not the wordmark scaled down.  `fylite_logo.svg`
-       is 240x100 and carries the strapline `FUYUN TOKAMAK SIMULATOR - LITE` at
-       7 px; at a 16 px favicon or a 30 px header strip that line is a smear and
-       the white plate is most of the pixels.
-       ★NO PLATE HERE, not even the wordmark's navy one: the mark sits directly
-       on the header, so it takes the reader's theme instead of punching a
-       coloured tile into it.  The letterform is the wordmark's own #FF8C00,
-       which carries on a light panel and on a dark one alike — which is the
-       whole reason the plate was needed in the first place and is not here. -->
-  <text x="31" y="34" font-family="Arial, Helvetica, sans-serif" font-size="44"
-        font-weight="bold" font-style="italic" fill="#FF8C00"
-        dominant-baseline="middle" text-anchor="middle">Fy</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc"><title id="title">FyLite icon</title><desc id="desc">Symbolic project identity; not a scientific result.</desc><g transform="translate(0 0) scale(1) translate(-0 -0)"><g xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#1F6FEB" stroke-width="2.6" stroke-linecap="round"><path d="M21 7C41 7 52 19 52 32C52 45 41 57 21 57C10 57 8 43 8 32C8 21 10 7 21 7Z" /><path d="M26 16C39 16 45 24 45 32C45 40 39 48 26 48C18 48 16 40 16 32C16 24 18 16 26 16Z" /><path d="M30 25C37 25 39 28 39 32C39 36 37 39 30 39C25 39 24 35 24 32C24 29 25 25 30 25Z" /></g><circle xmlns="http://www.w3.org/2000/svg" cx="33" cy="32" r="3.6" fill="#EA580C" /><path xmlns="http://www.w3.org/2000/svg" d="M18 52C25 46 39 21 46 15" fill="none" stroke="#EA580C" stroke-width="3" stroke-linecap="round" /></g></svg>

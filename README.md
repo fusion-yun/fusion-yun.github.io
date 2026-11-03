@@ -1,7 +1,6 @@
-fusion-yun.github.io
-====================
+# fusion-yun.github.io
 
-<p align="center"><img src="figures/fuyun_logo.svg" alt="FuYun" width="440"></p>
+![FuYun](assets/brand/banner.svg)
 
 **FuYun 的发布站点** —— <https://fusion-yun.github.io/>
 
@@ -99,21 +98,7 @@ jekyll serve                   # http://127.0.0.1:4000/
 
 ## 标识
 
-`figures/fuyun_logo.svg` 与 `figures/fuyun_mark.svg` 只用矢量图元与系统字体，**不依赖外部资源**，
-可任意缩放；页面引用保持 SVG 形态，不转位图。构成与 FyTok 仓的 `docs/figures/fytok_logo.svg`
-同族，便于并置：
-
-- **配色**：`#FF8C00` 等离子体橙 + `#003366` 深蓝；副题 `#42526E`，卡片描边 `#e1e4e8`。
-- **词标**：`Fuyun` —— 橙色斜体落在 `F` 与 `y` 两个字符上，二者连读即 `Fy`；其余字符深蓝正体。
-- **标记**：即词标中被高亮的两个字符 `Fy`，同一张卡片、同一套配色，用作 favicon 与头像。
-- **底色**：两份**全透明**，只画圆角描边的卡片轮廓与文字，可直接压在任意底色上；
-  因此**禁止**再给卡片 `rect` 加 `fill`（深色底下另配浅色变体，不要往这两份里塞底色）。
-- **横幅**：1280×640（2:1）透明画布，内嵌 240×100 卡片（圆角、描边），词标居上、
-  分隔线下为字距展开的英文副题；副题以 `textLength` 钉定宽度，使不同字体环境下的
-  溢出行为一致。
-
-改动标识时两个文件一起改。另注：FyTok 仓那份 `fytok_logo.svg` 里 `fill="url(#bg)"` 引用了
-文件中并不存在的渐变，渲染器按"无填充"处理——那份的底色实际上也从未画出来过。
+当前资源位于 `assets/brand/`：仓首页使用 `banner.svg`，页面使用 `logo.svg`，favicon 使用方形 `icon.svg` 与 `favicon.png`。配色为蓝 `#1F6FEB`、橙 `#EA580C`、灰 `#6E7681`；SVG 字形转为路径，不依赖浏览器字体。
 
 ## 许可
 

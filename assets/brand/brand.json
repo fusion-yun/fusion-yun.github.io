@@ -1,0 +1,30 @@
+{
+  "name": "FuYun",
+  "prefix": "Fu",
+  "wordmark": "Yun",
+  "subtitle": "FUSION DATA AND COMPUTING",
+  "palette": {
+    "blue": "#1F6FEB",
+    "orange": "#EA580C",
+    "grey": "#6E7681"
+  },
+  "symbol": "Project identity; schematic geometry only.",
+  "dimensions": {
+    "banner": [
+      1200,
+      250
+    ],
+    "logo": [
+      500,
+      104
+    ],
+    "icon": [
+      64,
+      64
+    ],
+    "favicon": [
+      64,
+      64
+    ]
+  }
+}
